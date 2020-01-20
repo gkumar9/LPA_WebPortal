@@ -1,0 +1,5 @@
+.searchform .form-control::-webkit-input-placeholder { color: lightgrey; }  /* WebKit, Blink, Edge */
+.searchform .form-control:-moz-placeholder { color: lightgrey; }  /* Mozilla Firefox 4 to 18 */
+.searchform .form-control::-moz-placeholder { color: lightgrey; }  /* Mozilla Firefox 19+ */
+.searchform .form-control:-ms-input-placeholder { color: lightgrey; }  /* Internet Explorer 10-11 */
+.searchform .form-control::-ms-input-placeholder { color: lightgrey; }  

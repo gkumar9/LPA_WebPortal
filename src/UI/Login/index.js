@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import LoginImage from "./../../Assets/login.png";
 import "./index.css";
 function LoginForm() {
   const [validated, setValidated] = useState(false);
@@ -35,5 +36,28 @@ function LoginForm() {
     </div>
   );
 }
+function Login() {
+  return (
+    <Container fluid style={{ width: "auto", margin: "1rem" }}>
+      <Row>
+        <Col lg="8">
+          <center style={{ fontWeight: "500", fontSize: "18px" }}>
+            Login to your account
+          </center>
+          <img
+            src={LoginImage}
+            className="rounded mx-auto d-block img-fluid"
+            alt="Login"
+          />
+        </Col>
 
-export default LoginForm;
+        <Col>
+          <LoginForm />
+        </Col>
+        <Col lg="1" />
+      </Row>
+    </Container>
+  );
+}
+
+export default Login;

@@ -1,9 +1,9 @@
 import React from "react";
-import {Navbar} from "react-bootstrap";
-import Logo from './../../Assets/Logo.png';
+import { Navbar, Nav } from "react-bootstrap";
+import Logo from "./../../Assets/Logo.png";
 function Header() {
   return (
-    <Navbar expand="lg" style={{'borderBottom':'solid 1px #cccbcb'}}>
+    <Navbar expand="lg" style={{ borderBottom: "solid 1px #cccbcb" }}>
       <Navbar.Brand href="#home">
         <img
           src={Logo}
@@ -11,6 +11,13 @@ function Header() {
           alt="React Bootstrap logo"
         />
       </Navbar.Brand>
+      <Nav className="mr-auto"></Nav>
+      <Nav justify >
+        <Nav.Link href="#deets">Home</Nav.Link>
+        <Nav.Link eventKey={2} href="#memes">
+          Log out
+        </Nav.Link>
+      </Nav>
     </Navbar>
   );
 }
