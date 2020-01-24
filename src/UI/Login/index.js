@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import LoginImage from "./../../Assets/login.png";
+import Header from "../Header/index";
+
 import "./index.css";
 function LoginForm() {
   const [validated, setValidated] = useState(false);
@@ -38,6 +40,9 @@ function LoginForm() {
 }
 function Login() {
   return (
+    
+    <React.Fragment>  
+    <Header/>
     <Container fluid style={{ width: "auto", margin: "1rem" }}>
       <Row>
         <Col lg="8">
@@ -56,7 +61,7 @@ function Login() {
         </Col>
         <Col lg="1" />
       </Row>
-    </Container>
+    </Container></React.Fragment>
   );
 }
 

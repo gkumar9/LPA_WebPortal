@@ -4,7 +4,7 @@ import Logo from "./../../Assets/Logo.png";
 function Header() {
   return (
     <Navbar expand="lg" style={{ borderBottom: "solid 1px #cccbcb" }}>
-      <Navbar.Brand href="#home">
+      <Navbar.Brand href="/">
         <img
           src={Logo}
           className="d-inline-block align-top img-responsive"

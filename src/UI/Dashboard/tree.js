@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function ControlledTreeView() {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState([]);
+  const [ setExpanded] = React.useState([]);
 
   const handleChange = (event, nodes) => {
     setExpanded(nodes);
