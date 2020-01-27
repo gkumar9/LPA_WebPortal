@@ -21,10 +21,11 @@ export default class Radio extends React.Component {
               }
             >
               <input
+              
                 className="radioPad__radio"
                 type="radio"
                 name="coffeeTypes"
-                id={loan}
+                id={key}
                 value={loan}
                 onChange={this.props.handleDifficultyRadio}
               />
