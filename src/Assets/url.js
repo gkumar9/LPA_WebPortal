@@ -4,6 +4,7 @@ let URL={
     fetchChapter:Base_url+'/api/subject/sections/',
     fetchTopic:Base_url+'/api/subject/topics/',
     fetchSubTopic:Base_url+'/api/subject/subtopics/',
+    createQuestion:Base_url+'/api/create/a/question/',
 };
 export default URL;
  

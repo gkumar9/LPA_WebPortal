@@ -183,6 +183,7 @@ class Ques extends Component {
   handleOptioncontentchange = (index, data) => {
     // let currentCharCode = this.state.letterchartcode;
     // let name = "Option " + String.fromCharCode(currentCharCode);
+    console.log(index, data);
     let currentArrayOfOption = this.state.listOfOptions;
     currentArrayOfOption[index].content = data;
     this.setState({
@@ -191,11 +192,46 @@ class Ques extends Component {
   };
   handleOptionWeightageChange = (index, e) => {
     e.preventDefault();
+    // console.log(typeof parseInt(e.target.value));
     let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption[index].weightage = e.target.value;
+    currentArrayOfOption[index].weightage = parseInt(e.target.value);
     this.setState({
       listOfOptions: currentArrayOfOption
     });
+  };
+  saveEnglishdata = () => {
+    axios({
+      method: "POST",
+      url: URL.createQuestion,
+      data: {
+        authToken: "string",
+        // difficulty: this.state.difficulty,
+        difficulty: "MILD",
+        // questionId: 0,
+        sectionId: 0,
+        subjectId: this.state.selectedSubjectID,
+        subtopicId: 0,
+        tags: this.state.tags,
+        topicId: 0,
+        type: "SINGLE_CHOICE",
+        version: {
+          content: this.state.questionData,
+          language: "ENGLISH",
+          options: this.state.listOfOptions,
+          // questionVersionId: 0,
+          solution: this.state.explanationData
+        }
+      },
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        console.log(res.data.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
   render() {
     return (
@@ -274,6 +310,7 @@ class Ques extends Component {
                         }
                         addoptionfn={this.addoptionfn}
                         deleteOption={this.deleteOption}
+                        saveEnglishdata={this.saveEnglishdata}
                       />
                     </div>
                   </Tabs.Tab>
@@ -302,10 +339,7 @@ class RightpanelEnglish extends Component {
           this.props.listOfOptions.map((item, index) => {
             return (
               <React.Fragment key={index}>
-                <Form.Group
-                  as={Row}
-                  style={{ marginTop: "2em" }}
-                >
+                <Form.Group as={Row} style={{ marginTop: "2em" }}>
                   <Form.Label column sm="2" style={{ fontWeight: "600" }}>
                     {item.name}
                   </Form.Label>
@@ -335,28 +369,12 @@ class RightpanelEnglish extends Component {
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
-                    // style={{margin:'1em'}}
                     editor={ClassicEditor}
                     data={item.content}
-                    onInit={editor => {
-                      // You can store the "editor" and use when it is needed.
-                      // console.log("Editor is ready to use!", editor);
-                    }}
                     onChange={(event, editor) => {
                       const data = editor.getData();
-                      this.props.handleOptioncontentchange.bind(
-                        this,
-                        index,
-                        data
-                      );
-                      // console.log({ event, editor, data });
+                      this.props.handleOptioncontentchange(index, data);
                     }}
-                    // onBlur={(event, editor) => {
-                    //   console.log("Blur.", editor);
-                    // }}
-                    // onFocus={(event, editor) => {
-                    //   console.log("Focus.", editor);
-                    // }}
                   />
                 </div>
               </React.Fragment>
@@ -396,6 +414,7 @@ class RightpanelEnglish extends Component {
               background: "#3F5FBB",
               borderColor: "#3F5FBB"
             }}
+            onClick={this.props.saveEnglishdata}
           >
             Save & move to Hindi section
           </Button>
@@ -575,7 +594,8 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           // }}
           onChange={(event, editor) => {
             const data = editor.getData();
-            handleQuestionEditor.bind(this, data);
+            // console.log(data)
+            handleQuestionEditor(data);
             // console.log({
             //   event,
             //   editor,
@@ -617,7 +637,7 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
           }}
           onChange={(event, editor) => {
             const data = editor.getData();
-            handleExplanationEditor.bind(this.data);
+            handleExplanationEditor(data);
           }}
           // onBlur={(event, editor) => {
           //   console.log("Blur.", editor);
