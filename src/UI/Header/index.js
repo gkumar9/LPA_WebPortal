@@ -13,7 +13,7 @@ function Header() {
       </Navbar.Brand>
       <Nav className="mr-auto"></Nav>
       <Nav justify >
-        <Nav.Link href="#deets">Home</Nav.Link>
+        <Nav.Link href="#">Welcome User</Nav.Link>
         <Nav.Link eventKey={2} href="#memes">
           Log out
         </Nav.Link>

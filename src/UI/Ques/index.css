@@ -1,0 +1,6 @@
+.react-tagsinput--focused{
+    border-color:transparent !important;
+}
+.react-tagsinput-tag{
+    background-color: #ffffff !important;
+}

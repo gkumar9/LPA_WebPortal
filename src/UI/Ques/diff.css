@@ -1,0 +1,29 @@
+.radioPad {
+  display: inline-block;
+  width: 33%;
+  vertical-align: middle;
+}
+
+.radioPad__wrapper {
+  display: block;
+  cursor: pointer;
+  background: #fff;
+  color: #000;
+  font-size: 1rem;
+  margin: 0.2rem;
+  padding: 0.3rem;
+  text-align: center;
+}
+.radioPad__wrapper:active,
+.radioPad__wrapper--selected {
+  background: #afafaf !important;
+}
+.radioPad__wrapper:hover {
+  background: #c9c8c5;
+}
+.radioPad__radio {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+  opacity: 0;
+}
