@@ -6,6 +6,8 @@ import { styled } from "@material-ui/styles"; // If using WebPack and style-load
 import "./index.css";
 import EnglishHQuesTab from "./QuesEnglish.js";
 import HindiQuesTab from "./QuesHindi.js";
+import { Link } from "react-router-dom";
+
 const MyBack = styled(Back)({
   color: "dimgrey",
   marginTop: "-0.2em",
@@ -44,9 +46,11 @@ class Ques extends Component {
             padding: "1em 3em"
           }}
         >
+          <Link to="/" target="_self">
           <Button
             variant="light"
             style={{ background: "transparent", border: "transparent" }}
+            
           >
             <MyBack />
             <span
@@ -54,7 +58,7 @@ class Ques extends Component {
             >
               Back to dashboard
             </span>
-          </Button>
+          </Button></Link>
         </div>
         <Container
           fluid

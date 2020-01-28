@@ -29,10 +29,10 @@ class QuesEnglish extends Component {
         { name: "Option A", content: "", weightage: null },
         { name: "Option B", content: "", weightage: null }
       ],
-      letterchartcode: 67,
+      letterchartcode: 67
     };
   }
-  
+
   addoptionfn = () => {
     let currentCharCode = this.state.letterchartcode;
     let name = "Option " + String.fromCharCode(currentCharCode);
@@ -71,11 +71,18 @@ class QuesEnglish extends Component {
       .then(res => {
         // console.log(res.data.data);
         if (res.status === 200) {
-          this.setState({
-            listOfSubject: res.data.data.list,
-            selectedSubjectID: res.data.data.list[0].subject.subjectId
-          });
-          this.callApiForChapter();
+          this.setState(
+            {
+              listOfSubject: res.data.data.list,
+              selectedSubjectID:
+                res.data.data.list.length > 0
+                  ? res.data.data.list[0].subject.subjectId
+                  : ""
+            },
+            () => {
+              this.callApiForChapter();
+            }
+          );
         } else {
           alert("Unexpected code");
         }
@@ -85,85 +92,155 @@ class QuesEnglish extends Component {
       });
   }
   callApiForChapter = () => {
-    axios({
-      method: "POST",
-      url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH",
-      data: { authToken: "string" },
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => {
-        // console.log(res.data.data);
-        if (res.status === 200) {
-          this.setState({
-            listOfChapter: res.data.data.list,
-            selectedChapterID: res.data.data.list[0].subjectSection.sectionId
-          });
-          this.callApiForTopic();
-        } else {
-          alert("Unexpected code");
+    if (this.state.selectedSubjectID !== "") {
+      axios({
+        method: "POST",
+        url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH",
+        data: { authToken: "string" },
+        headers: {
+          "Content-Type": "application/json"
         }
       })
-      .catch(e => {
-        console.log(e);
-      });
+        .then(res => {
+          if (res.status === 200) {
+            this.setState(
+              {
+                listOfChapter: res.data.data.list,
+                selectedChapterID:
+                  res.data.data.list.length > 0
+                    ? res.data.data.list[0].subjectSection.sectionId
+                    : ""
+              },
+              () => {
+                this.callApiForTopic();
+              }
+            );
+          } else {
+            alert("Unexpected code");
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    } else {
+      console.log("(English)subjectid is blank. API not called. checksubject list");
+      this.setState({ listOfChapter: [], selectedChapterID: "" });
+    }
   };
   callApiForTopic = () => {
-    axios({
-      method: "POST",
-      url: URL.fetchTopic + this.state.selectedChapterID + "/ENGLISH",
-      data: { authToken: "string" },
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => {
-        // console.log(res.data.data);
-        if (res.status === 200) {
-          this.setState({
-            listOfTopic: res.data.data.list,
-            selectedTopicID: res.data.data.list[0].subjectTopic.topicId
-          });
-          this.callApiForSubTopic();
-        } else {
-          alert("Unexpected code");
+    if (this.state.selectedChapterID !== "") {
+      axios({
+        method: "POST",
+        url: URL.fetchTopic + this.state.selectedChapterID + "/ENGLISH",
+        data: { authToken: "string" },
+        headers: {
+          "Content-Type": "application/json"
         }
       })
-      .catch(e => {
-        console.log(e);
-      });
+        .then(res => {
+          // console.log(res.data.data);
+          if (res.status === 200) {
+            this.setState(
+              {
+                listOfTopic: res.data.data.list,
+                selectedTopicID:
+                  res.data.data.list.length > 0
+                    ? res.data.data.list[0].subjectTopic.topicId
+                    : ""
+              },
+              () => {
+                this.callApiForSubTopic();
+              }
+            );
+          } else {
+            alert("Unexpected code");
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    } else {
+      console.log("(English)chapterid is blank.API not called. checkchapter list");
+      this.setState({ listOfTopic: [], selectedTopicID: "" });
+    }
   };
   callApiForSubTopic = () => {
-    axios({
-      method: "POST",
-      url: URL.fetchSubTopic + this.state.selectedTopicID + "/ENGLISH",
-      data: { authToken: "string" },
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => {
-        // console.log(res.data.data);
-        if (res.status === 200) {
-          this.setState({
-            listOfSubTopic: res.data.data.list,
-            selectedSubTopicID: res.data.data.list[0].subjectSubtopic.subtopicId
-          });
-        } else {
-          alert("Unexpected code");
+    if (this.state.selectedTopicID !== "") {
+      axios({
+        method: "POST",
+        url: URL.fetchSubTopic + this.state.selectedTopicID + "/ENGLISH",
+        data: { authToken: "string" },
+        headers: {
+          "Content-Type": "application/json"
         }
       })
-      .catch(e => {
-        console.log(e);
-      });
+        .then(res => {
+          // console.log(res.data.data);
+          if (res.status === 200) {
+            this.setState({
+              listOfSubTopic: res.data.data.list,
+              selectedSubTopicID:
+                res.data.data.list.length > 0
+                  ? res.data.data.list[0].subjectSubtopic.subtopicId
+                  : ""
+            });
+          } else {
+            alert("Unexpected code");
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    } else {
+      console.log("(English)topicid is blank.API not called. checktopic list");
+      this.setState({ listOfSubTopic: [], selectedSubTopicID: "" });
+    }
   };
   handleSubjectChange = e => {
     e.preventDefault();
+
+    this.setState(
+      {
+        selectedSubjectID: this.state.listOfSubject[
+          e.target.options.selectedIndex
+        ].subject.subjectId
+      },
+      () => {
+        this.callApiForChapter();
+      }
+    );
+  };
+  handleChapterChange = e => {
+    e.preventDefault();
+    this.setState(
+      {
+        selectedChapterID: this.state.listOfChapter[
+          e.target.options.selectedIndex
+        ].subjectSection.sectionId
+      },
+      () => {
+        this.callApiForTopic();
+      }
+    );
+  };
+  handleTopicChange = e => {
+    e.preventDefault();
+    this.setState(
+      {
+        selectedTopicID: this.state.listOfTopic[e.target.options.selectedIndex]
+          .subjectTopic.topicId
+      },
+      () => {
+        this.callApiForSubTopic();
+      }
+    );
+  };
+  handleSubTopicChange = e => {
+    e.preventDefault();
     this.setState({
-      selectedSubjectID: this.state.listOfSubject[
+      selectedSubTopicID: this.state.listOfSubTopic[
         e.target.options.selectedIndex
-      ].subject.subjectId
+      ].subjectSubtopic.subtopicId
     });
   };
   handleQuestionEditor = data => {
@@ -208,16 +285,19 @@ class QuesEnglish extends Component {
     }
     axios({
       method: "POST",
-      url: this.props.questionId===''?URL.createQuestion:URL.createQuestionNewVersion,
+      url:
+        this.props.questionId === ""
+          ? URL.createQuestion
+          : URL.createQuestionNewVersion,
       data: {
         authToken: "string",
         difficulty: difficultyvalue,
         questionId: this.props.questionId,
-        sectionId: 0,
+        sectionId: this.state.selectedChapterID,
         subjectId: this.state.selectedSubjectID,
-        subtopicId: 0,
+        subtopicId: this.state.selectedSubTopicID,
         tags: this.state.tags,
-        topicId: 0,
+        topicId: this.state.selectedTopicID,
         type: "SINGLE_CHOICE",
         version: {
           content: this.state.questionData,
@@ -232,12 +312,11 @@ class QuesEnglish extends Component {
       }
     })
       .then(res => {
-        
         if (res.status === 200) {
-            console.log(res.data.data);
-        //   this.setState({ activetab: "2" });
-        this.props.handleChange(res.data.data.questionId);
-        this.props.handleSelect();
+          console.log(res.data.data);
+          //   this.setState({ activetab: "2" });
+          this.props.handleChange(res.data.data.questionId);
+          this.props.handleSelect();
         }
       })
       .catch(e => {
@@ -261,6 +340,9 @@ class QuesEnglish extends Component {
               listOfTopic={this.state.listOfTopic}
               listOfSubTopic={this.state.listOfSubTopic}
               handleSubjectChange={this.handleSubjectChange}
+              handleChapterChange={this.handleChapterChange}
+              handleTopicChange={this.handleTopicChange}
+              handleSubTopicChange={this.handleSubTopicChange}
               selectedSubjectID={this.state.selectedSubjectID}
               selectedChapterID={this.state.selectedChapterID}
               selectedTopicID={this.state.selectedTopicID}
@@ -315,7 +397,7 @@ class RightpanelEnglish extends Component {
                     <Form.Control
                       style={{ borderRadius: "0", background: "lightgrey" }}
                       type="number"
-                      value={item.weightage||0}
+                      value={item.weightage || 0}
                       onChange={this.props.handleOptionWeightageChange.bind(
                         this,
                         index
@@ -397,15 +479,26 @@ class LeftPanel extends Component {
     let currentvaluesubject = this.props.listOfSubject.filter(
       item => item.subject.subjectId === this.props.selectedSubjectID
     )[0];
+    currentvaluesubject = currentvaluesubject
+      ? currentvaluesubject.subjectName
+      : "";
     let currentvaluechapter = this.props.listOfChapter.filter(
       item => item.subjectSection.sectionId === this.props.selectedChapterID
     )[0];
+    currentvaluechapter = currentvaluechapter
+      ? currentvaluechapter.sectionName
+      : "";
+
     let currentvaluetopic = this.props.listOfTopic.filter(
       item => item.subjectTopic.topicId === this.props.selectedTopicID
     )[0];
+    currentvaluetopic = currentvaluetopic ? currentvaluetopic.title : "";
     let currentvaluesubtopic = this.props.listOfSubTopic.filter(
       item => item.subjectSubtopic.subtopicId === this.props.selectedSubTopicID
     )[0];
+    currentvaluesubtopic = currentvaluesubtopic
+      ? currentvaluesubtopic.title
+      : "";
     return (
       <Form>
         <Form.Group controlId="exampleForm.ControlSelect1">
@@ -447,6 +540,7 @@ class LeftPanel extends Component {
             size="sm"
             as="select"
             value={currentvaluechapter}
+            onChange={this.props.handleChapterChange}
           >
             {this.props.listOfChapter &&
               this.props.listOfChapter.map((item, index) => {
@@ -471,6 +565,7 @@ class LeftPanel extends Component {
             size="sm"
             as="select"
             value={currentvaluetopic}
+            onChange={this.props.handleTopicChange}
           >
             {this.props.listOfTopic &&
               this.props.listOfTopic.map((item, index) => {
@@ -495,6 +590,7 @@ class LeftPanel extends Component {
             size="sm"
             as="select"
             value={currentvaluesubtopic}
+            onChange={this.props.handleSubTopicChange}
           >
             {this.props.listOfSubTopic &&
               this.props.listOfSubTopic.map((item, index) => {
