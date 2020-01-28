@@ -6,6 +6,7 @@ let URL={
     fetchSubTopic:Base_url+'/api/subject/subtopics/',
     createQuestion:Base_url+'/api/create/a/question/',
     createQuestionNewVersion:Base_url+'/api/add/new/question/version',
+    searchquestion:Base_url+'/api/question/list/'
 };
 export default URL;
  

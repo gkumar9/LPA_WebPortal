@@ -30,6 +30,32 @@ class LeftPanel extends Component {
       : "";
     return (
       <Form>
+        <Form.Group controlId="exampleForm.ControlSelect0">
+          <Form.Label
+            style={{
+              fontWeight: "600"
+            }}
+          >
+            Language
+          </Form.Label>
+          <Form.Control
+            style={{ borderRadius: "0" }}
+            size="sm"
+            as="select"
+            // defaultValue=""
+            onChange={this.props.handleLanguageChange}
+            value={this.props.selectedlanguage}
+          >
+            {this.props.listOfLanguage &&
+              this.props.listOfLanguage.map((item, index) => {
+                return (
+                  <option key={index} value={item}>
+                    {item}
+                  </option>
+                );
+              })}
+          </Form.Control>
+        </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect1">
           <Form.Label
             style={{

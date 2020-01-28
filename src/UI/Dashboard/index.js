@@ -31,9 +31,49 @@ class Dashboard extends Component {
       listOfSubTopic: [],
       selectedSubTopicID: "",
       tags: [],
-      difficulty: ""
+      difficulty: "",
+      selectedLanguage: "ENGLISH",
+      listOfLanguage: ["ENGLISH", "HINDI"],
+      searchbox: "",
+      searchResultList: []
     };
   }
+  handleSearchboxChange = e => {
+    e.preventDefault();
+
+    this.setState({ searchbox: e.target.value });
+    if (e.target.value !== "") {
+      axios({
+        method: "POST",
+        url: URL.searchquestion + "1",
+        data: {
+          authToken: "string",
+          language: this.state.selectedLanguage,
+          questionId: e.target.value,
+          sectionId: this.state.selectedChapterID,
+          subjectId: this.state.selectedSubjectID,
+          subtopicId: this.state.selectedSubTopicID,
+          topicId: this.state.selectedTopicID
+        },
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(res => {
+        console.log(res.data.data.list);
+        if (res.status === 200) {
+          this.setState({ searchResultList: res.data.data.list });
+        }
+      });
+    } else {
+      this.setState({ searchResultList: [] });
+    }
+  };
+  handleLanguageChange = e => {
+    e.preventDefault();
+    this.setState({ selectedLanguage: e.target.value }, () => {
+      this.componentDidMount();
+    });
+  };
   handleDifficultyRadio = e => {
     e.preventDefault();
     this.setState({ difficulty: e.target.value });
@@ -44,7 +84,7 @@ class Dashboard extends Component {
   componentDidMount() {
     axios({
       method: "POST",
-      url: URL.fetchSubject + "ENGLISH",
+      url: URL.fetchSubject + this.state.selectedLanguage,
       data: { authToken: "string" },
       headers: {
         "Content-Type": "application/json"
@@ -77,7 +117,11 @@ class Dashboard extends Component {
     if (this.state.selectedSubjectID !== "") {
       axios({
         method: "POST",
-        url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH",
+        url:
+          URL.fetchChapter +
+          this.state.selectedSubjectID +
+          "/" +
+          this.state.selectedLanguage,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -122,7 +166,11 @@ class Dashboard extends Component {
     if (this.state.selectedChapterID !== "") {
       axios({
         method: "POST",
-        url: URL.fetchTopic + this.state.selectedChapterID + "/ENGLISH",
+        url:
+          URL.fetchTopic +
+          this.state.selectedChapterID +
+          "/" +
+          this.state.selectedLanguage,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -166,7 +214,11 @@ class Dashboard extends Component {
     if (this.state.selectedTopicID !== "") {
       axios({
         method: "POST",
-        url: URL.fetchSubTopic + this.state.selectedTopicID + "/ENGLISH",
+        url:
+          URL.fetchSubTopic +
+          this.state.selectedTopicID +
+          "/" +
+          this.state.selectedLanguage,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -302,6 +354,9 @@ class Dashboard extends Component {
                       handleChangeTags={this.handleChangeTags}
                       difficulty={this.state.difficulty}
                       handleDifficultyRadio={this.handleDifficultyRadio}
+                      listOfLanguage={this.state.listOfLanguage}
+                      selectedLanguage={this.state.selectedLanguage}
+                      handleLanguageChange={this.handleLanguageChange}
                     />
                   </Col>
 
@@ -345,8 +400,7 @@ class Dashboard extends Component {
                         >
                           Add new and review prevoius question and answers.
                           <br></br>
-                          Please select the folder you want to access before
-                          taking any actions.
+                          {/* Please select the filter on left for accessing best results. */}
                         </p>
                       </Col>
                     </Row>
@@ -357,6 +411,8 @@ class Dashboard extends Component {
                           <Form.Group controlId="formBasicSearch">
                             <Form.Control
                               type="text"
+                              value={this.state.searchbox}
+                              onChange={this.handleSearchboxChange}
                               placeholder="&#128269;  Search a question with id number"
                               style={{
                                 padding: "1.5em 2em",
@@ -368,35 +424,44 @@ class Dashboard extends Component {
                       </Col>
                     </Row>
 
-                    <Row style={{ margin: "0 0em 1em" }}>
-                      <Col style={{ paddingLeft: "0.5em" }} lg="1.5">
-                        <Form.Check
-                          type="switch"
-                          id="custom-switch"
-                          label="Select all"
-                          // label={
-                          //   <Button variant="outline-primary" size="sm">
-                          //     Add to bucket
-                          //   </Button>
-                          // }
-                          // label={
-                          //   <Button variant="outline-dark" size="sm">
-                          //     <Bucket className="svg_icons" /> Add to bucket
-                          //   </Button>
-                          // }
-                        />
-                      </Col>
-                      <Col lg="9" />
-                      <Col style={{ paddingRight: "0em" }}>
-                        <Button
-                          variant="outline-primary"
-                          size="sm"
-                          // style={{ float: "right" }}
+                    {this.state.searchResultList.length > 0 && (
+                      <Row style={{ margin: "0 0em 1em" }}>
+                        <Col
+                          style={{ paddingLeft: "0.5em", paddingTop: "0.3em" }}
+                          lg="1.5"
                         >
-                          <Bucket className="svg_icons" /> Add to bucket
-                        </Button>
-                      </Col>
-                    </Row>
+                          <Form.Check
+                            // type="switch"
+                            id="custom-switch"
+                            label="Select all"
+                            // label={
+                            //   <Button variant="outline-primary" size="sm">
+                            //     Add to bucket
+                            //   </Button>
+                            // }
+                            // label={
+                            //   <Button variant="outline-dark" size="sm">
+                            //     <Bucket className="svg_icons" /> Add to bucket
+                            //   </Button>
+                            // }
+                          />
+                        </Col>
+
+                        <Col style={{ paddingRight: "0em" }}>
+                          <Button
+                            variant="outline-light"
+                            size="sm"
+                            style={{
+                              color: "black",
+                              borderColor: "transparent"
+                            }}
+                          >
+                            <Bucket className="svg_icons" /> Add to bucket
+                          </Button>
+                        </Col>
+                        <Col lg="9" />
+                      </Row>
+                    )}
                     <div
                       style={{
                         height: "45vh",
@@ -406,318 +471,94 @@ class Dashboard extends Component {
                         padding: "0.4em"
                       }}
                     >
-                      <Row style={{ margin: "0.5em 0em" }}>
-                        <Col
-                          style={{ paddingLeft: "0em", paddingRight: "0em" }}
-                        >
-                          <Card
-                            style={{
-                              background: "transparent",
-                              borderColor: "transparent"
-                            }}
-                          >
-                            <Card.Body style={{ padding: "0em" }}>
-                              <Card.Title style={{ fontSize: "medium" }}>
-                                <Form.Check inline type="checkbox" />
-
-                                <span>
-                                  <b>Id#</b>{" "}
-                                  <span style={{ color: "dimgrey" }}>
-                                    ABCD76{" "}
-                                  </span>
-                                </span>
-                                <span
+                      {this.state.searchResultList.length > 0 &&
+                        this.state.searchResultList.map(item => {
+                          return (
+                            <Row style={{ margin: "0.5em 0em" }}>
+                              <Col
+                                style={{
+                                  paddingLeft: "0em",
+                                  paddingRight: "0em"
+                                }}
+                              >
+                                <Card
                                   style={{
-                                    float: "right",
-                                    fontSize: "15px",
-                                    fontWeight: "600"
+                                    background: "transparent",
+                                    borderColor: "transparent"
                                   }}
                                 >
-                                  <b>Tags: </b>
-                                  <span style={{ color: "blue" }}>
-                                    Difficulty: ++
-                                  </span>
-                                  ,
-                                  <span style={{ color: "maroon" }}>
+                                  <Card.Body style={{ padding: "0em" }}>
+                                    <Card.Title style={{ fontSize: "medium" }}>
+                                      <Form.Check inline type="checkbox" />
+
+                                      <span>
+                                        <b>Id#</b>{" "}
+                                        <span style={{ color: "dimgrey" }}>
+                                          {item.questionId}
+                                        </span>
+                                      </span>
+                                      <span
+                                        style={{
+                                          float: "right",
+                                          fontSize: "15px",
+                                          fontWeight: "600"
+                                        }}
+                                      >
+                                        <b>Tags: </b>
+                                        <span style={{ color: "blue" }}>
+                                          Difficulty:{" "}
+                                          {item.level === "EASY"
+                                            ? item.level === "MILD"
+                                              ? "++"
+                                              : "+"
+                                            : "+++"}
+                                        </span>
+                                        {/* <span style={{ color: "maroon" }}>
                                     {" "}
                                     2013 RSBSSB
-                                  </span>
-                                  ,
-                                  <span style={{ color: "darkgreen" }}>
-                                    {" "}
-                                    Single option obj
-                                  </span>
-                                </span>
-                              </Card.Title>
+                                  </span> */}
+                                        ,
+                                        <span style={{ color: "darkgreen" }}>
+                                          {" "}
+                                          {item.type}
+                                        </span>
+                                      </span>
+                                    </Card.Title>
 
-                              <Card.Text>
-                                A coin is thrown 3 times. What is the
-                                probability that atleast one head is obtained ?
-                              </Card.Text>
-                              <div style={{ float: "right" }}>
-                                <Button
-                                  title="Add to bucket"
-                                  size="sm"
-                                  style={{
-                                    borderRadius: "0"
-                                  }}
-                                  variant="primary"
-                                >
-                                  {<Bucket />}{" "}
-                                </Button>
-                                <Button
-                                  title="Edit"
-                                  size="sm"
-                                  style={{
-                                    borderRadius: "0",
-                                    marginLeft: "1em"
-                                  }}
-                                  variant="secondary"
-                                >
-                                  {<Edit />}{" "}
-                                </Button>
-                              </div>
-                              {/* <Card.Link style={{float:'right'}} href="#">Card Link</Card.Link>
-                  <Card.Link style={{float:'right'}}href="#">Another Link</Card.Link> */}
-                            </Card.Body>
-                            <hr />
-                          </Card>
-                        </Col>
-                      </Row>
-                      <Row style={{ margin: "0.5em 0em" }}>
-                        <Col
-                          style={{ paddingLeft: "0em", paddingRight: "0em" }}
-                        >
-                          <Card
-                            style={{
-                              background: "transparent",
-                              borderColor: "transparent"
-                            }}
-                          >
-                            <Card.Body style={{ padding: "0em" }}>
-                              <Card.Title style={{ fontSize: "medium" }}>
-                                <Form.Check inline type="checkbox" />
-
-                                <span>
-                                  <b>Id#</b>{" "}
-                                  <span style={{ color: "dimgrey" }}>
-                                    ABCD76{" "}
-                                  </span>
-                                </span>
-                                <span
-                                  style={{
-                                    float: "right",
-                                    fontSize: "15px",
-                                    fontWeight: "600"
-                                  }}
-                                >
-                                  <b>Tags: </b>
-                                  <span style={{ color: "blue" }}>
-                                    Difficulty: ++
-                                  </span>
-                                  ,
-                                  <span style={{ color: "maroon" }}>
-                                    {" "}
-                                    2013 RSBSSB
-                                  </span>
-                                  ,
-                                  <span style={{ color: "darkgreen" }}>
-                                    {" "}
-                                    Single option obj
-                                  </span>
-                                </span>
-                              </Card.Title>
-
-                              <Card.Text>
-                                A coin is thrown 3 times. What is the
-                                probability that atleast one head is obtained ?
-                              </Card.Text>
-                              <div style={{ float: "right" }}>
-                                <Button
-                                  title="Add to bucket"
-                                  size="sm"
-                                  style={{
-                                    borderRadius: "0"
-                                  }}
-                                  variant="primary"
-                                >
-                                  {<Bucket />}{" "}
-                                </Button>
-                                <Button
-                                  title="Edit"
-                                  size="sm"
-                                  style={{
-                                    borderRadius: "0",
-                                    marginLeft: "1em"
-                                  }}
-                                  variant="secondary"
-                                >
-                                  {<Edit />}{" "}
-                                </Button>
-                              </div>
-                              {/* <Card.Link style={{float:'right'}} href="#">Card Link</Card.Link>
-                  <Card.Link style={{float:'right'}}href="#">Another Link</Card.Link> */}
-                            </Card.Body>
-                            <hr />
-                          </Card>
-                        </Col>
-                      </Row>
-                      <Row style={{ margin: "0.5em 0em" }}>
-                        <Col
-                          style={{ paddingLeft: "0em", paddingRight: "0em" }}
-                        >
-                          <Card
-                            style={{
-                              background: "transparent",
-                              borderColor: "transparent"
-                            }}
-                          >
-                            <Card.Body style={{ padding: "0em" }}>
-                              <Card.Title style={{ fontSize: "medium" }}>
-                                <Form.Check inline type="checkbox" />
-
-                                <span>
-                                  <b>Id#</b>{" "}
-                                  <span style={{ color: "dimgrey" }}>
-                                    ABCD76{" "}
-                                  </span>
-                                </span>
-                                <span
-                                  style={{
-                                    float: "right",
-                                    fontSize: "15px",
-                                    fontWeight: "600"
-                                  }}
-                                >
-                                  <b>Tags: </b>
-                                  <span style={{ color: "blue" }}>
-                                    Difficulty: ++
-                                  </span>
-                                  ,
-                                  <span style={{ color: "maroon" }}>
-                                    {" "}
-                                    2013 RSBSSB
-                                  </span>
-                                  ,
-                                  <span style={{ color: "darkgreen" }}>
-                                    {" "}
-                                    Single option obj
-                                  </span>
-                                </span>
-                              </Card.Title>
-
-                              <Card.Text>
-                                A coin is thrown 3 times. What is the
-                                probability that atleast one head is obtained ?
-                              </Card.Text>
-                              <div style={{ float: "right" }}>
-                                <Button
-                                  title="Add to bucket"
-                                  size="sm"
-                                  style={{
-                                    borderRadius: "0"
-                                  }}
-                                  variant="primary"
-                                >
-                                  {<Bucket />}{" "}
-                                </Button>
-                                <Button
-                                  title="Edit"
-                                  size="sm"
-                                  style={{
-                                    borderRadius: "0",
-                                    marginLeft: "1em"
-                                  }}
-                                  variant="secondary"
-                                >
-                                  {<Edit />}{" "}
-                                </Button>
-                              </div>
-                              {/* <Card.Link style={{float:'right'}} href="#">Card Link</Card.Link>
-                  <Card.Link style={{float:'right'}}href="#">Another Link</Card.Link> */}
-                            </Card.Body>
-                            <hr />
-                          </Card>
-                        </Col>
-                      </Row>
-                      <Row style={{ margin: "0.5em 0em" }}>
-                        <Col
-                          style={{ paddingLeft: "0em", paddingRight: "0em" }}
-                        >
-                          <Card
-                            style={{
-                              background: "transparent",
-                              borderColor: "transparent"
-                            }}
-                          >
-                            <Card.Body style={{ padding: "0em" }}>
-                              <Card.Title style={{ fontSize: "medium" }}>
-                                <Form.Check inline type="checkbox" />
-
-                                <span>
-                                  <b>Id#</b>{" "}
-                                  <span style={{ color: "dimgrey" }}>
-                                    ABCD76{" "}
-                                  </span>
-                                </span>
-                                <span
-                                  style={{
-                                    float: "right",
-                                    fontSize: "15px",
-                                    fontWeight: "600"
-                                  }}
-                                >
-                                  <b>Tags: </b>
-                                  <span style={{ color: "blue" }}>
-                                    Difficulty: ++
-                                  </span>
-                                  ,
-                                  <span style={{ color: "maroon" }}>
-                                    {" "}
-                                    2013 RSBSSB
-                                  </span>
-                                  ,
-                                  <span style={{ color: "darkgreen" }}>
-                                    {" "}
-                                    Single option obj
-                                  </span>
-                                </span>
-                              </Card.Title>
-
-                              <Card.Text>
-                                A coin is thrown 3 times. What is the
-                                probability that atleast one head is obtained ?
-                              </Card.Text>
-                              <div style={{ float: "right" }}>
-                                <Button
-                                  title="Add to bucket"
-                                  size="sm"
-                                  style={{
-                                    borderRadius: "0"
-                                  }}
-                                  variant="primary"
-                                >
-                                  {<Bucket />}{" "}
-                                </Button>
-                                <Button
-                                  title="Edit"
-                                  size="sm"
-                                  style={{
-                                    borderRadius: "0",
-                                    marginLeft: "1em"
-                                  }}
-                                  variant="secondary"
-                                >
-                                  {<Edit />}{" "}
-                                </Button>
-                              </div>
-                              {/* <Card.Link style={{float:'right'}} href="#">Card Link</Card.Link>
-                  <Card.Link style={{float:'right'}}href="#">Another Link</Card.Link> */}
-                            </Card.Body>
-                            <hr />
-                          </Card>
-                        </Col>
-                      </Row>
+                                    <Card.Text>
+                                      {""}
+                                      {item.content}
+                                    </Card.Text>
+                                    <div style={{ float: "right" }}>
+                                      <Button
+                                        title="Add to bucket"
+                                        size="sm"
+                                        style={{
+                                          borderRadius: "0"
+                                        }}
+                                        variant="primary"
+                                      >
+                                        {<Bucket />}{" "}
+                                      </Button>
+                                      <Button
+                                        title="Edit"
+                                        size="sm"
+                                        style={{
+                                          borderRadius: "0",
+                                          marginLeft: "1em"
+                                        }}
+                                        variant="secondary"
+                                      >
+                                        {<Edit />}{" "}
+                                      </Button>
+                                    </div>
+                                  </Card.Body>
+                                  {/* <hr /> */}
+                                </Card>
+                              </Col>
+                            </Row>
+                          );
+                        })}{" "}
                     </div>
                   </Col>
                 </Row>
