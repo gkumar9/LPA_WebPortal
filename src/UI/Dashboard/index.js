@@ -53,11 +53,18 @@ class Dashboard extends Component {
       .then(res => {
         // console.log(res.data.data);
         if (res.status === 200) {
-          this.setState({
-            listOfSubject: res.data.data.list,
-            selectedSubjectID: res.data.data.list[0].subject.subjectId
-          });
-          this.callApiForChapter();
+          this.setState(
+            {
+              listOfSubject: res.data.data.list,
+              selectedSubjectID:
+                res.data.data.list.length > 0
+                  ? res.data.data.list[0].subject.subjectId
+                  : ""
+            },
+            () => {
+              this.callApiForChapter();
+            }
+          );
         } else {
           alert("Unexpected code");
         }
@@ -67,85 +74,171 @@ class Dashboard extends Component {
       });
   }
   callApiForChapter = () => {
-    axios({
-      method: "POST",
-      url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH",
-      data: { authToken: "string" },
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => {
-        // console.log(res.data.data);
-        if (res.status === 200) {
-          this.setState({
-            listOfChapter: res.data.data.list,
-            selectedChapterID: res.data.data.list[0].subjectSection.sectionId
-          });
-          this.callApiForTopic();
-        } else {
-          alert("Unexpected code");
+    if (this.state.selectedSubjectID !== "") {
+      axios({
+        method: "POST",
+        url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH",
+        data: { authToken: "string" },
+        headers: {
+          "Content-Type": "application/json"
         }
       })
-      .catch(e => {
-        console.log(e);
+        .then(res => {
+          if (res.status === 200) {
+            this.setState(
+              {
+                listOfChapter: res.data.data.list,
+                selectedChapterID:
+                  res.data.data.list.length > 0
+                    ? res.data.data.list[0].subjectSection.sectionId
+                    : ""
+              },
+              () => {
+                this.callApiForTopic();
+              }
+            );
+          } else {
+            alert("Unexpected code");
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    } else {
+      console.log(
+        "(English)subjectid is blank. API not called. checksubject list"
+      );
+      this.setState({
+        listOfChapter: [],
+        selectedChapterID: "",
+        listOfTopic: [],
+        selectedTopicID: "",
+        listOfSubTopic: [],
+        selectedSubTopicID: ""
       });
+    }
   };
   callApiForTopic = () => {
-    axios({
-      method: "POST",
-      url: URL.fetchTopic + this.state.selectedChapterID + "/ENGLISH",
-      data: { authToken: "string" },
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => {
-        // console.log(res.data.data);
-        if (res.status === 200) {
-          this.setState({
-            listOfTopic: res.data.data.list,
-            selectedTopicID: res.data.data.list[0].subjectTopic.topicId
-          });
-          this.callApiForSubTopic();
-        } else {
-          alert("Unexpected code");
+    if (this.state.selectedChapterID !== "") {
+      axios({
+        method: "POST",
+        url: URL.fetchTopic + this.state.selectedChapterID + "/ENGLISH",
+        data: { authToken: "string" },
+        headers: {
+          "Content-Type": "application/json"
         }
       })
-      .catch(e => {
-        console.log(e);
+        .then(res => {
+          // console.log(res.data.data);
+          if (res.status === 200) {
+            this.setState(
+              {
+                listOfTopic: res.data.data.list,
+                selectedTopicID:
+                  res.data.data.list.length > 0
+                    ? res.data.data.list[0].subjectTopic.topicId
+                    : ""
+              },
+              () => {
+                this.callApiForSubTopic();
+              }
+            );
+          } else {
+            alert("Unexpected code");
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    } else {
+      console.log(
+        "(English)chapterid is blank.API not called. checkchapter list"
+      );
+      this.setState({
+        listOfTopic: [],
+        selectedTopicID: "",
+        listOfSubTopic: [],
+        selectedSubTopicID: ""
       });
+    }
   };
   callApiForSubTopic = () => {
-    axios({
-      method: "POST",
-      url: URL.fetchSubTopic + this.state.selectedTopicID + "/ENGLISH",
-      data: { authToken: "string" },
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => {
-        // console.log(res.data.data);
-        if (res.status === 200) {
-          this.setState({
-            listOfSubTopic: res.data.data.list,
-            selectedSubTopicID: res.data.data.list[0].subjectSubtopic.subtopicId
-          });
-        } else {
-          alert("Unexpected code");
+    if (this.state.selectedTopicID !== "") {
+      axios({
+        method: "POST",
+        url: URL.fetchSubTopic + this.state.selectedTopicID + "/ENGLISH",
+        data: { authToken: "string" },
+        headers: {
+          "Content-Type": "application/json"
         }
       })
-      .catch(e => {
-        console.log(e);
-      });
+        .then(res => {
+          // console.log(res.data.data);
+          if (res.status === 200) {
+            this.setState({
+              listOfSubTopic: res.data.data.list,
+              selectedSubTopicID:
+                res.data.data.list.length > 0
+                  ? res.data.data.list[0].subjectSubtopic.subtopicId
+                  : ""
+            });
+          } else {
+            alert("Unexpected code");
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    } else {
+      console.log("(English)topicid is blank.API not called. checktopic list");
+      this.setState({ listOfSubTopic: [], selectedSubTopicID: "" });
+    }
   };
   handleSubjectChange = e => {
     e.preventDefault();
+
+    this.setState(
+      {
+        selectedSubjectID: this.state.listOfSubject[
+          e.target.options.selectedIndex
+        ].subject.subjectId
+      },
+      () => {
+        this.callApiForChapter();
+      }
+    );
+  };
+  handleChapterChange = e => {
+    e.preventDefault();
+    this.setState(
+      {
+        selectedChapterID: this.state.listOfChapter[
+          e.target.options.selectedIndex
+        ].subjectSection.sectionId
+      },
+      () => {
+        this.callApiForTopic();
+      }
+    );
+  };
+  handleTopicChange = e => {
+    e.preventDefault();
+    this.setState(
+      {
+        selectedTopicID: this.state.listOfTopic[e.target.options.selectedIndex]
+          .subjectTopic.topicId
+      },
+      () => {
+        this.callApiForSubTopic();
+      }
+    );
+  };
+  handleSubTopicChange = e => {
+    e.preventDefault();
     this.setState({
-      selectedSubjectID: this.state.listOfSubject[
+      selectedSubTopicID: this.state.listOfSubTopic[
         e.target.options.selectedIndex
-      ].subject.subjectId
+      ].subjectSubtopic.subtopicId
     });
   };
   render() {
@@ -153,72 +246,72 @@ class Dashboard extends Component {
       <React.Fragment>
         <Header />
         <Container fluid style={{ width: "auto" }}>
-          <Row style={{ height: "90vh" }}>
-            <Col
-              lg="3"
-              style={{
-                padding: "6em 2em",
-                background: "#EEEEEE",
-                // background: "white",
-                // height: "90vh",
-                // paddingLeft: "0em",
-                // paddingRight: "0em"
-              }}
-            >
-              {/* <GmailTreeView /> */}
-              <LeftPanelQuestion
-                listOfSubject={this.state.listOfSubject}
-                listOfChapter={this.state.listOfChapter}
-                listOfTopic={this.state.listOfTopic}
-                listOfSubTopic={this.state.listOfSubTopic}
-                handleSubjectChange={this.handleSubjectChange}
-                selectedSubjectID={this.state.selectedSubjectID}
-                selectedChapterID={this.state.selectedChapterID}
-                selectedTopicID={this.state.selectedTopicID}
-                selectedSubTopicID={this.state.selectedSubTopicID}
-                tags={this.state.tags}
-                handleChangeTags={this.handleChangeTags}
-                difficulty={this.state.difficulty}
-                handleDifficultyRadio={this.handleDifficultyRadio}
-              />
-            </Col>
+          <Tab.Container defaultActiveKey="first">
+            <Row style={{ padding: "1em 0em", background: "#EEEEEE" }}>
+              <Col lg="3"></Col>
+              <Col
+                lg="1.5"
+                className="customtabcolor"
+                style={{
+                  margin: "0 2em"
+                }}
+              >
+                <Nav.Link eventKey="first">
+                  <span style={{ fontSize: "larger" }}>Q&A </span>
+                </Nav.Link>
+              </Col>
+              <Col
+                lg="1.5"
+                style={{
+                  padding: "0.3em 1.5em"
+                }}
+              >
+                <Nav.Link eventKey="second">
+                  <span style={{ fontSize: "larger", color: "dimgrey" }}>
+                    Exams
+                  </span>
+                </Nav.Link>
+              </Col>
+              <Col></Col>
+            </Row>
 
-            <Col
-              style={{
-                background: "#EEEEEE",
-                // height: "90vh",
-                padding: "0em 2em"
-              }}
-            >
-              <Tab.Container defaultActiveKey="first">
-                <Row style={{ margin: "2em 0em" }}>
+            <Tab.Content>
+              <Tab.Pane eventKey="first">
+                <Row style={{ height: "90vh" }}>
                   <Col
-                    lg="1.5"
+                    lg="3"
                     style={{
-                      background: "white",
-                      borderRadius: "2em",
-                      padding: "0.3em 1.5em",
-                      letterSpacing: "0.2em"
+                      padding: "0em 2em",
+                      background: "#EEE"
                     }}
                   >
-                    <Nav.Link eventKey="first">
-                      <span style={{ fontSize: "larger" }}>Q&A </span>
-                    </Nav.Link>
+                    <LeftPanelQuestion
+                      listOfSubject={this.state.listOfSubject}
+                      listOfChapter={this.state.listOfChapter}
+                      listOfTopic={this.state.listOfTopic}
+                      listOfSubTopic={this.state.listOfSubTopic}
+                      handleSubjectChange={this.handleSubjectChange}
+                      handleChapterChange={this.handleChapterChange}
+                      handleTopicChange={this.handleTopicChange}
+                      handleSubTopicChange={this.handleSubTopicChange}
+                      selectedSubjectID={this.state.selectedSubjectID}
+                      selectedChapterID={this.state.selectedChapterID}
+                      selectedTopicID={this.state.selectedTopicID}
+                      selectedSubTopicID={this.state.selectedSubTopicID}
+                      tags={this.state.tags}
+                      handleChangeTags={this.handleChangeTags}
+                      difficulty={this.state.difficulty}
+                      handleDifficultyRadio={this.handleDifficultyRadio}
+                    />
                   </Col>
+
                   <Col
                     style={{
-                      padding: "0.3em 1.5em"
+                      background: "#EEEEEE",
+                      // height: "90vh",
+                      padding: "0em 2em"
                     }}
                   >
-                    <Nav.Link eventKey="second">
-                      <span style={{ fontSize: "larger", color: "dimgrey" }}>
-                        Exams
-                      </span>
-                    </Nav.Link>
-                  </Col>
-                </Row>
-                <Tab.Content>
-                  <Tab.Pane eventKey="first">
                     <Row style={{ margin: "2em 0em" }}>
                       <Col lg="1.5">
                         {/* <BrowserRouter> */}
@@ -626,12 +719,12 @@ class Dashboard extends Component {
                         </Col>
                       </Row>
                     </div>
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="second">asdasdasd</Tab.Pane>
-                </Tab.Content>
-              </Tab.Container>
-            </Col>
-          </Row>
+                  </Col>
+                </Row>
+              </Tab.Pane>
+              <Tab.Pane eventKey="second">asdasdasd</Tab.Pane>
+            </Tab.Content>
+          </Tab.Container>
         </Container>
       </React.Fragment>
     );

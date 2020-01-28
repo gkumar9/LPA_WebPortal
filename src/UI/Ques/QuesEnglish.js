@@ -123,8 +123,17 @@ class QuesEnglish extends Component {
           console.log(e);
         });
     } else {
-      console.log("(English)subjectid is blank. API not called. checksubject list");
-      this.setState({ listOfChapter: [], selectedChapterID: "" });
+      console.log(
+        "(English)subjectid is blank. API not called. checksubject list"
+      );
+      this.setState({
+        listOfChapter: [],
+        selectedChapterID: "",
+        listOfTopic: [],
+        selectedTopicID: "",
+        listOfSubTopic: [],
+        selectedSubTopicID: ""
+      });
     }
   };
   callApiForTopic = () => {
@@ -160,8 +169,15 @@ class QuesEnglish extends Component {
           console.log(e);
         });
     } else {
-      console.log("(English)chapterid is blank.API not called. checkchapter list");
-      this.setState({ listOfTopic: [], selectedTopicID: "" });
+      console.log(
+        "(English)chapterid is blank.API not called. checkchapter list"
+      );
+      this.setState({
+        listOfTopic: [],
+        selectedTopicID: "",
+        listOfSubTopic: [],
+        selectedSubTopicID: ""
+      });
     }
   };
   callApiForSubTopic = () => {

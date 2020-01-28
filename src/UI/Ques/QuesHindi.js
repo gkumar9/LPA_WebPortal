@@ -6,7 +6,7 @@ import axios from "axios";
 import URL from "../../Assets/url";
 import TagsInput from "react-tagsinput";
 import Difficulty from "./difficulty.js";
-import "react-tagsinput/react-tagsinput.css"; // If using WebPack and style-loader.
+import "react-tagsinput/react-tagsinput.css";
 import "./index.css";
 
 class QuesHindi extends Component {
@@ -122,8 +122,17 @@ class QuesHindi extends Component {
           console.log(e);
         });
     } else {
-      console.log("(Hindi)subjectid is blank. API not called. checksubject list");
-      this.setState({ listOfChapter: [], selectedChapterID: "" });
+      console.log(
+        "(Hindi)subjectid is blank. API not called. checksubject list"
+      );
+      this.setState({
+        listOfChapter: [],
+        selectedChapterID: "",
+        listOfTopic: [],
+        selectedTopicID: "",
+        listOfSubTopic: [],
+        selectedSubTopicID: ""
+      });
     }
   };
   callApiForTopic = () => {
@@ -159,8 +168,15 @@ class QuesHindi extends Component {
           console.log(e);
         });
     } else {
-      console.log("(Hindi)chapterid is blank.API not called. checkchapter list");
-      this.setState({ listOfTopic: [], selectedTopicID: "" });
+      console.log(
+        "(Hindi)chapterid is blank.API not called. checkchapter list"
+      );
+      this.setState({
+        listOfTopic: [],
+        selectedTopicID: "",
+        listOfSubTopic: [],
+        selectedSubTopicID: ""
+      });
     }
   };
   callApiForSubTopic = () => {
