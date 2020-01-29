@@ -62,7 +62,7 @@ class Ques extends Component {
         </div>
         <Container
           fluid
-          style={{ width: "auto", background: "#EEEEEE", padding: "0.5em 3em" }}
+          style={{ width: "auto", background: "#EEEEEE", padding: "0.5em 1.5em" }}
         >
           <Tabs
             className="myClass "

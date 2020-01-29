@@ -30,9 +30,61 @@ class Exam extends Component {
       hour: "",
       minute: "",
       startDate: new Date(),
-      endDate: new Date()
+      endDate: new Date(),
+      testnameEnglish: "",
+      testnameHindi: "",
+      testInstructionEnglish: "",
+      testInstructionHindi: "",
+      listOfSectionEnglish: [
+        {
+          marksPerQuestion: 0,
+          negativeMarksPerQuestion: 0,
+          questions: [0],
+
+          versions: [
+            {
+              content: "string",
+              language: "string",
+              name: "string",
+              sectionName: "string"
+            }
+          ]
+        }
+      ],
+      listOfSectionHindi: [
+        {
+          marksPerQuestion: 0,
+          negativeMarksPerQuestion: 0,
+          questions: [0],
+
+          versions: [
+            {
+              content: "string",
+              language: "string",
+              name: "Section A",
+              sectionName: "string"
+            }
+          ]
+        }
+      ]
     };
   }
+  addSectionEnglish = () => {
+    let tempsectionlist = this.state.listOfSectionEnglish;
+    tempsectionlist.push({});
+  };
+  handleEnglishTestNameChange = e => {
+    this.setState({ testnameEnglish: e.target.value });
+  };
+  handleHindiTestNameChange = e => {
+    this.setState({ testnameHindi: e.target.value });
+  };
+  handleEnglishInstructionChange = data => {
+    this.setState({ testInstructionEnglish: data });
+  };
+  handleHindiInstructionChange = data => {
+    this.setState({ testInstructionHindi: data });
+  };
   onTimeChange = option => {
     this.setState({ hour: option.hour, minute: option.minute });
   };
@@ -265,62 +317,88 @@ class Exam extends Component {
         </div>
         <Container
           fluid
-          style={{ width: "auto", background: "#EEEEEE", padding: "0.5em 3em" }}
+          style={{
+            width: "auto",
+            background: "#EEEEEE",
+            padding: "0.5em 1.5em"
+          }}
         >
-          <Row>
-            <Col
-              lg="3"
-              style={{
-                padding: "0em 2em",
-                background: "#EEE"
-              }}
-            >
-              <div style={{ padding: "2.3em 0" }}>
-                <LeftPanelexam
-                  startDate={this.state.startDate}
-                  endDate={this.state.endDate}
-                  handleEndDateChange={this.handleEndDateChange}
-                  handleStartDateChange={this.handleStartDateChange}
-                  hour={this.state.hour}
-                  minute={this.state.minute}
-                  onTimeChange={this.onTimeChange}
-                  listOfSubject={this.state.listOfSubject}
-                  listOfChapter={this.state.listOfChapter}
-                  listOfExam={this.state.listOfExam}
-                  handleSubjectChange={this.handleSubjectChange}
-                  handleChapterChange={this.handleChapterChange}
-                  handleExamChange={this.handleExamChange}
-                  selectedSubjectID={this.state.selectedSubjectID}
-                  selectedChapterID={this.state.selectedChapterID}
-                  selectedExamID={this.state.selectedExamID}
-                  listOfType={this.state.listOfType}
-                  selectedType={this.state.selectedType}
-                  handleTypeChange={this.handleTypeChange}
-                  handleTypeYearChange={this.handleTypeYearChange}
-                  selectedTypeYear={this.state.selectedTypeYear}
+          <div style={{ padding: "20px 0", margin: "0 1em" }}>
+            <Row>
+              <Col
+                lg="3"
+                style={{
+                  padding: "0em 1em"
+                  // background: "#EEE"
+                }}
+              >
+                <div >
+                  <LeftPanelexam
+                    startDate={this.state.startDate}
+                    endDate={this.state.endDate}
+                    handleEndDateChange={this.handleEndDateChange}
+                    handleStartDateChange={this.handleStartDateChange}
+                    hour={this.state.hour}
+                    minute={this.state.minute}
+                    onTimeChange={this.onTimeChange}
+                    listOfSubject={this.state.listOfSubject}
+                    listOfChapter={this.state.listOfChapter}
+                    listOfExam={this.state.listOfExam}
+                    handleSubjectChange={this.handleSubjectChange}
+                    handleChapterChange={this.handleChapterChange}
+                    handleExamChange={this.handleExamChange}
+                    selectedSubjectID={this.state.selectedSubjectID}
+                    selectedChapterID={this.state.selectedChapterID}
+                    selectedExamID={this.state.selectedExamID}
+                    listOfType={this.state.listOfType}
+                    selectedType={this.state.selectedType}
+                    handleTypeChange={this.handleTypeChange}
+                    handleTypeYearChange={this.handleTypeYearChange}
+                    selectedTypeYear={this.state.selectedTypeYear}
+                  />
+                </div>
+              </Col>
+              <Col lg="1"></Col>
+              <Col
+                style={{
+                  background: "#EEEEEE"
+                  // height: "90vh",
+                  // padding: "0em 1em"
+                }}
+              >
+                <ExamEnglishTab
+                  testnameEnglish={this.state.testnameEnglish}
+                  testInstructionEnglish={this.state.testInstructionEnglish}
+                  handleEnglishInstructionChange={
+                    this.handleEnglishInstructionChange
+                  }
+                  handleEnglishTestNameChange={this.handleEnglishTestNameChange}
+                  listOfSectionEnglish={this.state.listOfSectionEnglish}
                 />
-              </div>
-            </Col>
-            <Col
-              style={{
-                background: "#EEEEEE",
-                // height: "90vh",
-                padding: "0em 2em"
-              }}
-            >
-              <Tabs
+                {/* <Tabs
                 className="myClass "
                 variant="pill"
                 activeKey={this.state.activetab}
                 onSelect={this.handleSelect}
               >
                 <Tab eventKey={1} title="English">
-                  <ExamEnglishTab />
+                  <ExamEnglishTab
+                    testnameEnglish={this.state.testnameEnglish}
+                    testInstructionEnglish={this.state.testInstructionEnglish}
+                    handleEnglishInstructionChange={
+                      this.handleEnglishInstructionChange
+                    }
+                    handleEnglishTestNameChange={
+                      this.handleEnglishTestNameChange
+                    }
+                    listOfSectionEnglish={this.state.listOfSectionEnglish}
+                  />
                 </Tab>
                 <Tab eventKey={2} title="Hindi"></Tab>
-              </Tabs>
-            </Col>
-          </Row>
+              </Tabs> */}
+              </Col><Col lg="1"></Col>
+            </Row>
+          </div>
         </Container>
       </React.Fragment>
     );

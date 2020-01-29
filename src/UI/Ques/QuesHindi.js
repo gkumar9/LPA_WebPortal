@@ -347,8 +347,8 @@ class QuesHindi extends Component {
   };
   render() {
     return (
-      <div style={{ padding: "20px 0" }}>
-        <Row style={{ height: "auto" }}>
+      <div style={{ padding: "20px 0",margin:'0 1em' }}>
+        <Row >
           <Col lg="3">
             <div
               style={{
@@ -393,6 +393,7 @@ class QuesHindi extends Component {
               />
             </div>
           </Col>
+          <Col lg="1"></Col>
         </Row>
       </div>
     );

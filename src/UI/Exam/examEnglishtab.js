@@ -1,95 +1,171 @@
 import React, { Component } from "react";
-import { Button, Row, Col, Form } from "react-bootstrap";
+import { Button, Row, Col, Form, Container } from "react-bootstrap";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 class ExamEnglihPanel extends Component {
   render() {
     return (
-      <div style={{ padding: "20px 10px" }}>
+      <div>
         <Row style={{ height: "auto" }}>
-          <Form.Control
-            placeholder="Test name"
-            style={{ borderRadius: "0", width: "30%" }}
-          />
-          <div style={{ margin: "1.5em 0", width: "100%" }}>
-            <CKEditor
-              editor={ClassicEditor}
-              config={{
-                placeholder: "Test description and instruction"
+          <Container fluid style={{ padding: "0" }}>
+            <Form.Control
+              style={{
+                fontWeight: "600",
+                margin: " 0 0.5em"
               }}
-              // data={item.content}
-              onChange={(event, editor) => {
-                const data = editor.getData();
-                //   this.props.handleOptioncontentchange(index, data);
-              }}
+              plaintext
+              readOnly
+              defaultValue="Name"
             />
+            <Row style={{ margin: "0em 0" }}>
+              <Col lg="4" style={{ padding: "0" }}>
+                <Form.Control
+                  placeholder="Test name in English"
+                  style={{ borderRadius: "0" }}
+                />
+              </Col>
+              <Col></Col>
+              <Col lg="4" style={{ padding: "0" }}>
+                <Form.Control
+                  placeholder="Test name in Hindi"
+                  style={{ borderRadius: "0", float: "right" }}
+                />
+              </Col>
+            </Row>
+          </Container>
+          <div style={{ margin: "1.7em 0", width: "100%" }}>
+            <Form.Control
+              style={{
+                fontWeight: "600",
+                margin: " 0 0.5em"
+              }}
+              plaintext
+              readOnly
+              defaultValue="Description and Instruction"
+            />
+            <div style={{ margin: "0em 0em", width: "100%" }}>
+              <CKEditor
+                editor={ClassicEditor}
+                config={{
+                  placeholder: "Test description and instruction in English"
+                }}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                }}
+              />
+            </div>
+            <div style={{ margin: "1em 0em", width: "100%" }}>
+              <CKEditor
+                editor={ClassicEditor}
+                config={{
+                  placeholder: "Test description and instruction in Hindi"
+                }}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                }}
+              />
+            </div>
           </div>
+
           <div
             style={{
               border: "1px solid lightgrey",
               width: "100%",
-              padding: "0.5em",
-              margin: "0.5em 0"
+              padding: "1em",
+              margin: "0em 0"
             }}
           >
-            <Row>
-              <Col lg="2">
+            <Row noGutters={true} style={{ margin: "1em 0em" }}>
+              <Col lg="4">
                 <Form.Control
                   style={{
-                    fontWeight: "600",
-                    margin: " 0 0.5em"
-                    // textAlign: "center"
+                    fontWeight: "600"
+                    // margin: " 0 0.5em"
                   }}
                   plaintext
                   readOnly
                   defaultValue="Section A"
                 />
-
-                {/* <span
-                              style={{
-                                fontWeight: "600",
-                                margin: "0.5em",
-                                textAlign: "center"
-                              }}
-                            >
-                              Section A
-                            </span> */}
               </Col>
-              <Col lg="3">
+              <Col>
+                <Button
+                  style={{ float: "right", color: "grey" }}
+                  variant="link"
+                  // onClick={this.props.deleteOption.bind(this, index)}
+                >
+                  X Delete
+                </Button>
+              </Col>
+            </Row>
+            <Row noGutters={true} style={{ margin: "1em 0em" }}>
+              {/* <Col lg="2">
                 <Form.Control
-                  placeholder="Section name"
+                  style={{
+                    fontWeight: "600",
+                    margin: " 0 0em"
+                  }}
+                  plaintext
+                  readOnly
+                  defaultValue="Section A"
+                />
+              </Col> */}
+              <Col lg="5">
+                <Form.Control
+                  placeholder="Section name in English"
                   style={{ borderRadius: "0" }}
                 />
               </Col>
-              <Col>
+              <Col lg="2"></Col>
+              <Col lg="5">
+                <Form.Control
+                  placeholder="Section name in Hindi"
+                  style={{ borderRadius: "0" }}
+                />
+              </Col>
+            </Row>
+            <Row noGutters={true} style={{ margin: "1em 0em" }}>
+              {/* <Col lg="2"></Col> */}
+              <Col lg="5">
                 <Form.Control
                   placeholder="Marks/ ques"
                   style={{ borderRadius: "0" }}
                 />
               </Col>
-              <Col>
+              <Col lg="2"></Col>
+              <Col lg="5">
                 <Form.Control
-                  placeholder="-ve/ wrong op"
+                  placeholder="-ve/ wrong ques"
                   style={{ borderRadius: "0" }}
                 />
               </Col>
-              <Col lg="3"></Col>
             </Row>
-            <div style={{ margin: "1.5em 0", width: "100%" }}>
-              <CKEditor
-                editor={ClassicEditor}
-                config={{
-                  placeholder: "Section description and instruction"
-                }}
-                // data={item.content}
-                onChange={(event, editor) => {
-                  const data = editor.getData();
-                  //   this.props.handleOptioncontentchange(index, data);
-                }}
-              />
+            <div style={{ margin: "1.7em 0", width: "100%" }}>
+              <div style={{ margin: "0em 0em", width: "100%" }}>
+                <CKEditor
+                  editor={ClassicEditor}
+                  config={{
+                    placeholder:
+                      "Section description and instruction in English"
+                  }}
+                  onChange={(event, editor) => {
+                    const data = editor.getData();
+                  }}
+                />
+              </div>
+              <div style={{ margin: "1em 0em", width: "100%" }}>
+                <CKEditor
+                  editor={ClassicEditor}
+                  config={{
+                    placeholder: "Section description and instruction in Hindi"
+                  }}
+                  onChange={(event, editor) => {
+                    const data = editor.getData();
+                  }}
+                />
+              </div>
             </div>
             <Row>
-              <Col lg="2"></Col>
+              {/* <Col lg="2"></Col> */}
               <Col lg="1">
                 <Form.Control
                   style={{
@@ -111,7 +187,7 @@ class ExamEnglihPanel extends Component {
               </Col>
             </Row>
             <Row style={{ marginTop: "0.5em" }}>
-              <Col lg="2"></Col>
+              {/* <Col lg="2"></Col> */}
               <Col lg="1">
                 <Form.Control
                   style={{
@@ -142,7 +218,7 @@ class ExamEnglihPanel extends Component {
               </Col>
             </Row>
             <Row style={{ marginTop: "0.5em" }}>
-              <Col lg="3"></Col>
+              <Col lg="1"></Col>
               <Col>
                 <Button
                   onClick={this.props.addoptionfn}
@@ -162,9 +238,9 @@ class ExamEnglihPanel extends Component {
               </Col>
             </Row>
           </div>
-          <Row>
-            {/* <Col lg="10"> </Col> */}
-            <Col style={{ textAlign: "right" }}>
+          <Row noGutters={true} style={{ margin: "1em 0em" }}>
+            <Col lg="10"> </Col>
+            <Col >
               <Button
                 // onClick={this.props.addoptionfn}
                 varirant="info"
@@ -174,7 +250,7 @@ class ExamEnglihPanel extends Component {
                   background: "#FF8976",
                   borderColor: "#FF8976",
                   borderRadius: "0",
-                  float: "right"
+                  // float: "right"
                 }}
               >
                 {" "}
