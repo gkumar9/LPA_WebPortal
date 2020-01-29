@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Button, Row, Col } from "react-bootstrap";
+import { Container, Button, Row, Col, Tabs, Tab } from "react-bootstrap";
 import Header from "../Header/index";
 import Back from "@material-ui/icons/ArrowBack";
 import { styled } from "@material-ui/styles";
@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import LeftPanelexam from "./leftpanelexam.js";
 import axios from "axios";
 import URL from "../../Assets/url";
-
+import ExamEnglishTab from "./examEnglishtab.js";
 const MyBack = styled(Back)({
   color: "dimgrey",
   marginTop: "-0.2em",
@@ -267,7 +267,7 @@ class Exam extends Component {
           fluid
           style={{ width: "auto", background: "#EEEEEE", padding: "0.5em 3em" }}
         >
-          <Row style={{ height: "90vh" }}>
+          <Row>
             <Col
               lg="3"
               style={{
@@ -275,29 +275,31 @@ class Exam extends Component {
                 background: "#EEE"
               }}
             >
-              <LeftPanelexam
-                startDate={this.state.startDate}
-                endDate={this.state.endDate}
-                handleEndDateChange={this.handleEndDateChange}
-                handleStartDateChange={this.handleStartDateChange}
-                hour={this.state.hour}
-                minute={this.state.minute}
-                onTimeChange={this.onTimeChange}
-                listOfSubject={this.state.listOfSubject}
-                listOfChapter={this.state.listOfChapter}
-                listOfExam={this.state.listOfExam}
-                handleSubjectChange={this.handleSubjectChange}
-                handleChapterChange={this.handleChapterChange}
-                handleExamChange={this.handleExamChange}
-                selectedSubjectID={this.state.selectedSubjectID}
-                selectedChapterID={this.state.selectedChapterID}
-                selectedExamID={this.state.selectedExamID}
-                listOfType={this.state.listOfType}
-                selectedType={this.state.selectedType}
-                handleTypeChange={this.handleTypeChange}
-                handleTypeYearChange={this.handleTypeYearChange}
-                selectedTypeYear={this.state.selectedTypeYear}
-              />
+              <div style={{ padding: "2.3em 0" }}>
+                <LeftPanelexam
+                  startDate={this.state.startDate}
+                  endDate={this.state.endDate}
+                  handleEndDateChange={this.handleEndDateChange}
+                  handleStartDateChange={this.handleStartDateChange}
+                  hour={this.state.hour}
+                  minute={this.state.minute}
+                  onTimeChange={this.onTimeChange}
+                  listOfSubject={this.state.listOfSubject}
+                  listOfChapter={this.state.listOfChapter}
+                  listOfExam={this.state.listOfExam}
+                  handleSubjectChange={this.handleSubjectChange}
+                  handleChapterChange={this.handleChapterChange}
+                  handleExamChange={this.handleExamChange}
+                  selectedSubjectID={this.state.selectedSubjectID}
+                  selectedChapterID={this.state.selectedChapterID}
+                  selectedExamID={this.state.selectedExamID}
+                  listOfType={this.state.listOfType}
+                  selectedType={this.state.selectedType}
+                  handleTypeChange={this.handleTypeChange}
+                  handleTypeYearChange={this.handleTypeYearChange}
+                  selectedTypeYear={this.state.selectedTypeYear}
+                />
+              </div>
             </Col>
             <Col
               style={{
@@ -305,7 +307,19 @@ class Exam extends Component {
                 // height: "90vh",
                 padding: "0em 2em"
               }}
-            ></Col>
+            >
+              <Tabs
+                className="myClass "
+                variant="pill"
+                activeKey={this.state.activetab}
+                onSelect={this.handleSelect}
+              >
+                <Tab eventKey={1} title="English">
+                  <ExamEnglishTab />
+                </Tab>
+                <Tab eventKey={2} title="Hindi"></Tab>
+              </Tabs>
+            </Col>
           </Row>
         </Container>
       </React.Fragment>

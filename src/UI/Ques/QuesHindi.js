@@ -378,7 +378,7 @@ class QuesHindi extends Component {
           <Col lg="1"></Col>
           <Col>
             <div>
-              <RightpanelEnglish
+              <RightpanelHindi
                 handleQuestionEditor={this.handleQuestionEditor}
                 questionData={this.state.questionData}
                 handleExplanationEditor={this.handleExplanationEditor}
@@ -398,7 +398,7 @@ class QuesHindi extends Component {
     );
   }
 }
-class RightpanelEnglish extends Component {
+class RightpanelHindi extends Component {
   render() {
     return (
       <Form>

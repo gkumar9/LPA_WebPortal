@@ -194,13 +194,15 @@ class LeftPanelExam extends Component {
           >
             Total time for test (Hr Min)
           </Form.Label>
-          <TimePickerWrapper
+          <Form.Control></Form.Control>
+          {/* <TimePickerWrapper
+          
             timeFormat="HH:MM"
             // timeMode="12"
             onTimeChange={this.props.onTimeChange}
             withoutIcon
             time={`${this.props.hour}:${this.props.minute}`}
-          />
+          /> */}
         </Form.Group>
       </Form>
     );
