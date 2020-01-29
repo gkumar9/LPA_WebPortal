@@ -3,6 +3,7 @@
 import Login from "./UI/Login/index.js";
 import Ques from "./UI/Ques/index.js";
 import Dashboard from "./UI/Dashboard/index.js";
+import Exam from './UI/Exam/index.js';
 import React from "react";
 import { HashRouter, Route } from "react-router-dom";
 
@@ -32,6 +33,12 @@ function App() {
         path="/addques"
         render={props => {
           return <Ques {...props} />;
+        }}
+      />
+      <Route
+        path="/addexam"
+        render={props => {
+          return <Exam {...props} />;
         }}
       />
     </HashRouter>
