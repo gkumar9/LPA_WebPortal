@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Button, Row, Col, Tabs, Tab } from "react-bootstrap";
+import { Container, Button, Row, Col } from "react-bootstrap";
 import Header from "../Header/index";
 import Back from "@material-ui/icons/ArrowBack";
 import { styled } from "@material-ui/styles";
@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import LeftPanelexam from "./leftpanelexam.js";
 import axios from "axios";
 import URL from "../../Assets/url";
-import ExamEnglishTab from "./examEnglishtab.js";
+import RightExamPanel from "./rightpanelexam.js";
 const MyBack = styled(Back)({
   color: "dimgrey",
   marginTop: "-0.2em",
@@ -35,7 +35,7 @@ class Exam extends Component {
       testnameHindi: "",
       testInstructionEnglish: "",
       testInstructionHindi: "",
-      listOfSectionEnglish: [
+      listOfSection: [
         {
           marksPerQuestion: 0,
           negativeMarksPerQuestion: 0,
@@ -43,35 +43,85 @@ class Exam extends Component {
 
           versions: [
             {
-              content: "string",
-              language: "string",
+              content: "stringEng",
+              language: "ENGLISH",
               name: "string",
-              sectionName: "string"
-            }
-          ]
-        }
-      ],
-      listOfSectionHindi: [
-        {
-          marksPerQuestion: 0,
-          negativeMarksPerQuestion: 0,
-          questions: [0],
-
-          versions: [
+              sectionName: "stringEnglish"
+            },
             {
-              content: "string",
-              language: "string",
-              name: "Section A",
-              sectionName: "string"
+              content: "stringHin",
+              language: "HINDI",
+              name: "string",
+              sectionName: "stringHindi"
             }
           ]
         }
       ]
     };
   }
-  addSectionEnglish = () => {
-    let tempsectionlist = this.state.listOfSectionEnglish;
-    tempsectionlist.push({});
+  addSectionQuestions = index => {
+    let tempsectionlist = this.state.listOfSection;
+    tempsectionlist[index].questions.push("");
+    this.setState({ listOfSection: tempsectionlist });
+  };
+  deleteSectionQuestion = index => {
+    let tempsectionlist = this.state.listOfSection;
+    tempsectionlist[index].questions.pop();
+    this.setState({ listOfSection: tempsectionlist });
+  };
+  handleSectionDescriptionChange = (index, language, data) => {
+    let tempsectionlist = this.state.listOfSection;
+    tempsectionlist[index].versions.filter(
+      item => item.language === language
+    )[0].content = data;
+
+    this.setState({ listOfSection: tempsectionlist });
+  };
+  handleNegativeMarksPerQuesChange = (index, e) => {
+    // console.log(index,e)
+    let tempsectionlist = this.state.listOfSection;
+    tempsectionlist[index].negativeMarksPerQuestion = e.target.value;
+    this.setState({ listOfSection: tempsectionlist });
+  };
+  handleMarksperQuesChange = (index, e) => {
+    let tempsectionlist = this.state.listOfSection;
+    tempsectionlist[index].marksPerQuestion = e.target.value;
+    this.setState({ listOfSection: tempsectionlist });
+  };
+  addSection = () => {
+    let tempsectionlist = this.state.listOfSection;
+    tempsectionlist.push({
+      marksPerQuestion: 0,
+      negativeMarksPerQuestion: 0,
+      questions: [0],
+
+      versions: [
+        {
+          content: "stringEng",
+          language: "ENGLISH",
+          name: "string",
+          sectionName: "stringEnglish"
+        },
+        {
+          content: "stringHin",
+          language: "HINDI",
+          name: "string",
+          sectionName: "stringHindi"
+        }
+      ]
+    });
+  };
+  deleteSection = () => {
+    let tempsectionlist = this.state.listOfSection;
+    tempsectionlist.pop();
+    this.setState({ listOfSection: tempsectionlist });
+  };
+  handleSectionnameChange = (index, language, e) => {
+    let tempsectionlist = this.state.listOfSection;
+    tempsectionlist[index].versions.filter(
+      item => item.language === language
+    )[0].sectionName = e.target.value;
+    this.setState({ listOfSection: tempsectionlist });
   };
   handleEnglishTestNameChange = e => {
     this.setState({ testnameEnglish: e.target.value });
@@ -275,7 +325,7 @@ class Exam extends Component {
         ].subjectSection.sectionId
       },
       () => {
-        this.callApiForTopic();
+        
       }
     );
   };
@@ -332,7 +382,7 @@ class Exam extends Component {
                   // background: "#EEE"
                 }}
               >
-                <div >
+                <div>
                   <LeftPanelexam
                     startDate={this.state.startDate}
                     endDate={this.state.endDate}
@@ -362,41 +412,36 @@ class Exam extends Component {
               <Col
                 style={{
                   background: "#EEEEEE"
-                  // height: "90vh",
-                  // padding: "0em 1em"
                 }}
               >
-                <ExamEnglishTab
+                <RightExamPanel
                   testnameEnglish={this.state.testnameEnglish}
                   testInstructionEnglish={this.state.testInstructionEnglish}
+                  testInstructionHindi={this.state.testInstructionHindi}
+                  handleHindiInstructionChange={
+                    this.handleHindiInstructionChange
+                  }
                   handleEnglishInstructionChange={
                     this.handleEnglishInstructionChange
                   }
+                  handleHindiTestNameChange={this.handleHindiTestNameChange}
                   handleEnglishTestNameChange={this.handleEnglishTestNameChange}
-                  listOfSectionEnglish={this.state.listOfSectionEnglish}
+                  listOfSection={this.state.listOfSection}
+                  deleteSection={this.deleteSection}
+                  handleSectionnameChange={this.handleSectionnameChange}
+                  handleNegativeMarksPerQuesChange={
+                    this.handleNegativeMarksPerQuesChange
+                  }
+                  handleMarksperQuesChange={this.handleMarksperQuesChange}
+                  handleSectionDescriptionChange={
+                    this.handleSectionDescriptionChange
+                  }
+                  addSectionQuestions={this.addSectionQuestions}
+                  deleteSectionQuestion={this.deleteSectionQuestion}
+                  addSection={this.addSection}
                 />
-                {/* <Tabs
-                className="myClass "
-                variant="pill"
-                activeKey={this.state.activetab}
-                onSelect={this.handleSelect}
-              >
-                <Tab eventKey={1} title="English">
-                  <ExamEnglishTab
-                    testnameEnglish={this.state.testnameEnglish}
-                    testInstructionEnglish={this.state.testInstructionEnglish}
-                    handleEnglishInstructionChange={
-                      this.handleEnglishInstructionChange
-                    }
-                    handleEnglishTestNameChange={
-                      this.handleEnglishTestNameChange
-                    }
-                    listOfSectionEnglish={this.state.listOfSectionEnglish}
-                  />
-                </Tab>
-                <Tab eventKey={2} title="Hindi"></Tab>
-              </Tabs> */}
-              </Col><Col lg="1"></Col>
+              </Col>
+              <Col lg="1"></Col>
             </Row>
           </div>
         </Container>
