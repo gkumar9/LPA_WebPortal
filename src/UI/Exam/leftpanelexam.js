@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form } from "react-bootstrap";
+import { Form, Row, Col } from "react-bootstrap";
 import TimePickerWrapper from "react-times";
 import "react-times/css/material/default.css";
 import "./index.css";
@@ -192,10 +192,37 @@ class LeftPanelExam extends Component {
               fontWeight: "600"
             }}
           >
-            Total time for test (Hr Min)
+            Total time for test (Hr : Min)
           </Form.Label>
-          <Form.Control></Form.Control>
-          {/* <TimePickerWrapper
+          <Row noGutters={true}>
+            <Col sm="5">
+              <Form.Control
+              type="number"
+                placeholder="Hours"
+                value={this.props.hour}
+                onChange={this.props.onHourChange.bind(this)}
+              ></Form.Control>
+            </Col>
+            <Col sm="2">
+              <Form.Control
+                style={{
+                  textAlign: "center",
+                  fontWeight: "600",
+                  fontSize: "1em"
+                }}
+                plaintext
+                readOnly
+                defaultValue=":"
+              />
+            </Col>
+            <Col sm="5">
+              <Form.Control
+              type="number"
+                placeholder="Minutes"
+                value={this.props.minute}
+                onChange={this.props.onMinuteChange.bind(this)}
+              ></Form.Control>
+              {/* <TimePickerWrapper
           
             timeFormat="HH:MM"
             // timeMode="12"
@@ -203,6 +230,8 @@ class LeftPanelExam extends Component {
             withoutIcon
             time={`${this.props.hour}:${this.props.minute}`}
           /> */}
+            </Col>
+          </Row>
         </Form.Group>
       </Form>
     );

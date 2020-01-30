@@ -29,7 +29,8 @@ class RightExamPanel extends Component {
               <Col></Col>
               <Col lg="4" style={{ padding: "0" }}>
                 <Form.Control
-                  value={this.props.handleHindiTestNameChange}
+                  value={this.props.testnameHindi}
+                  onChange={this.props.handleHindiTestNameChange}
                   placeholder="Test name in Hindi"
                   style={{ borderRadius: "0", float: "right" }}
                 />
@@ -83,7 +84,7 @@ class RightExamPanel extends Component {
                     border: "1px solid lightgrey",
                     width: "100%",
                     padding: "1em",
-                    margin: "0em 0"
+                    margin: "1em 0"
                   }}
                 >
                   <Row noGutters={true} style={{ margin: "1em 0em" }}>
@@ -149,6 +150,7 @@ class RightExamPanel extends Component {
                     {/* <Col lg="2"></Col> */}
                     <Col lg="5">
                       <Form.Control
+                        type="number"
                         value={item.marksPerQuestion}
                         onChange={this.props.handleMarksperQuesChange.bind(
                           this,
@@ -161,6 +163,7 @@ class RightExamPanel extends Component {
                     <Col lg="2"></Col>
                     <Col lg="5">
                       <Form.Control
+                        type="number"
                         value={item.negativeMarksPerQuestion}
                         onChange={this.props.handleNegativeMarksPerQuesChange.bind(
                           this,
@@ -235,9 +238,15 @@ class RightExamPanel extends Component {
                               defaultValue={`Q ${indexquestion + 1}`}
                             />
                           </Col>
-                          <Col lg="3" style={{ paddingLeft: "10px" }}>
+                          <Col lg="3" style={{}}>
                             <Form.Control
+                              type="number"
                               value={itemquestion}
+                              onChange={this.props.handlSectionQuestionValueChange.bind(
+                                this,
+                                index,
+                                indexquestion
+                              )}
                               placeholder="Question ID#"
                               style={{ borderRadius: "0" }}
                             />
@@ -285,26 +294,29 @@ class RightExamPanel extends Component {
                 </div>
               );
             })}
-          <Row noGutters={true} style={{ margin: "1em 0em" }}>
-            <Col lg="10"> </Col>
-            <Col>
-              <Button
-                onClick={this.props.addSection}
-                varirant="info"
-                style={{
-                  fontSize: "0.8em",
-                  fontWeight: "700",
-                  background: "#FF8976",
-                  borderColor: "#FF8976",
-                  borderRadius: "0"
-                  // float: "right"
-                }}
-              >
-                {" "}
-                + Add Section
-              </Button>
-            </Col>
-          </Row>
+
+          <Container fluid style={{ paddingRight: "0" }}>
+            <Row noGutters={true} style={{ margin: "1em 0em" }}>
+              <Col lg="10"> </Col>
+              <Col>
+                <Button
+                  onClick={this.props.addSection}
+                  varirant="info"
+                  style={{
+                    fontSize: "0.8em",
+                    fontWeight: "700",
+                    background: "#FF8976",
+                    borderColor: "#FF8976",
+                    borderRadius: "0",
+                    float: "right"
+                  }}
+                >
+                  {" "}
+                  + Add Section
+                </Button>
+              </Col>
+            </Row>
+          </Container>
         </Row>
       </div>
     );

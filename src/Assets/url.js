@@ -9,6 +9,7 @@ let URL = {
   searchquestion: Base_url + "/api/question/list/",
   searchexam: Base_url + "/api/test/list/",
   fetchExam: Base_url + "/api/exams/",
-  fetchSubjectForExam: Base_url + "/api/exam/subject/mapping/"
+  fetchSubjectForExam: Base_url + "/api/exam/subject/mapping/",
+  addnewExam:Base_url+'/api/add/new/test'
 };
 export default URL;

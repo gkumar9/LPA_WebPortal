@@ -347,8 +347,8 @@ class QuesHindi extends Component {
   };
   render() {
     return (
-      <div style={{ padding: "20px 0",margin:'0 1em' }}>
-        <Row >
+      <div style={{ padding: "20px 0", margin: "0 1em" }}>
+        <Row>
           <Col lg="3">
             <div
               style={{
@@ -485,11 +485,14 @@ class RightpanelHindi extends Component {
             style={{
               borderRadius: "0",
               background: "#3F5FBB",
-              borderColor: "#3F5FBB"
+              borderColor: "#3F5FBB",
+              padding: "0.6em 2.5em",
+              fontSize: "1.1em",
+              fontWeight: "600"
             }}
             onClick={this.props.saveHindidata}
           >
-            {this.props.questionId
+            {this.props.questionId === "" || this.props.questionId === undefined
               ? "Save & move to English section"
               : "Save & finish"}
           </Button>

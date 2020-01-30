@@ -8,6 +8,7 @@ import LeftPanelexam from "./leftpanelexam.js";
 import axios from "axios";
 import URL from "../../Assets/url";
 import RightExamPanel from "./rightpanelexam.js";
+
 const MyBack = styled(Back)({
   color: "dimgrey",
   marginTop: "-0.2em",
@@ -69,6 +70,11 @@ class Exam extends Component {
     tempsectionlist[index].questions.pop();
     this.setState({ listOfSection: tempsectionlist });
   };
+  handlSectionQuestionValueChange = (index, indexquestion, e) => {
+    let tempsectionlist = this.state.listOfSection;
+    tempsectionlist[index].questions[indexquestion] = e.target.value;
+    this.setState({ listOfSection: tempsectionlist });
+  };
   handleSectionDescriptionChange = (index, language, data) => {
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].versions.filter(
@@ -89,6 +95,7 @@ class Exam extends Component {
     this.setState({ listOfSection: tempsectionlist });
   };
   addSection = () => {
+    // console.log('add section');
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist.push({
       marksPerQuestion: 0,
@@ -110,6 +117,7 @@ class Exam extends Component {
         }
       ]
     });
+    this.setState({ listOfSection: tempsectionlist });
   };
   deleteSection = () => {
     let tempsectionlist = this.state.listOfSection;
@@ -135,8 +143,12 @@ class Exam extends Component {
   handleHindiInstructionChange = data => {
     this.setState({ testInstructionHindi: data });
   };
-  onTimeChange = option => {
-    this.setState({ hour: option.hour, minute: option.minute });
+  onHourChange = e => {
+    this.setState({ hour: e.target.value });
+  };
+
+  onMinuteChange = e => {
+    this.setState({ minute: e.target.value });
   };
   handleStartDateChange = date => {
     this.setState({
@@ -324,9 +336,7 @@ class Exam extends Component {
           e.target.options.selectedIndex
         ].subjectSection.sectionId
       },
-      () => {
-        
-      }
+      () => {}
     );
   };
   handleTypeChange = e => {
@@ -334,6 +344,49 @@ class Exam extends Component {
     this.setState({ selectedType: e.target.value }, () => {
       // this.componentDidMount();
     });
+  };
+  saveExamdata = () => {
+    axios({
+      method: "POST",
+      url: URL.addnewExam,
+      data: {
+        authToken: "string",
+        endDate: this.state.endDate.toISOString(),
+        examId: this.state.selectedExamID,
+        sectionId: this.state.selectedChapterID,
+        sections: this.state.listOfSection,
+        startDate: this.state.startDate.toISOString(),
+        subjectId: this.state.selectedSubjectId,
+        // "testId": 0,
+        testInstructions: [
+          {
+            instructions: this.state.testInstructionEnglish,
+            language: "ENGLISH",
+            name: this.state.testnameEnglish
+            // "testVersionId": 0
+          },
+          {
+            instructions: this.state.testInstructionHindi,
+            language: "HINDI",
+            name: this.state.testnameHindi
+          }
+        ],
+        time: (this.state.hour * 60 * 60 + this.state.minute * 60) * 1000,
+        type: this.state.selectedType,
+        year: this.state.selectedTypeYear
+      },
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        if (res.status === 200) {
+          console.log(res.data.data);
+        }
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
   render() {
     return (
@@ -390,7 +443,8 @@ class Exam extends Component {
                     handleStartDateChange={this.handleStartDateChange}
                     hour={this.state.hour}
                     minute={this.state.minute}
-                    onTimeChange={this.onTimeChange}
+                    onHourChange={this.onHourChange}
+                    onMinuteChange={this.onMinuteChange}
                     listOfSubject={this.state.listOfSubject}
                     listOfChapter={this.state.listOfChapter}
                     listOfExam={this.state.listOfExam}
@@ -439,7 +493,25 @@ class Exam extends Component {
                   addSectionQuestions={this.addSectionQuestions}
                   deleteSectionQuestion={this.deleteSectionQuestion}
                   addSection={this.addSection}
+                  handlSectionQuestionValueChange={
+                    this.handlSectionQuestionValueChange
+                  }
                 />
+                <div style={{ margin: "1em 0", textAlign: "center" }}>
+                  <Button
+                    style={{
+                      borderRadius: "0",
+                      background: "#3F5FBB",
+                      borderColor: "#3F5FBB",
+                      padding: "0.6em 2.5em",
+                      fontSize: "1.1em",
+                      fontWeight: "600"
+                    }}
+                    onClick={this.saveExamdata}
+                  >
+                    Save & see preview
+                  </Button>
+                </div>
               </Col>
               <Col lg="1"></Col>
             </Row>

@@ -341,7 +341,7 @@ class QuesEnglish extends Component {
   };
   render() {
     return (
-      <div style={{ padding: "20px 0",margin:'0 1em' }}>
+      <div style={{ padding: "20px 0", margin: "0 1em" }}>
         <Row style={{ height: "auto" }}>
           <Col lg="3">
             <div
@@ -395,6 +395,7 @@ class QuesEnglish extends Component {
 }
 class RightpanelEnglish extends Component {
   render() {
+    console.log(this.props.questionId);
     return (
       <Form>
         <QuestionComp
@@ -479,11 +480,16 @@ class RightpanelEnglish extends Component {
             style={{
               borderRadius: "0",
               background: "#3F5FBB",
-              borderColor: "#3F5FBB"
+              borderColor: "#3F5FBB",
+              padding: "0.6em 2.5em",
+              fontSize: "1.1em",
+              fontWeight: "600"
             }}
             onClick={this.props.saveEnglishdata}
           >
-            Save & move to Hindi section
+            {this.props.questionId === "" || this.props.questionId === undefined
+              ? "Save & move to Hindi section"
+              : "Save & finish"}
           </Button>
         </div>
       </Form>

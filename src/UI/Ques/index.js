@@ -19,8 +19,7 @@ class Ques extends Component {
     this.state = {
       questionId: "",
       activetab: "1"
-    }
-    
+    };
   }
   handleSelect = () => {
     let activetab = this.state.activetab;
@@ -30,10 +29,10 @@ class Ques extends Component {
       this.setState({ activetab: "1" });
     }
   };
-  handleChange=(data)=>{
-    console.log('Id from english response',data);
-    this.setState({questionId:data});
-  }
+  handleChange = data => {
+    console.log("Id from english response", data);
+    this.setState({ questionId: data });
+  };
   render() {
     return (
       <React.Fragment>
@@ -47,22 +46,30 @@ class Ques extends Component {
           }}
         >
           <Link to="/" target="_self">
-          <Button
-            variant="light"
-            style={{ background: "transparent", border: "transparent" }}
-            
-          >
-            <MyBack />
-            <span
-              style={{ marginLeft: "1em", fontSize: "1.2em", color: "dimgrey" }}
+            <Button
+              variant="light"
+              style={{ background: "transparent", border: "transparent" }}
             >
-              Back to dashboard
-            </span>
-          </Button></Link>
+              <MyBack />
+              <span
+                style={{
+                  marginLeft: "1em",
+                  fontSize: "1.2em",
+                  color: "dimgrey"
+                }}
+              >
+                Back to dashboard
+              </span>
+            </Button>
+          </Link>
         </div>
         <Container
           fluid
-          style={{ width: "auto", background: "#EEEEEE", padding: "0.5em 1.5em" }}
+          style={{
+            width: "auto",
+            background: "#EEEEEE",
+            padding: "0.5em 1.5em"
+          }}
         >
           <Tabs
             className="myClass "
@@ -71,11 +78,17 @@ class Ques extends Component {
             onSelect={this.handleSelect}
           >
             <Tab eventKey={1} title="English">
-              <EnglishHQuesTab questionId={this.state.questionId} handleChange={this.handleChange}  handleSelect={this.handleSelect}/>
+              <EnglishHQuesTab
+                questionId={this.state.questionId}
+                handleChange={this.handleChange}
+                handleSelect={this.handleSelect}
+              />
             </Tab>
             <Tab eventKey={2} title="Hindi">
-              <HindiQuesTab questionId={this.state.questionId} handleChange={this.handleChange} 
-               handleSelect={this.handleSelect}
+              <HindiQuesTab
+                questionId={this.state.questionId}
+                handleChange={this.handleChange}
+                handleSelect={this.handleSelect}
               />
             </Tab>
           </Tabs>
