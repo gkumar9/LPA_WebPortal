@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Form, Row, Col } from "react-bootstrap";
-import TimePickerWrapper from "react-times";
-import "react-times/css/material/default.css";
 import "./index.css";
 import DatePicker from "react-datepicker";
 

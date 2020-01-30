@@ -264,7 +264,7 @@ class Exam extends Component {
     if (this.state.selectedSubjectID !== "") {
       axios({
         method: "POST",
-        url: URL.fetchChapter + this.state.selectedSubjectID + "/" + "ENGLISH",
+        url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH" ,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"

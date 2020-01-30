@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, {  useState } from "react";
 import { Container, Row, Col, Tab, Nav } from "react-bootstrap";
 import Header from "../Header/index";
 import QATab from "./QAtab.js";
