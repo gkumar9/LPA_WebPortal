@@ -353,7 +353,7 @@ class QuesHindi extends Component {
             <div
               style={{
                 width: "auto",
-                height: "0.5em"
+                // height: "0.5em"
               }}
             ></div>
             <LeftPanel

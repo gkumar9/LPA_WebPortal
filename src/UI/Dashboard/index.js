@@ -4,8 +4,8 @@ import Header from "../Header/index";
 import QATab from "./QAtab.js";
 import ExamTab from "./Examtab.js";
 
-function Dashboard() {
-  // render() {
+function Dashboard(props) {
+  // console.log(props);
   const [key, setKey] = useState("first");
 
   const style = {
@@ -16,7 +16,9 @@ function Dashboard() {
     padding: " 0.3em 2em",
     letterSpacing: "0.2em"
   };
+  
   return (
+    
     <React.Fragment>
       <Header />
       <Container fluid style={{ width: "auto", background: "#EEEEEE" }}>
@@ -63,7 +65,7 @@ function Dashboard() {
 
           <Tab.Content>
             <Tab.Pane eventKey="first">
-              <QATab />
+              <QATab history={props.history}/>
             </Tab.Pane>
             <Tab.Pane eventKey="second">
               <ExamTab />

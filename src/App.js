@@ -7,7 +7,7 @@ import Exam from './UI/Exam/index.js';
 import Editques from './UI/Editques/index.js';
 import React from "react";
 import { HashRouter, Route } from "react-router-dom";
-
+import PreviewQues from './UI/QuesPreview/index.js'
 // import { Router, Route, Link, IndexRoute, hashHistory, browserHistory } from 'react-router-3';
 import { createBrowserHistory } from "history";
 export const history = createBrowserHistory({
@@ -21,6 +21,7 @@ function App() {
         exact
         path="/"
         render={props => {
+          // console.log(props);
           return <Dashboard {...props} />;
         }}
       />
@@ -46,6 +47,12 @@ function App() {
       path="/editques/:id"
       render={props=>{
         return <Editques {...props} />;
+      }}
+      />
+      <Route 
+      path="/quespreview"
+      render={props=>{
+        return <PreviewQues {...props} />;
       }}
       />
     </HashRouter>

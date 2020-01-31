@@ -443,58 +443,58 @@ class EditComponent extends Component {
   };
   render() {
     return (
-    //   <Container>
-        <div style={{ padding: "20px 0", margin: "0 1em" }}>
-          <Row>
-            <Col lg="3">
-              <div
-                style={{
-                  width: "auto",
-                  height: "0.5em"
-                }}
-              >
-                <LeftPanel
-                  listOfSubject={this.state.listOfSubject}
-                  listOfChapter={this.state.listOfChapter}
-                  listOfTopic={this.state.listOfTopic}
-                  listOfSubTopic={this.state.listOfSubTopic}
-                  handleSubjectChange={this.handleSubjectChange}
-                  handleChapterChange={this.handleChapterChange}
-                  handleTopicChange={this.handleTopicChange}
-                  handleSubTopicChange={this.handleSubTopicChange}
-                  selectedSubjectID={this.state.selectedSubjectID}
-                  selectedChapterID={this.state.selectedChapterID}
-                  selectedTopicID={this.state.selectedTopicID}
-                  selectedSubTopicID={this.state.selectedSubTopicID}
-                  tags={this.state.tags}
-                  handleChangeTags={this.handleChangeTags}
-                  difficulty={this.state.difficulty}
-                  handleDifficultyRadio={this.handleDifficultyRadio}
-                />
-              </div>
-            </Col>
-            <Col lg="1"></Col>
-            <Col>
-              <div>
-                <RightpanelEnglish
-                  handleQuestionEditor={this.handleQuestionEditor}
-                  questionData={this.state.questionData}
-                  handleExplanationEditor={this.handleExplanationEditor}
-                  explanationData={this.state.explanationData}
-                  listOfOptions={this.state.listOfOptions}
-                  letterchartcode={this.state.letterchartcode}
-                  handleOptioncontentchange={this.handleOptioncontentchange}
-                  handleOptionWeightageChange={this.handleOptionWeightageChange}
-                  addoptionfn={this.addoptionfn}
-                  deleteOption={this.deleteOption}
-                  savedata={this.savedata}
-                />
-              </div>
-            </Col>
-            <Col lg="1"></Col>
-          </Row>
-        </div>
-    //   </Container>
+      //   <Container>
+      <div style={{ padding: "20px 0", margin: "0 1em" }}>
+        <Row>
+          <Col lg="3">
+            <div
+              style={{
+                width: "auto"
+                //   height: "0.5em"
+              }}
+            >
+              <LeftPanel
+                listOfSubject={this.state.listOfSubject}
+                listOfChapter={this.state.listOfChapter}
+                listOfTopic={this.state.listOfTopic}
+                listOfSubTopic={this.state.listOfSubTopic}
+                handleSubjectChange={this.handleSubjectChange}
+                handleChapterChange={this.handleChapterChange}
+                handleTopicChange={this.handleTopicChange}
+                handleSubTopicChange={this.handleSubTopicChange}
+                selectedSubjectID={this.state.selectedSubjectID}
+                selectedChapterID={this.state.selectedChapterID}
+                selectedTopicID={this.state.selectedTopicID}
+                selectedSubTopicID={this.state.selectedSubTopicID}
+                tags={this.state.tags}
+                handleChangeTags={this.handleChangeTags}
+                difficulty={this.state.difficulty}
+                handleDifficultyRadio={this.handleDifficultyRadio}
+              />
+            </div>
+          </Col>
+          <Col lg="1"></Col>
+          <Col>
+            <div>
+              <RightpanelEnglish
+                handleQuestionEditor={this.handleQuestionEditor}
+                questionData={this.state.questionData}
+                handleExplanationEditor={this.handleExplanationEditor}
+                explanationData={this.state.explanationData}
+                listOfOptions={this.state.listOfOptions}
+                letterchartcode={this.state.letterchartcode}
+                handleOptioncontentchange={this.handleOptioncontentchange}
+                handleOptionWeightageChange={this.handleOptionWeightageChange}
+                addoptionfn={this.addoptionfn}
+                deleteOption={this.deleteOption}
+                savedata={this.savedata}
+              />
+            </div>
+          </Col>
+          <Col lg="1"></Col>
+        </Row>
+      </div>
+      //   </Container>
     );
   }
 }
