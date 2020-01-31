@@ -10,6 +10,7 @@ import LeftPanelQuestion from "./leftpanelQAtab.js";
 import URL from "../../Assets/url";
 import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import { withRouter } from "react-router-dom";
 
 class QAtab extends Component {
   constructor(props) {
@@ -23,19 +24,45 @@ class QAtab extends Component {
       selectedTopicID: "",
       listOfSubTopic: [],
       selectedSubTopicID: "",
-      //   tags: [],
-      //   difficulty: "",
       selectedLanguage: "ENGLISH",
       listOfLanguage: ["ENGLISH", "HINDI"],
       searchbox: "",
       searchResultList: [],
       listOfselectedPreview: [],
       isLoading: false,
-      listOfsearchselected: []
+      listOfsearchselected: [],
+      searchSelectAll: false
     };
   }
+  handleAddToBucket = () => {
+    let tempsearchlistselected = this.state.listOfsearchselected;
+    tempsearchlistselected.map(item => {
+      return this.onAddpreviewdata(item.id);
+    });
+  };
+  handleSelectAllCheck = e => {
+    if (e.target.checked) {
+      let tempsearchlist = this.state.listOfsearchselected.map(item => {
+        item.status = true;
+        return item;
+      });
+      this.setState({
+        searchSelectAll: e.target.checked,
+        listOfsearchselected: tempsearchlist
+      });
+    } else {
+      let tempsearchlist = this.state.listOfsearchselected.map(item => {
+        item.status = false;
+        return item;
+      });
+      this.setState({
+        searchSelectAll: e.target.checked,
+        listOfsearchselected: tempsearchlist
+      });
+    }
+  };
+
   OnPreviewClick = () => {
-    // console.log(this.props)
     this.props.history.push({
       pathname: "/quespreview",
       state: {
@@ -43,42 +70,52 @@ class QAtab extends Component {
       }
     });
   };
-  onAddpreviewdata = (id, index) => {
-    // console.log(this.state.listOfsearchselected);
 
-    // let tempsearchlist=this.state.listOfsearchselected;
-    // tempsearchlist[index].status=!tempsearchlist[index].status
+  onAddpreviewdata = id => {
     this.setState({ isLoading: true }, () => {
-      axios({
-        method: "POST",
-        url: URL.geteditques + id,
-        data: { authToken: "string" },
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => {
-          if (res.status === 200) {
-            let temppreviewlist = this.state.listOfselectedPreview;
-            temppreviewlist.push(res.data.data.question);
-            let tempsearchlist = this.state.listOfsearchselected;
-            tempsearchlist[index].status = !tempsearchlist[index].status;
-            this.setState({
-              listOfselectedPreview: temppreviewlist,
-              // listOfsearchselected:tempsearchlist,
-              isLoading: false
-            });
-          } else {
-            this.setState({ isLoading: false }, () => {
-              alert("Data not found");
-            });
+      let filterchecktemp = this.state.listOfselectedPreview.filter(
+        item => item.questionId === id
+      );
+      if (filterchecktemp.length > 0) {
+        let templist = this.state.listOfselectedPreview;
+        templist = templist.filter(obj => obj.questionId !== id);
+
+        this.setState({
+          listOfselectedPreview: templist,
+          isLoading: false
+        });
+      } else {
+        axios({
+          method: "POST",
+          url: URL.geteditques + id,
+          data: { authToken: "string" },
+          headers: {
+            "Content-Type": "application/json"
           }
         })
-        .catch(e => {
-          this.setState({ isLoading: false }, () => {
-            alert("Error found");
+          .then(res => {
+            if (res.status === 200) {
+              let temppreviewlist = this.state.listOfselectedPreview;
+              temppreviewlist.push(res.data.data.question);
+              // let tempsearchlist = this.state.listOfsearchselected;
+              // tempsearchlist[index].status = !tempsearchlist[index].status;
+              this.setState({
+                listOfselectedPreview: temppreviewlist,
+                // listOfsearchselected:tempsearchlist,
+                isLoading: false
+              });
+            } else {
+              this.setState({ isLoading: false }, () => {
+                alert("Data not found");
+              });
+            }
+          })
+          .catch(e => {
+            this.setState({ isLoading: false }, () => {
+              alert("Error found");
+            });
           });
-        });
+      }
     });
   };
   handleSearchboxChange = e => {
@@ -347,7 +384,6 @@ class QAtab extends Component {
     });
   };
   handleInputChangeCheckboxlistsearch = (index, e) => {
-    // console.log(e.target.checked,index);
     let tempsearchlist = this.state.listOfsearchselected;
     tempsearchlist[index].status = e.target.checked;
     this.setState({ listOfsearchselected: tempsearchlist });
@@ -483,24 +519,16 @@ class QAtab extends Component {
                     lg="1.5"
                   >
                     <Form.Check
-                      // type="switch"
                       id="custom-switch"
                       label="Select all"
-                      // label={
-                      //   <Button variant="outline-primary" size="sm">
-                      //     Add to bucket
-                      //   </Button>
-                      // }
-                      // label={
-                      //   <Button variant="outline-dark" size="sm">
-                      //     <Bucket className="svg_icons" /> Add to bucket
-                      //   </Button>
-                      // }
+                      checked={this.state.searchSelectAll}
+                      onChange={this.handleSelectAllCheck}
                     />
                   </Col>
 
                   <Col style={{ paddingRight: "0em" }}>
                     <Button
+                      onClick={this.handleAddToBucket}
                       variant="outline-light"
                       size="sm"
                       style={{
@@ -604,15 +632,19 @@ class QAtab extends Component {
                               <div style={{ float: "right" }}>
                                 <Button
                                   title={
-                                    this.state.listOfsearchselected[index]
-                                      .status
+                                    this.state.listOfselectedPreview.filter(
+                                      objj =>
+                                        objj.questionId === item.questionId
+                                    ).length > 0
                                       ? "Added to bucket"
                                       : "Add to bucket"
                                   }
                                   size="sm"
                                   style={
-                                    this.state.listOfsearchselected[index]
-                                      .status
+                                    this.state.listOfselectedPreview.filter(
+                                      objj =>
+                                        objj.questionId === item.questionId
+                                    ).length > 0
                                       ? {
                                           background: "green",
                                           borderRadius: "0",
@@ -625,8 +657,7 @@ class QAtab extends Component {
                                   }
                                   onClick={this.onAddpreviewdata.bind(
                                     this,
-                                    item.questionId,
-                                    index
+                                    item.questionId
                                   )}
                                   variant="primary"
                                 >
@@ -667,4 +698,4 @@ class QAtab extends Component {
     );
   }
 }
-export default QAtab;
+export default withRouter(QAtab);

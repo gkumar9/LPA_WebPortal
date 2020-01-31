@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Button, Form, Container } from "react-bootstrap";
+import { Row, Col, Button, Form } from "react-bootstrap";
 import TagsInput from "react-tagsinput";
 import Difficulty from "./difficulty.js";
 import CKEditor from "@ckeditor/ckeditor5-react";
