@@ -72,7 +72,7 @@ class Exam extends Component {
   };
   handlSectionQuestionValueChange = (index, indexquestion, e) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].questions[indexquestion] = e.target.value;
+    tempsectionlist[index].questions[indexquestion] = parseInt(e.target.value);
     this.setState({ listOfSection: tempsectionlist });
   };
   handleSectionDescriptionChange = (index, language, data) => {

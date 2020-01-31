@@ -1,0 +1,13 @@
+.react-tagsinput--focused{
+    border-color:transparent !important;
+}
+.react-tagsinput-tag{
+    background-color: #ffffff !important;
+}
+.myClass > a {
+    color: black;
+    outline: none;
+}
+.myClass > a.nav-item.nav-link.active{
+border-bottom: 2px blue solid;
+}

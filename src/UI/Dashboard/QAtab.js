@@ -49,7 +49,7 @@ class QAtab extends Component {
           "Content-Type": "application/json"
         }
       }).then(res => {
-        console.log(res.data.data.list);
+        // console.log(res.data.data.list);
         if (res.status === 200) {
           this.setState({ searchResultList: res.data.data.list });
         }
@@ -64,13 +64,6 @@ class QAtab extends Component {
       this.componentDidMount();
     });
   };
-  //   handleDifficultyRadio = e => {
-  //     e.preventDefault();
-  //     this.setState({ difficulty: e.target.value });
-  //   };
-  //   handleChangeTags = tags => {
-  //     this.setState({ tags });
-  //   };
   componentDidMount() {
     axios({
       method: "POST",
@@ -283,6 +276,9 @@ class QAtab extends Component {
       ].subjectSubtopic.subtopicId
     });
   };
+  handleQAEdit=(questionId)=>{
+    // this.props.history.push('/addques');
+  }
   render() {
     return (
       <Row style={{ height: "90vh" }}>
@@ -496,7 +492,7 @@ class QAtab extends Component {
                             >
                               {<Bucket />}{" "}
                             </Button>
-                            <Button
+                            <Link to={`/editques/${item.questionId}`} target="_self"><Button
                               title="Edit"
                               size="sm"
                               style={{
@@ -504,9 +500,10 @@ class QAtab extends Component {
                                 marginLeft: "1em"
                               }}
                               variant="secondary"
+                              // onClick={this.handleQAEdit.bind(this,item.questionId)}
                             >
-                              {<Edit />}{" "}
-                            </Button>
+                              {<Edit/>}{" "}
+                            </Button></Link>
                           </div>
                         </Card.Body>
                         {/* <hr /> */}

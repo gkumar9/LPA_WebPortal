@@ -4,6 +4,7 @@ import Login from "./UI/Login/index.js";
 import Ques from "./UI/Ques/index.js";
 import Dashboard from "./UI/Dashboard/index.js";
 import Exam from './UI/Exam/index.js';
+import Editques from './UI/Editques/index.js';
 import React from "react";
 import { HashRouter, Route } from "react-router-dom";
 
@@ -40,6 +41,12 @@ function App() {
         render={props => {
           return <Exam {...props} />;
         }}
+      />
+      <Route 
+      path="/editques/:id"
+      render={props=>{
+        return <Editques {...props} />;
+      }}
       />
     </HashRouter>
   );
