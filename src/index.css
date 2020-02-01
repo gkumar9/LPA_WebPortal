@@ -2,11 +2,11 @@ body {
   margin: 0;
   font-family: lato;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* -moz-osx-font-smoothing: grayscale; */
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: lato,source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 select:not([multiple]) {

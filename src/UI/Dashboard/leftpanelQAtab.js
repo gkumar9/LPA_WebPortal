@@ -208,7 +208,7 @@ class LeftPanelQAtab extends Component {
                 borderColor: "transparent"
               }}
             >
-              clear
+              Clear Search
             </Button>
           )}
         </>
