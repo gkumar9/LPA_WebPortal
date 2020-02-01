@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 // import Difficulty from '../Ques/difficulty'
 // import TagsInput from "react-tagsinput";
 
@@ -28,6 +28,7 @@ class LeftPanelQAtab extends Component {
     currentvaluesubtopic = currentvaluesubtopic
       ? currentvaluesubtopic.title
       : "";
+
     return (
       <Form>
         <Form.Group controlId="exampleForm.ControlSelect0">
@@ -43,7 +44,7 @@ class LeftPanelQAtab extends Component {
             size="sm"
             as="select"
             // defaultValue=""
-            onChange={this.props.handleLanguageChange}
+            onChange={this.props.handleLanguageChange.bind(this)}
             value={this.props.selectedlanguage}
           >
             {this.props.listOfLanguage &&
@@ -184,6 +185,33 @@ class LeftPanelQAtab extends Component {
             handleDifficultyRadio={this.props.handleDifficultyRadio}
           />
         </Form.Group> */}
+        <>
+          <Button
+            size="sm"
+            onClick={this.props.handlesearchWithFilter}
+            style={{
+              borderRadius: "0",
+              background: "#419ABB",
+              borderColor: "transparent"
+            }}
+          >
+            Search with filters
+          </Button>
+          {this.props.searchResultListLength > 0 && (
+            <Button
+              size="sm"
+              onClick={this.props.clearSearchFromFilters}
+              style={{
+                marginLeft: "1em",
+                borderRadius: "0",
+                background: "dimgrey",
+                borderColor: "transparent"
+              }}
+            >
+              clear
+            </Button>
+          )}
+        </>
       </Form>
     );
   }

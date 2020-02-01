@@ -35,7 +35,9 @@ class QAtab extends Component {
     };
   }
   handleAddToBucket = () => {
-    let tempsearchlistselected = this.state.listOfsearchselected;
+    let tempsearchlistselected = this.state.listOfsearchselected.filter(
+      item => item.status === true
+    );
     tempsearchlistselected.map(item => {
       return this.onAddpreviewdata(item.id);
     });
@@ -63,6 +65,11 @@ class QAtab extends Component {
   };
 
   OnPreviewClick = () => {
+    localStorage.setItem(
+      "Previewdata",
+      JSON.stringify(this.state.listOfselectedPreview)
+    );
+    localStorage.setItem("previewLanguage", this.state.selectedLanguage);
     this.props.history.push({
       pathname: "/quespreview",
       state: {
@@ -159,8 +166,52 @@ class QAtab extends Component {
         }
       });
     } else {
-      this.setState({ searchResultList: [] });
+      this.setState({ searchResultList: [], listOfsearchselected: [] });
     }
+  };
+  handlesearchWithFilter = () => {
+    axios({
+      method: "POST",
+      url: URL.searchquestion + "1",
+      data: {
+        authToken: "string",
+        language: this.state.selectedLanguage,
+        questionId: "",
+        sectionId: this.state.selectedChapterID,
+        subjectId: this.state.selectedSubjectID,
+        subtopicId: this.state.selectedSubTopicID,
+        topicId: this.state.selectedTopicID
+      },
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(res => {
+      // console.log(res.data.data.list);
+      if (res.status === 200) {
+        let templist = res.data.data.list.map(item => {
+          let filtertemplist = this.state.listOfselectedPreview.filter(
+            obj => obj.questionId === item.questionId
+          );
+          if (filtertemplist.length > 0) {
+            return { id: item.questionId, status: true };
+          } else {
+            return { id: item.questionId, status: false };
+          }
+        });
+        // console.log(templist);
+        this.setState({
+          searchResultList: res.data.data.list,
+          listOfsearchselected: templist
+        });
+      }
+    });
+  };
+  clearSearchFromFilters = () => {
+    this.setState({
+      searchResultList: [],
+      listOfsearchselected: [],
+      searchbox: ""
+    });
   };
   handleLanguageChange = e => {
     e.preventDefault();
@@ -169,39 +220,48 @@ class QAtab extends Component {
     });
   };
   componentDidMount() {
-    this.setState({ isLoading: true }, () => {
-      axios({
-        method: "POST",
-        url: URL.fetchSubject + this.state.selectedLanguage,
-        data: { authToken: "string" },
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => {
-          // console.log(res.data.data);
-          if (res.status === 200) {
-            this.setState(
-              {
-                listOfSubject: res.data.data.list,
-                selectedSubjectID:
-                  res.data.data.list.length > 0
-                    ? res.data.data.list[0].subject.subjectId
-                    : "",
-                isLoading: false
-              },
-              () => {
-                this.callApiForChapter();
-              }
-            );
-          } else {
-            alert("Unexpected code");
+    let templistOfselectedPreview =
+      localStorage.getItem("Previewdata") !== null &&
+      localStorage.getItem("Previewdata") !== ""
+        ? JSON.parse(localStorage.getItem("Previewdata"))
+        : [];
+
+    this.setState(
+      { isLoading: true, listOfselectedPreview: templistOfselectedPreview },
+      () => {
+        axios({
+          method: "POST",
+          url: URL.fetchSubject + this.state.selectedLanguage,
+          data: { authToken: "string" },
+          headers: {
+            "Content-Type": "application/json"
           }
         })
-        .catch(e => {
-          console.log(e);
-        });
-    });
+          .then(res => {
+            // console.log(res.data.data);
+            if (res.status === 200) {
+              this.setState(
+                {
+                  listOfSubject: res.data.data.list,
+                  selectedSubjectID:
+                    res.data.data.list.length > 0
+                      ? res.data.data.list[0].subject.subjectId
+                      : "",
+                  isLoading: false
+                },
+                () => {
+                  this.callApiForChapter();
+                }
+              );
+            } else {
+              alert("Unexpected code");
+            }
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      }
+    );
   }
   callApiForChapter = () => {
     if (this.state.selectedSubjectID !== "") {
@@ -411,6 +471,9 @@ class QAtab extends Component {
               }}
             >
               <LeftPanelQuestion
+                searchResultListLength={this.state.searchResultList.length}
+                handlesearchWithFilter={this.handlesearchWithFilter}
+                clearSearchFromFilters={this.clearSearchFromFilters}
                 listOfSubject={this.state.listOfSubject}
                 listOfChapter={this.state.listOfChapter}
                 listOfTopic={this.state.listOfTopic}
@@ -423,12 +486,8 @@ class QAtab extends Component {
                 selectedChapterID={this.state.selectedChapterID}
                 selectedTopicID={this.state.selectedTopicID}
                 selectedSubTopicID={this.state.selectedSubTopicID}
-                // tags={this.state.tags}
-                // handleChangeTags={this.handleChangeTags}
-                // difficulty={this.state.difficulty}
-                // handleDifficultyRadio={this.handleDifficultyRadio}
                 listOfLanguage={this.state.listOfLanguage}
-                selectedLanguage={this.state.selectedLanguage}
+                selectedlanguage={this.state.selectedLanguage}
                 handleLanguageChange={this.handleLanguageChange}
               />
             </Col>
@@ -627,7 +686,7 @@ class QAtab extends Component {
 
                               <Card.Text style={{ marginBottom: "0.5em" }}>
                                 {""}
-                                {item.content}
+                                {item.content.replace(/<\/?[^>]+(>|$)/g, "")}
                               </Card.Text>
                               <div style={{ float: "right" }}>
                                 <Button

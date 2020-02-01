@@ -1,0 +1,9 @@
+@media print {
+    @page {
+      /* size: landscape; */
+    }
+    .backbuttonprint {
+      visibility: hidden;
+    }
+   
+  }
