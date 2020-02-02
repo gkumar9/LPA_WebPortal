@@ -255,10 +255,13 @@ class QAtab extends Component {
               );
             } else {
               alert("Unexpected code");
+              this.setState({isLoading: false})
             }
           })
           .catch(e => {
             console.log(e);
+            alert(e);
+            this.setState({isLoading: false})
           });
       }
     );
@@ -297,6 +300,8 @@ class QAtab extends Component {
         })
         .catch(e => {
           console.log(e);
+          alert(e);
+          this.setState({isLoading: false})
         });
     } else {
       console.log(
@@ -308,7 +313,8 @@ class QAtab extends Component {
         listOfTopic: [],
         selectedTopicID: "",
         listOfSubTopic: [],
-        selectedSubTopicID: ""
+        selectedSubTopicID: "",
+        isLoading: false
       });
     }
   };
@@ -347,6 +353,8 @@ class QAtab extends Component {
         })
         .catch(e => {
           console.log(e);
+          alert(e);
+          this.setState({isLoading: false})
         });
     } else {
       console.log(
@@ -390,6 +398,8 @@ class QAtab extends Component {
         })
         .catch(e => {
           console.log(e);
+          alert(e);
+          this.setState({isLoading: false})
         });
     } else {
       console.log("(English)topicid is blank.API not called. checktopic list");

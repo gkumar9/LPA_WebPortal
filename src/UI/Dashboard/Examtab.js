@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Button, Form, Card } from "react-bootstrap";
-import Bucket from "@material-ui/icons/Https";
+// import Bucket from "@material-ui/icons/Https";
 import Edit from "@material-ui/icons/Edit";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -22,16 +22,46 @@ class Examtab extends Component {
       listOfLanguage: ["ENGLISH", "HINDI"],
       searchbox: "",
       searchResultList: [],
-      listOfType: ['Free','Weekly','Practise test','Previous year paper'],
-      selectedType: "Free",
+      listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
+      selectedType: "Free"
     };
   }
-  handleTypeChange=e=>{
+  handlesearchWithFilter = () => {
+    axios({
+      method: "POST",
+      url: URL.searchexam + "1",
+      data: {
+        authToken: "string",
+        language: this.state.selectedLanguage,
+        examId: this.state.selectedExamID,
+        testId: "",
+        sectionId: this.state.selectedChapterID,
+        subjectId: this.state.selectedSubjectID,
+        type: this.state.selectedType
+      },
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(res => {
+      // console.log(res.data.data.list);
+      if (res.status === 200) {
+        this.setState({ searchResultList: res.data.data.list });
+      }
+    });
+  };
+  clearSearchFromFilters = () => {
+    this.setState({
+      searchResultList: [],
+      // listOfsearchselected: [],
+      searchbox: ""
+    });
+  };
+  handleTypeChange = e => {
     e.preventDefault();
     this.setState({ selectedType: e.target.value }, () => {
       // this.componentDidMount();
     });
-  }
+  };
   handleSearchboxChange = e => {
     e.preventDefault();
 
@@ -261,6 +291,9 @@ class Examtab extends Component {
           }}
         >
           <LeftpanelExamtab
+            searchResultListLength={this.state.searchResultList.length}
+            handlesearchWithFilter={this.handlesearchWithFilter}
+            clearSearchFromFilters={this.clearSearchFromFilters}
             listOfSubject={this.state.listOfSubject}
             listOfChapter={this.state.listOfChapter}
             listOfExam={this.state.listOfExam}
@@ -347,26 +380,16 @@ class Examtab extends Component {
             </Col>
           </Row>
 
-          {this.state.searchResultList.length > 0 && (
+          {/* {this.state.searchResultList.length > 0 && (
             <Row style={{ margin: "0 0em 1em" }}>
               <Col
                 style={{ paddingLeft: "0.5em", paddingTop: "0.3em" }}
                 lg="1.5"
               >
                 <Form.Check
-                  // type="switch"
                   id="custom-switch"
                   label="Select all"
-                  // label={
-                  //   <Button variant="outline-primary" size="sm">
-                  //     Add to bucket
-                  //   </Button>
-                  // }
-                  // label={
-                  //   <Button variant="outline-dark" size="sm">
-                  //     <Bucket className="svg_icons" /> Add to bucket
-                  //   </Button>
-                  // }
+                 
                 />
               </Col>
 
@@ -384,7 +407,7 @@ class Examtab extends Component {
               </Col>
               <Col lg="9" />
             </Row>
-          )}
+          )} */}
           <div
             style={{
               height: "45vh",
@@ -395,9 +418,9 @@ class Examtab extends Component {
             }}
           >
             {this.state.searchResultList.length > 0 &&
-              this.state.searchResultList.map(item => {
+              this.state.searchResultList.map((item,index) => {
                 return (
-                  <Row style={{ margin: "0.5em 0em" }}>
+                  <Row key={index} style={{ margin: "0.5em 0em" }}>
                     <Col
                       style={{
                         paddingLeft: "0em",
@@ -412,7 +435,7 @@ class Examtab extends Component {
                       >
                         <Card.Body style={{ padding: "0em" }}>
                           <Card.Title style={{ fontSize: "medium" }}>
-                            <Form.Check inline type="checkbox" />
+                            {/* <Form.Check inline type="checkbox" /> */}
 
                             <span>
                               <b>Id#</b>{" "}
@@ -427,16 +450,8 @@ class Examtab extends Component {
                                 fontWeight: "600"
                               }}
                             >
-                              <b>Year: </b>{item.year}
-                              {/* <span style={{ color: "blue" }}>
-                                Type:{" "}
-                                {item.type}
-                              </span> */}
-                              {/* <span style={{ color: "maroon" }}>
-                          {" "}
-                          2013 RSBSSB
-                        </span> */}
-                              ,
+                              <b>Year: </b>
+                              {item.year},
                               <span style={{ color: "darkgreen" }}>
                                 {" "}
                                 {item.type}
@@ -449,27 +464,22 @@ class Examtab extends Component {
                             {item.name}
                           </Card.Text>
                           <div style={{ float: "right" }}>
-                            <Button
-                              title="Add to bucket"
-                              size="sm"
-                              style={{
-                                borderRadius: "0"
-                              }}
-                              variant="primary"
+                            <Link
+                              to={`/editexam/${item.testId}`}
+                              target="_self"
                             >
-                              {<Bucket />}{" "}
-                            </Button>
-                            <Button
-                              title="Edit"
-                              size="sm"
-                              style={{
-                                borderRadius: "0",
-                                marginLeft: "1em"
-                              }}
-                              variant="secondary"
-                            >
-                              {<Edit />}{" "}
-                            </Button>
+                              <Button
+                                title="Edit"
+                                size="sm"
+                                style={{
+                                  borderRadius: "0",
+                                  padding: ".15rem .15rem"
+                                }}
+                                variant="secondary"
+                              >
+                                {<Edit className="svg_icons" />}{" "}
+                              </Button>
+                            </Link>
                           </div>
                         </Card.Body>
                         {/* <hr /> */}

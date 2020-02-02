@@ -680,6 +680,7 @@ class RightpanelEnglish extends Component {
                   </Form.Label>
                   <Col sm="2">
                     <Form.Control
+                    disabled
                       style={{ borderRadius: "0", background: "lightgrey" }}
                       type="number"
                       value={item.weightage || 0}
@@ -690,7 +691,7 @@ class RightpanelEnglish extends Component {
                       placeholder="weightage"
                     />
                   </Col>
-                  {this.props.listOfOptions.length === index + 1 && (
+                  {/* {this.props.listOfOptions.length === index + 1 && (
                     <Col>
                       <Button
                         style={{ float: "right", color: "grey" }}
@@ -700,7 +701,7 @@ class RightpanelEnglish extends Component {
                         X Delete
                       </Button>
                     </Col>
-                  )}
+                  )} */}
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
@@ -718,7 +719,7 @@ class RightpanelEnglish extends Component {
         <Row>
           <Col lg="10"></Col>
           <Col>
-            <Button
+            {/* <Button
               onClick={this.props.addoptionfn}
               varirant="info"
               style={{
@@ -732,7 +733,7 @@ class RightpanelEnglish extends Component {
             >
               {" "}
               + Add Option
-            </Button>
+            </Button> */}
           </Col>
         </Row>
         <div style={{ margin: "2em 0" }}>

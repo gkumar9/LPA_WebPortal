@@ -330,7 +330,9 @@ class QuesHindi extends Component {
       .then(res => {
         console.log(res.data.data);
         if (res.status === 200) {
+          alert('Success:',res.data.data)
           if (this.props.questionId === "") {
+            
             this.props.handleChange.bind(this, res.data.data.questionId);
             this.props.handleSelect();
           }

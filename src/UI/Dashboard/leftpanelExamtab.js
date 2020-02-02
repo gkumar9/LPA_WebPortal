@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form } from "react-bootstrap";
+import { Form,Button } from "react-bootstrap";
 // import Difficulty from '../Ques/difficulty'
 // import TagsInput from "react-tagsinput";
 
@@ -162,6 +162,33 @@ class LeftPanelExamtab extends Component {
               })}
           </Form.Control>
         </Form.Group>
+        <>
+          <Button
+            size="sm"
+            onClick={this.props.handlesearchWithFilter}
+            style={{
+              borderRadius: "0",
+              background: "#419ABB",
+              borderColor: "transparent"
+            }}
+          >
+            Search with filters
+          </Button>
+          {this.props.searchResultListLength > 0 && (
+            <Button
+              size="sm"
+              onClick={this.props.clearSearchFromFilters}
+              style={{
+                marginLeft: "1em",
+                borderRadius: "0",
+                background: "dimgrey",
+                borderColor: "transparent"
+              }}
+            >
+              Clear Search
+            </Button>
+          )}
+        </>
       </Form>
     );
   }

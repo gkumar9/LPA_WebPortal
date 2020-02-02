@@ -38,22 +38,22 @@ class Exam extends Component {
       testInstructionHindi: "",
       listOfSection: [
         {
-          marksPerQuestion: 0,
-          negativeMarksPerQuestion: 0,
-          questions: [0],
+          marksPerQuestion: '',
+          negativeMarksPerQuestion: '',
+          questions: [],
 
           versions: [
             {
-              content: "stringEng",
+              content: "",
               language: "ENGLISH",
               name: "string",
-              sectionName: "stringEnglish"
+              sectionName: ""
             },
             {
-              content: "stringHin",
+              content: "",
               language: "HINDI",
               name: "string",
-              sectionName: "stringHindi"
+              sectionName: ""
             }
           ]
         }
@@ -264,7 +264,7 @@ class Exam extends Component {
     if (this.state.selectedSubjectID !== "") {
       axios({
         method: "POST",
-        url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH" ,
+        url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH",
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -346,6 +346,7 @@ class Exam extends Component {
     });
   };
   saveExamdata = () => {
+    // console.log(this.state.endDate,this.state.endDate.toDateString())
     axios({
       method: "POST",
       url: URL.addnewExam,
@@ -353,11 +354,10 @@ class Exam extends Component {
         authToken: "string",
         endDate: this.state.endDate.toISOString(),
         examId: this.state.selectedExamID,
+        subjectId: this.state.selectedSubjectID,
         sectionId: this.state.selectedChapterID,
         sections: this.state.listOfSection,
         startDate: this.state.startDate.toISOString(),
-        subjectId: this.state.selectedSubjectId,
-        // "testId": 0,
         testInstructions: [
           {
             instructions: this.state.testInstructionEnglish,
@@ -371,7 +371,9 @@ class Exam extends Component {
             name: this.state.testnameHindi
           }
         ],
-        time: (this.state.hour * 60 * 60 + this.state.minute * 60) * 1000,
+        time:
+          parseFloat(this.state.hour) +
+          parseFloat(Number(parseInt(this.state.minute) / 60)),
         type: this.state.selectedType,
         year: this.state.selectedTypeYear
       },
@@ -382,6 +384,7 @@ class Exam extends Component {
       .then(res => {
         if (res.status === 200) {
           console.log(res.data.data);
+          alert('Success:',res.data.data)
         }
       })
       .catch(e => {
@@ -470,6 +473,7 @@ class Exam extends Component {
               >
                 <RightExamPanel
                   testnameEnglish={this.state.testnameEnglish}
+                  testnameHindi={this.state.testnameHindi}
                   testInstructionEnglish={this.state.testInstructionEnglish}
                   testInstructionHindi={this.state.testInstructionHindi}
                   handleHindiInstructionChange={

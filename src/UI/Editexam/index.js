@@ -6,48 +6,36 @@ import { styled } from "@material-ui/styles";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import URL from "../../Assets/url";
-import EditComponent from "./editcomponent.js";
+import EditComponentExam from "./editcomponentexam.js";
 const MyBack = styled(Back)({
   color: "dimgrey",
   marginTop: "-0.2em",
   width: "1em"
 });
-class Editques extends Component {
+class EditExam extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      questionId: this.props.match.params.id,
-      fetchedData: null,
+      testId: this.props.match.params.id,
+      fetchedData: null
       // activetab: "1"
     };
   }
   componentDidMount() {
     axios({
       method: "POST",
-      url: URL.geteditques + this.state.questionId,
+      url: URL.getexamcontent + this.state.testId,
       data: { authToken: "string" },
       headers: {
         "Content-Type": "application/json"
       }
     }).then(res => {
-      console.log(res.data.data.question);
+      console.log(res.data.data.test);
       if (res.status === 200) {
-        this.setState({ fetchedData: res.data.data.question });
+        this.setState({ fetchedData: res.data.data.test });
       }
     });
   }
-  // handleSelect = () => {
-  //   let activetab = this.state.activetab;
-  //   if (activetab === "1") {
-  //     this.setState({ activetab: "2" });
-  //   } else {
-  //     this.setState({ activetab: "1" });
-  //   }
-  // };
-  // handleChange = data => {
-  //   console.log("Id from english response", data);
-  //   this.setState({ questionId: data });
-  // };
   render() {
     return (
       <React.Fragment>
@@ -87,12 +75,11 @@ class Editques extends Component {
           }}
         >
           {this.state.fetchedData && (
-            <EditComponent fetchedData={this.state.fetchedData} />
+            <EditComponentExam fetchedData={this.state.fetchedData} />
           )}
         </Container>
       </React.Fragment>
     );
   }
 }
-
-export default Editques;
+export default EditExam;

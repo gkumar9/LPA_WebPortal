@@ -1,0 +1,9 @@
+.react_times_button.time_picker_preview{
+    box-shadow: none !important;
+}
+.react-datepicker__input-container > input{
+    width: 100%;
+}
+.react-datepicker-wrapper{
+    width:100%
+}

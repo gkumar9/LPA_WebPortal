@@ -331,6 +331,7 @@ class QuesEnglish extends Component {
         if (res.status === 200) {
           console.log(res.data.data);
           //   this.setState({ activetab: "2" });
+          alert('Success:',res.data.data)
           this.props.handleChange(res.data.data.questionId);
           this.props.handleSelect();
         }
@@ -395,7 +396,7 @@ class QuesEnglish extends Component {
 }
 class RightpanelEnglish extends Component {
   render() {
-    console.log(this.props.questionId);
+    // console.log(this.props.questionId);
     return (
       <Form>
         <QuestionComp
