@@ -1,68 +1,35 @@
-// import React from "react";
-// import Header from "./UI/Header/index.js";
-import Login from "./UI/Login/index.js";
-import Ques from "./UI/Ques/index.js";
-import Dashboard from "./UI/Dashboard/index.js";
-import Exam from './UI/Exam/index.js';
-import Editques from './UI/Editques/index.js';
-import React from "react";
-import { HashRouter, Route } from "react-router-dom";
-import PreviewQues from './UI/QuesPreview/index.js'
-import EditExam from './UI/Editexam/index.js'
-// import { Router, Route, Link, IndexRoute, hashHistory, browserHistory } from 'react-router-3';
-import { createBrowserHistory } from "history";
-export const history = createBrowserHistory({
-  basename: process.env.PUBLIC_URL
-});
-
-function App() {
-  return (
-    <HashRouter basename={"/"}>
-      <Route
-        exact
-        path="/"
-        render={props => {
-          // console.log(props);
-          return <Dashboard {...props} />;
-        }}
-      />
-      <Route
-        path="/login"
-        render={props => {
-          return <Login {...props} />;
-        }}
-      />
-      <Route
-        path="/addques"
-        render={props => {
-          return <Ques {...props} />;
-        }}
-      />
-      <Route
-        path="/addexam"
-        render={props => {
-          return <Exam {...props} />;
-        }}
-      />
-      <Route 
-      path="/editques/:id"
-      render={props=>{
-        return <Editques {...props} />;
-      }}
-      />
-      <Route 
-      path="/quespreview"
-      render={props=>{
-        return <PreviewQues {...props} />;
-      }}
-      />
-      <Route 
-      path="/editexam/:id"
-      render={props=>{
-        return <EditExam {...props} />;
-      }}
-      />
-    </HashRouter>
-  );
+import React, { Component } from "react";
+import Navigation from "./Navigation";
+import firebase from "./firebaseApp";
+import "./index.css";
+class App extends Component {
+  state = {
+    authenticated: undefined
+  };
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(authenticated => {
+      if (authenticated) {
+        // console.log("authenticated", authenticated);
+        this.setState({
+          authenticated: true
+        });
+      } else {
+        // console.log("authenticated", authenticated);
+        this.setState({
+          authenticated: false
+        });
+      }
+    });
+  }
+  render() {
+    // console.log(this.state.authenticated);
+    // return  <Navigation authenticated={this.state.authenticated} />
+    return this.state.authenticated !== undefined &&
+      this.state.authenticated !== null ? (
+      <Navigation authenticated={this.state.authenticated} />
+    ) : (
+      <div className="loader"></div>
+    );
+  }
 }
 export default App;

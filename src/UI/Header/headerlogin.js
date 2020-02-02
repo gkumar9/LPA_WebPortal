@@ -4,7 +4,7 @@ import Logo from "./../../Assets/Logo.png";
 // import firebase from 'firebase';
 import firebase from "./../../firebaseApp";
 
-function Header() {
+function HeaderLogin() {
   // console.log(firebase.auth())
   return (
     <Navbar expand="lg" style={{ borderBottom: "solid 1px #cccbcb" }}>
@@ -17,22 +17,9 @@ function Header() {
       </Navbar.Brand>
       <Nav className="mr-auto"></Nav>
       <Nav justify>
-        <Nav.Link href="#">Welcome User</Nav.Link>
-        <Nav.Link
-          eventKey={2}
-          onSelect={() => {
-            firebase
-              .auth()
-              .signOut()
-              .then(res => {
-                console.log("signout called");
-              });
-          }}
-        >
-          Log out
-        </Nav.Link>
+       
       </Nav>
     </Navbar>
   );
 }
-export default Header;
+export default HeaderLogin;

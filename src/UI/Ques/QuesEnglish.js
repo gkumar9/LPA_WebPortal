@@ -60,6 +60,7 @@ class QuesEnglish extends Component {
     this.setState({ tags });
   };
   componentDidMount() {
+    console.log('as')
     axios({
       method: "POST",
       url: URL.fetchSubject + "ENGLISH",
