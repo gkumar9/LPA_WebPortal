@@ -11,7 +11,7 @@ import {
   Route,
   Redirect,
   BrowserRouter as Router,
-  Switch
+  // Switch
 } from "react-router-dom";
 export const history = createBrowserHistory({
   basename: process.env.PUBLIC_URL

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Navigation from "./Navigation";
 import firebase from "./firebaseApp";
+import axios from "axios";
+
 import "./index.css";
 class App extends Component {
   state = {
@@ -9,10 +11,22 @@ class App extends Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(authenticated => {
       if (authenticated) {
-        // console.log("authenticated", authenticated);
-        this.setState({
-          authenticated: true
-        });
+        firebase
+          .auth()
+          .currentUser.getIdToken()
+          .then(idToken => {
+            // console.log(idToken)
+            // localStorage.setItem("idToken", idToken);
+            axios.interceptors.request.use(config => {
+              if (config.data && config.data.authToken) {
+                config.data.authToken = idToken;
+              }
+              return Promise.resolve(config);
+            });
+            this.setState({
+              authenticated: true
+            });
+          });
       } else {
         // console.log("authenticated", authenticated);
         this.setState({

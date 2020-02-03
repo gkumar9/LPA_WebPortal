@@ -83,7 +83,7 @@ class Examtab extends Component {
           "Content-Type": "application/json"
         }
       }).then(res => {
-        console.log(res.data.data.list);
+        // console.log(res.data.data.list);
         if (res.status === 200) {
           this.setState({ searchResultList: res.data.data.list });
         }

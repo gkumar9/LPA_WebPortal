@@ -27,7 +27,7 @@ class Exam extends Component {
       selectedChapterID: "",
       listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
       selectedType: "Free",
-      selectedTypeYear: "",
+      selectedTypeYear: null,
       hour: "",
       minute: "",
       startDate: new Date(),

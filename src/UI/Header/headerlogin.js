@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import Logo from "./../../Assets/Logo.png";
 // import firebase from 'firebase';
-import firebase from "./../../firebaseApp";
+// import firebase from "./../../firebaseApp";
 
 function HeaderLogin() {
   // console.log(firebase.auth())

@@ -19,10 +19,6 @@ class ExamEditComponent extends Component {
       listOfChapter: [],
       selectedChapterID: "",
       listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
-      // selectedType: "Free",
-      // selectedTypeYear: "",
-      // hour: "",
-      // minute: "",
       startDate: new Date(),
       endDate: new Date(),
       testnameEnglish: this.props.fetchedData.testVersions.filter(
@@ -40,7 +36,7 @@ class ExamEditComponent extends Component {
       hour: hours,
       minute: minutes,
       selectedType: this.props.fetchedData.type,
-      selectedTypeYear: this.props.fetchedData.year,
+      selectedTypeYear: this.props.fetchedData.year?this.props.fetchedData.year:null,
       listOfSection: this.props.fetchedData.testSections,
       englishtestVersionId:this.props.fetchedData.testVersions.filter(
         item => item.language === "ENGLISH"
@@ -555,7 +551,7 @@ class ExamEditComponent extends Component {
                   }}
                   onClick={this.saveExamdata}
                 >
-                  Save & see preview
+                  Update data
                 </Button>
               </div>
             </Col>
