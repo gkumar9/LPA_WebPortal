@@ -40,7 +40,7 @@ class Dashboard extends Component {
                 lg="1.5"
                 // className="customtabcolor"
                 style={{
-                  margin: "0 2em"
+                  margin: "0 4em"
                 }}
               >
                 <Nav.Link

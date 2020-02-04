@@ -8,9 +8,11 @@ class LeftPanelQAtab extends Component {
     let currentvaluesubject = this.props.listOfSubject.filter(
       item => item.subject.subjectId === this.props.selectedSubjectID
     )[0];
+    // console.log(currentvaluesubject)
     currentvaluesubject = currentvaluesubject
       ? currentvaluesubject.subjectName
       : "";
+      
     let currentvaluechapter = this.props.listOfChapter.filter(
       item => item.subjectSection.sectionId === this.props.selectedChapterID
     )[0];
@@ -70,7 +72,7 @@ class LeftPanelQAtab extends Component {
             size="sm"
             as="select"
             // defaultValue=""
-            onChange={this.props.handleSubjectChange}
+            onChange={this.props.handleSubjectChange.bind(this)}
             value={currentvaluesubject}
           >
             {this.props.listOfSubject &&
@@ -81,6 +83,7 @@ class LeftPanelQAtab extends Component {
                   </option>
                 );
               })}
+              <option key='' value="">Select</option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect2">

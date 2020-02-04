@@ -85,7 +85,7 @@ class QAtab extends Component {
         item => item.questionId === id
       );
       if (filterchecktemp.length > 0) {
-        console.log('>0')
+        // console.log('>0')
         let templist = this.state.listOfselectedPreview;
         templist = templist.filter(obj => obj.questionId !== id);
         console.log(templist)
@@ -99,7 +99,7 @@ class QAtab extends Component {
           }
         );
       } else {
-        console.log('<')
+        // console.log('<')
         axios({
           method: "POST",
           url: URL.geteditques + id,
@@ -149,11 +149,11 @@ class QAtab extends Component {
         data: {
           authToken: "string",
           language: this.state.selectedLanguage,
-          questionId: e.target.value,
-          sectionId: this.state.selectedChapterID,
-          subjectId: this.state.selectedSubjectID,
-          subtopicId: this.state.selectedSubTopicID,
-          topicId: this.state.selectedTopicID
+          questionId: this.state.searchbox,
+          sectionId: this.state.selectedChapterID?this.state.selectedChapterID:null,
+          subjectId: this.state.selectedSubjectID?this.state.selectedSubjectID:null,
+          subtopicId: this.state.selectedSubTopicID?this.state.selectedSubTopicID:null,
+          topicId: this.state.selectedTopicID?this.state.selectedTopicID:null
         },
         headers: {
           "Content-Type": "application/json"
@@ -189,7 +189,7 @@ class QAtab extends Component {
       data: {
         authToken: "string",
         language: this.state.selectedLanguage,
-        questionId: "",
+        questionId: this.state.selected,
         sectionId: this.state.selectedChapterID,
         subjectId: this.state.selectedSubjectID,
         subtopicId: this.state.selectedSubTopicID,
@@ -221,10 +221,19 @@ class QAtab extends Component {
   };
   clearSearchFromFilters = () => {
     this.setState({
-      searchResultList: [],
-      listOfsearchselected: [],
-      searchbox: ""
-    });
+      // searchResultList: [],
+      // listOfsearchselected: [],
+      searchbox: "",
+      listOfChapter:[],
+      selectedChapterID:"",
+      // listOfSubject:[],
+      selectedSubjectID:'',
+      listOfTopic:[],
+      selectedTopicID:'',
+      listOfSubTopic:[],
+      selectedSubTopicID:''
+    },()=>{this.handlesearchWithFilter();});
+
   };
   handleLanguageChange = e => {
     e.preventDefault();
@@ -240,7 +249,7 @@ class QAtab extends Component {
         : [];
 
     this.setState(
-      { isLoading: true, listOfselectedPreview: templistOfselectedPreview },
+      { isLoading: false, listOfselectedPreview: templistOfselectedPreview },
       () => {
         axios({
           method: "POST",
@@ -256,14 +265,48 @@ class QAtab extends Component {
               this.setState(
                 {
                   listOfSubject: res.data.data.list,
-                  selectedSubjectID:
-                    res.data.data.list.length > 0
-                      ? res.data.data.list[0].subject.subjectId
-                      : "",
+                  selectedSubjectID:"",
                   isLoading: false
                 },
                 () => {
-                  this.callApiForChapter();
+                  axios({
+                    method: "POST",
+                    url: URL.searchquestion + "1",
+                    data: {
+                      authToken: "string",
+                      language: this.state.selectedLanguage,
+                      questionId: null,
+                      sectionId: null,
+                      subjectId: null,
+                      subtopicId: null,
+                      topicId: null
+                    },
+                    headers: {
+                      "Content-Type": "application/json"
+                    }
+                  }).then(res => {
+                    // console.log(res.data.data.list);
+                    if (res.status === 200) {
+                      let templist = res.data.data.list.map(item => {
+                        let filtertemplist = this.state.listOfselectedPreview.filter(
+                          obj => obj.questionId === item.questionId
+                        );
+                        if (filtertemplist.length > 0) {
+                          return { id: item.questionId, status: true };
+                        } else {
+                          return { id: item.questionId, status: false };
+                        }
+                      });
+                      // console.log(templist);
+                      this.setState({
+                        searchResultList: res.data.data.list,
+                        listOfsearchselected: templist
+                      });
+                    }
+                  })
+                  .catch((e)=>{
+                    alert(e);
+                  })
                 }
               );
             } else {
@@ -280,6 +323,7 @@ class QAtab extends Component {
     );
   }
   callApiForChapter = () => {
+    // console.log(this.state.selectedSubjectID);
     if (this.state.selectedSubjectID !== "") {
       axios({
         method: "POST",
@@ -421,17 +465,29 @@ class QAtab extends Component {
   };
   handleSubjectChange = e => {
     e.preventDefault();
-
-    this.setState(
-      {
-        selectedSubjectID: this.state.listOfSubject[
-          e.target.options.selectedIndex
-        ].subject.subjectId
-      },
-      () => {
-        this.callApiForChapter();
-      }
-    );
+    // console.log(e.target.value)
+    if (e.target.value === "") {
+      this.setState(
+        {
+          selectedSubjectID: ''
+        },
+        () => {
+          this.callApiForChapter();
+        }
+      );
+    }else{
+      this.setState(
+        {
+          selectedSubjectID: this.state.listOfSubject[
+            e.target.options.selectedIndex
+          ].subject.subjectId
+        },
+        () => {
+          this.callApiForChapter();
+        }
+      );
+    }
+    
   };
   handleChapterChange = e => {
     e.preventDefault();
@@ -489,7 +545,7 @@ class QAtab extends Component {
             <Col
               lg="3"
               style={{
-                padding: "0em 2em",
+                padding: "0em 3em",
                 background: "#EEE"
               }}
             >
@@ -518,7 +574,7 @@ class QAtab extends Component {
               style={{
                 background: "#EEEEEE",
                 // height: "90vh",
-                padding: "0em 2em"
+                padding: "0em 4em"
               }}
             >
               <Row style={{ margin: "2em 0em" }}>
@@ -626,7 +682,7 @@ class QAtab extends Component {
               )}
               <div
                 style={{
-                  height: "45vh",
+                  // height: "45vh",
                   overflow: "scroll",
                   // border: "1px solid lightgrey",
                   // background: "white",
@@ -639,8 +695,8 @@ class QAtab extends Component {
                       <Row
                         key={item.questionId}
                         style={{
-                          margin: "0.5em 0em",
-                          borderBottom: "1px #c2c2c2 solid"
+                          margin: "0.9em 0em",
+                          // borderBottom: "1px #c2c2c2 solid"
                         }}
                       >
                         <Col

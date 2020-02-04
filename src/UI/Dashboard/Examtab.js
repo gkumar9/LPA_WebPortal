@@ -22,8 +22,14 @@ class Examtab extends Component {
       listOfLanguage: ["ENGLISH", "HINDI"],
       searchbox: "",
       searchResultList: [],
-      listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
-      selectedType: "Free"
+      listOfType: [
+        "Free",
+        "Weekly",
+        "Practise test",
+        "Previous year paper",
+        ""
+      ],
+      selectedType: ""
     };
   }
   handlesearchWithFilter = () => {
@@ -33,11 +39,15 @@ class Examtab extends Component {
       data: {
         authToken: "string",
         language: this.state.selectedLanguage,
-        examId: this.state.selectedExamID,
-        testId: "",
-        sectionId: this.state.selectedChapterID,
-        subjectId: this.state.selectedSubjectID,
-        type: this.state.selectedType
+        examId: this.state.selectedExamID ? this.state.selectedExamID : null,
+        testId: this.state.searchbox,
+        sectionId: this.state.selectedChapterID
+          ? this.state.selectedChapterID
+          : null,
+        subjectId: this.state.selectedSubjectID
+          ? this.state.selectedSubjectID
+          : null,
+        type: this.state.selectedType ? this.state.selectedType : null
       },
       headers: {
         "Content-Type": "application/json"
@@ -50,11 +60,23 @@ class Examtab extends Component {
     });
   };
   clearSearchFromFilters = () => {
-    this.setState({
-      searchResultList: [],
-      // listOfsearchselected: [],
-      searchbox: ""
-    });
+    this.setState(
+      {
+        // searchResultList: [],
+        // listOfsearchselected: [],
+        searchbox: "",
+        // listOfExam: [],
+        selectedExamID: "",
+        listOfSubject: [],
+        selectedSubjectID: "",
+        listOfChapter: [],
+        selectedChapterID: "",
+        selectedType: ""
+      },
+      () => {
+        this.handlesearchWithFilter();
+      }
+    );
   };
   handleTypeChange = e => {
     e.preventDefault();
@@ -73,11 +95,15 @@ class Examtab extends Component {
         data: {
           authToken: "string",
           language: this.state.selectedLanguage,
-          examId: this.state.selectedExamID,
+          examId: this.state.selectedExamID ? this.state.selectedExamID : null,
           testId: e.target.value,
-          sectionId: this.state.selectedChapterID,
-          subjectId: this.state.selectedSubjectID,
-          type: this.state.selectedType
+          sectionId: this.state.selectedChapterID
+            ? this.state.selectedChapterID
+            : null,
+          subjectId: this.state.selectedSubjectID
+            ? this.state.selectedSubjectID
+            : null,
+          type: this.state.selectedType ? this.state.selectedType : null
         },
         headers: {
           "Content-Type": "application/json"
@@ -113,13 +139,39 @@ class Examtab extends Component {
           this.setState(
             {
               listOfExam: res.data.data.list,
-              selectedExamID:
-                res.data.data.list.length > 0
-                  ? res.data.data.list[0].exam.examId
-                  : ""
+              selectedExamID: ""
+              // selectedExamID:
+              //   res.data.data.list.length > 0
+              //     ? res.data.data.list[0].exam.examId
+              //     : ""
             },
             () => {
-              this.callApiForSubject();
+              axios({
+                method: "POST",
+                url: URL.searchexam + "1",
+                data: {
+                  authToken: "string",
+                  language: this.state.selectedLanguage,
+                  examId: null,
+                  testId: null,
+                  sectionId: null,
+                  subjectId: null,
+                  type: null
+                },
+                headers: {
+                  "Content-Type": "application/json"
+                }
+              })
+                .then(res => {
+                  // console.log(res.data.data.list);
+                  if (res.status === 200) {
+                    this.setState({ searchResultList: res.data.data.list });
+                  }
+                })
+                .catch(e => {
+                  alert(e);
+                });
+              // this.callApiForSubject();
             }
           );
         } else {
@@ -131,6 +183,7 @@ class Examtab extends Component {
       });
   }
   callApiForSubject = () => {
+    console.log(this.state.selectedExamID);
     if (this.state.selectedExamID !== "") {
       axios({
         method: "POST",
@@ -243,15 +296,26 @@ class Examtab extends Component {
   handleExamChange = e => {
     e.preventDefault();
 
-    this.setState(
-      {
-        selectedExamID: this.state.listOfExam[e.target.options.selectedIndex]
-          .exam.examId
-      },
-      () => {
-        this.callApiForSubject();
-      }
-    );
+    if (e.target.value === "") {
+      this.setState(
+        {
+          selectedExamID: ""
+        },
+        () => {
+          this.callApiForSubject();
+        }
+      );
+    } else {
+      this.setState(
+        {
+          selectedExamID: this.state.listOfExam[e.target.options.selectedIndex]
+            .exam.examId
+        },
+        () => {
+          this.callApiForSubject();
+        }
+      );
+    }
   };
   handleSubjectChange = e => {
     e.preventDefault();
@@ -286,7 +350,7 @@ class Examtab extends Component {
         <Col
           lg="3"
           style={{
-            padding: "0em 2em",
+            padding: "0em 3em",
             background: "#EEE"
           }}
         >
@@ -320,7 +384,7 @@ class Examtab extends Component {
           style={{
             background: "#EEEEEE",
             // height: "90vh",
-            padding: "0em 2em"
+            padding: "0em 4em"
           }}
         >
           <Row style={{ margin: "2em 0em" }}>
@@ -410,17 +474,19 @@ class Examtab extends Component {
           )} */}
           <div
             style={{
-              height: "45vh",
-              overflow: "scroll",
+              // height: "45vh",
+              // marginBottom:'2em',
+              marginBottom: "2em",
+              // overflow: "scroll",
               // border: "1px solid lightgrey",
               // background: "white",
               padding: "0.4em"
             }}
           >
-            {this.state.searchResultList.length > 0 &&
-              this.state.searchResultList.map((item,index) => {
+            {this.state.searchResultList.length > 0 ? (
+              this.state.searchResultList.map((item, index) => {
                 return (
-                  <Row key={index} style={{ margin: "0.5em 0em" }}>
+                  <Row key={index} style={{ margin: "0.9em 0em" }}>
                     <Col
                       style={{
                         paddingLeft: "0em",
@@ -450,12 +516,23 @@ class Examtab extends Component {
                                 fontWeight: "600"
                               }}
                             >
-                              <b>Year: </b>
-                              {item.year},
-                              <span style={{ color: "darkgreen" }}>
-                                {" "}
-                                {item.type}
+                              <b>Tags: </b>
+                              <span
+                                style={{
+                                  color: "darkgreen",
+                                  // fontSize:'0.5em',
+                                  textTransform: "capitalize"
+                                }}
+                              >
+                                {item.type.toLowerCase()}
                               </span>
+                              {item.year && (
+                                <span>
+                                  {", "}
+                                  {/* <b>Year: </b> */}
+                                  {item.year}
+                                </span>
+                              )}
                             </span>
                           </Card.Title>
 
@@ -487,7 +564,12 @@ class Examtab extends Component {
                     </Col>
                   </Row>
                 );
-              })}{" "}
+              })
+            ) : (
+              <Row style={{ margin: "0.5em 0em" }}>
+                <h5>No data found</h5>
+              </Row>
+            )}{" "}
           </div>
         </Col>
       </Row>

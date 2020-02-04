@@ -30,7 +30,9 @@ select:not([multiple]) {
   height: 100px;
   animation: spin 2s linear infinite;
 }
-
+.btn.focus, .btn:focus{
+  outline:none;
+}
 @keyframes spin {
   0% {
     transform: rotate(0deg);

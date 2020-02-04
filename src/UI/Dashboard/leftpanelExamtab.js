@@ -76,6 +76,7 @@ class LeftPanelExamtab extends Component {
             onChange={this.props.handleExamChange}
             value={currentvalueexam}
           >
+          
             {this.props.listOfExam &&
               this.props.listOfExam.map((item, index) => {
                 return (
@@ -84,6 +85,7 @@ class LeftPanelExamtab extends Component {
                   </option>
                 );
               })}
+              <option key='' value=''>Select</option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect111">
