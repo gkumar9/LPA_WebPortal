@@ -276,7 +276,7 @@ class Examtab extends Component {
         ].subjectSection.sectionId
       },
       () => {
-        this.callApiForTopic();
+        // this.callApiForTopic();
       }
     );
   };

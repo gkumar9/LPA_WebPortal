@@ -38,8 +38,9 @@ class QAtab extends Component {
     let tempsearchlistselected = this.state.listOfsearchselected.filter(
       item => item.status === true
     );
-    tempsearchlistselected.map(item => {
-      return this.onAddpreviewdata(item.id);
+    tempsearchlistselected.map( item => {
+      console.log(item);
+      this.onAddpreviewdata(item.id);
     });
   };
   handleSelectAllCheck = e => {
@@ -84,14 +85,21 @@ class QAtab extends Component {
         item => item.questionId === id
       );
       if (filterchecktemp.length > 0) {
+        console.log('>0')
         let templist = this.state.listOfselectedPreview;
         templist = templist.filter(obj => obj.questionId !== id);
-
-        this.setState({
-          listOfselectedPreview: templist,
-          isLoading: false
-        });
+        console.log(templist)
+        this.setState(
+          {
+            listOfselectedPreview: templist,
+            isLoading: false
+          },
+          () => {
+            localStorage.setItem("Previewdata", JSON.stringify(templist));
+          }
+        );
       } else {
+        console.log('<')
         axios({
           method: "POST",
           url: URL.geteditques + id,
@@ -106,11 +114,16 @@ class QAtab extends Component {
               temppreviewlist.push(res.data.data.question);
               // let tempsearchlist = this.state.listOfsearchselected;
               // tempsearchlist[index].status = !tempsearchlist[index].status;
-              this.setState({
-                listOfselectedPreview: temppreviewlist,
-                // listOfsearchselected:tempsearchlist,
-                isLoading: false
-              });
+              this.setState(
+                {
+                  listOfselectedPreview: temppreviewlist,
+                  // listOfsearchselected:tempsearchlist,
+                  isLoading: false
+                },
+                () => {
+                  localStorage.setItem("Previewdata", JSON.stringify(temppreviewlist));
+                }
+              );
             } else {
               this.setState({ isLoading: false }, () => {
                 alert("Data not found");
@@ -255,13 +268,13 @@ class QAtab extends Component {
               );
             } else {
               alert("Unexpected code");
-              this.setState({isLoading: false})
+              this.setState({ isLoading: false });
             }
           })
           .catch(e => {
             console.log(e);
             alert(e);
-            this.setState({isLoading: false})
+            this.setState({ isLoading: false });
           });
       }
     );
@@ -301,7 +314,7 @@ class QAtab extends Component {
         .catch(e => {
           console.log(e);
           alert(e);
-          this.setState({isLoading: false})
+          this.setState({ isLoading: false });
         });
     } else {
       console.log(
@@ -354,7 +367,7 @@ class QAtab extends Component {
         .catch(e => {
           console.log(e);
           alert(e);
-          this.setState({isLoading: false})
+          this.setState({ isLoading: false });
         });
     } else {
       console.log(
@@ -399,7 +412,7 @@ class QAtab extends Component {
         .catch(e => {
           console.log(e);
           alert(e);
-          this.setState({isLoading: false})
+          this.setState({ isLoading: false });
         });
     } else {
       console.log("(English)topicid is blank.API not called. checktopic list");
@@ -679,7 +692,9 @@ class QAtab extends Component {
                                       ? item.level === "MILD"
                                         ? "++"
                                         : "+"
-                                      : "+++"}
+                                      :  item.level === "MILD"
+                                        ? "++"
+                                        : "+++"}
                                   </span>
                                   ,
                                   <span

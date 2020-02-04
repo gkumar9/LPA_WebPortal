@@ -52,7 +52,7 @@ class LoginForm extends Component {
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
 
-          <Button type="submit" variant="outline-primary loginButton">
+          <Button type="submit" variant="outline-primary loginButton" style={{marginTop:'0.5em'}}>
             Login
           </Button>
         </Form>

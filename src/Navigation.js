@@ -32,7 +32,7 @@ const ProtectedRoute = ({ component: Component, authenticated, path }) => {
 class Navigation extends Component {
   render() {
     return (
-      <Router>
+      <Router basename={'/'}>
         {/* <Switch> */}
         <Route
           exact

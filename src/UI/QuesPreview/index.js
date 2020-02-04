@@ -164,7 +164,9 @@ class ShowData extends Component {
                                       ? item.level === "MILD"
                                         ? "++"
                                         : "+"
-                                      : "+++"}
+                                      :  item.level === "MILD"
+                                        ? "++"
+                                        : "+++"}
                                   </span>
                                   ,
                                   <span

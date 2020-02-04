@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+// import MathType from "@wiris/mathtype-ckeditor5/src/plugin";
 import axios from "axios";
 import URL from "../../Assets/url";
 import TagsInput from "react-tagsinput";
@@ -60,7 +61,7 @@ class QuesEnglish extends Component {
     this.setState({ tags });
   };
   componentDidMount() {
-    console.log('as')
+    console.log("as");
     axios({
       method: "POST",
       url: URL.fetchSubject + "ENGLISH",
@@ -332,7 +333,7 @@ class QuesEnglish extends Component {
         if (res.status === 200) {
           console.log(res.data.data);
           //   this.setState({ activetab: "2" });
-          alert('Success:',res.data.data)
+          alert("Success:", res.data.data);
           this.props.handleChange(res.data.data.questionId);
           this.props.handleSelect();
         }
@@ -348,7 +349,7 @@ class QuesEnglish extends Component {
           <Col lg="3">
             <div
               style={{
-                width: "auto",
+                width: "auto"
                 // height: "0.5em"
               }}
             ></div>
@@ -439,6 +440,10 @@ class RightpanelEnglish extends Component {
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
+                    // config={{
+                    //   plugins: [MathType],
+                    //   toolbar: { items: ["MathType"] }
+                    // }}
                     editor={ClassicEditor}
                     data={item.content}
                     onChange={(event, editor) => {
