@@ -17,11 +17,12 @@ class Editques extends Component {
     super(props);
     this.state = {
       questionId: this.props.match.params.id,
-      fetchedData: null,
+      fetchedData: null
       // activetab: "1"
     };
   }
   componentDidMount() {
+    // console.log(this.props.match.params.lang)
     axios({
       method: "POST",
       url: URL.geteditques + this.state.questionId,
@@ -29,12 +30,16 @@ class Editques extends Component {
       headers: {
         "Content-Type": "application/json"
       }
-    }).then(res => {
-      console.log(res.data.data.question);
-      if (res.status === 200) {
-        this.setState({ fetchedData: res.data.data.question });
-      }
-    });
+    })
+      .then(res => {
+        console.log(res.data.data.question);
+        if (res.status === 200) {
+          this.setState({ fetchedData: res.data.data.question });
+        }
+      })
+      .catch(e => {
+        alert(e);
+      });
   }
   // handleSelect = () => {
   //   let activetab = this.state.activetab;
@@ -87,7 +92,10 @@ class Editques extends Component {
           }}
         >
           {this.state.fetchedData && (
-            <EditComponent fetchedData={this.state.fetchedData} />
+            <EditComponent
+              fetchedData={this.state.fetchedData}
+              match={this.props.match}
+            />
           )}
         </Container>
       </React.Fragment>

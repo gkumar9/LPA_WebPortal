@@ -34,7 +34,9 @@ class EditExam extends Component {
       if (res.status === 200) {
         this.setState({ fetchedData: res.data.data.test });
       }
-    });
+    }).catch((e)=>{
+      alert(e)
+    })
   }
   render() {
     return (
@@ -70,6 +72,7 @@ class EditExam extends Component {
           fluid
           style={{
             width: "auto",
+            // height:'90vh',
             background: "#EEEEEE",
             padding: "0.5em 1.5em"
           }}

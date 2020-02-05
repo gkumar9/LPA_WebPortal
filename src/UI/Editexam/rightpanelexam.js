@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Button, Row, Col, Form, Container } from "react-bootstrap";
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+// import CKEditor from "@ckeditor/ckeditor5-react";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import CKEditor from "ckeditor4-react";
 class RightExamPanel extends Component {
   render() {
     return (
@@ -38,7 +39,7 @@ class RightExamPanel extends Component {
             </Row>
           </Container>
           <div style={{ margin: "1.7em 0", width: "100%" }}>
-            <Form.Control
+            {/* <Form.Control
               style={{
                 fontWeight: "600",
                 margin: " 0 0.5em"
@@ -46,35 +47,55 @@ class RightExamPanel extends Component {
               plaintext
               readOnly
               defaultValue="Description and Instruction"
-            />
+            /> */}
             <div style={{ margin: "0em 0em", width: "100%" }}>
+              <small>Test description and instruction in English</small>
               <CKEditor
-                editor={ClassicEditor}
+                onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+                // editor={ClassicEditor}
                 config={{
-                  placeholder: "Test description and instruction in English"
+                  height: 80
+                  // placeholder: "Test description and instruction in English"
                 }}
                 data={this.props.testInstructionEnglish}
-                onChange={(event, editor) => {
-                  const data = editor.getData();
-                  this.props.handleEnglishInstructionChange(data);
+                onChange={event => {
+                  // const data = editor.getData();
+                  this.props.handleEnglishInstructionChange(
+                    event.editor.getData()
+                  );
                 }}
               />
             </div>
             <div style={{ margin: "1em 0em", width: "100%" }}>
+              <small>Test description and instruction in Hindi</small>
               <CKEditor
-                editor={ClassicEditor}
+                onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+                // editor={ClassicEditor}
                 config={{
-                  placeholder: "Test description and instruction in Hindi"
+                  height: 80
+                  // placeholder: "Test description and instruction in Hindi"
                 }}
                 data={this.props.testInstructionHindi}
-                onChange={(event, editor) => {
-                  const data = editor.getData();
-                  this.props.handleHindiInstructionChange(data);
+                onChange={event => {
+                  // const data = editor.getData();
+                  this.props.handleHindiInstructionChange(
+                    event.editor.getData()
+                  );
                 }}
               />
             </div>
           </div>
-
+          {this.props.listOfSection.length > 0 && (
+            <Form.Control
+              style={{
+                fontWeight: "600",
+                margin: " 0 0.5em"
+              }}
+              plaintext
+              readOnly
+              defaultValue="Section(s)"
+            />
+          )}
           {this.props.listOfSection &&
             this.props.listOfSection.map((item, index) => {
               return (
@@ -87,9 +108,9 @@ class RightExamPanel extends Component {
                     margin: "1em 0"
                   }}
                 >
-                  <Row noGutters={true} style={{ margin: "1em 0em" }}>
+                  <Row noGutters={true} style={{ margin: "0em 0em" }}>
                     <Col lg="4">
-                      <Form.Control
+                      {/* <Form.Control
                         style={{
                           fontWeight: "600"
                           // margin: " 0 0.5em"
@@ -97,27 +118,29 @@ class RightExamPanel extends Component {
                         plaintext
                         readOnly
                         defaultValue="Section A"
-                      />
+                      /> */}
                     </Col>
+
                     {this.props.listOfSection.length === index + 1 && (
                       <Col>
-                        <Button
+                        {/* <Button
                           style={{ float: "right", color: "grey" }}
                           variant="link"
                           onClick={this.props.deleteSection}
                         >
                           X Delete
-                        </Button>
+                        </Button> */}
                       </Col>
                     )}
                   </Row>
-                  <Row noGutters={true} style={{ margin: "1em 0em" }}>
+                  <Row noGutters={true} style={{ margin: "0em 0em" }}>
                     <Col lg="5">
+                      <small>Section Name in English</small>
                       <Form.Control
                         value={
                           item.testSectionVersions.filter(
                             object => object.language === "ENGLISH"
-                          )[0].sectionName
+                          )[0].name
                         }
                         onChange={this.props.handleSectionnameChange.bind(
                           this,
@@ -130,11 +153,12 @@ class RightExamPanel extends Component {
                     </Col>
                     <Col lg="2"></Col>
                     <Col lg="5">
+                      <small>Section Name in Hindi</small>
                       <Form.Control
                         value={
                           item.testSectionVersions.filter(
                             object => object.language === "HINDI"
-                          )[0].sectionName
+                          )[0].name
                         }
                         onChange={this.props.handleSectionnameChange.bind(
                           this,
@@ -149,7 +173,9 @@ class RightExamPanel extends Component {
                   <Row noGutters={true} style={{ margin: "1em 0em" }}>
                     {/* <Col lg="2"></Col> */}
                     <Col lg="5">
+                      <small>Marks/ ques</small>
                       <Form.Control
+                        disabled
                         type="number"
                         value={item.marksPerQuestion}
                         onChange={this.props.handleMarksperQuesChange.bind(
@@ -162,7 +188,9 @@ class RightExamPanel extends Component {
                     </Col>
                     <Col lg="2"></Col>
                     <Col lg="5">
+                      <small>Negative marks / ques</small>
                       <Form.Control
+                        disabled
                         type="number"
                         value={item.negativeMarksPerQuestion}
                         onChange={this.props.handleNegativeMarksPerQuesChange.bind(
@@ -176,45 +204,59 @@ class RightExamPanel extends Component {
                   </Row>
                   <div style={{ margin: "1.7em 0", width: "100%" }}>
                     <div style={{ margin: "0em 0em", width: "100%" }}>
+                      <small>
+                        Section description and instruction in English
+                      </small>
                       <CKEditor
-                        editor={ClassicEditor}
+                        onBeforeLoad={CKEDITOR =>
+                          (CKEDITOR.disableAutoInline = true)
+                        }
+                        // editor={ClassicEditor}
                         data={
                           item.testSectionVersions.filter(
                             object => object.language === "ENGLISH"
                           )[0].content
                         }
                         config={{
-                          placeholder:
-                            "Section description and instruction in English"
+                          height: 80
+                          // placeholder:
+                          //   "Section description and instruction in English"
                         }}
-                        onChange={(event, editor) => {
-                          const data = editor.getData();
+                        onChange={event => {
+                          // const data = editor.getData();
                           this.props.handleSectionDescriptionChange(
                             index,
                             "ENGLISH",
-                            data
+                            event.editor.getData()
                           );
                         }}
                       />
                     </div>
                     <div style={{ margin: "1em 0em", width: "100%" }}>
+                      <small>
+                        Section description and instruction in Hindi
+                      </small>
                       <CKEditor
-                        editor={ClassicEditor}
+                        onBeforeLoad={CKEDITOR =>
+                          (CKEDITOR.disableAutoInline = true)
+                        }
+                        // editor={ClassicEditor}
                         data={
                           item.testSectionVersions.filter(
                             object => object.language === "HINDI"
                           )[0].content
                         }
                         config={{
+                          height: 80,
                           placeholder:
                             "Section description and instruction in Hindi"
                         }}
-                        onChange={(event, editor) => {
-                          const data = editor.getData();
+                        onChange={event => {
+                          // const data = editor.getData();
                           this.props.handleSectionDescriptionChange(
                             index,
                             "HINDI",
-                            data
+                            event.editor.getData()
                           );
                         }}
                       />
@@ -271,7 +313,7 @@ class RightExamPanel extends Component {
                   <Row style={{ marginTop: "0.5em" }}>
                     <Col lg="1"></Col>
                     <Col>
-                      <Button
+                      {/* <Button
                         onClick={this.props.addSectionQuestions.bind(
                           this,
                           index
@@ -288,7 +330,7 @@ class RightExamPanel extends Component {
                       >
                         {" "}
                         + Add question
-                      </Button>
+                      </Button> */}
                     </Col>
                   </Row>
                 </div>
@@ -299,7 +341,7 @@ class RightExamPanel extends Component {
             <Row noGutters={true} style={{ margin: "1em 0em" }}>
               <Col lg="10"> </Col>
               <Col>
-                <Button
+                {/* <Button
                   onClick={this.props.addSection}
                   varirant="info"
                   style={{
@@ -313,7 +355,7 @@ class RightExamPanel extends Component {
                 >
                   {" "}
                   + Add Section
-                </Button>
+                </Button> */}
               </Col>
             </Row>
           </Container>

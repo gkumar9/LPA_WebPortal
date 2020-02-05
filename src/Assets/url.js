@@ -14,7 +14,8 @@ let URL = {
   geteditques:Base_url+'/api/question/content/',
   updateExistingQuestionVersion:Base_url+'/api/update/existing/question/version',
   getexamcontent:Base_url+'/api/test/content/',
-  updatetest:Base_url+'/api/update/test'
+  updatetest:Base_url+'/api/update/test',
+  tagsearch:Base_url+'/api/tag/search/'
 
 };
 export default URL;

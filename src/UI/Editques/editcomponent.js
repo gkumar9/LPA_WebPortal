@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
 import TagsInput from "react-tagsinput";
 import Difficulty from "./difficulty.js";
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+// import CKEditor from "@ckeditor/ckeditor5-react";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import CKEditor from "ckeditor4-react";
 // import { Pramukhime } from "./../../Assets/pramukhime/plugin";
 import axios from "axios";
 import "react-tagsinput/react-tagsinput.css"; // If using WebPack and style-loader.
@@ -74,16 +75,16 @@ class EditComponent extends Component {
 
     this.setState({
       difficulty: difficultyvalue,
-      questionData: this.props.fetchedData.questionVersions[0].content,
-      explanationData: this.props.fetchedData.questionVersions[0].solution,
-      listOfOptions: this.props.fetchedData.questionVersions[0].options,
+      questionData:this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].content,
+      explanationData:this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].solution,
+      listOfOptions:this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].options,
       letterchartcode:
-        this.props.fetchedData.questionVersions[0].options.length + 65
+       this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].options.length + 65
     });
     axios({
       method: "POST",
       url:
-        URL.fetchSubject + this.props.fetchedData.questionVersions[0].language,
+        URL.fetchSubject +this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].language,
       data: { authToken: "string" },
       headers: {
         "Content-Type": "application/json"
@@ -139,7 +140,7 @@ class EditComponent extends Component {
           URL.fetchChapter +
           this.state.selectedSubjectID +
           "/" +
-          this.props.fetchedData.questionVersions[0].language,
+         this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].language,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -208,7 +209,7 @@ class EditComponent extends Component {
           URL.fetchTopic +
           this.state.selectedChapterID +
           "/" +
-          this.props.fetchedData.questionVersions[0].language,
+         this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].language,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -275,7 +276,7 @@ class EditComponent extends Component {
           URL.fetchSubTopic +
           this.state.selectedTopicID +
           "/" +
-          this.props.fetchedData.questionVersions[0].language,
+         this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].language,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -420,9 +421,9 @@ class EditComponent extends Component {
         type: "SINGLE_CHOICE",
         version: {
           content: this.state.questionData,
-          language: this.props.fetchedData.questionVersions[0].language,
+          language:this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].language,
           options: this.state.listOfOptions,
-          questionVersionId: this.props.fetchedData.questionVersions[0]
+          questionVersionId:this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0]
             .questionVersionId,
           solution: this.state.explanationData
         }
@@ -680,7 +681,7 @@ class RightpanelEnglish extends Component {
                   </Form.Label>
                   <Col sm="2">
                     <Form.Control
-                    disabled
+                      disabled
                       style={{ borderRadius: "0", background: "lightgrey" }}
                       type="number"
                       value={item.weightage || 0}
@@ -705,11 +706,21 @@ class RightpanelEnglish extends Component {
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
-                    editor={ClassicEditor}
+                    onBeforeLoad={CKEDITOR =>
+                      (CKEDITOR.disableAutoInline = true)
+                    }
+                    config={{
+                      height: 80
+
+                      // placeholder: "Test description and instruction in English"
+                    }}
                     data={item.content}
-                    onChange={(event, editor) => {
-                      const data = editor.getData();
-                      this.props.handleOptioncontentchange(index, data);
+                    onChange={event => {
+                      // const data = editor.getData();
+                      this.props.handleOptioncontentchange(
+                        index,
+                        event.editor.getData()
+                      );
                     }}
                   />
                 </div>
@@ -780,13 +791,24 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
         }}
       >
         <CKEditor
-          editor={ClassicEditor}
+          onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+          config={{
+            height: 80,
+            // font_defaultLabel: "lato",
+            // fontSize_sizes: "16/16px;24/24px;48/48px;",
+            // font_style: {
+            //   element: "p",
+            //   styles: { "font-size": "18px" },
+            //   overrides: [{ element: "font", attributes: { face: null } }]
+            // }
+            // placeholder: "Test description and instruction in English"
+          }}
           data={questionData}
           //   config={{
           //     plugins: [Pramukhime]
           //   }}
-          onChange={(event, editor) => {
-            const data = editor.getData();
+          onChange={event => {
+            const data = event.editor.getData();
 
             handleQuestionEditor(data);
           }}
@@ -812,14 +834,14 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
         }}
       >
         <CKEditor
-          editor={ClassicEditor}
-          data={explanationData}
-          onInit={editor => {
-            // You can store the "editor" and use when it is needed.
-            // console.log("Editor is ready to use!", editor);
+          onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+          config={{
+            height: 80
+            // placeholder: "Test description and instruction in English"
           }}
-          onChange={(event, editor) => {
-            const data = editor.getData();
+          data={explanationData}
+          onChange={event => {
+            const data = event.editor.getData();
             handleExplanationEditor(data);
           }}
         />

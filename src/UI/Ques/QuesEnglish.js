@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import CKEditor from "ckeditor4-react";
+// import CKEditor from "@ckeditor/ckeditor5-react";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 // import MathType from "@wiris/mathtype-ckeditor5/src/plugin";
 import axios from "axios";
 import URL from "../../Assets/url";
-import TagsInput from "react-tagsinput";
+// import TagsInput from "react-tagsinput";
 import Difficulty from "./difficulty.js";
-import "react-tagsinput/react-tagsinput.css"; // If using WebPack and style-loader.
+// import "react-tagsinput/react-tagsinput.css"; // If using WebPack and style-loader.
 import "./index.css";
+import ReactTags from "react-tag-autocomplete";
 
 class QuesEnglish extends Component {
   constructor(props) {
@@ -22,7 +24,7 @@ class QuesEnglish extends Component {
       selectedTopicID: "",
       listOfSubTopic: [],
       selectedSubTopicID: "",
-      tags: [],
+      // tags: [],
       difficulty: "",
       questionData: "",
       explanationData: "",
@@ -30,10 +32,30 @@ class QuesEnglish extends Component {
         { name: "Option A", content: "", weightage: null },
         { name: "Option B", content: "", weightage: null }
       ],
-      letterchartcode: 67
+      letterchartcode: 67,
+      tags: [
+        { id: 1, name: "Apples" },
+        { id: 2, name: "Pears" }
+      ],
+      suggestions: [
+        { id: 3, name: "Bananas" },
+        { id: 4, name: "Mangos" },
+        { id: 5, name: "Lemons" },
+        { id: 6, name: "Apricots" }
+      ],
+      apisugges: []
     };
   }
+  onDelete = i => {
+    const tags = this.state.tags.slice(0);
+    tags.splice(i, 1);
+    this.setState({ tags });
+  };
 
+  onAddition = tag => {
+    const tags = [].concat(this.state.tags, tag);
+    this.setState({ tags });
+  };
   addoptionfn = () => {
     let currentCharCode = this.state.letterchartcode;
     let name = "Option " + String.fromCharCode(currentCharCode);
@@ -58,10 +80,34 @@ class QuesEnglish extends Component {
     this.setState({ difficulty: e.target.value });
   };
   handleChangeTags = tags => {
-    this.setState({ tags });
+    let tempsugg = this.state.suggestions;
+    let tempapisugges = this.state.tempapisugges;
+    if (tags.length > 2) {
+      axios({
+        method: "POST",
+        url: URL.tagsearch + tags,
+        data: { authToken: "string" },
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(res => {
+        if (res.status === 200) {
+          if (res.data.data.list.length > 0) {
+            tempapisugges.concat(res.data.list);
+            tempsugg.concat(res.data.data.list);
+            this.setState({ suggestions: tempsugg, apisugges: tempapisugges });
+          } else {
+            tempsugg = [];
+            tempsugg.concat(tempapisugges);
+            tempsugg.push({ id: 99, name: tags });
+            this.setState({ suggestions: tempsugg });
+          }
+        }
+      });
+    }
   };
   componentDidMount() {
-    console.log("as");
+    // console.log("as");
     axios({
       method: "POST",
       url: URL.fetchSubject + "ENGLISH",
@@ -91,6 +137,7 @@ class QuesEnglish extends Component {
       })
       .catch(e => {
         console.log(e);
+        alert(e);
       });
   }
   callApiForChapter = () => {
@@ -333,13 +380,14 @@ class QuesEnglish extends Component {
         if (res.status === 200) {
           console.log(res.data.data);
           //   this.setState({ activetab: "2" });
-          alert("Success:", res.data.data);
+          alert("Success in English:", res.data.data);
           this.props.handleChange(res.data.data.questionId);
           this.props.handleSelect();
         }
       })
       .catch(e => {
         console.log(e);
+        alert(e);
       });
   };
   render() {
@@ -367,6 +415,9 @@ class QuesEnglish extends Component {
               selectedTopicID={this.state.selectedTopicID}
               selectedSubTopicID={this.state.selectedSubTopicID}
               tags={this.state.tags}
+              suggestions={this.state.suggestions}
+              onAddition={this.onAddition}
+              onDelete={this.onDelete}
               handleChangeTags={this.handleChangeTags}
               difficulty={this.state.difficulty}
               handleDifficultyRadio={this.handleDifficultyRadio}
@@ -444,10 +495,16 @@ class RightpanelEnglish extends Component {
                     //   plugins: [MathType],
                     //   toolbar: { items: ["MathType"] }
                     // }}
-                    editor={ClassicEditor}
+                    onBeforeLoad={CKEDITOR =>
+                      (CKEDITOR.disableAutoInline = true)
+                    }
+                    config={{
+                      height: 80
+                      // placeholder: "Test description and instruction in English"
+                    }}
                     data={item.content}
-                    onChange={(event, editor) => {
-                      const data = editor.getData();
+                    onChange={event => {
+                      const data = event.editor.getData();
                       this.props.handleOptioncontentchange(index, data);
                     }}
                   />
@@ -640,10 +697,18 @@ class LeftPanel extends Component {
           >
             Tags
           </Form.Label>
-          <TagsInput
+          <ReactTags
+            // style={{width:'100%'}}
+            tags={this.props.tags}
+            onInput={this.props.handleChangeTags}
+            suggestions={this.props.suggestions}
+            onDelete={this.props.onDelete.bind(this)}
+            onAddition={this.props.onAddition.bind(this)}
+          />
+          {/* <TagsInput
             value={this.props.tags}
             onChange={this.props.handleChangeTags}
-          />
+          /> */}
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlTextarea1">
           <Form.Label
@@ -680,14 +745,18 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
         }}
       >
         <CKEditor
-          editor={ClassicEditor}
+          onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+          config={{
+            height: 80
+            // placeholder: "Test description and instruction in English"
+          }}
           data={questionData}
           // onInit={editor => {
           //   // You can store the "editor" and use when it is needed.
           //   // console.log("Editor is ready to use!", editor);
           // }}
           onChange={(event, editor) => {
-            const data = editor.getData();
+            const data = event.editor.getData();
             // console.log(data)
             handleQuestionEditor(data);
             // console.log({
@@ -723,14 +792,18 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
         }}
       >
         <CKEditor
-          editor={ClassicEditor}
+          onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+          config={{
+            height: 80
+            // placeholder: "Test description and instruction in English"
+          }}
           data={explanationData}
           onInit={editor => {
             // You can store the "editor" and use when it is needed.
             // console.log("Editor is ready to use!", editor);
           }}
           onChange={(event, editor) => {
-            const data = editor.getData();
+            const data = event.editor.getData();
             handleExplanationEditor(data);
           }}
           // onBlur={(event, editor) => {

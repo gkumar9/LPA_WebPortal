@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Button, Row, Col, Form, Container } from "react-bootstrap";
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+// import CKEditor from "@ckeditor/ckeditor5-react";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import CKEditor from "ckeditor4-react";
 class RightExamPanel extends Component {
   render() {
     return (
@@ -49,26 +50,29 @@ class RightExamPanel extends Component {
             />
             <div style={{ margin: "0em 0em", width: "100%" }}>
               <CKEditor
-                editor={ClassicEditor}
+                // editor={ClassicEditor}
+                onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
                 config={{
-                  placeholder: "Test description and instruction in English"
+                  height: 80
+                  // placeholder: "Test description and instruction in English"
                 }}
                 data={this.props.testInstructionEnglish}
-                onChange={(event, editor) => {
-                  const data = editor.getData();
+                onChange={event => {
+                  const data = event.editor.getData();
                   this.props.handleEnglishInstructionChange(data);
                 }}
               />
             </div>
             <div style={{ margin: "1em 0em", width: "100%" }}>
               <CKEditor
-                editor={ClassicEditor}
+                onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
                 config={{
-                  placeholder: "Test description and instruction in Hindi"
+                  height: 80
+                  // placeholder: "Test description and instruction in English"
                 }}
                 data={this.props.testInstructionHindi}
                 onChange={(event, editor) => {
-                  const data = editor.getData();
+                  const data = event.editor.getData();
                   this.props.handleHindiInstructionChange(data);
                 }}
               />
@@ -177,18 +181,20 @@ class RightExamPanel extends Component {
                   <div style={{ margin: "1.7em 0", width: "100%" }}>
                     <div style={{ margin: "0em 0em", width: "100%" }}>
                       <CKEditor
-                        editor={ClassicEditor}
+                        onBeforeLoad={CKEDITOR =>
+                          (CKEDITOR.disableAutoInline = true)
+                        }
+                        config={{
+                          height: 80
+                          // placeholder: "Test description and instruction in English"
+                        }}
                         data={
                           item.versions.filter(
                             object => object.language === "ENGLISH"
                           )[0].content
                         }
-                        config={{
-                          placeholder:
-                            "Section description and instruction in English"
-                        }}
                         onChange={(event, editor) => {
-                          const data = editor.getData();
+                          const data = event.editor.getData();
                           this.props.handleSectionDescriptionChange(
                             index,
                             "ENGLISH",
@@ -199,18 +205,20 @@ class RightExamPanel extends Component {
                     </div>
                     <div style={{ margin: "1em 0em", width: "100%" }}>
                       <CKEditor
-                        editor={ClassicEditor}
+                        onBeforeLoad={CKEDITOR =>
+                          (CKEDITOR.disableAutoInline = true)
+                        }
+                        config={{
+                          height: 80
+                          // placeholder: "Test description and instruction in English"
+                        }}
                         data={
                           item.versions.filter(
                             object => object.language === "HINDI"
                           )[0].content
                         }
-                        config={{
-                          placeholder:
-                            "Section description and instruction in Hindi"
-                        }}
                         onChange={(event, editor) => {
-                          const data = editor.getData();
+                          const data = event.editor.getData();
                           this.props.handleSectionDescriptionChange(
                             index,
                             "HINDI",

@@ -197,7 +197,7 @@ class LeftPanelExam extends Component {
               <Form.Control
               type="number"
                 placeholder="Hours"
-                value={this.props.hour}
+                value={this.props.hour?this.props.hour:0}
                 onChange={this.props.onHourChange.bind(this)}
               ></Form.Control>
             </Col>
@@ -217,7 +217,7 @@ class LeftPanelExam extends Component {
               <Form.Control
               type="number"
                 placeholder="Minutes"
-                value={this.props.minute}
+                value={this.props.minute?this.props.minute:0}
                 onChange={this.props.onMinuteChange.bind(this)}
               ></Form.Control>
               {/* <TimePickerWrapper

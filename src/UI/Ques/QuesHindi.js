@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+// import CKEditor from "@ckeditor/ckeditor5-react";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import CKEditor from "ckeditor4-react";
 import axios from "axios";
 import URL from "../../Assets/url";
 import TagsInput from "react-tagsinput";
@@ -332,7 +333,7 @@ class QuesHindi extends Component {
         if (res.status === 200) {
           alert('Success:',res.data.data)
           if (this.props.questionId === "") {
-            
+            alert('success in Hindi:',res.data.data)
             this.props.handleChange.bind(this, res.data.data.questionId);
             this.props.handleSelect();
           }
@@ -345,6 +346,7 @@ class QuesHindi extends Component {
       })
       .catch(e => {
         console.log(e);
+        alert(e)
       });
   };
   render() {
@@ -444,10 +446,14 @@ class RightpanelHindi extends Component {
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
-                    editor={ClassicEditor}
+                    onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+                config={{
+                  height: 80
+                  // placeholder: "Test description and instruction in English"
+                }}
                     data={item.content}
-                    onChange={(event, editor) => {
-                      const data = editor.getData();
+                    onChange={(event) => {
+                      const data = event.editor.getData();
                       this.props.handleOptioncontentchange(index, data);
                     }}
                   />
@@ -680,14 +686,18 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
         }}
       >
         <CKEditor
-          editor={ClassicEditor}
+          onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+                config={{
+                  height: 80
+                  // placeholder: "Test description and instruction in English"
+                }}
           data={questionData}
           // onInit={editor => {
           //   // You can store the "editor" and use when it is needed.
           //   // console.log("Editor is ready to use!", editor);
           // }}
-          onChange={(event, editor) => {
-            const data = editor.getData();
+          onChange={(event) => {
+            const data = event.editor.getData();
             // console.log(data)
             handleQuestionEditor(data);
             // console.log({
@@ -723,14 +733,18 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
         }}
       >
         <CKEditor
-          editor={ClassicEditor}
+          onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+                config={{
+                  height: 80
+                  // placeholder: "Test description and instruction in English"
+                }}
           data={explanationData}
           onInit={editor => {
             // You can store the "editor" and use when it is needed.
             // console.log("Editor is ready to use!", editor);
           }}
           onChange={(event, editor) => {
-            const data = editor.getData();
+            const data = event.editor.getData();
             handleExplanationEditor(data);
           }}
           // onBlur={(event, editor) => {

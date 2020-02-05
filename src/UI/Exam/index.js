@@ -38,8 +38,8 @@ class Exam extends Component {
       testInstructionHindi: "",
       listOfSection: [
         {
-          marksPerQuestion: '',
-          negativeMarksPerQuestion: '',
+          marksPerQuestion: "",
+          negativeMarksPerQuestion: "",
           questions: [],
 
           versions: [
@@ -347,17 +347,43 @@ class Exam extends Component {
   };
   saveExamdata = () => {
     // console.log(this.state.endDate,this.state.endDate.toDateString())
+    var startDatetemp = this.state.startDate;
+
+    var dd = startDatetemp.getDate();
+    var mm = startDatetemp.getMonth() + 1; //January is 0!
+
+    var yyyy = startDatetemp.getFullYear();
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+    if (mm < 10) {
+      mm = "0" + mm;
+    }
+    var startDate = yyyy + "-" + mm + "-" + dd;
+    var endDatetemp = this.state.startDate;
+
+    var ddendDatetemp = endDatetemp.getDate();
+    var mmendDatetemp = endDatetemp.getMonth() + 1; //January is 0!
+
+    var yyyyendDatetemp = endDatetemp.getFullYear();
+    if (ddendDatetemp < 10) {
+      ddendDatetemp = "0" + ddendDatetemp;
+    }
+    if (mmendDatetemp < 10) {
+      mmendDatetemp = "0" + mmendDatetemp;
+    }
+    var endDate = yyyyendDatetemp + "-" + mmendDatetemp + "-" + ddendDatetemp;
     axios({
       method: "POST",
       url: URL.addnewExam,
       data: {
         authToken: "string",
-        endDate: this.state.endDate.toISOString(),
+        endDate: endDate,
         examId: this.state.selectedExamID,
         subjectId: this.state.selectedSubjectID,
         sectionId: this.state.selectedChapterID,
         sections: this.state.listOfSection,
-        startDate: this.state.startDate.toISOString(),
+        startDate: startDate,
         testInstructions: [
           {
             instructions: this.state.testInstructionEnglish,
@@ -384,7 +410,7 @@ class Exam extends Component {
       .then(res => {
         if (res.status === 200) {
           console.log(res.data.data);
-          alert('Success:',res.data.data)
+          alert("Success:", res.data.data);
         }
       })
       .catch(e => {

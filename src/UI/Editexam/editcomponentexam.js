@@ -19,8 +19,12 @@ class ExamEditComponent extends Component {
       listOfChapter: [],
       selectedChapterID: "",
       listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: this.props.fetchedData.startDate
+        ? new Date(this.props.fetchedData.startDate)
+        : new Date(),
+      endDate: this.props.fetchedData.endDate
+        ? new Date(this.props.fetchedData.endDate)
+        : new Date(),
       testnameEnglish: this.props.fetchedData.testVersions.filter(
         item => item.language === "ENGLISH"
       )[0].name,
@@ -36,20 +40,25 @@ class ExamEditComponent extends Component {
       hour: hours,
       minute: minutes,
       selectedType: this.props.fetchedData.type,
-      selectedTypeYear: this.props.fetchedData.year?this.props.fetchedData.year:null,
+      selectedTypeYear: this.props.fetchedData.year
+        ? this.props.fetchedData.year
+        : null,
       listOfSection: this.props.fetchedData.testSections,
-      englishtestVersionId:this.props.fetchedData.testVersions.filter(
+      englishtestVersionId: this.props.fetchedData.testVersions.filter(
         item => item.language === "ENGLISH"
       )[0].testVersionId,
-      hinditestVersionId:this.props.fetchedData.testVersions.filter(
+      hinditestVersionId: this.props.fetchedData.testVersions.filter(
         item => item.language === "HINDI"
-      )[0].testVersionId,
-      
+      )[0].testVersionId
     };
   }
   addSectionQuestions = index => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].questions.push("");
+    if (tempsectionlist[index].questions) {
+      tempsectionlist[index].questions.push("");
+    } else {
+      tempsectionlist[index].questions = [""];
+    }
     this.setState({ listOfSection: tempsectionlist });
   };
   deleteSectionQuestion = index => {
@@ -85,22 +94,22 @@ class ExamEditComponent extends Component {
     // console.log('add section');
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist.push({
-      marksPerQuestion: 0,
-      negativeMarksPerQuestion: 0,
-      questions: [0],
+      marksPerQuestion: "",
+      negativeMarksPerQuestion: "",
+      questions: [],
 
-      versions: [
+      testSectionVersions: [
         {
-          content: "stringEng",
+          content: "",
           language: "ENGLISH",
           name: "string",
-          sectionName: "stringEnglish"
+          sectionName: ""
         },
         {
-          content: "stringHin",
+          content: "",
           language: "HINDI",
           name: "string",
-          sectionName: "stringHindi"
+          sectionName: ""
         }
       ]
     });
@@ -115,7 +124,7 @@ class ExamEditComponent extends Component {
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].testSectionVersions.filter(
       item => item.language === language
-    )[0].sectionName = e.target.value;
+    )[0].name = e.target.value;
     this.setState({ listOfSection: tempsectionlist });
   };
   handleEnglishTestNameChange = e => {
@@ -413,16 +422,42 @@ class ExamEditComponent extends Component {
     });
   };
   saveExamdata = () => {
+    var startDatetemp = this.state.startDate;
+
+    var dd = startDatetemp.getDate();
+    var mm = startDatetemp.getMonth() + 1; //January is 0!
+
+    var yyyy = startDatetemp.getFullYear();
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+    if (mm < 10) {
+      mm = "0" + mm;
+    }
+    var startDate = yyyy + "-" + mm + "-" + dd;
+    var endDatetemp = this.state.startDate;
+
+    var ddendDatetemp = endDatetemp.getDate();
+    var mmendDatetemp = endDatetemp.getMonth() + 1; //January is 0!
+
+    var yyyyendDatetemp = endDatetemp.getFullYear();
+    if (ddendDatetemp < 10) {
+      ddendDatetemp = "0" + ddendDatetemp;
+    }
+    if (mmendDatetemp < 10) {
+      mmendDatetemp = "0" + mmendDatetemp;
+    }
+    var endDate = yyyyendDatetemp + "-" + mmendDatetemp + "-" + ddendDatetemp;
     axios({
       method: "POST",
       url: URL.updatetest,
       data: {
         authToken: "string",
-        endDate: this.state.endDate.toISOString(),
+        endDate: endDate,
         examId: this.state.selectedExamID,
         sectionId: this.state.selectedChapterID,
         sections: this.state.listOfSection,
-        startDate: this.state.startDate.toISOString(),
+        startDate: startDate,
         subjectId: this.state.selectedSubjectID,
         testId: this.props.fetchedData.testId,
         testInstructions: [
@@ -430,8 +465,7 @@ class ExamEditComponent extends Component {
             instructions: this.state.testInstructionEnglish,
             language: "ENGLISH",
             name: this.state.testnameEnglish,
-            testVersionId: this.state.englishtestVersionId,
-            
+            testVersionId: this.state.englishtestVersionId
           },
           {
             instructions: this.state.testInstructionHindi,

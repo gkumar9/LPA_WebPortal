@@ -10,7 +10,7 @@ import { createBrowserHistory } from "history";
 import {
   Route,
   Redirect,
-  BrowserRouter as Router,
+  HashRouter as Router,
   // Switch
 } from "react-router-dom";
 export const history = createBrowserHistory({
@@ -58,7 +58,7 @@ class Navigation extends Component {
         />
         <ProtectedRoute
           authenticated={this.props.authenticated}
-          path="/editques/:id"
+          path="/editques/:lang/:id"
           component={Editques}
         />
         <ProtectedRoute

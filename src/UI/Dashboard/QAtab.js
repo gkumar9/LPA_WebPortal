@@ -38,7 +38,7 @@ class QAtab extends Component {
     let tempsearchlistselected = this.state.listOfsearchselected.filter(
       item => item.status === true
     );
-    tempsearchlistselected.map( item => {
+    tempsearchlistselected.map(item => {
       console.log(item);
       this.onAddpreviewdata(item.id);
     });
@@ -88,7 +88,7 @@ class QAtab extends Component {
         // console.log('>0')
         let templist = this.state.listOfselectedPreview;
         templist = templist.filter(obj => obj.questionId !== id);
-        console.log(templist)
+        console.log(templist);
         this.setState(
           {
             listOfselectedPreview: templist,
@@ -121,7 +121,10 @@ class QAtab extends Component {
                   isLoading: false
                 },
                 () => {
-                  localStorage.setItem("Previewdata", JSON.stringify(temppreviewlist));
+                  localStorage.setItem(
+                    "Previewdata",
+                    JSON.stringify(temppreviewlist)
+                  );
                 }
               );
             } else {
@@ -140,7 +143,7 @@ class QAtab extends Component {
   };
   handleSearchboxChange = e => {
     e.preventDefault();
-
+    console.log(e.target.value);
     this.setState({ searchbox: e.target.value });
     if (e.target.value !== "") {
       axios({
@@ -149,11 +152,19 @@ class QAtab extends Component {
         data: {
           authToken: "string",
           language: this.state.selectedLanguage,
-          questionId: this.state.searchbox,
-          sectionId: this.state.selectedChapterID?this.state.selectedChapterID:null,
-          subjectId: this.state.selectedSubjectID?this.state.selectedSubjectID:null,
-          subtopicId: this.state.selectedSubTopicID?this.state.selectedSubTopicID:null,
-          topicId: this.state.selectedTopicID?this.state.selectedTopicID:null
+          questionId: e.target.value,
+          sectionId: this.state.selectedChapterID
+            ? this.state.selectedChapterID
+            : null,
+          subjectId: this.state.selectedSubjectID
+            ? this.state.selectedSubjectID
+            : null,
+          subtopicId: this.state.selectedSubTopicID
+            ? this.state.selectedSubTopicID
+            : null,
+          topicId: this.state.selectedTopicID
+            ? this.state.selectedTopicID
+            : null
         },
         headers: {
           "Content-Type": "application/json"
@@ -220,20 +231,24 @@ class QAtab extends Component {
     });
   };
   clearSearchFromFilters = () => {
-    this.setState({
-      // searchResultList: [],
-      // listOfsearchselected: [],
-      searchbox: "",
-      listOfChapter:[],
-      selectedChapterID:"",
-      // listOfSubject:[],
-      selectedSubjectID:'',
-      listOfTopic:[],
-      selectedTopicID:'',
-      listOfSubTopic:[],
-      selectedSubTopicID:''
-    },()=>{this.handlesearchWithFilter();});
-
+    this.setState(
+      {
+        // searchResultList: [],
+        // listOfsearchselected: [],
+        searchbox: "",
+        listOfChapter: [],
+        selectedChapterID: "",
+        // listOfSubject:[],
+        selectedSubjectID: "",
+        listOfTopic: [],
+        selectedTopicID: "",
+        listOfSubTopic: [],
+        selectedSubTopicID: ""
+      },
+      () => {
+        this.handlesearchWithFilter();
+      }
+    );
   };
   handleLanguageChange = e => {
     e.preventDefault();
@@ -265,7 +280,7 @@ class QAtab extends Component {
               this.setState(
                 {
                   listOfSubject: res.data.data.list,
-                  selectedSubjectID:"",
+                  selectedSubjectID: "",
                   isLoading: false
                 },
                 () => {
@@ -284,29 +299,30 @@ class QAtab extends Component {
                     headers: {
                       "Content-Type": "application/json"
                     }
-                  }).then(res => {
-                    // console.log(res.data.data.list);
-                    if (res.status === 200) {
-                      let templist = res.data.data.list.map(item => {
-                        let filtertemplist = this.state.listOfselectedPreview.filter(
-                          obj => obj.questionId === item.questionId
-                        );
-                        if (filtertemplist.length > 0) {
-                          return { id: item.questionId, status: true };
-                        } else {
-                          return { id: item.questionId, status: false };
-                        }
-                      });
-                      // console.log(templist);
-                      this.setState({
-                        searchResultList: res.data.data.list,
-                        listOfsearchselected: templist
-                      });
-                    }
                   })
-                  .catch((e)=>{
-                    alert(e);
-                  })
+                    .then(res => {
+                      // console.log(res.data.data.list);
+                      if (res.status === 200) {
+                        let templist = res.data.data.list.map(item => {
+                          let filtertemplist = this.state.listOfselectedPreview.filter(
+                            obj => obj.questionId === item.questionId
+                          );
+                          if (filtertemplist.length > 0) {
+                            return { id: item.questionId, status: true };
+                          } else {
+                            return { id: item.questionId, status: false };
+                          }
+                        });
+                        // console.log(templist);
+                        this.setState({
+                          searchResultList: res.data.data.list,
+                          listOfsearchselected: templist
+                        });
+                      }
+                    })
+                    .catch(e => {
+                      alert(e);
+                    });
                 }
               );
             } else {
@@ -469,13 +485,13 @@ class QAtab extends Component {
     if (e.target.value === "") {
       this.setState(
         {
-          selectedSubjectID: ''
+          selectedSubjectID: ""
         },
         () => {
           this.callApiForChapter();
         }
       );
-    }else{
+    } else {
       this.setState(
         {
           selectedSubjectID: this.state.listOfSubject[
@@ -487,7 +503,6 @@ class QAtab extends Component {
         }
       );
     }
-    
   };
   handleChapterChange = e => {
     e.preventDefault();
@@ -695,7 +710,8 @@ class QAtab extends Component {
                       <Row
                         key={item.questionId}
                         style={{
-                          margin: "0.9em 0em",
+                          margin: "1.5em 0em"
+                          // borderTop: "1px #c2c2c2 solid",
                           // borderBottom: "1px #c2c2c2 solid"
                         }}
                       >
@@ -748,9 +764,9 @@ class QAtab extends Component {
                                       ? item.level === "MILD"
                                         ? "++"
                                         : "+"
-                                      :  item.level === "MILD"
-                                        ? "++"
-                                        : "+++"}
+                                      : item.level === "MILD"
+                                      ? "++"
+                                      : "+++"}
                                   </span>
                                   ,
                                   <span
@@ -804,7 +820,7 @@ class QAtab extends Component {
                                   {<Bucket className="svg_icons" />}{" "}
                                 </Button>
                                 <Link
-                                  to={`/editques/${item.questionId}`}
+                                  to={`/editques/${this.state.selectedLanguage}/${item.questionId}`}
                                   target="_self"
                                 >
                                   <Button

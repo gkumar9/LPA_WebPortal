@@ -486,7 +486,13 @@ class Examtab extends Component {
             {this.state.searchResultList.length > 0 ? (
               this.state.searchResultList.map((item, index) => {
                 return (
-                  <Row key={index} style={{ margin: "0.9em 0em" }}>
+                  <Row
+                    key={index}
+                    style={{
+                      margin: "1.5em 0em",
+                      // borderTop: "1px #c2c2c2 solid"
+                    }}
+                  >
                     <Col
                       style={{
                         paddingLeft: "0em",
@@ -536,7 +542,7 @@ class Examtab extends Component {
                             </span>
                           </Card.Title>
 
-                          <Card.Text>
+                          <Card.Text style={{ marginBottom: "0.5em" }}>
                             {""}
                             {item.name}
                           </Card.Text>

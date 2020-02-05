@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 // import Difficulty from '../Ques/difficulty'
 // import TagsInput from "react-tagsinput";
 
@@ -12,7 +12,7 @@ class LeftPanelQAtab extends Component {
     currentvaluesubject = currentvaluesubject
       ? currentvaluesubject.subjectName
       : "";
-      
+
     let currentvaluechapter = this.props.listOfChapter.filter(
       item => item.subjectSection.sectionId === this.props.selectedChapterID
     )[0];
@@ -83,7 +83,9 @@ class LeftPanelQAtab extends Component {
                   </option>
                 );
               })}
-              <option key='' value="">Select</option>
+            <option key="" value="">
+              Select
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect2">
@@ -189,31 +191,39 @@ class LeftPanelQAtab extends Component {
           />
         </Form.Group> */}
         <>
-          <Button
-            size="sm"
-            onClick={this.props.handlesearchWithFilter}
-            style={{
-              borderRadius: "0",
-              background: "#419ABB",
-              borderColor: "transparent"
-            }}
-          >
-            Search with filters
-          </Button>
-          {this.props.searchResultListLength > 0 && (
-            <Button
-              size="sm"
-              onClick={this.props.clearSearchFromFilters}
-              style={{
-                marginLeft: "1em",
-                borderRadius: "0",
-                background: "dimgrey",
-                borderColor: "transparent"
-              }}
-            >
-              Clear Search
-            </Button>
-          )}
+          <Row>
+            <Col xs lg="7" style={{paddingRight:'0'}}>
+              <Button
+                size="sm"
+                onClick={this.props.handlesearchWithFilter}
+                style={{
+                  borderRadius: "0",
+                  background: "#419ABB",
+                  borderColor: "transparent",
+                  // marginRight: "0.5em"
+                }}
+              >
+                Search with filters
+              </Button>
+            </Col>
+            <Col xs style={{paddingRight:'0'}}>
+              {this.props.searchResultListLength > 0 && (
+                <Button
+                  size="sm"
+                  onClick={this.props.clearSearchFromFilters}
+                  style={{
+                    // width:'auto',
+                    // marginLeft: "1.5em",
+                    borderRadius: "0",
+                    background: "dimgrey",
+                    borderColor: "transparent"
+                  }}
+                >
+                  Clear Search
+                </Button>
+              )}
+            </Col>
+          </Row>
         </>
       </Form>
     );
