@@ -1,15 +1,9 @@
 import React, { Component } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
 import CKEditor from "ckeditor4-react";
-// import CKEditor from "@ckeditor/ckeditor5-react";
-// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-// import MathType from '@wiris/mathtype-ckeditor4/src/plugin';
-// import MathType from ""
 import axios from "axios";
 import URL from "../../Assets/url";
-// import TagsInput from "react-tagsinput";
 import Difficulty from "./difficulty.js";
-// import "react-tagsinput/react-tagsinput.css"; // If using WebPack and style-loader.
 import "./index.css";
 import ReactTags from "react-tag-autocomplete";
 
@@ -494,15 +488,15 @@ class RightpanelEnglish extends Component {
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
-                  
                     // config={{
                     //   plugins: [MathType],
                     //   toolbar: { items: ["MathType"] }
                     // }}
-                    onBeforeLoad={CKEDITOR =>
-                      (CKEDITOR.disableAutoInline = true)
-                    }
+                    onBeforeLoad={CKEDITOR => {
+                      CKEDITOR.disableAutoInline = true;
+                    }}
                     config={{
+                      // extraPlugins:'ckeditor_wiris',
                       // extraPlugins:MathType,
                       height: 80
                       // placeholder: "Test description and instruction in English"
@@ -782,6 +776,12 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
   );
 }
 function ExplanationComp({ explanationData, handleExplanationEditor }) {
+  // CKEDITOR.plugins.addExternal('ckeditor_wiris', '../node_modules/@wiris/mathtype-ckeditor4/', 'plugin.js');
+  // CKEDITOR.editorConfig = function (config) {
+  //   extraPlugins = 'ckeditor_wiris';
+  //   // Allow MathML content.
+  //   allowedContent = true;
+// };
   return (
     <Form.Group controlId="exampleForm.EControlInput1">
       <Form.Label
@@ -796,17 +796,31 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
           margin: "0.5em 0"
         }}
       >
+      
         <CKEditor
-          onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+          // onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+          onBeforeLoad={CKEDITOR => {
+            CKEDITOR.plugins.addExternal(
+              "ckeditor_wiris",
+              "/Users/gauravkumar/Desktop/workspace/lpa-webportal/node_modules/@wiris/mathtype-ckeditor4/",
+              "plugin.js"
+            );
+            CKEDITOR.editorConfig = function(config) {
+              config.extraPlugins = "ckeditor_wiris";
+              // Allow MathML content.
+              config.allowedContent = true;
+              config.height = "80px";
+              console.log("from editorconfig");
+            };
+            CKEDITOR.disableAutoInline = true;
+            // console.log(CKEDITOR);
+          }}
           config={{
-            height: 80
-            // placeholder: "Test description and instruction in English"
+            extraPlugins: "ckeditor_wiris",
+            allowedContent: true,
+            height: "80px"
           }}
           data={explanationData}
-          onInit={editor => {
-            // You can store the "editor" and use when it is needed.
-            // console.log("Editor is ready to use!", editor);
-          }}
           onChange={(event, editor) => {
             const data = event.editor.getData();
             handleExplanationEditor(data);
