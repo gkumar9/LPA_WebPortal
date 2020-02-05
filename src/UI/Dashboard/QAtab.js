@@ -560,8 +560,12 @@ class QAtab extends Component {
             <Col
               lg="3"
               style={{
-                padding: "0em 3em",
-                background: "#EEE"
+                padding: "0.8em 3em",
+                background: "#EEE",
+                borderRight: "1px solid #cac2c2",
+                boxShadow: "2px 2px 5px -2px rgba(0, 0, 0, 0.75)",
+                zIndex: "88",
+                position: "relative"
               }}
             >
               <LeftPanelQuestion
@@ -624,7 +628,7 @@ class QAtab extends Component {
                     }}
                   >
                     {" "}
-                    <View className="svg_icons" /> Preview
+                    <View className="svg_icons" /> Bucket
                   </Button>
                 </Col>
                 {/* <Col
@@ -750,6 +754,68 @@ class QAtab extends Component {
                                     {item.questionId}
                                   </span>
                                 </span>
+                                <span style={{ marginLeft: "1em" }}>
+                                  <Button
+                                    title={
+                                      this.state.listOfselectedPreview.filter(
+                                        objj =>
+                                          objj.questionId === item.questionId
+                                      ).length > 0
+                                        ? "Added to bucket"
+                                        : "Add to bucket"
+                                    }
+                                    size="sm"
+                                    style={
+                                      this.state.listOfselectedPreview.filter(
+                                        objj =>
+                                          objj.questionId === item.questionId
+                                      ).length > 0
+                                        ? {
+                                            background: "transparent",
+                                            borderRadius: "0",
+                                            padding: ".15rem .15rem",
+                                            border: "none",
+                                            color: "#FF8976"
+                                          }
+                                        : {
+                                            borderRadius: "0",
+                                            padding: ".15rem .15rem",
+                                            background: "transparent",
+                                            border: "none",
+                                            color: "grey"
+                                          }
+                                    }
+                                    onClick={this.onAddpreviewdata.bind(
+                                      this,
+                                      item.questionId
+                                    )}
+                                    variant="primary"
+                                  >
+                                    {<Bucket className="svg_icons" />}{" "}
+                                  </Button>
+                                  <Link
+                                    to={`/editques/${this.state.selectedLanguage}/${item.questionId}`}
+                                    target="_self"
+                                  >
+                                    <Button
+                                      title="Edit"
+                                      size="sm"
+                                      style={{
+                                        borderRadius: "0",
+                                        marginLeft: "1em",
+                                        padding: ".15rem .15rem",
+                                        background: "transparent",
+                                        color: "red",
+                                        border: "none"
+                                      }}
+                                      variant="secondary"
+
+                                      // onClick={this.handleQAEdit.bind(this,item.questionId)}
+                                    >
+                                      {<Edit className="svg_icons" />}{" "}
+                                    </Button>
+                                  </Link>
+                                </span>
                                 <span
                                   style={{
                                     float: "right",
@@ -785,7 +851,7 @@ class QAtab extends Component {
                                 {""}
                                 {item.content.replace(/<\/?[^>]+(>|$)/g, "")}
                               </Card.Text>
-                              <div style={{ float: "right" }}>
+                              {/* <div style={{ float: "right" }}>
                                 <Button
                                   title={
                                     this.state.listOfselectedPreview.filter(
@@ -838,7 +904,7 @@ class QAtab extends Component {
                                     {<Edit className="svg_icons" />}{" "}
                                   </Button>
                                 </Link>
-                              </div>
+                              </div> */}
                             </Card.Body>
                             {/* <hr /> */}
                           </Card>

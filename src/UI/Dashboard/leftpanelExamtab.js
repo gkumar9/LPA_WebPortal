@@ -192,21 +192,7 @@ class LeftPanelExamtab extends Component {
             </Button>
           )} */}
           <Row>
-            <Col xs lg="7" style={{ paddingRight: "0" }}>
-              <Button
-                size="sm"
-                onClick={this.props.handlesearchWithFilter}
-                style={{
-                  borderRadius: "0",
-                  background: "#419ABB",
-                  borderColor: "transparent"
-                  // marginRight: "0.5em"
-                }}
-              >
-                Search with filters
-              </Button>
-            </Col>
-            <Col xs style={{ paddingRight: "0" }}>
+          <Col xs style={{paddingRight:'0'}}>
               {this.props.searchResultListLength > 0 && (
                 <Button
                   size="sm"
@@ -215,13 +201,28 @@ class LeftPanelExamtab extends Component {
                     // width:'auto',
                     // marginLeft: "1.5em",
                     borderRadius: "0",
-                    background: "dimgrey",
+                    background: "#6aa3ff",
                     borderColor: "transparent"
                   }}
                 >
                   Clear Search
                 </Button>
               )}
+            </Col>
+            <Col xs lg="7" style={{paddingLeft:'0'}}>
+              <Button
+                size="sm"
+                onClick={this.props.handlesearchWithFilter}
+                style={{
+                  borderRadius: "0",
+                  background: "#007bff",
+                  borderColor: "transparent",
+                  float:'right'
+                  // marginRight: "0.5em"
+                }}
+              >
+                Search with filters
+              </Button>
             </Col>
           </Row>
         </>

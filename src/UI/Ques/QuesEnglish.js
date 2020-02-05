@@ -3,7 +3,8 @@ import { Row, Col, Button, Form } from "react-bootstrap";
 import CKEditor from "ckeditor4-react";
 // import CKEditor from "@ckeditor/ckeditor5-react";
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-// import MathType from "@wiris/mathtype-ckeditor5/src/plugin";
+// import MathType from '@wiris/mathtype-ckeditor4/src/plugin';
+// import MathType from ""
 import axios from "axios";
 import URL from "../../Assets/url";
 // import TagsInput from "react-tagsinput";
@@ -82,6 +83,8 @@ class QuesEnglish extends Component {
   handleChangeTags = tags => {
     let tempsugg = this.state.suggestions;
     let tempapisugges = this.state.tempapisugges;
+    tempsugg.push({ id: null, name: tags });
+    this.setState({ suggestions: tempsugg });
     if (tags.length > 2) {
       axios({
         method: "POST",
@@ -99,7 +102,7 @@ class QuesEnglish extends Component {
           } else {
             tempsugg = [];
             tempsugg.concat(tempapisugges);
-            tempsugg.push({ id: 99, name: tags });
+            tempsugg.push({ id: null, name: tags });
             this.setState({ suggestions: tempsugg });
           }
         }
@@ -491,6 +494,7 @@ class RightpanelEnglish extends Component {
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
+                  
                     // config={{
                     //   plugins: [MathType],
                     //   toolbar: { items: ["MathType"] }
@@ -499,6 +503,7 @@ class RightpanelEnglish extends Component {
                       (CKEDITOR.disableAutoInline = true)
                     }
                     config={{
+                      // extraPlugins:MathType,
                       height: 80
                       // placeholder: "Test description and instruction in English"
                     }}

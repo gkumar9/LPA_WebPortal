@@ -350,8 +350,9 @@ class Examtab extends Component {
         <Col
           lg="3"
           style={{
-            padding: "0em 3em",
-            background: "#EEE"
+            padding: "0.8em 3em",
+            background: "#EEE",
+            borderRight:'1px solid #cac2c2'
           }}
         >
           <LeftpanelExamtab

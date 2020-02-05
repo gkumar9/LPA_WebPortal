@@ -18,7 +18,7 @@
   border-radius: 1px;
   background: white;
   /* shared font styles */
-  font-size: 1em;
+  font-size: .875rem;
   line-height: 1.2;
 
   /* clicking anywhere will focus the input */
@@ -37,7 +37,7 @@
   display: inline-block;
   box-sizing: border-box;
   margin: 0 6px 6px 0;
-  padding: 6px 8px;
+  padding: 4px 5px;
   border: 1px solid green;
   border-radius: 2px;
   background: white;
@@ -137,4 +137,8 @@
 .react-tags__suggestions li.is-disabled {
   opacity: 0.5;
   cursor: auto;
+}
+
+.form-control{
+  color:black;
 }

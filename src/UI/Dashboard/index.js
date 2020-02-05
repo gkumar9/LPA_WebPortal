@@ -34,13 +34,21 @@ class Dashboard extends Component {
             activeKey={this.state.key}
             onSelect={key => this.setKey(key)}
           >
-            <Row style={{ padding: "1em 0em" }}>
-              <Col lg="3"></Col>
+            <Row
+              style={{
+                padding: "1em 0em",
+                borderBottom: "1px solid #cac2c2",
+                boxShadow: "-1px 3px 4px -3px rgba(0, 0, 0, 0.75)",
+                zIndex: "99",
+                position: "relative"
+              }}
+            >
+              {/* <Col lg="3"></Col> */}
               <Col
                 lg="1.5"
                 // className="customtabcolor"
                 style={{
-                  margin: "0 4em"
+                  margin: "0px 0em 0em 3em"
                 }}
               >
                 <Nav.Link
