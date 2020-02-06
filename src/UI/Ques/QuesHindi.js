@@ -331,9 +331,9 @@ class QuesHindi extends Component {
       .then(res => {
         console.log(res.data.data);
         if (res.status === 200) {
-          alert('Success:',res.data.data)
+          alert("Success:", res.data.data);
           if (this.props.questionId === "") {
-            alert('success in Hindi:',res.data.data)
+            alert("success in Hindi:", res.data.data);
             this.props.handleChange.bind(this, res.data.data.questionId);
             this.props.handleSelect();
           }
@@ -346,17 +346,28 @@ class QuesHindi extends Component {
       })
       .catch(e => {
         console.log(e);
-        alert(e)
+        alert(e);
       });
   };
   render() {
     return (
-      <div style={{ padding: "20px 0", margin: "0 1em" }}>
+      <div>
         <Row>
-          <Col lg="3">
+          <Col
+            lg="3"
+            style={{
+              padding: "0em 3em",
+              background: "#EEE",
+              borderRight: "1px solid #cac2c2",
+              boxShadow: "2px 2px 5px -2px rgba(0, 0, 0, 0.75)",
+              zIndex: "88",
+              position: "relative"
+            }}
+          >
             <div
               style={{
                 width: "auto",
+                margin: "2.5em 0em"
                 // height: "0.5em"
               }}
             ></div>
@@ -379,9 +390,13 @@ class QuesHindi extends Component {
               handleDifficultyRadio={this.handleDifficultyRadio}
             />
           </Col>
-          <Col lg="1"></Col>
-          <Col>
-            <div>
+          {/* <Col lg="1"></Col> */}
+          <Col  style={{
+              background: "#EEEEEE",
+              // height: "90vh",
+              padding: "0em 4em"
+            }}>
+            <div style={{ margin: "2.5em 0em" }}>
               <RightpanelHindi
                 handleQuestionEditor={this.handleQuestionEditor}
                 questionData={this.state.questionData}
@@ -397,7 +412,7 @@ class QuesHindi extends Component {
               />
             </div>
           </Col>
-          <Col lg="1"></Col>
+          {/* <Col lg="1"></Col> */}
         </Row>
       </div>
     );
@@ -446,13 +461,15 @@ class RightpanelHindi extends Component {
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
-                    onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
-                config={{
-                  height: 80
-                  // placeholder: "Test description and instruction in English"
-                }}
+                    onBeforeLoad={CKEDITOR =>
+                      (CKEDITOR.disableAutoInline = true)
+                    }
+                    config={{
+                      height: 80
+                      // placeholder: "Test description and instruction in English"
+                    }}
                     data={item.content}
-                    onChange={(event) => {
+                    onChange={event => {
                       const data = event.editor.getData();
                       this.props.handleOptioncontentchange(index, data);
                     }}
@@ -687,16 +704,16 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
       >
         <CKEditor
           onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
-                config={{
-                  height: 80
-                  // placeholder: "Test description and instruction in English"
-                }}
+          config={{
+            height: 80
+            // placeholder: "Test description and instruction in English"
+          }}
           data={questionData}
           // onInit={editor => {
           //   // You can store the "editor" and use when it is needed.
           //   // console.log("Editor is ready to use!", editor);
           // }}
-          onChange={(event) => {
+          onChange={event => {
             const data = event.editor.getData();
             // console.log(data)
             handleQuestionEditor(data);
@@ -734,10 +751,10 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
       >
         <CKEditor
           onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
-                config={{
-                  height: 80
-                  // placeholder: "Test description and instruction in English"
-                }}
+          config={{
+            height: 80
+            // placeholder: "Test description and instruction in English"
+          }}
           data={explanationData}
           onInit={editor => {
             // You can store the "editor" and use when it is needed.

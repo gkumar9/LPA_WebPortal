@@ -46,8 +46,8 @@ class PreviewQues extends Component {
   render() {
     return (
       <React.Fragment>
-        <Header />
-        <div
+        <Header props={this.props}/>
+        {/* <div
           className="backbuttonprint"
           style={{
             boxShadow: "0px 3px 5px lightgrey",
@@ -73,7 +73,7 @@ class PreviewQues extends Component {
               </span>
             </Button>
           </Link>
-        </div>
+        </div> */}
         {this.state.isData && localStorage.getItem("previewLanguage") ? (
           <ShowData data={this.state.data} />
         ) : (

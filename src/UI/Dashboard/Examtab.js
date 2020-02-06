@@ -350,9 +350,13 @@ class Examtab extends Component {
         <Col
           lg="3"
           style={{
-            padding: "0.8em 3em",
+            padding: "2.5em 3em",
             background: "#EEE",
-            borderRight:'1px solid #cac2c2'
+            // borderRight: "1px solid #cac2c2",
+            boxShadow: "2px 2px 5px -2px rgba(0, 0, 0, 0.75)",
+            zIndex: "88",
+            position: "relative",
+            // margin: "2em 0em"
           }}
         >
           <LeftpanelExamtab
@@ -490,7 +494,7 @@ class Examtab extends Component {
                   <Row
                     key={index}
                     style={{
-                      margin: "1.5em 0em",
+                      margin: "1.5em 0em"
                       // borderTop: "1px #c2c2c2 solid"
                     }}
                   >

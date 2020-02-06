@@ -11,6 +11,7 @@ export default class Radio extends React.Component {
     const options = this.state.coffeeTypes.map((loan, key) => {
       const isCurrent = this.props.difficulty === loan;
       return (
+        
         <div key={key} className="radioPad">
           <div>
             <label
@@ -33,6 +34,7 @@ export default class Radio extends React.Component {
             </label>
           </div>
         </div>
+        
       );
     });
     return (

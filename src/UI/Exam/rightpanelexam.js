@@ -7,7 +7,7 @@ class RightExamPanel extends Component {
   render() {
     return (
       <div>
-        <Row style={{ height: "auto" }}>
+        <Row style={{ height: "auto" }} noGutters={true}>
           <Container fluid style={{ padding: "0" }}>
             <Form.Control
               style={{
@@ -18,8 +18,8 @@ class RightExamPanel extends Component {
               readOnly
               defaultValue="Name"
             />
-            <Row style={{ margin: "0em 0" }}>
-              <Col lg="4" style={{ padding: "0" }}>
+            <Row style={{ margin: "0em 0" }} noGutters={true}>
+              <Col lg="6" style={{ paddingRight: "0.5em" }}>
                 <Form.Control
                   value={this.props.testnameEnglish}
                   onChange={this.props.handleEnglishTestNameChange}
@@ -28,7 +28,7 @@ class RightExamPanel extends Component {
                 />
               </Col>
               <Col></Col>
-              <Col lg="4" style={{ padding: "0" }}>
+              <Col lg="6" style={{ paddingLeft: "0.5em" }}>
                 <Form.Control
                   value={this.props.testnameHindi}
                   onChange={this.props.handleHindiTestNameChange}
@@ -39,7 +39,7 @@ class RightExamPanel extends Component {
             </Row>
           </Container>
           <div style={{ margin: "1.7em 0", width: "100%" }}>
-            <Form.Control
+            {/* <Form.Control
               style={{
                 fontWeight: "600",
                 margin: " 0 0.5em"
@@ -47,8 +47,10 @@ class RightExamPanel extends Component {
               plaintext
               readOnly
               defaultValue="Description and Instruction"
-            />
+            /> */}
+
             <div style={{ margin: "0em 0em", width: "100%" }}>
+              <small>Test description and instruction in English</small>
               <CKEditor
                 // editor={ClassicEditor}
                 onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
@@ -63,7 +65,9 @@ class RightExamPanel extends Component {
                 }}
               />
             </div>
+
             <div style={{ margin: "1em 0em", width: "100%" }}>
+              <small>Test description and instruction in Hindi</small>
               <CKEditor
                 onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
                 config={{
@@ -78,7 +82,17 @@ class RightExamPanel extends Component {
               />
             </div>
           </div>
-
+          {this.props.listOfSection.length > 0 && (
+            <Form.Control
+              style={{
+                fontWeight: "600",
+                margin: " 0 0.5em"
+              }}
+              plaintext
+              readOnly
+              defaultValue="Section(s)"
+            />
+          )}
           {this.props.listOfSection &&
             this.props.listOfSection.map((item, index) => {
               return (
@@ -91,9 +105,9 @@ class RightExamPanel extends Component {
                     margin: "1em 0"
                   }}
                 >
-                  <Row noGutters={true} style={{ margin: "1em 0em" }}>
+                  <Row noGutters={true} style={{ margin: "0em 0em" }}>
                     <Col lg="4">
-                      <Form.Control
+                      {/* <Form.Control
                         style={{
                           fontWeight: "600"
                           // margin: " 0 0.5em"
@@ -101,7 +115,7 @@ class RightExamPanel extends Component {
                         plaintext
                         readOnly
                         defaultValue="Section A"
-                      />
+                      /> */}
                     </Col>
                     {this.props.listOfSection.length === index + 1 && (
                       <Col>
@@ -115,8 +129,9 @@ class RightExamPanel extends Component {
                       </Col>
                     )}
                   </Row>
-                  <Row noGutters={true} style={{ margin: "1em 0em" }}>
-                    <Col lg="5">
+                  <Row noGutters={true} style={{ margin: "0em 0em" }}>
+                    <Col lg="6" style={{ paddingRight: "0.5em" }}>
+                      <small>Section Name in English</small>
                       <Form.Control
                         value={
                           item.versions.filter(
@@ -132,8 +147,9 @@ class RightExamPanel extends Component {
                         style={{ borderRadius: "0" }}
                       />
                     </Col>
-                    <Col lg="2"></Col>
-                    <Col lg="5">
+                    {/* <Col lg="2"></Col> */}
+                    <Col lg="6" style={{ paddingLeft: "0.5em" }}>
+                      <small>Section Name in Hindi</small>
                       <Form.Control
                         value={
                           item.versions.filter(
@@ -152,7 +168,8 @@ class RightExamPanel extends Component {
                   </Row>
                   <Row noGutters={true} style={{ margin: "1em 0em" }}>
                     {/* <Col lg="2"></Col> */}
-                    <Col lg="5">
+                    <Col lg="6" style={{ paddingRight: "0.5em" }}>
+                      <small>Marks/ ques</small>
                       <Form.Control
                         type="number"
                         value={item.marksPerQuestion}
@@ -164,8 +181,10 @@ class RightExamPanel extends Component {
                         style={{ borderRadius: "0" }}
                       />
                     </Col>
-                    <Col lg="2"></Col>
-                    <Col lg="5">
+                    {/* <Col lg="2"></Col> */}
+                    <Col lg="6" style={{ paddingLeft: "0.5em" }}>
+                      <small>Negative marks / ques</small>
+
                       <Form.Control
                         type="number"
                         value={item.negativeMarksPerQuestion}
@@ -180,6 +199,9 @@ class RightExamPanel extends Component {
                   </Row>
                   <div style={{ margin: "1.7em 0", width: "100%" }}>
                     <div style={{ margin: "0em 0em", width: "100%" }}>
+                      <small>
+                        Section description and instruction in English
+                      </small>
                       <CKEditor
                         onBeforeLoad={CKEDITOR =>
                           (CKEDITOR.disableAutoInline = true)
@@ -204,6 +226,9 @@ class RightExamPanel extends Component {
                       />
                     </div>
                     <div style={{ margin: "1em 0em", width: "100%" }}>
+                      <small>
+                        Section description and instruction in Hindi
+                      </small>
                       <CKEditor
                         onBeforeLoad={CKEDITOR =>
                           (CKEDITOR.disableAutoInline = true)

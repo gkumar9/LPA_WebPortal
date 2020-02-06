@@ -7,7 +7,7 @@ class RightExamPanel extends Component {
   render() {
     return (
       <div>
-        <Row style={{ height: "auto" }}>
+        <Row noGutters={true} style={{ height: "auto" }}>
           <Container fluid style={{ padding: "0" }}>
             <Form.Control
               style={{

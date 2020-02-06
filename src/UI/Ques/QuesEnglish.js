@@ -105,6 +105,8 @@ class QuesEnglish extends Component {
   };
   componentDidMount() {
     // console.log("as");
+    // CKEditor.editorUrl = 'http://www.wiris.com/plugins/demo/ckeditor4/php/ckeditor4/ckeditor.js';
+
     axios({
       method: "POST",
       url: URL.fetchSubject + "ENGLISH",
@@ -389,12 +391,23 @@ class QuesEnglish extends Component {
   };
   render() {
     return (
-      <div style={{ padding: "20px 0", margin: "0 1em" }}>
+      <div>
         <Row>
-          <Col lg="3">
+          <Col
+            lg="3"
+            style={{
+              padding: "0em 3em",
+              background: "#EEE",
+              borderRight: "1px solid #cac2c2",
+              boxShadow: "2px 2px 5px -2px rgba(0, 0, 0, 0.75)",
+              zIndex: "88",
+              position: "relative"
+            }}
+          >
             <div
               style={{
-                width: "auto"
+                width: "auto",
+                margin: "2.5em 0em"
                 // height: "0.5em"
               }}
             ></div>
@@ -420,9 +433,15 @@ class QuesEnglish extends Component {
               handleDifficultyRadio={this.handleDifficultyRadio}
             />
           </Col>
-          <Col lg="1"></Col>
-          <Col>
-            <div>
+          {/* <Col lg="1"></Col> */}
+          <Col
+            style={{
+              background: "#EEEEEE",
+              // height: "90vh",
+              padding: "0em 4em"
+            }}
+          >
+            <div style={{ margin: "2.5em 0em" }}>
               <RightpanelEnglish
                 handleQuestionEditor={this.handleQuestionEditor}
                 questionData={this.state.questionData}
@@ -438,7 +457,7 @@ class QuesEnglish extends Component {
               />
             </div>
           </Col>
-          <Col lg="1"></Col>
+          {/* <Col lg="1"></Col> */}
         </Row>
       </div>
     );
@@ -781,7 +800,7 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
   //   extraPlugins = 'ckeditor_wiris';
   //   // Allow MathML content.
   //   allowedContent = true;
-// };
+  // };
   return (
     <Form.Group controlId="exampleForm.EControlInput1">
       <Form.Label
@@ -796,27 +815,23 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
           margin: "0.5em 0"
         }}
       >
-      
         <CKEditor
           // onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
           onBeforeLoad={CKEDITOR => {
-            CKEDITOR.plugins.addExternal(
-              "ckeditor_wiris",
-              "/Users/gauravkumar/Desktop/workspace/lpa-webportal/node_modules/@wiris/mathtype-ckeditor4/",
-              "plugin.js"
-            );
-            CKEDITOR.editorConfig = function(config) {
-              config.extraPlugins = "ckeditor_wiris";
-              // Allow MathML content.
-              config.allowedContent = true;
-              config.height = "80px";
-              console.log("from editorconfig");
-            };
+            // CKEDITOR.plugins.addExternal(
+            //   "ckeditor_wiris",
+            //   "/Users/gauravkumar/Desktop/workspace/lpa-webportal/node_modules/@wiris/mathtype-ckeditor4/",
+            //   "plugin.js"
+            // );
+            // CKEDITOR.editorConfig = function(config) {
+            //   config.extraPlugins = "ckeditor_wiris";
+            //   config.allowedContent = true;
+            //   config.height = "80px";
+            // };
             CKEDITOR.disableAutoInline = true;
-            // console.log(CKEDITOR);
           }}
           config={{
-            extraPlugins: "ckeditor_wiris",
+            // extraPlugins: "ckeditor_wiris",
             allowedContent: true,
             height: "80px"
           }}
@@ -825,12 +840,6 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
             const data = event.editor.getData();
             handleExplanationEditor(data);
           }}
-          // onBlur={(event, editor) => {
-          //   console.log("Blur.", editor);
-          // }}
-          // onFocus={(event, editor) => {
-          //   console.log("Focus.", editor);
-          // }}
         />
       </div>
     </Form.Group>

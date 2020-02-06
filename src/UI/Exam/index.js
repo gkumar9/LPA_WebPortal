@@ -420,8 +420,8 @@ class Exam extends Component {
   render() {
     return (
       <React.Fragment>
-        <Header />
-        <div
+        <Header props={this.props} />
+        {/* <div
           style={{
             boxShadow: "0px 3px 5px lightgrey",
             width: "auto",
@@ -446,22 +446,27 @@ class Exam extends Component {
               </span>
             </Button>
           </Link>
-        </div>
+        </div> */}
         <Container
           fluid
           style={{
             width: "auto",
             background: "#EEEEEE",
-            padding: "0.5em 1.5em"
+            padding: "0"
           }}
         >
-          <div style={{ padding: "20px 0", margin: "0 1em" }}>
-            <Row>
+          <div>
+            <Row noGutters={true}>
               <Col
                 lg="3"
                 style={{
-                  padding: "0em 1em"
-                  // background: "#EEE"
+                  padding: "2.5em 3em",
+                  background: "#EEE",
+                  // borderRight: "1px solid #cac2c2",
+                  boxShadow: "2px 2px 5px -2px rgba(0, 0, 0, 0.75)",
+                  zIndex: "88",
+                  position: "relative"
+                  // margin: "2em 0em"
                 }}
               >
                 <div>
@@ -491,59 +496,59 @@ class Exam extends Component {
                   />
                 </div>
               </Col>
-              <Col lg="1"></Col>
-              <Col
-                style={{
-                  background: "#EEEEEE"
-                }}
-              >
-                <RightExamPanel
-                  testnameEnglish={this.state.testnameEnglish}
-                  testnameHindi={this.state.testnameHindi}
-                  testInstructionEnglish={this.state.testInstructionEnglish}
-                  testInstructionHindi={this.state.testInstructionHindi}
-                  handleHindiInstructionChange={
-                    this.handleHindiInstructionChange
-                  }
-                  handleEnglishInstructionChange={
-                    this.handleEnglishInstructionChange
-                  }
-                  handleHindiTestNameChange={this.handleHindiTestNameChange}
-                  handleEnglishTestNameChange={this.handleEnglishTestNameChange}
-                  listOfSection={this.state.listOfSection}
-                  deleteSection={this.deleteSection}
-                  handleSectionnameChange={this.handleSectionnameChange}
-                  handleNegativeMarksPerQuesChange={
-                    this.handleNegativeMarksPerQuesChange
-                  }
-                  handleMarksperQuesChange={this.handleMarksperQuesChange}
-                  handleSectionDescriptionChange={
-                    this.handleSectionDescriptionChange
-                  }
-                  addSectionQuestions={this.addSectionQuestions}
-                  deleteSectionQuestion={this.deleteSectionQuestion}
-                  addSection={this.addSection}
-                  handlSectionQuestionValueChange={
-                    this.handlSectionQuestionValueChange
-                  }
-                />
-                <div style={{ margin: "1em 0", textAlign: "center" }}>
-                  <Button
-                    style={{
-                      borderRadius: "0",
-                      background: "#3F5FBB",
-                      borderColor: "#3F5FBB",
-                      padding: "0.6em 2.5em",
-                      fontSize: "1.1em",
-                      fontWeight: "600"
-                    }}
-                    onClick={this.saveExamdata}
-                  >
-                    Save & see preview
-                  </Button>
+              {/* <Col lg="1"></Col> */}
+              <Col style={{ background: "#EEEEEE", padding: "0em 4em" }}>
+                <div style={{ margin: "2.5em 0em" }}>
+                  <RightExamPanel
+                    testnameEnglish={this.state.testnameEnglish}
+                    testnameHindi={this.state.testnameHindi}
+                    testInstructionEnglish={this.state.testInstructionEnglish}
+                    testInstructionHindi={this.state.testInstructionHindi}
+                    handleHindiInstructionChange={
+                      this.handleHindiInstructionChange
+                    }
+                    handleEnglishInstructionChange={
+                      this.handleEnglishInstructionChange
+                    }
+                    handleHindiTestNameChange={this.handleHindiTestNameChange}
+                    handleEnglishTestNameChange={
+                      this.handleEnglishTestNameChange
+                    }
+                    listOfSection={this.state.listOfSection}
+                    deleteSection={this.deleteSection}
+                    handleSectionnameChange={this.handleSectionnameChange}
+                    handleNegativeMarksPerQuesChange={
+                      this.handleNegativeMarksPerQuesChange
+                    }
+                    handleMarksperQuesChange={this.handleMarksperQuesChange}
+                    handleSectionDescriptionChange={
+                      this.handleSectionDescriptionChange
+                    }
+                    addSectionQuestions={this.addSectionQuestions}
+                    deleteSectionQuestion={this.deleteSectionQuestion}
+                    addSection={this.addSection}
+                    handlSectionQuestionValueChange={
+                      this.handlSectionQuestionValueChange
+                    }
+                  />
+                  <div style={{ margin: "1em 0", textAlign: "center" }}>
+                    <Button
+                      style={{
+                        borderRadius: "0",
+                        background: "#3F5FBB",
+                        borderColor: "#3F5FBB",
+                        padding: "0.6em 2.5em",
+                        fontSize: "1.1em",
+                        fontWeight: "600"
+                      }}
+                      onClick={this.saveExamdata}
+                    >
+                      Save & see preview
+                    </Button>
+                  </div>
                 </div>
               </Col>
-              <Col lg="1"></Col>
+              {/* <Col lg="1"></Col> */}
             </Row>
           </div>
         </Container>

@@ -500,16 +500,21 @@ class ExamEditComponent extends Component {
         style={{
           width: "auto",
           background: "#EEEEEE",
-          padding: "0.5em 1.5em"
+          padding: "0"
         }}
       >
-        <div style={{ padding: "20px 0", margin: "0 1em" }}>
-          <Row>
+        <div>
+          <Row noGutters={true}>
             <Col
               lg="3"
               style={{
-                padding: "0em 1em"
-                // background: "#EEE"
+                padding: "2.5em 3em",
+                background: "#EEE",
+                // borderRight: "1px solid #cac2c2",
+                boxShadow: "2px 2px 5px -2px rgba(0, 0, 0, 0.75)",
+                zIndex: "88",
+                position: "relative"
+                // margin: "2em 0em"
               }}
             >
               <div>
@@ -539,10 +544,12 @@ class ExamEditComponent extends Component {
                 />
               </div>
             </Col>
-            <Col lg="1"></Col>
+            {/* <Col lg="1"></Col> */}
             <Col
               style={{
-                background: "#EEEEEE"
+                background: "#EEEEEE",
+                padding: "0em 4em",
+                margin: "2.5em 0em"
               }}
             >
               <RightExamPanel
@@ -589,7 +596,7 @@ class ExamEditComponent extends Component {
                 </Button>
               </div>
             </Col>
-            <Col lg="1"></Col>
+            {/* <Col lg="1"></Col> */}
           </Row>
         </div>
       </Container>

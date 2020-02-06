@@ -39,6 +39,9 @@ class Editques extends Component {
       })
       .catch(e => {
         alert(e);
+        this.props.history.push({
+          pathname: "/"
+        });
       });
   }
   // handleSelect = () => {
@@ -56,8 +59,8 @@ class Editques extends Component {
   render() {
     return (
       <React.Fragment>
-        <Header />
-        <div
+        <Header props={this.props}/>
+        {/* <div
           style={{
             boxShadow: "0px 3px 5px lightgrey",
             width: "auto",
@@ -82,22 +85,15 @@ class Editques extends Component {
               </span>
             </Button>
           </Link>
-        </div>
-        <Container
-          fluid
-          style={{
-            width: "auto",
-            background: "#EEEEEE",
-            padding: "0.5em 1.5em"
-          }}
-        >
+        </div> */}
+        
           {this.state.fetchedData && (
             <EditComponent
               fetchedData={this.state.fetchedData}
               match={this.props.match}
             />
           )}
-        </Container>
+        {/* </Container> */}
       </React.Fragment>
     );
   }

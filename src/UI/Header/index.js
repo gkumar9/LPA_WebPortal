@@ -3,20 +3,38 @@ import { Navbar, Nav } from "react-bootstrap";
 import Logo from "./../../Assets/Logo.png";
 // import firebase from 'firebase';
 import firebase from "./../../firebaseApp";
+import { Link } from "react-router-dom";
 
-function Header() {
+function Header({ props }) {
   // console.log(firebase.auth())
+  
   return (
     <Navbar expand="lg" style={{ borderBottom: "solid 1px #cccbcb" }}>
-      <Navbar.Brand href="/">
-        <img
-          src={Logo}
-          className="d-inline-block align-top img-responsive"
-          alt="React Bootstrap logo"
-        />
+      <Navbar.Brand href="#">
+        <Link to="/" target="_self">
+          <img
+            src={Logo}
+            className="d-inline-block align-top img-responsive"
+            alt="React Bootstrap logo"
+          />
+        </Link>
       </Navbar.Brand>
+      <Nav.Link>
+        <Link
+          to="/"
+          target="_self"
+          style={
+            props.location.pathname === "/"
+              ? { textDecoration: "none", color: "black" }
+              : { color: "grey", textDecoration: "none" }
+          }
+        >
+          Home
+        </Link>
+      </Nav.Link>
       <Nav className="mr-auto"></Nav>
       <Nav justify>
+        {/* <Link to="/" target="_self"> */}{" "}
         <Nav.Link href="#">Welcome User</Nav.Link>
         <Nav.Link
           eventKey={2}

@@ -35,14 +35,17 @@ class EditExam extends Component {
         this.setState({ fetchedData: res.data.data.test });
       }
     }).catch((e)=>{
-      alert(e)
+      alert(e);
+      this.props.history.push({
+        pathname: "/"
+      });
     })
   }
   render() {
     return (
       <React.Fragment>
-        <Header />
-        <div
+       <Header props={this.props}/>
+        {/* <div
           style={{
             boxShadow: "0px 3px 5px lightgrey",
             width: "auto",
@@ -67,14 +70,14 @@ class EditExam extends Component {
               </span>
             </Button>
           </Link>
-        </div>
+        </div> */}
         <Container
           fluid
           style={{
             width: "auto",
             // height:'90vh',
             background: "#EEEEEE",
-            padding: "0.5em 1.5em"
+            padding: "0"
           }}
         >
           {this.state.fetchedData && (

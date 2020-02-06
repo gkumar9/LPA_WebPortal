@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Button, Form } from "react-bootstrap";
+import { Row, Col, Button, Form, Container } from "react-bootstrap";
 import TagsInput from "react-tagsinput";
 import Difficulty from "./difficulty.js";
 // import CKEditor from "@ckeditor/ckeditor5-react";
@@ -75,16 +75,27 @@ class EditComponent extends Component {
 
     this.setState({
       difficulty: difficultyvalue,
-      questionData:this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].content,
-      explanationData:this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].solution,
-      listOfOptions:this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].options,
+      questionData: this.props.fetchedData.questionVersions.filter(
+        item => item.language === this.props.match.params.lang
+      )[0].content,
+      explanationData: this.props.fetchedData.questionVersions.filter(
+        item => item.language === this.props.match.params.lang
+      )[0].solution,
+      listOfOptions: this.props.fetchedData.questionVersions.filter(
+        item => item.language === this.props.match.params.lang
+      )[0].options,
       letterchartcode:
-       this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].options.length + 65
+        this.props.fetchedData.questionVersions.filter(
+          item => item.language === this.props.match.params.lang
+        )[0].options.length + 65
     });
     axios({
       method: "POST",
       url:
-        URL.fetchSubject +this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].language,
+        URL.fetchSubject +
+        this.props.fetchedData.questionVersions.filter(
+          item => item.language === this.props.match.params.lang
+        )[0].language,
       data: { authToken: "string" },
       headers: {
         "Content-Type": "application/json"
@@ -140,7 +151,9 @@ class EditComponent extends Component {
           URL.fetchChapter +
           this.state.selectedSubjectID +
           "/" +
-         this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].language,
+          this.props.fetchedData.questionVersions.filter(
+            item => item.language === this.props.match.params.lang
+          )[0].language,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -209,7 +222,9 @@ class EditComponent extends Component {
           URL.fetchTopic +
           this.state.selectedChapterID +
           "/" +
-         this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].language,
+          this.props.fetchedData.questionVersions.filter(
+            item => item.language === this.props.match.params.lang
+          )[0].language,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -276,7 +291,9 @@ class EditComponent extends Component {
           URL.fetchSubTopic +
           this.state.selectedTopicID +
           "/" +
-         this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].language,
+          this.props.fetchedData.questionVersions.filter(
+            item => item.language === this.props.match.params.lang
+          )[0].language,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -421,10 +438,13 @@ class EditComponent extends Component {
         type: "SINGLE_CHOICE",
         version: {
           content: this.state.questionData,
-          language:this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0].language,
+          language: this.props.fetchedData.questionVersions.filter(
+            item => item.language === this.props.match.params.lang
+          )[0].language,
           options: this.state.listOfOptions,
-          questionVersionId:this.props.fetchedData.questionVersions.filter(item=>item.language===this.props.match.params.lang)[0]
-            .questionVersionId,
+          questionVersionId: this.props.fetchedData.questionVersions.filter(
+            item => item.language === this.props.match.params.lang
+          )[0].questionVersionId,
           solution: this.state.explanationData
         }
       },
@@ -445,12 +465,27 @@ class EditComponent extends Component {
   render() {
     return (
       //   <Container>
-      <div style={{ padding: "20px 0", margin: "0 1em" }}>
-        <Row>
-          <Col lg="3">
+      <Container
+        fluid
+        style={{ width: "auto", background: "#EEEEEE", padding: "0" }}
+      >
+        <Row noGutters={true}>
+          <Col
+            lg="3"
+            style={{
+              padding: "2.5em 3em",
+              background: "#EEE",
+              // borderRight: "1px solid #cac2c2",
+              boxShadow: "2px 2px 5px -2px rgba(0, 0, 0, 0.75)",
+              zIndex: "88",
+              position: "relative"
+              // margin: "2em 0em"
+            }}
+          >
             <div
               style={{
                 width: "auto"
+                // margin: "2.5em 0em"
                 //   height: "0.5em"
               }}
             >
@@ -474,9 +509,9 @@ class EditComponent extends Component {
               />
             </div>
           </Col>
-          <Col lg="1"></Col>
-          <Col>
-            <div>
+          {/* <Col lg="1"></Col> */}
+          <Col style={{ background: "#EEEEEE", padding: "0em 4em" }}>
+            <div style={{ margin: "2.5em 0em" }}>
               <RightpanelEnglish
                 handleQuestionEditor={this.handleQuestionEditor}
                 questionData={this.state.questionData}
@@ -492,10 +527,9 @@ class EditComponent extends Component {
               />
             </div>
           </Col>
-          <Col lg="1"></Col>
+          {/* <Col lg="1"></Col> */}
         </Row>
-      </div>
-      //   </Container>
+      </Container>
     );
   }
 }
@@ -793,7 +827,7 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
         <CKEditor
           onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
           config={{
-            height: 80,
+            height: 80
             // font_defaultLabel: "lato",
             // fontSize_sizes: "16/16px;24/24px;48/48px;",
             // font_style: {
