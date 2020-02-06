@@ -769,38 +769,16 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
             // placeholder: "Test description and instruction in English"
           }}
           data={questionData}
-          // onInit={editor => {
-          //   // You can store the "editor" and use when it is needed.
-          //   // console.log("Editor is ready to use!", editor);
-          // }}
           onChange={(event, editor) => {
             const data = event.editor.getData();
-            // console.log(data)
             handleQuestionEditor(data);
-            // console.log({
-            //   event,
-            //   editor,
-            //   data
-            // });
           }}
-          // onBlur={(event, editor) => {
-          //   console.log("Blur.", editor);
-          // }}
-          // onFocus={(event, editor) => {
-          //   console.log("Focus.", editor);
-          // }}
         />
       </div>
     </Form.Group>
   );
 }
 function ExplanationComp({ explanationData, handleExplanationEditor }) {
-  // CKEDITOR.plugins.addExternal('ckeditor_wiris', '../node_modules/@wiris/mathtype-ckeditor4/', 'plugin.js');
-  // CKEDITOR.editorConfig = function (config) {
-  //   extraPlugins = 'ckeditor_wiris';
-  //   // Allow MathML content.
-  //   allowedContent = true;
-  // };
   return (
     <Form.Group controlId="exampleForm.EControlInput1">
       <Form.Label
@@ -816,22 +794,10 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
         }}
       >
         <CKEditor
-          // onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
-          onBeforeLoad={CKEDITOR => {
-            // CKEDITOR.plugins.addExternal(
-            //   "ckeditor_wiris",
-            //   "/Users/gauravkumar/Desktop/workspace/lpa-webportal/node_modules/@wiris/mathtype-ckeditor4/",
-            //   "plugin.js"
-            // );
-            // CKEDITOR.editorConfig = function(config) {
-            //   config.extraPlugins = "ckeditor_wiris";
-            //   config.allowedContent = true;
-            //   config.height = "80px";
-            // };
-            CKEDITOR.disableAutoInline = true;
-          }}
+          onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+          // editorUrl="/Users/gauravkumar/Desktop/workspace/lpa-webportal/public/customckeditor/ckeditor.js"
           config={{
-            // extraPlugins: "ckeditor_wiris",
+            // extraPlugins : 'timestamp',
             allowedContent: true,
             height: "80px"
           }}
