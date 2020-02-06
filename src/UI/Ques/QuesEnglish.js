@@ -349,7 +349,7 @@ class QuesEnglish extends Component {
     e.preventDefault();
     // console.log(typeof parseInt(e.target.value));
     let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption[index].weightage = parseInt(e.target.value);
+    currentArrayOfOption[index].weightage = (e.target.value);
     this.setState({
       listOfOptions: currentArrayOfOption
     });
@@ -369,10 +369,14 @@ class QuesEnglish extends Component {
       default:
         break;
     }
+    let converttags=this.state.tags.map((item)=>{
+      return{tagId:item.id,tag:item.name}
+    });
+
     axios({
       method: "POST",
       url:
-        this.props.questionId === ""
+        this.props.questionId === null
           ? URL.createQuestion
           : URL.createQuestionNewVersion,
       data: {
@@ -382,7 +386,7 @@ class QuesEnglish extends Component {
         sectionId: this.state.selectedChapterID,
         subjectId: this.state.selectedSubjectID,
         subtopicId: this.state.selectedSubTopicID,
-        tags: this.state.tags,
+        tags: converttags,
         topicId: this.state.selectedTopicID,
         type: "SINGLE_CHOICE",
         version: {
@@ -421,7 +425,7 @@ class QuesEnglish extends Component {
               padding: "0em 3em",
               background: "#EEE",
               borderRight: "1px solid #cac2c2",
-              boxShadow: "2px 2px 5px -2px rgba(0, 0, 0, 0.75)",
+              boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -4px",
               zIndex: "88",
               position: "relative"
             }}
@@ -505,9 +509,9 @@ class RightpanelEnglish extends Component {
                   </Form.Label>
                   <Col sm="2">
                     <Form.Control
-                      style={{ borderRadius: "0", background: "lightgrey" }}
+                      style={{ borderRadius: "0", background: "#f9f9f9" }}
                       type="number"
-                      value={item.weightage || 0}
+                      value={item.weightage || ''}
                       onChange={this.props.handleOptionWeightageChange.bind(
                         this,
                         index

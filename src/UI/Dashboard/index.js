@@ -38,7 +38,7 @@ class Dashboard extends Component {
               style={{
                 padding: "1em 0em",
                 // borderBottom: "1px solid #cac2c2",
-                boxShadow: "-1px 3px 4px -3px rgba(0, 0, 0, 0.75)",
+                boxShadow: "-1px 3px 4px -4px rgba(0, 0, 0, 0.75)",
                 zIndex: "99",
                 position: "relative"
               }}

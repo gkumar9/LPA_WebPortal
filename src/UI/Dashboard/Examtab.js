@@ -354,7 +354,7 @@ class Examtab extends Component {
             padding: "2.5em 3em",
             background: "#EEE",
             // borderRight: "1px solid #cac2c2",
-            boxShadow: "2px 2px 5px -2px rgba(0, 0, 0, 0.75)",
+            boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -3px",
             zIndex: "88",
             position: "relative"
             // margin: "2em 0em"

@@ -358,7 +358,7 @@ class QuesHindi extends Component {
     e.preventDefault();
     // console.log(typeof parseInt(e.target.value));
     let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption[index].weightage = parseInt(e.target.value);
+    currentArrayOfOption[index].weightage = (e.target.value);
     this.setState({
       listOfOptions: currentArrayOfOption
     });
@@ -438,7 +438,7 @@ class QuesHindi extends Component {
               padding: "0em 3em",
               background: "#EEE",
               borderRight: "1px solid #cac2c2",
-              boxShadow: "2px 2px 5px -2px rgba(0, 0, 0, 0.75)",
+              boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -4px",
               zIndex: "88",
               position: "relative"
             }}
@@ -520,9 +520,9 @@ class RightpanelHindi extends Component {
                   </Form.Label>
                   <Col sm="2">
                     <Form.Control
-                      style={{ borderRadius: "0", background: "lightgrey" }}
+                      style={{ borderRadius: "0", background: "#f9f9f9" }}
                       type="number"
-                      value={item.weightage || 0}
+                      value={item.weightage || ''}
                       onChange={this.props.handleOptionWeightageChange.bind(
                         this,
                         index

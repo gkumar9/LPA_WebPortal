@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Row, Col, Button, Form, Container } from "react-bootstrap";
-import TagsInput from "react-tagsinput";
+// import TagsInput from "react-tagsinput";
 import Difficulty from "./difficulty.js";
 // import CKEditor from "@ckeditor/ckeditor5-react";
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import CKEditor from "ckeditor4-react";
 // import { Pramukhime } from "./../../Assets/pramukhime/plugin";
 import axios from "axios";
-import "react-tagsinput/react-tagsinput.css"; // If using WebPack and style-loader.
+// import "react-tagsinput/react-tagsinput.css"; // If using WebPack and style-loader.
 import "./index.css";
 import URL from "../../Assets/url";
+import ReactTags from "react-tag-autocomplete";
 
 class EditComponent extends Component {
   constructor(props) {
@@ -23,14 +24,85 @@ class EditComponent extends Component {
       selectedTopicID: "",
       listOfSubTopic: [],
       selectedSubTopicID: "",
-      tags: [],
+      // tags: [],
       difficulty: "",
       questionData: "",
       explanationData: "",
       listOfOptions: [],
-      letterchartcode: 65
+      letterchartcode: 65,
+      tags: [],
+      suggestions: [],
+      apisugges: []
     };
   }
+  onDelete = i => {
+    // e.preventDefault()
+    const tags = this.state.tags.slice(0);
+    tags.splice(i, 1);
+    this.setState({ tags });
+  };
+
+  onAddition = tag => {
+    // e.preventDefault()
+    const tags = [].concat(this.state.tags, tag);
+    let suggestions = this.state.apisugges;
+    // let tempapisugges = this.state.apisugges;
+    this.setState({ tags, suggestions });
+  };
+  handleChangeTags = tags => {
+    // console.log(tags);
+    let tempsugg = this.state.suggestions;
+    let tempapisugges = this.state.apisugges;
+    // console.log("apisugges", tempapisugges);
+    // tempsugg=tempsugg.filter((item)=>item.id!==999)
+    tempsugg.push({ id: null, name: tags });
+    this.setState({ suggestions: tempsugg }, () => {
+      if (tags) {
+        axios({
+          method: "POST",
+          url: URL.tagsearch + tags,
+          data: { authToken: "string" },
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }).then(res => {
+          if (res.status === 200) {
+            if (res.data.data.list.length > 0) {
+              let temp = res.data.data.list.map(item => {
+                return { id: item.tagId, name: item.tag };
+              });
+              tempsugg = temp;
+              tempsugg = tempsugg.concat(tempapisugges);
+              // eslint-disable-next-line array-callback-return
+              tempsugg = tempsugg.filter(function(a) {
+                var key = a.id + "|" + a.name;
+                if (!this[key]) {
+                  this[key] = true;
+                  return true;
+                }
+              }, Object.create(null));
+              tempapisugges = tempapisugges.concat(temp);
+              // eslint-disable-next-line array-callback-return
+              let result = tempapisugges.filter(function(a) {
+                var key = a.id + "|" + a.name;
+                if (!this[key]) {
+                  this[key] = true;
+                  return true;
+                }
+              }, Object.create(null));
+              tempsugg.push({ id: null, name: tags });
+              this.setState({ suggestions: tempsugg, apisugges: result });
+              // console.log(tempsugg);
+            } else {
+              // console.log(tempsugg);
+            }
+          }
+        });
+      }
+    });
+
+    // console.log(tempsugg)
+  };
   addoptionfn = () => {
     let currentCharCode = this.state.letterchartcode;
     let name = "Option " + String.fromCharCode(currentCharCode);
@@ -54,9 +126,9 @@ class EditComponent extends Component {
     e.preventDefault();
     this.setState({ difficulty: e.target.value });
   };
-  handleChangeTags = tags => {
-    this.setState({ tags });
-  };
+  // handleChangeTags = tags => {
+  //   this.setState({ tags });
+  // };
   componentDidMount() {
     let difficultyvalue;
     switch (this.props.fetchedData.level) {
@@ -72,6 +144,9 @@ class EditComponent extends Component {
       default:
         break;
     }
+    let converttags=this.props.fetchedData.tags.map((item)=>{
+      return{id:item.tagId,name:item.tag}
+    })
 
     this.setState({
       difficulty: difficultyvalue,
@@ -87,7 +162,8 @@ class EditComponent extends Component {
       letterchartcode:
         this.props.fetchedData.questionVersions.filter(
           item => item.language === this.props.match.params.lang
-        )[0].options.length + 65
+        )[0].options.length + 65,
+        tags:converttags
     });
     axios({
       method: "POST",
@@ -423,6 +499,9 @@ class EditComponent extends Component {
       default:
         break;
     }
+    let converttags=this.state.tags.map((item)=>{
+      return{tagId:item.id,tag:item.name}
+    });
     axios({
       method: "POST",
       url: URL.updateExistingQuestionVersion,
@@ -433,7 +512,7 @@ class EditComponent extends Component {
         sectionId: this.state.selectedChapterID,
         subjectId: this.state.selectedSubjectID,
         subtopicId: this.state.selectedSubTopicID,
-        tags: this.state.tags,
+        tags: converttags,
         topicId: this.state.selectedTopicID,
         type: "SINGLE_CHOICE",
         version: {
@@ -476,7 +555,7 @@ class EditComponent extends Component {
               padding: "2.5em 3em",
               background: "#EEE",
               // borderRight: "1px solid #cac2c2",
-              boxShadow: "2px 2px 5px -2px rgba(0, 0, 0, 0.75)",
+              boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -4px",
               zIndex: "88",
               position: "relative"
               // margin: "2em 0em"
@@ -503,7 +582,10 @@ class EditComponent extends Component {
                 selectedTopicID={this.state.selectedTopicID}
                 selectedSubTopicID={this.state.selectedSubTopicID}
                 tags={this.state.tags}
-                handleChangeTags={this.handleChangeTags}
+              suggestions={this.state.suggestions}
+              onAddition={this.onAddition}
+              onDelete={this.onDelete}
+              handleChangeTags={this.handleChangeTags}
                 difficulty={this.state.difficulty}
                 handleDifficultyRadio={this.handleDifficultyRadio}
               />
@@ -670,9 +752,13 @@ class LeftPanel extends Component {
           >
             Tags
           </Form.Label>
-          <TagsInput
-            value={this.props.tags}
-            onChange={this.props.handleChangeTags}
+          <ReactTags
+            // style={{width:'100%'}}
+            tags={this.props.tags}
+            onInput={this.props.handleChangeTags}
+            suggestions={this.props.suggestions}
+            onDelete={this.props.onDelete.bind(this)}
+            onAddition={this.props.onAddition.bind(this)}
           />
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlTextarea1">
@@ -716,7 +802,7 @@ class RightpanelEnglish extends Component {
                   <Col sm="2">
                     <Form.Control
                       disabled
-                      style={{ borderRadius: "0", background: "lightgrey" }}
+                      style={{ borderRadius: "0", background: "#f9f9f9" }}
                       type="number"
                       value={item.weightage || 0}
                       onChange={this.props.handleOptionWeightageChange.bind(
