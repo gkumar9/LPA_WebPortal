@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import { Container, Button, Row, Col } from "react-bootstrap";
 import Header from "../Header/index";
-import Back from "@material-ui/icons/ArrowBack";
-import { styled } from "@material-ui/styles";
-import { Link } from "react-router-dom";
+// import Back from "@material-ui/icons/ArrowBack";
+// import { styled } from "@material-ui/styles";
+// import { Link } from "react-router-dom";
 import LeftPanelexam from "./leftpanelexam.js";
 import axios from "axios";
 import URL from "../../Assets/url";
 import RightExamPanel from "./rightpanelexam.js";
 
-const MyBack = styled(Back)({
-  color: "dimgrey",
-  marginTop: "-0.2em",
-  width: "1em"
-});
+// const MyBack = styled(Back)({
+//   color: "dimgrey",
+//   marginTop: "-0.2em",
+//   width: "1em"
+// });
 
 class Exam extends Component {
   constructor(props) {
@@ -98,30 +98,31 @@ class Exam extends Component {
     // console.log('add section');
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist.push({
-      marksPerQuestion: 0,
-      negativeMarksPerQuestion: 0,
-      questions: [0],
+      marksPerQuestion: '',
+      negativeMarksPerQuestion: '',
+      questions: [],
 
       versions: [
         {
-          content: "stringEng",
+          content: "",
           language: "ENGLISH",
-          name: "string",
-          sectionName: "stringEnglish"
+          name: "",
+          sectionName: ""
         },
         {
-          content: "stringHin",
+          content: "",
           language: "HINDI",
-          name: "string",
-          sectionName: "stringHindi"
+          name: "",
+          sectionName: ""
         }
       ]
     });
     this.setState({ listOfSection: tempsectionlist });
   };
-  deleteSection = () => {
+  deleteSection = (index) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist.pop();
+    // tempsectionlist.pop();
+    tempsectionlist.splice(index, 1);
     this.setState({ listOfSection: tempsectionlist });
   };
   handleSectionnameChange = (index, language, e) => {

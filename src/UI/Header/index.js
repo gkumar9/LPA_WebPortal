@@ -10,7 +10,7 @@ function Header({ props }) {
   
   return (
     <Navbar expand="lg" style={{ borderBottom: "solid 1px #cccbcb" }}>
-      <Navbar.Brand href="#">
+      <Navbar.Brand  >
         <Link to="/" target="_self">
           <img
             src={Logo}
@@ -19,7 +19,7 @@ function Header({ props }) {
           />
         </Link>
       </Navbar.Brand>
-      <Nav.Link>
+      <Navbar.Brand style={{fontSize:'1em'}}>
         <Link
           to="/"
           target="_self"
@@ -31,7 +31,7 @@ function Header({ props }) {
         >
           Home
         </Link>
-      </Nav.Link>
+      </Navbar.Brand>
       <Nav className="mr-auto"></Nav>
       <Nav justify>
         {/* <Link to="/" target="_self"> */}{" "}

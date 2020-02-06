@@ -7,16 +7,20 @@
 .radioPad__wrapper {
   display: block;
   cursor: pointer;
-  background: #fff;
-  color: #000;
+  background: transparent !important;
+  border:1px solid #ced4da;
+  color: #787878 !important;
   font-size: 1rem;
   margin: 0.2rem;
   padding: 0.3rem;
   text-align: center;
 }
-.radioPad__wrapper:active,
-.radioPad__wrapper--selected {
-  background: #afafaf !important;
+.radioPad__wrapper:active, .radioPad__wrapper--selected {
+  background: #fff !important;
+}
+.radioPad__wrapper:active, .radioPad__wrapper--selected {
+  background:white !important;
+  color: black !important;
 }
 .radioPad__wrapper:hover {
   background: #c9c8c5;

@@ -1,17 +1,17 @@
 import React, { Component } from "react";
-import { Container, Button } from "react-bootstrap";
+// import { Container, Button } from "react-bootstrap";
 import Header from "../Header/index";
-import Back from "@material-ui/icons/ArrowBack";
-import { styled } from "@material-ui/styles";
-import { Link } from "react-router-dom";
+// import Back from "@material-ui/icons/ArrowBack";
+// import { styled } from "@material-ui/styles";
+// import { Link } from "react-router-dom";
 import axios from "axios";
 import URL from "../../Assets/url";
 import EditComponent from "./editcomponent.js";
-const MyBack = styled(Back)({
-  color: "dimgrey",
-  marginTop: "-0.2em",
-  width: "1em"
-});
+// const MyBack = styled(Back)({
+//   color: "dimgrey",
+//   marginTop: "-0.2em",
+//   width: "1em"
+// });
 class Editques extends Component {
   constructor(props) {
     super(props);

@@ -5,9 +5,10 @@ import { Row, Col, Button, Form } from "react-bootstrap";
 import CKEditor from "ckeditor4-react";
 import axios from "axios";
 import URL from "../../Assets/url";
-import TagsInput from "react-tagsinput";
+// import TagsInput from "react-tagsinput";
+import ReactTags from "react-tag-autocomplete";
 import Difficulty from "./difficulty.js";
-import "react-tagsinput/react-tagsinput.css";
+// import "react-tagsinput/react-tagsinput.css";
 import "./index.css";
 
 class QuesHindi extends Component {
@@ -22,7 +23,7 @@ class QuesHindi extends Component {
       selectedTopicID: "",
       listOfSubTopic: [],
       selectedSubTopicID: "",
-      tags: [],
+      // tags: [],
       difficulty: "",
       questionData: "",
       explanationData: "",
@@ -30,9 +31,80 @@ class QuesHindi extends Component {
         { name: "Option A", content: "", weightage: null },
         { name: "Option B", content: "", weightage: null }
       ],
-      letterchartcode: 67
+      letterchartcode: 67,
+      tags: [],
+      suggestions: [],
+      apisugges: []
     };
   }
+  onDelete = i => {
+    // e.preventDefault()
+    const tags = this.state.tags.slice(0);
+    tags.splice(i, 1);
+    this.setState({ tags });
+  };
+
+  onAddition = tag => {
+    // e.preventDefault()
+    const tags = [].concat(this.state.tags, tag);
+    let suggestions = this.state.apisugges;
+    // let tempapisugges = this.state.apisugges;
+    this.setState({ tags, suggestions });
+  };
+  handleChangeTags = tags => {
+    // console.log(tags);
+    let tempsugg = this.state.suggestions;
+    let tempapisugges = this.state.apisugges;
+    // console.log("apisugges", tempapisugges);
+    // tempsugg=tempsugg.filter((item)=>item.id!==999)
+    tempsugg.push({ id: null, name: tags });
+    this.setState({ suggestions: tempsugg }, () => {
+      if (tags) {
+        axios({
+          method: "POST",
+          url: URL.tagsearch + tags,
+          data: { authToken: "string" },
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }).then(res => {
+          if (res.status === 200) {
+            if (res.data.data.list.length > 0) {
+              let temp = res.data.data.list.map(item => {
+                return { id: item.tagId, name: item.tag };
+              });
+              tempsugg = temp;
+              tempsugg = tempsugg.concat(tempapisugges);
+              // eslint-disable-next-line array-callback-return
+              tempsugg = tempsugg.filter(function(a) {
+                var key = a.id + "|" + a.name;
+                if (!this[key]) {
+                  this[key] = true;
+                  return true;
+                }
+              }, Object.create(null));
+              tempapisugges = tempapisugges.concat(temp);
+              // eslint-disable-next-line array-callback-return
+              let result = tempapisugges.filter(function(a) {
+                var key = a.id + "|" + a.name;
+                if (!this[key]) {
+                  this[key] = true;
+                  return true;
+                }
+              }, Object.create(null));
+              tempsugg.push({ id: null, name: tags });
+              this.setState({ suggestions: tempsugg, apisugges: result });
+              // console.log(tempsugg);
+            } else {
+              // console.log(tempsugg);
+            }
+          }
+        });
+      }
+    });
+
+    // console.log(tempsugg)
+  };
   addoptionfn = () => {
     let currentCharCode = this.state.letterchartcode;
     let name = "Option " + String.fromCharCode(currentCharCode);
@@ -44,21 +116,28 @@ class QuesHindi extends Component {
     });
   };
   deleteOption = index => {
-    let currentCharCode = this.state.letterchartcode;
     let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption.pop(index);
+    let letterchartcode = 65;
+
+    currentArrayOfOption.splice(index, 1);
+    currentArrayOfOption = currentArrayOfOption.map(item => {
+      let name = "Option " + String.fromCharCode(letterchartcode);
+      letterchartcode++;
+      return { name: name, content: item.content, weightage: item.weightage };
+    });
+
     this.setState({
       listOfOptions: currentArrayOfOption,
-      letterchartcode: currentCharCode - 1
+      letterchartcode: letterchartcode
     });
   };
   handleDifficultyRadio = e => {
     e.preventDefault();
     this.setState({ difficulty: e.target.value });
   };
-  handleChangeTags = tags => {
-    this.setState({ tags });
-  };
+  // handleChangeTags = tags => {
+  //   this.setState({ tags });
+  // };
   componentDidMount() {
     axios({
       method: "POST",
@@ -385,17 +464,22 @@ class QuesHindi extends Component {
               selectedTopicID={this.state.selectedTopicID}
               selectedSubTopicID={this.state.selectedSubTopicID}
               tags={this.state.tags}
+              suggestions={this.state.suggestions}
+              onAddition={this.onAddition}
+              onDelete={this.onDelete}
               handleChangeTags={this.handleChangeTags}
               difficulty={this.state.difficulty}
               handleDifficultyRadio={this.handleDifficultyRadio}
             />
           </Col>
-          {/* <Col lg="1"></Col> */}
-          <Col  style={{
+
+          <Col
+            style={{
               background: "#EEEEEE",
               // height: "90vh",
               padding: "0em 4em"
-            }}>
+            }}
+          >
             <div style={{ margin: "2.5em 0em" }}>
               <RightpanelHindi
                 handleQuestionEditor={this.handleQuestionEditor}
@@ -412,7 +496,6 @@ class QuesHindi extends Component {
               />
             </div>
           </Col>
-          {/* <Col lg="1"></Col> */}
         </Row>
       </div>
     );
@@ -447,17 +530,17 @@ class RightpanelHindi extends Component {
                       placeholder="weightage"
                     />
                   </Col>
-                  {this.props.listOfOptions.length === index + 1 && (
-                    <Col>
-                      <Button
-                        style={{ float: "right", color: "grey" }}
-                        variant="link"
-                        onClick={this.props.deleteOption.bind(this, index)}
-                      >
-                        X Delete
-                      </Button>
-                    </Col>
-                  )}
+                  {/* {this.props.listOfOptions.length === index + 1 && ( */}
+                  <Col>
+                    <Button
+                      style={{ float: "right", color: "grey" }}
+                      variant="link"
+                      onClick={this.props.deleteOption.bind(this, index)}
+                    >
+                      X Delete
+                    </Button>
+                  </Col>
+                  {/* )} */}
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
@@ -663,9 +746,13 @@ class LeftPanel extends Component {
           >
             Tags
           </Form.Label>
-          <TagsInput
-            value={this.props.tags}
-            onChange={this.props.handleChangeTags}
+          <ReactTags
+            // style={{width:'100%'}}
+            tags={this.props.tags}
+            onInput={this.props.handleChangeTags}
+            suggestions={this.props.suggestions}
+            onDelete={this.props.onDelete.bind(this)}
+            onAddition={this.props.onAddition.bind(this)}
           />
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlTextarea11">

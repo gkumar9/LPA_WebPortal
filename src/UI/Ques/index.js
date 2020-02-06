@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Container, Button, Tabs, Tab, Nav, Row, Col } from "react-bootstrap";
+import { Container, Tab, Nav, Row, Col } from "react-bootstrap";
 import Header from "../Header/index";
 // import Back from "@material-ui/icons/ArrowBack";
 // import { styled } from "@material-ui/styles"; // If using WebPack and style-loader.
 import "./index.css";
 import EnglishHQuesTab from "./QuesEnglish.js";
 import HindiQuesTab from "./QuesHindi.js";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 const style = {
   textAlign: "center",
   background: "white",

@@ -28,28 +28,24 @@ class QuesEnglish extends Component {
         { name: "Option B", content: "", weightage: null }
       ],
       letterchartcode: 67,
-      tags: [
-        { id: 1, name: "Apples" },
-        { id: 2, name: "Pears" }
-      ],
-      suggestions: [
-        { id: 3, name: "Bananas" },
-        { id: 4, name: "Mangos" },
-        { id: 5, name: "Lemons" },
-        { id: 6, name: "Apricots" }
-      ],
+      tags: [],
+      suggestions: [],
       apisugges: []
     };
   }
   onDelete = i => {
+    // e.preventDefault()
     const tags = this.state.tags.slice(0);
     tags.splice(i, 1);
     this.setState({ tags });
   };
 
   onAddition = tag => {
+    // e.preventDefault()
     const tags = [].concat(this.state.tags, tag);
-    this.setState({ tags });
+    let suggestions = this.state.apisugges;
+    // let tempapisugges = this.state.apisugges;
+    this.setState({ tags, suggestions });
   };
   addoptionfn = () => {
     let currentCharCode = this.state.letterchartcode;
@@ -62,12 +58,19 @@ class QuesEnglish extends Component {
     });
   };
   deleteOption = index => {
-    let currentCharCode = this.state.letterchartcode;
     let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption.pop(index);
+    let letterchartcode = 65;
+
+    currentArrayOfOption.splice(index, 1);
+    currentArrayOfOption = currentArrayOfOption.map(item => {
+      let name = "Option " + String.fromCharCode(letterchartcode);
+      letterchartcode++;
+      return { name: name, content: item.content, weightage: item.weightage };
+    });
+
     this.setState({
       listOfOptions: currentArrayOfOption,
-      letterchartcode: currentCharCode - 1
+      letterchartcode: letterchartcode
     });
   };
   handleDifficultyRadio = e => {
@@ -75,38 +78,60 @@ class QuesEnglish extends Component {
     this.setState({ difficulty: e.target.value });
   };
   handleChangeTags = tags => {
+    // console.log(tags);
     let tempsugg = this.state.suggestions;
-    let tempapisugges = this.state.tempapisugges;
+    let tempapisugges = this.state.apisugges;
+    // console.log("apisugges", tempapisugges);
+    // tempsugg=tempsugg.filter((item)=>item.id!==999)
     tempsugg.push({ id: null, name: tags });
-    this.setState({ suggestions: tempsugg });
-    if (tags.length > 2) {
-      axios({
-        method: "POST",
-        url: URL.tagsearch + tags,
-        data: { authToken: "string" },
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(res => {
-        if (res.status === 200) {
-          if (res.data.data.list.length > 0) {
-            tempapisugges.concat(res.data.list);
-            tempsugg.concat(res.data.data.list);
-            this.setState({ suggestions: tempsugg, apisugges: tempapisugges });
-          } else {
-            tempsugg = [];
-            tempsugg.concat(tempapisugges);
-            tempsugg.push({ id: null, name: tags });
-            this.setState({ suggestions: tempsugg });
+    this.setState({ suggestions: tempsugg }, () => {
+      if (tags) {
+        axios({
+          method: "POST",
+          url: URL.tagsearch + tags,
+          data: { authToken: "string" },
+          headers: {
+            "Content-Type": "application/json"
           }
-        }
-      });
-    }
+        }).then(res => {
+          if (res.status === 200) {
+            if (res.data.data.list.length > 0) {
+              let temp = res.data.data.list.map(item => {
+                return { id: item.tagId, name: item.tag };
+              });
+              tempsugg = temp;
+              tempsugg = tempsugg.concat(tempapisugges);
+              // eslint-disable-next-line array-callback-return
+              tempsugg = tempsugg.filter(function(a) {
+                var key = a.id + "|" + a.name;
+                if (!this[key]) {
+                  this[key] = true;
+                  return true;
+                }
+              }, Object.create(null));
+              tempapisugges = tempapisugges.concat(temp);
+              // eslint-disable-next-line array-callback-return
+              let result = tempapisugges.filter(function(a) {
+                var key = a.id + "|" + a.name;
+                if (!this[key]) {
+                  this[key] = true;
+                  return true;
+                }
+              }, Object.create(null));
+              tempsugg.push({ id: null, name: tags });
+              this.setState({ suggestions: tempsugg, apisugges: result });
+              // console.log(tempsugg);
+            } else {
+              // console.log(tempsugg);
+            }
+          }
+        });
+      }
+    });
+
+    // console.log(tempsugg)
   };
   componentDidMount() {
-    // console.log("as");
-    // CKEditor.editorUrl = 'http://www.wiris.com/plugins/demo/ckeditor4/php/ckeditor4/ckeditor.js';
-
     axios({
       method: "POST",
       url: URL.fetchSubject + "ENGLISH",
@@ -314,9 +339,6 @@ class QuesEnglish extends Component {
     this.setState({ explanationData: data });
   };
   handleOptioncontentchange = (index, data) => {
-    // let currentCharCode = this.state.letterchartcode;
-    // let name = "Option " + String.fromCharCode(currentCharCode);
-    console.log(index, data);
     let currentArrayOfOption = this.state.listOfOptions;
     currentArrayOfOption[index].content = data;
     this.setState({
@@ -493,17 +515,17 @@ class RightpanelEnglish extends Component {
                       placeholder="weightage"
                     />
                   </Col>
-                  {this.props.listOfOptions.length === index + 1 && (
-                    <Col>
-                      <Button
-                        style={{ float: "right", color: "grey" }}
-                        variant="link"
-                        onClick={this.props.deleteOption.bind(this, index)}
-                      >
-                        X Delete
-                      </Button>
-                    </Col>
-                  )}
+                  {/* {this.props.listOfOptions.length === index + 1 && ( */}
+                  <Col>
+                    <Button
+                      style={{ float: "right", color: "grey" }}
+                      variant="link"
+                      onClick={this.props.deleteOption.bind(this, index)}
+                    >
+                      X Delete
+                    </Button>
+                  </Col>
+                  {/* )} */}
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor

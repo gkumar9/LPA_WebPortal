@@ -39,8 +39,9 @@ class QAtab extends Component {
       item => item.status === true
     );
     tempsearchlistselected.map(item => {
-      console.log(item);
-      this.onAddpreviewdata(item.id);
+      // console.log(item);
+      
+      return (this.onAddpreviewdata(item.id));
     });
   };
   handleSelectAllCheck = e => {

@@ -15,9 +15,8 @@
   padding: 0.3rem;
   text-align: center;
 }
-.radioPad__wrapper--selected {
-  background:white !important;
-  /* color: black !important; */
+.radioPad__wrapper:active, .radioPad__wrapper--selected {
+  background: #fff !important;
 }
 .radioPad__wrapper:active, .radioPad__wrapper--selected {
   background:white !important;

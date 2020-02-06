@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import Error404 from "./404.js";
 import { Button, Container, Card, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import Back from "@material-ui/icons/ArrowBack";
-import { styled } from "@material-ui/styles";
+// import { Link } from "react-router-dom";
+// import Back from "@material-ui/icons/ArrowBack";
+// import { styled } from "@material-ui/styles";
 import Header from "../Header/index";
 import "./index.css";
 import PdfContainer from "./pdf.js";
 import Doc from "./doc";
 
-const MyBack = styled(Back)({
-  color: "dimgrey",
-  marginTop: "-0.2em",
-  width: "1em"
-});
+// const MyBack = styled(Back)({
+//   color: "dimgrey",
+//   marginTop: "-0.2em",
+//   width: "1em"
+// });
 class PreviewQues extends Component {
   constructor(props) {
     super(props);

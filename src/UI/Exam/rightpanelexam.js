@@ -117,17 +117,17 @@ class RightExamPanel extends Component {
                         defaultValue="Section A"
                       /> */}
                     </Col>
-                    {this.props.listOfSection.length === index + 1 && (
-                      <Col>
-                        <Button
-                          style={{ float: "right", color: "grey" }}
-                          variant="link"
-                          onClick={this.props.deleteSection}
-                        >
-                          X Delete
-                        </Button>
-                      </Col>
-                    )}
+                    {/* {this.props.listOfSection.length === index + 1 && ( */}
+                    <Col>
+                      <Button
+                        style={{ float: "right", color: "grey" }}
+                        variant="link"
+                        onClick={this.props.deleteSection.bind(this, index)}
+                      >
+                        X Delete
+                      </Button>
+                    </Col>
+                    {/* )} */}
                   </Row>
                   <Row noGutters={true} style={{ margin: "0em 0em" }}>
                     <Col lg="6" style={{ paddingRight: "0.5em" }}>
@@ -256,7 +256,7 @@ class RightExamPanel extends Component {
                   {item.questions &&
                     item.questions.map((itemquestion, indexquestion) => {
                       return (
-                        <Row style={{ marginTop: "0.5em" }}>
+                        <Row key={indexquestion} style={{ marginTop: "0.5em" }}>
                           {/* <Col lg="2"></Col> */}
                           <Col lg="1">
                             <Form.Control
