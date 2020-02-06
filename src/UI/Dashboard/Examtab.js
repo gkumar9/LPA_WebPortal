@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Row, Col, Button, Form, Card } from "react-bootstrap";
 // import Bucket from "@material-ui/icons/Https";
 import Edit from "@material-ui/icons/Edit";
+import View from "@material-ui/icons/Visibility";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./index.css";
@@ -355,7 +356,7 @@ class Examtab extends Component {
             // borderRight: "1px solid #cac2c2",
             boxShadow: "2px 2px 5px -2px rgba(0, 0, 0, 0.75)",
             zIndex: "88",
-            position: "relative",
+            position: "relative"
             // margin: "2em 0em"
           }}
         >
@@ -449,42 +450,9 @@ class Examtab extends Component {
             </Col>
           </Row>
 
-          {/* {this.state.searchResultList.length > 0 && (
-            <Row style={{ margin: "0 0em 1em" }}>
-              <Col
-                style={{ paddingLeft: "0.5em", paddingTop: "0.3em" }}
-                lg="1.5"
-              >
-                <Form.Check
-                  id="custom-switch"
-                  label="Select all"
-                 
-                />
-              </Col>
-
-              <Col style={{ paddingRight: "0em" }}>
-                <Button
-                  variant="outline-light"
-                  size="sm"
-                  style={{
-                    color: "black",
-                    borderColor: "transparent"
-                  }}
-                >
-                  <Bucket className="svg_icons" /> Add to bucket
-                </Button>
-              </Col>
-              <Col lg="9" />
-            </Row>
-          )} */}
           <div
             style={{
-              // height: "45vh",
-              // marginBottom:'2em',
               marginBottom: "2em",
-              // overflow: "scroll",
-              // border: "1px solid lightgrey",
-              // background: "white",
               padding: "0.4em"
             }}
           >
@@ -520,6 +488,45 @@ class Examtab extends Component {
                                 {item.testId}
                               </span>
                             </span>
+                            <span style={{ marginLeft: "1em" }}>
+                              <Button
+                                title="Preview test"
+                                size="sm"
+                                style={{
+                                  borderRadius: "0",
+                                  marginLeft: "1em",
+                                  padding: ".15rem .15rem",
+                                  background: "transparent",
+                                  color: "rgb(255, 137, 118)",
+                                  border: "none"
+                                }}
+                                variant="secondary"
+
+                                // onClick={this.handleQAEdit.bind(this,item.questionId)}
+                              >
+                                {<View className="svg_icons" />}{" "}
+                              </Button>
+                              <Link
+                                to={`/editexam/${item.testId}`}
+                                target="_self"
+                              >
+                                <Button
+                                  title="Edit"
+                                  size="sm"
+                                  style={{
+                                    borderRadius: "0",
+                                    marginLeft: "1em",
+                                    padding: ".15rem .15rem",
+                                    background: "transparent",
+                                    color: "red",
+                                    border: "none"
+                                  }}
+                                  variant="secondary"
+                                >
+                                  {<Edit className="svg_icons" />}{" "}
+                                </Button>
+                              </Link>
+                            </span>
                             <span
                               style={{
                                 float: "right",
@@ -551,7 +558,7 @@ class Examtab extends Component {
                             {""}
                             {item.name}
                           </Card.Text>
-                          <div style={{ float: "right" }}>
+                          {/* <div style={{ float: "right" }}>
                             <Link
                               to={`/editexam/${item.testId}`}
                               target="_self"
@@ -568,7 +575,7 @@ class Examtab extends Component {
                                 {<Edit className="svg_icons" />}{" "}
                               </Button>
                             </Link>
-                          </div>
+                          </div> */}
                         </Card.Body>
                         {/* <hr /> */}
                       </Card>
