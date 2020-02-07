@@ -914,13 +914,13 @@ class QAtab extends Component {
                                           objj.questionId === item.questionId
                                       ).length > 0 ? (
                                         <img
-                                          src={BucketIconOrange}
+                                          src={BucketIconGrey}
                                           width="20"
                                           alt="bucket"
                                         />
                                       ) : (
                                         <img
-                                          src={BucketIconGrey}
+                                          src={BucketIconOrange}
                                           width="20"
                                           alt="bucket"
                                         />
