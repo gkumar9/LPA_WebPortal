@@ -28,7 +28,7 @@ class Exam extends Component {
       selectedChapterID: "",
       listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
       selectedType: "Free",
-      selectedTypeYear: '',
+      selectedTypeYear: "",
       hour: "",
       minute: "",
       startDate: new Date(),
@@ -87,12 +87,16 @@ class Exam extends Component {
   handleNegativeMarksPerQuesChange = (index, e) => {
     // console.log(index,e)
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].negativeMarksPerQuestion = e.target.value?parseInt(e.target.value):0;
+    tempsectionlist[index].negativeMarksPerQuestion = e.target.value
+      ? parseInt(e.target.value)
+      : 0;
     this.setState({ listOfSection: tempsectionlist });
   };
   handleMarksperQuesChange = (index, e) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].marksPerQuestion = e.target.value?parseInt(e.target.value):0;
+    tempsectionlist[index].marksPerQuestion = e.target.value
+      ? parseInt(e.target.value)
+      : 0;
     this.setState({ listOfSection: tempsectionlist });
   };
   addSection = () => {
@@ -401,9 +405,11 @@ class Exam extends Component {
           }
         ],
         time:
-          (parseFloat(this.state.hour) +
-          parseFloat(Number(parseInt(this.state.minute) / 60)))?(parseFloat(this.state.hour) +
-          parseFloat(Number(parseInt(this.state.minute) / 60))):0,
+          parseFloat(this.state.hour) +
+          parseFloat(Number(parseInt(this.state.minute) / 60))
+            ? parseFloat(this.state.hour) +
+              parseFloat(Number(parseInt(this.state.minute) / 60))
+            : 0,
         type: this.state.selectedType,
         year: this.state.selectedTypeYear
       },
@@ -549,7 +555,7 @@ class Exam extends Component {
                       }}
                       onClick={this.saveExamdata}
                     >
-                      Save & see preview
+                      Save
                     </Button>
                   </div>
                 </div>

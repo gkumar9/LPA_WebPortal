@@ -1,8 +1,16 @@
 import React, { Component } from "react";
-import { Row, Col, Button, Form, Card } from "react-bootstrap";
-import Bucket from "@material-ui/icons/Https";
+import {
+  Row,
+  Col,
+  Button,
+  Form,
+  Card,
+  OverlayTrigger,
+  Tooltip
+} from "react-bootstrap";
+// import Bucket from "@material-ui/icons/Https";
 import Edit from "@material-ui/icons/Edit";
-import View from "@material-ui/icons/Visibility";
+// import View from "@material-ui/icons/Visibility";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./index.css";
@@ -11,6 +19,11 @@ import URL from "../../Assets/url";
 import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { withRouter } from "react-router-dom";
+import BucketIcon from "./../../Assets/image.png";
+// import BucketIconBlack from "./../../Assets/image2.png";
+import BucketIconOrange from "./../../Assets/image3.png";
+import BucketIconLightOrange from "./../../Assets/image4.png";
+import swal from "sweetalert";
 
 class QAtab extends Component {
   constructor(props) {
@@ -71,6 +84,7 @@ class QAtab extends Component {
       "Previewdata",
       JSON.stringify(this.state.listOfselectedPreview)
     );
+    // console.log(this.state.selectedLanguage);
     localStorage.setItem("previewLanguage", this.state.selectedLanguage);
     this.props.history.push({
       pathname: "/quespreview",
@@ -319,7 +333,10 @@ class QAtab extends Component {
                       }
                     })
                     .catch(e => {
-                      alert(e);
+                      swal('Error', "No data found","error");
+        // this.props.history.push({
+        //   pathname: "/"
+        // });
                     });
                 }
               );
@@ -330,7 +347,11 @@ class QAtab extends Component {
           })
           .catch(e => {
             console.log(e);
-            alert(e);
+            // alert(e);
+            swal('Error', "No data found","error");
+        // this.props.history.push({
+        //   pathname: "/"
+        // });
             this.setState({ isLoading: false });
           });
       }
@@ -627,7 +648,14 @@ class QAtab extends Component {
                     }}
                   >
                     {" "}
-                    <View className="svg_icons" /> Bucket
+                    {/* <View className="svg_icons" /> */}
+                    <img
+                      src={BucketIcon}
+                      width="20"
+                      alt="bucket"
+                      style={{ paddingBottom: "0.2em", marginRight: "0.3em" }}
+                    />
+                    Bucket
                   </Button>
                 </Col>
                 {/* <Col
@@ -692,7 +720,13 @@ class QAtab extends Component {
                         borderColor: "transparent"
                       }}
                     >
-                      <Bucket className="svg_icons" /> Add to bucket
+                      <img
+                        src={BucketIconOrange}
+                        width="20"
+                        alt="bucket"
+                        style={{ paddingBottom: "0.2em", marginRight: "0.3em" }}
+                      />{" "}
+                      Add to bucket
                     </Button>
                   </Col>
                   <Col lg="6" />
@@ -753,45 +787,7 @@ class QAtab extends Component {
                                     {item.questionId}
                                   </span>
                                 </span>
-                                <span style={{ marginLeft: "1em" }}>
-                                  <Button
-                                    title={
-                                      this.state.listOfselectedPreview.filter(
-                                        objj =>
-                                          objj.questionId === item.questionId
-                                      ).length > 0
-                                        ? "Added to bucket"
-                                        : "Add to bucket"
-                                    }
-                                    size="sm"
-                                    style={
-                                      this.state.listOfselectedPreview.filter(
-                                        objj =>
-                                          objj.questionId === item.questionId
-                                      ).length > 0
-                                        ? {
-                                            background: "transparent",
-                                            borderRadius: "0",
-                                            padding: ".15rem .15rem",
-                                            border: "none",
-                                            color: "#FF8976"
-                                          }
-                                        : {
-                                            borderRadius: "0",
-                                            padding: ".15rem .15rem",
-                                            background: "transparent",
-                                            border: "none",
-                                            color: "grey"
-                                          }
-                                    }
-                                    onClick={this.onAddpreviewdata.bind(
-                                      this,
-                                      item.questionId
-                                    )}
-                                    variant="primary"
-                                  >
-                                    {<Bucket className="svg_icons" />}{" "}
-                                  </Button>
+                                <span style={{ marginLeft: "2.2em" }}>
                                   <Link
                                     to={`/editques/${this.state.selectedLanguage}/${item.questionId}`}
                                     target="_self"
@@ -801,10 +797,10 @@ class QAtab extends Component {
                                       size="sm"
                                       style={{
                                         borderRadius: "0",
-                                        marginLeft: "1em",
+
                                         padding: ".15rem .15rem",
                                         background: "transparent",
-                                        color: "red",
+                                        color: "rgb(106, 163, 255) ",
                                         border: "none"
                                       }}
                                       variant="secondary"
@@ -814,6 +810,59 @@ class QAtab extends Component {
                                       {<Edit className="svg_icons" />}{" "}
                                     </Button>
                                   </Link>
+                                  <OverlayTrigger
+                                    placement="top"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={renderTooltip(
+                                      this.state.listOfselectedPreview.filter(
+                                        objj =>
+                                          objj.questionId === item.questionId
+                                      ).length > 0
+                                        ? "Remove from bucket"
+                                        : "Add to bucket"
+                                    )}
+                                  >
+                                    <Button
+                                      // title={
+                                      //   this.state.listOfselectedPreview.filter(
+                                      //     objj =>
+                                      //       objj.questionId === item.questionId
+                                      //   ).length > 0
+                                      //     ? "Added to bucket"
+                                      //     : "Add to bucket"
+                                      // }
+                                      size="sm"
+                                      style={{
+                                        borderRadius: "0",
+                                        marginLeft: "1em",
+                                        padding: ".15rem .15rem",
+                                        background: "transparent",
+                                        border: "none"
+                                      }}
+                                      onClick={this.onAddpreviewdata.bind(
+                                        this,
+                                        item.questionId
+                                      )}
+                                      variant="primary"
+                                    >
+                                      {this.state.listOfselectedPreview.filter(
+                                        objj =>
+                                          objj.questionId === item.questionId
+                                      ).length > 0 ? (
+                                        <img
+                                          src={BucketIconOrange}
+                                          width="20"
+                                          alt="bucket"
+                                        />
+                                      ) : (
+                                        <img
+                                          src={BucketIconLightOrange}
+                                          width="20"
+                                          alt="bucket"
+                                        />
+                                      )}
+                                    </Button>
+                                  </OverlayTrigger>
                                 </span>
                                 <span
                                   style={{
@@ -923,5 +972,8 @@ class QAtab extends Component {
       </React.Fragment>
     );
   }
+}
+function renderTooltip(name) {
+  return <Tooltip>{name}</Tooltip>;
 }
 export default withRouter(QAtab);

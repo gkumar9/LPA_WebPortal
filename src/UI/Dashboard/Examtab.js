@@ -8,6 +8,7 @@ import axios from "axios";
 import "./index.css";
 import LeftpanelExamtab from "./leftpanelExamtab.js";
 import URL from "../../Assets/url";
+import swal from "sweetalert";
 
 class Examtab extends Component {
   constructor(props) {
@@ -170,17 +171,18 @@ class Examtab extends Component {
                   }
                 })
                 .catch(e => {
-                  alert(e);
+                  swal('Error', "No data found","error");
                 });
               // this.callApiForSubject();
             }
           );
         } else {
-          alert("Unexpected code");
+          swal('Error', "No data found","error");
         }
       })
       .catch(e => {
         console.log(e);
+        swal('Error', "No data found","error");
       });
   }
   callApiForSubject = () => {
@@ -495,7 +497,7 @@ class Examtab extends Component {
                                 {item.testId}
                               </span>
                             </span>
-                            <span style={{ marginLeft: "1em" }}>
+                            <span style={{ marginLeft: "2em" }}>
                               <Button
                                 title="Preview test"
                                 size="sm"
@@ -524,10 +526,10 @@ class Examtab extends Component {
                                   size="sm"
                                   style={{
                                     borderRadius: "0",
-                                    marginLeft: "1em",
+                                    marginLeft: "0.8em",
                                     padding: ".15rem .15rem",
                                     background: "transparent",
-                                    color: "red",
+                                    color: "rgb(106, 163, 255)",
                                     border: "none"
                                   }}
                                   variant="secondary"

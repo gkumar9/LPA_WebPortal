@@ -25,7 +25,7 @@ class QuesHindi extends Component {
       listOfSubTopic: [],
       selectedSubTopicID: 0,
       // tags: [],
-      difficulty: "",
+      difficulty: "+",
       questionData: "",
       explanationData: "",
       listOfOptions: [
@@ -392,7 +392,7 @@ class QuesHindi extends Component {
           : URL.createQuestionNewVersion,
       data: {
         authToken: "string",
-        difficulty: difficultyvalue,
+        difficulty: difficultyvalue?difficultyvalue:'EASY',
         questionId: this.props.questionId,
         sectionId: this.state.selectedChapterID,
         subjectId: this.state.selectedSubjectID,
@@ -415,7 +415,7 @@ class QuesHindi extends Component {
       .then(res => {
         console.log(res.data.data);
         if (res.status === 200) {
-          alert("Success:", res.data.data);
+          // alert("Success:", res.data.data);
           swal("Success", `QuestionId:${res.data.data.questionId}`, "success");
           // if (this.props.questionId === 0) {
           // swal("Success", `QuestionId:${res.data.data}`, "success");

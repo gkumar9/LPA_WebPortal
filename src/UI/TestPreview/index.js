@@ -3,17 +3,19 @@ import Header from "../Header/index";
 import { Button, Container, Card, Row, Col } from "react-bootstrap";
 import Error404 from "../QuesPreview/404.js";
 import "../QuesPreview/index.css";
-import PdfContainer from "../QuesPreview/pdf.js";
-import Doc from "../QuesPreview/doc";
+// import PdfContainer from "../QuesPreview/pdf.js";
+// import Doc from "../QuesPreview/doc";
 import axios from "axios";
 import URL from "../../Assets/url";
 class Previewtest extends Component {
   constructor(props) {
     super(props);
-    this.state = { isData: false, testId: null, data: [] };
+    this.state = { isData: false, testId: null, data: {} };
   }
+  // createPdf = html => Doc.createPdf(html);
   componentDidMount() {
     let testId = JSON.parse(localStorage.getItem("TestPreviewId"));
+
     if (testId && testId !== undefined && testId !== "") {
       this.setState({ testId: testId }, () => {
         axios({
@@ -25,18 +27,50 @@ class Previewtest extends Component {
           }
         })
           .then(res => {
-            console.log(res.data.data);
-            if(res.status===200){
-                let testdataresponse=res.data.data.test;
-                
+            if (res.status === 200) {
+              let testdataresponse = res.data.data.test;
+              if (
+                testdataresponse.testSections &&
+                testdataresponse.testSections.length > 0
+              ) {
+                let sectionlist = testdataresponse.testSections;
 
+                let newsectionlist = sectionlist.map(object => {
+                  if (
+                    object.testSectionMapping &&
+                    object.testSectionMapping.length > 0
+                  ) {
+                    let questionsectionlist = object.testSectionMapping;
+
+                    let newquestionsectionlist = questionsectionlist.map(
+                      item => {
+                        let questionData = this.callquestionAPI(
+                          item.questionId
+                        ).then(res => {
+                          console.log(res);
+                        });
+                        // questionData=questionData.then((res)=> (res));
+                        return {
+                          id: item.id,
+                          questionId: item.questionId,
+                          questionData: questionData
+                        };
+                      }
+                    );
+                    object.testSectionMapping = newquestionsectionlist;
+                    return object;
+                  }
+                });
+                testdataresponse.testSections = newsectionlist;
+                this.setState({ data: testdataresponse, isData: true });
+              }
             }
           })
           .catch(e => {
             alert(e);
-            this.props.history.push({
-              pathname: "/"
-            });
+            // this.props.history.push({
+            //   pathname: "/"
+            // });
           });
       });
     } else {
@@ -47,13 +81,103 @@ class Previewtest extends Component {
       );
     }
   }
+  callquestionAPI = async questionId => {
+    return axios({
+      method: "POST",
+      url: URL.geteditques + questionId,
+      data: { authToken: "string" },
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(res => res.data.data.question);
+    // let  data  = res.data.data.question;
+    // console.log(data)
+    // return (data?data:{});
+  };
 
   render() {
+    console.log(this.state.data, this.state.isData);
     return (
       <React.Fragment>
         <Header props={this.props} />
-        {this.state.isData && localStorage.getItem("previewLanguage") ? (
-          <ShowData data={this.state.data} />
+        {this.state.isData && localStorage.getItem("TestPreviewLanguage") ? (
+          <Container>
+            <center style={{ margin: "0 3em", textTransform: "capitalize" }}>
+              <h3>
+                {
+                  this.state.data.testVersions.filter(
+                    item =>
+                      item.language ===
+                      localStorage.getItem("TestPreviewLanguage")
+                  )[0].name
+                }
+              </h3>
+            </center>
+            <Row>
+              <Col lg="4">
+                {" "}
+                Time allowed:
+                {this.state.data.time ? this.state.data.time : "NA"}
+              </Col>
+              <Col />
+              <Col lg="4">
+                <span style={{ float: "right" }}>
+                  Maximum marks:
+                  {this.state.data.maximumMarks
+                    ? this.state.data.maximumMarks
+                    : "NA"}
+                </span>
+              </Col>
+            </Row>
+            <hr />
+            <center>INSTRUCTION</center>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: this.state.data.testVersions.filter(
+                  item =>
+                    item.language ===
+                    localStorage.getItem("TestPreviewLanguage")
+                )[0].instructions
+              }}
+            >
+              {/* {
+                  this.state.data.testVersions.filter(
+                    item =>
+                      item.language ===
+                      localStorage.getItem("TestPreviewLanguage")
+                  )[0].instructions
+                } */}
+            </div>
+            <br />
+            {this.state.data.testSections.map((item, index) => {
+              return (
+                <div key={index}>
+                  <center>
+                    <h4>
+                      {
+                        item.testSectionVersions.filter(
+                          obj =>
+                            obj.language ===
+                            localStorage.getItem("TestPreviewLanguage")
+                        )[0].name
+                      }
+                    </h4>
+                  </center>
+                  <br />
+                  {
+                    item.testSectionVersions.filter(
+                      obj =>
+                        obj.language ===
+                        localStorage.getItem("TestPreviewLanguage")
+                    )[0].content
+                  }
+                  {/* {item.testSectionMapping.questionData().then((res)=>{
+                      return <QuestionShowData data={res} />
+                    })} */}
+                </div>
+              );
+            })}
+          </Container>
         ) : (
           <Error404 />
         )}
@@ -62,174 +186,169 @@ class Previewtest extends Component {
   }
 }
 
-class ShowData extends Component {
+class QuestionShowData extends Component {
   constructor(props) {
     super(props);
     this.state = {
       editabledata: [],
-      selectedLanguage: localStorage.getItem("previewLanguage")
+      selectedLanguage: localStorage.getItem("TestPreviewLanguage")
     };
   }
   componentDidMount() {
     this.setState({ editabledata: this.props.data });
   }
-  createPdf = html => Doc.createPdf(html);
-  deleteQuestion = index => {
-    let templist = this.state.editabledata;
-    templist.splice(index, 1);
-    this.setState({ editabledata: templist });
-    // console.log(templist);
-    localStorage.setItem("Previewdata", JSON.stringify(templist));
-  };
+  // createPdf = html => Doc.createPdf(html);
+  // deleteQuestion = index => {
+  //   let templist = this.state.editabledata;
+  //   templist.splice(index, 1);
+  //   this.setState({ editabledata: templist });
+  //   // console.log(templist);
+  //   localStorage.setItem("Previewdata", JSON.stringify(templist));
+  // };
   render() {
     return (
       <Container>
-        <PdfContainer createPdf={this.createPdf}>
-          <div
-            style={{
-              padding: "0.5em 1.5em"
-            }}
-          >
-            {this.state.editabledata &&
-              this.state.editabledata.map((item, index) => {
-                return (
-                  <Row
-                    noGutters={true}
-                    key={item.questionId}
+        <div
+          style={{
+            padding: "0.5em 1.5em"
+          }}
+        >
+          {this.state.editabledata &&
+            this.state.editabledata.map((item, index) => {
+              return (
+                <Row
+                  noGutters={true}
+                  key={item.questionId}
+                  style={{
+                    margin: "0.5em 0em"
+                    // borderBottom: "1px #c2c2c2 solid"
+                  }}
+                >
+                  <Col
                     style={{
-                      margin: "0.5em 0em"
-                      // borderBottom: "1px #c2c2c2 solid"
+                      paddingLeft: "0em",
+                      paddingRight: "0em"
                     }}
                   >
-                    <Col
+                    <Card
                       style={{
-                        paddingLeft: "0em",
-                        paddingRight: "0em"
+                        background: "transparent",
+                        borderColor: "transparent"
                       }}
                     >
-                      <Card
-                        style={{
-                          background: "transparent",
-                          borderColor: "transparent"
-                        }}
-                      >
-                        <Card.Body style={{ padding: "0", margin: "0.5em 0" }}>
-                          <Card.Title style={{ fontSize: "medium" }}>
-                            <Row noGutters={true}>
-                              <Col lg="1">
-                                <span>
-                                  <small>
-                                    <b>#</b>{" "}
-                                  </small>
-                                  <span style={{ color: "dimgrey" }}>
-                                    {item.questionId}
-                                  </span>
+                      <Card.Body style={{ padding: "0", margin: "0.5em 0" }}>
+                        <Card.Title style={{ fontSize: "medium" }}>
+                          <Row noGutters={true}>
+                            <Col lg="1">
+                              <span>
+                                <small>
+                                  <b>#</b>{" "}
+                                </small>
+                                <span style={{ color: "dimgrey" }}>
+                                  {item.questionId}
                                 </span>
-                              </Col>
+                              </span>
+                            </Col>
 
-                              <Col>
+                            <Col>
+                              <span
+                                style={{
+                                  // float: "right",
+                                  fontSize: "15px",
+                                  fontWeight: "600"
+                                }}
+                              >
+                                <b>Tags: </b>
+                                <span style={{ color: "#1D4B7F" }}>
+                                  Difficulty:{" "}
+                                  {item.level === "EASY"
+                                    ? item.level === "MILD"
+                                      ? "++"
+                                      : "+"
+                                    : item.level === "MILD"
+                                    ? "++"
+                                    : "+++"}
+                                </span>
+                                ,
                                 <span
                                   style={{
-                                    // float: "right",
-                                    fontSize: "15px",
-                                    fontWeight: "600"
+                                    color: "darkgreen",
+                                    textTransform: "lowercase"
                                   }}
                                 >
-                                  <b>Tags: </b>
-                                  <span style={{ color: "#1D4B7F" }}>
-                                    Difficulty:{" "}
-                                    {item.level === "EASY"
-                                      ? item.level === "MILD"
-                                        ? "++"
-                                        : "+"
-                                      : item.level === "MILD"
-                                      ? "++"
-                                      : "+++"}
-                                  </span>
-                                  ,
-                                  <span
-                                    style={{
-                                      color: "darkgreen",
-                                      textTransform: "lowercase"
-                                    }}
-                                  >
-                                    {" "}
-                                    {item.type}
-                                  </span>
+                                  {" "}
+                                  {item.type}
                                 </span>
-                              </Col>
-                              <Col lg="3">
-                                <Button
-                                  className="backbuttonprint"
-                                  style={{
-                                    float: "right",
-                                    color: "grey",
-                                    fontSize: "0.8em"
-                                  }}
-                                  variant="link"
-                                  onClick={this.deleteQuestion.bind(
-                                    this,
-                                    index
-                                  )}
-                                >
-                                  X Delete
-                                </Button>
-                              </Col>
-                            </Row>
-                          </Card.Title>
+                              </span>
+                            </Col>
+                            <Col lg="3">
+                              <Button
+                                className="backbuttonprint"
+                                style={{
+                                  float: "right",
+                                  color: "grey",
+                                  fontSize: "0.8em"
+                                }}
+                                variant="link"
+                                onClick={this.deleteQuestion.bind(this, index)}
+                              >
+                                X Delete
+                              </Button>
+                            </Col>
+                          </Row>
+                        </Card.Title>
 
-                          <Card.Text style={{ marginBottom: "0.5em" }}>
-                            <b>{"Q. "}</b>
-                            {item.questionVersions
-                              .filter(
-                                obbj =>
-                                  obbj.language === this.state.selectedLanguage
-                              )[0]
-                              .content.replace(/<\/?[^>]+(>|$)/g, "")}
-                          </Card.Text>
-                          <Row>
-                            {item.questionVersions
-                              .filter(
-                                obbj =>
-                                  obbj.language === this.state.selectedLanguage
-                              )[0]
-                              .options.map((optionitem, optionindex) => {
-                                return (
-                                  <React.Fragment key={optionindex}>
-                                    <Col lg="6" style={{ margin: "0.5em 0" }}>
-                                      {optionindex + 1}
-                                      {") "}{" "}
-                                      {optionitem.content.replace(
-                                        /<\/?[^>]+(>|$)/g,
-                                        ""
-                                      )}{" "}
-                                      <sub
-                                      // style={{border:' dimgrey solid',padding:'0.1em'}}
-                                      >
-                                        -<b> {optionitem.weightage}</b>
-                                      </sub>
-                                    </Col>
-                                  </React.Fragment>
-                                );
-                              })}{" "}
-                          </Row>
-                          <Row style={{ margin: "0.2em 0.1em" }}>
-                            <b> Sol- </b>
-                            {item.questionVersions
-                              .filter(
-                                obbj =>
-                                  obbj.language === this.state.selectedLanguage
-                              )[0]
-                              .solution.replace(/<\/?[^>]+(>|$)/g, "")}
-                          </Row>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  </Row>
-                );
-              })}
-          </div>
-        </PdfContainer>
+                        <Card.Text style={{ marginBottom: "0.5em" }}>
+                          <b>{"Q. "}</b>
+                          {item.questionVersions
+                            .filter(
+                              obbj =>
+                                obbj.language === this.state.selectedLanguage
+                            )[0]
+                            .content.replace(/<\/?[^>]+(>|$)/g, "")}
+                        </Card.Text>
+                        <Row>
+                          {item.questionVersions
+                            .filter(
+                              obbj =>
+                                obbj.language === this.state.selectedLanguage
+                            )[0]
+                            .options.map((optionitem, optionindex) => {
+                              return (
+                                <React.Fragment key={optionindex}>
+                                  <Col lg="6" style={{ margin: "0.5em 0" }}>
+                                    {optionindex + 1}
+                                    {") "}{" "}
+                                    {optionitem.content.replace(
+                                      /<\/?[^>]+(>|$)/g,
+                                      ""
+                                    )}{" "}
+                                    <sub
+                                    // style={{border:' dimgrey solid',padding:'0.1em'}}
+                                    >
+                                      -<b> {optionitem.weightage}</b>
+                                    </sub>
+                                  </Col>
+                                </React.Fragment>
+                              );
+                            })}{" "}
+                        </Row>
+                        <Row style={{ margin: "0.2em 0.1em" }}>
+                          <b> Sol- </b>
+                          {item.questionVersions
+                            .filter(
+                              obbj =>
+                                obbj.language === this.state.selectedLanguage
+                            )[0]
+                            .solution.replace(/<\/?[^>]+(>|$)/g, "")}
+                        </Row>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
+              );
+            })}
+        </div>
       </Container>
     );
   }

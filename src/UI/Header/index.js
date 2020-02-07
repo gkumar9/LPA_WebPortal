@@ -7,10 +7,10 @@ import { Link } from "react-router-dom";
 
 function Header({ props }) {
   // console.log(firebase.auth())
-  
+
   return (
     <Navbar expand="lg" style={{ borderBottom: "solid 1px #cccbcb" }}>
-      <Navbar.Brand  >
+      <Navbar.Brand>
         <Link to="/" target="_self">
           <img
             src={Logo}
@@ -19,7 +19,7 @@ function Header({ props }) {
           />
         </Link>
       </Navbar.Brand>
-      <Navbar.Brand style={{fontSize:'1em'}}>
+      {/* <Navbar.Brand style={{fontSize:'1em'}}>
         <Link
           to="/"
           target="_self"
@@ -31,11 +31,24 @@ function Header({ props }) {
         >
           Home
         </Link>
-      </Navbar.Brand>
+      </Navbar.Brand> */}
       <Nav className="mr-auto"></Nav>
       <Nav justify>
         {/* <Link to="/" target="_self"> */}{" "}
-        <Nav.Link href="#">Welcome User</Nav.Link>
+        {/* <Nav.Link href="#">Welcome User</Nav.Link> */}
+        <Nav.Link>
+          <Link
+            to="/"
+            target="_self"
+            style={
+              props.location.pathname === "/"
+                ? { textDecoration: "none", color: "black" }
+                : { color: "grey", textDecoration: "none" }
+            }
+          >
+            Dashboard
+          </Link>
+        </Nav.Link>
         <Nav.Link
           eventKey={2}
           onSelect={() => {

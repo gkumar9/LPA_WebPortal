@@ -103,18 +103,18 @@ class ExamEditComponent extends Component {
       negativeMarksPerQuestion: 0,
       questions: [],
 
-      testSectionVersions: [
+      versions: [
         {
           content: "",
           language: "ENGLISH",
-          name: "string",
-          sectionName: ""
+          name: ""
+          // sectionName: ""
         },
         {
           content: "",
           language: "HINDI",
-          name: "string",
-          sectionName: ""
+          name: ""
+          // sectionName: ""
         }
       ]
     });
@@ -453,6 +453,14 @@ class ExamEditComponent extends Component {
       mmendDatetemp = "0" + mmendDatetemp;
     }
     var endDate = yyyyendDatetemp + "-" + mmendDatetemp + "-" + ddendDatetemp;
+
+    let templistofsection = this.state.listOfSection.map(item => {
+      item["versions"] = item["testSectionVersions"];
+      delete item.testSectionMapping;
+      return item;
+    });
+    
+
     axios({
       method: "POST",
       url: URL.updatetest,
@@ -461,7 +469,7 @@ class ExamEditComponent extends Component {
         endDate: endDate,
         examId: this.state.selectedExamID,
         sectionId: this.state.selectedChapterID,
-        sections: this.state.listOfSection,
+        sections: templistofsection,
         startDate: startDate,
         subjectId: this.state.selectedSubjectID,
         testId: this.props.fetchedData.testId,

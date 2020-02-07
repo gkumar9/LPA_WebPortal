@@ -11,6 +11,7 @@ import axios from "axios";
 import "./index.css";
 import URL from "../../Assets/url";
 import ReactTags from "react-tag-autocomplete";
+import swal from "sweetalert";
 
 class EditComponent extends Component {
   constructor(props) {
@@ -535,7 +536,8 @@ class EditComponent extends Component {
       .then(res => {
         if (res.status === 200) {
           console.log(res.data.data);
-          alert("success", res.data.data);
+          // alert("success", res.data.data);
+          swal("Success", `Data updated`, "success");
         }
       })
       .catch(e => {

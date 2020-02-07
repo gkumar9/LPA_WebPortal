@@ -21,7 +21,7 @@ class QuesEnglish extends Component {
       listOfSubTopic: [],
       selectedSubTopicID: 0,
       // tags: [],
-      difficulty: "",
+      difficulty: "+",
       questionData: "",
       explanationData: "",
       listOfOptions: [
@@ -383,7 +383,7 @@ class QuesEnglish extends Component {
           : URL.createQuestionNewVersion,
       data: {
         authToken: "string",
-        difficulty: difficultyvalue,
+        difficulty: difficultyvalue?difficultyvalue:'EASY',
         questionId: this.props.questionId,
         sectionId: this.state.selectedChapterID,
         subjectId: this.state.selectedSubjectID,

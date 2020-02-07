@@ -37,10 +37,10 @@ class EditExam extends Component {
         this.setState({ fetchedData: res.data.data.test });
       }
     }).catch((e)=>{
-      swal(e, "error");
-      this.props.history.push({
-        pathname: "/"
-      });
+      swal('Error', "No data found","error");
+        this.props.history.push({
+          pathname: "/"
+        });
     })
   }
   render() {

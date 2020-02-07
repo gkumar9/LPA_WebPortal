@@ -68,7 +68,11 @@ class LeftPanelQAtab extends Component {
             Subject
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            style={
+              currentvaluesubject !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
             size="sm"
             as="select"
             // defaultValue=""
@@ -194,20 +198,21 @@ class LeftPanelQAtab extends Component {
           <Row>
             <Col xs style={{ paddingRight: "0" }}>
               {/* {this.props.searchResultListLength > 0 && ( */}
-                <Button
-                  size="sm"
-                  onClick={this.props.clearSearchFromFilters}
-                  style={{
-                    // width:'auto',
-                    // marginLeft: "1.5em",
-                    borderRadius: "0",
-                    background: "#6aa3ff",
-                    borderColor: "transparent"
-                  }}
-                >
-                  {/* <span style={{ fontSize: "12px" }}>&#10005; </span> */}
-                  Clear Search
-                </Button>
+              <Button
+                size="sm"
+                onClick={this.props.clearSearchFromFilters}
+                style={{
+                  // width:'auto',
+                  // marginLeft: "1.5em",
+                  color: "#615f5f",
+                  borderRadius: "0",
+                  background: "transparent",
+                  borderColor: "#b7b7b7"
+                }}
+              >
+                {/* <span style={{ fontSize: "12px" }}>&#10005; </span> */}
+                Clear Search
+              </Button>
               {/* )} */}
             </Col>
             <Col xs lg="7" style={{ paddingLeft: "0" }}>
@@ -216,14 +221,14 @@ class LeftPanelQAtab extends Component {
                 onClick={this.props.handlesearchWithFilter}
                 style={{
                   borderRadius: "0",
-                  background: "#007bff",
+                  background: "rgb(106, 163, 255)",
                   borderColor: "transparent",
                   float: "right"
                   // marginRight: "0.5em"
                 }}
               >
-                 {/* <span style={{ fontSize: "12px" }}>&#10004;</span> */}
-                  Search with filters
+                {/* <span style={{ fontSize: "12px" }}>&#10004;</span> */}
+                Search with filters
               </Button>
             </Col>
           </Row>

@@ -38,9 +38,16 @@ class Editques extends Component {
         if (res.status === 200) {
           this.setState({ fetchedData: res.data.data.question });
         }
+        else{
+          swal('Error', "No data found","error");
+          // alert(e);
+        this.props.history.push({
+          pathname: "/"
+        });
+        }
       })
       .catch(e => {
-        swal(e, "error");
+        swal('Error', "No data found","error");
         this.props.history.push({
           pathname: "/"
         });
