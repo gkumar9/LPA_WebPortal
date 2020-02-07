@@ -20,9 +20,9 @@ import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { withRouter } from "react-router-dom";
 import BucketIcon from "./../../Assets/image.png";
-// import BucketIconBlack from "./../../Assets/image2.png";
+import BucketIconBlack from "./../../Assets/image2.png";
 import BucketIconOrange from "./../../Assets/image3.png";
-import BucketIconLightOrange from "./../../Assets/image4.png";
+import BucketIconGrey from "./../../Assets/image4.png";
 // import swal from "sweetalert";
 
 class QAtab extends Component {
@@ -56,12 +56,23 @@ class QAtab extends Component {
 
       return this.onAddpreviewdata(item.id);
     });
+    this.setState({
+      searchSelectAll: false
+    });
   };
   handleSelectAllCheck = e => {
     if (e.target.checked) {
+      // let temp=this.state.listOfselectedPreview
       let tempsearchlist = this.state.listOfsearchselected.map(item => {
-        item.status = true;
-        return item;
+        let temp = this.state.listOfselectedPreview.filter(
+          obj => obj.questionId === item.id
+        );
+        let objj =
+          temp.length > 0
+            ? { id: item.id, status: false }
+            : { id: item.id, status: true };
+        // item.status = true;
+        return objj;
       });
       this.setState({
         searchSelectAll: e.target.checked,
@@ -102,10 +113,19 @@ class QAtab extends Component {
       if (filterchecktemp.length > 0) {
         let templist = this.state.listOfselectedPreview;
         templist = templist.filter(obj => obj.questionId !== id);
-
+        let templistOfsearchselected = this.state.listOfsearchselected.map(
+          item => {
+            let obj =
+              item.id === id
+                ? { id: item.id, status: false }
+                : { id: item.id, status: item.status };
+            return obj;
+          }
+        );
         this.setState(
           {
             listOfselectedPreview: templist,
+            listOfsearchselected: templistOfsearchselected,
             isLoading: false
           },
           () => {
@@ -126,12 +146,19 @@ class QAtab extends Component {
             if (res.status === 200) {
               let temppreviewlist = this.state.listOfselectedPreview;
               temppreviewlist.push(res.data.data.question);
-              // let tempsearchlist = this.state.listOfsearchselected;
-              // tempsearchlist[index].status = !tempsearchlist[index].status;
+              let templistOfsearchselected = this.state.listOfsearchselected.map(
+                item => {
+                  let obj =
+                    item.id === id
+                      ? { id: item.id, status: false }
+                      : { id: item.id, status: item.status };
+                  return obj;
+                }
+              );
               this.setState(
                 {
                   listOfselectedPreview: temppreviewlist,
-                  // listOfsearchselected:tempsearchlist,
+                  listOfsearchselected: templistOfsearchselected,
                   isLoading: false
                 },
                 () => {
@@ -316,14 +343,14 @@ class QAtab extends Component {
                       // console.log(res.data.data.list);
                       if (res.status === 200) {
                         let templist = res.data.data.list.map(item => {
-                          let filtertemplist = this.state.listOfselectedPreview.filter(
-                            obj => obj.questionId === item.questionId
-                          );
-                          if (filtertemplist.length > 0) {
-                            return { id: item.questionId, status: true };
-                          } else {
-                            return { id: item.questionId, status: false };
-                          }
+                          // let filtertemplist = this.state.listOfselectedPreview.filter(
+                          //   obj => obj.questionId === item.questionId
+                          // );
+                          // if (filtertemplist.length > 0) {
+                          //   return { id: item.questionId, status: true };
+                          // } else {
+                          return { id: item.questionId, status: false };
+                          // }
                         });
                         // console.log(templist);
                         this.setState({
@@ -640,21 +667,25 @@ class QAtab extends Component {
                 <Col>
                   <Button
                     onClick={this.OnPreviewClick}
-                    style={this.state.listOfselectedPreview.length>0?{
-                      fontSize: "1em",
-                      fontWeight: "700",
-                      background: "rgb(255, 109, 86)",
-                      borderColor: "rgb(255, 109, 86)",
-                      borderRadius: "0",
-                      float: "right"
-                    }:{
-                      fontSize: "1em",
-                      fontWeight: "700",
-                      background: "rgb(238, 179, 170)",
-                      borderColor: "rgb(238, 179, 170)",
-                      borderRadius: "0",
-                      float: "right"
-                    }}
+                    style={
+                      this.state.listOfselectedPreview.length > 0
+                        ? {
+                            fontSize: "1em",
+                            fontWeight: "700",
+                            background: "rgba(254, 134, 53, 0.86)",
+                            borderColor: "rgba(254, 134, 53, 0.86)",
+                            borderRadius: "0",
+                            float: "right"
+                          }
+                        : {
+                            fontSize: "1em",
+                            fontWeight: "700",
+                            background: "#adb5bd",
+                            borderColor: "#adb5bd",
+                            borderRadius: "0",
+                            float: "right"
+                          }
+                    }
                   >
                     {" "}
                     {/* <View className="svg_icons" /> rgb(238, 179, 170)*/}
@@ -730,7 +761,13 @@ class QAtab extends Component {
                       }}
                     >
                       <img
-                        src={BucketIconOrange}
+                        src={
+                          this.state.listOfsearchselected.filter(
+                            item => item.status === true
+                          ).length > 0
+                            ? BucketIconOrange
+                            : BucketIconGrey
+                        }
                         width="20"
                         alt="bucket"
                         style={{ paddingBottom: "0.2em", marginRight: "0.3em" }}
@@ -744,7 +781,7 @@ class QAtab extends Component {
               <div
                 style={{
                   // height: "45vh",
-                  overflow: "scroll",
+                  // overflow: "scroll",
                   // border: "1px solid lightgrey",
                   // background: "white",
                   padding: "0.4em"
@@ -756,7 +793,7 @@ class QAtab extends Component {
                       <Row
                         key={item.questionId}
                         style={{
-                          margin: "1.5em 0em"
+                          margin: "1.2em 0em"
                           // borderTop: "1px #c2c2c2 solid",
                           // borderBottom: "1px #c2c2c2 solid"
                         }}
@@ -776,9 +813,21 @@ class QAtab extends Component {
                             <Card.Body
                               style={{ padding: "0", margin: "0.5em 0" }}
                             >
-                              <Card.Title style={{ fontSize: "medium" }}>
+                              <Card.Title
+                                style={{
+                                  fontSize: "medium",
+                                  marginBottom: ".2rem"
+                                }}
+                              >
                                 <Form.Check
                                   inline
+                                  disabled={
+                                    this.state.listOfselectedPreview.filter(
+                                      ob => ob.questionId === item.questionId
+                                    ).length > 0
+                                      ? true
+                                      : false
+                                  }
                                   type="checkbox"
                                   checked={
                                     this.state.listOfsearchselected[index]
@@ -871,7 +920,7 @@ class QAtab extends Component {
                                         />
                                       ) : (
                                         <img
-                                          src={BucketIconLightOrange}
+                                          src={BucketIconGrey}
                                           width="20"
                                           alt="bucket"
                                         />

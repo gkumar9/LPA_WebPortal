@@ -187,171 +187,171 @@ class Previewtest extends Component {
   }
 }
 
-class QuestionShowData extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      editabledata: [],
-      selectedLanguage: localStorage.getItem("TestPreviewLanguage")
-    };
-  }
-  componentDidMount() {
-    this.setState({ editabledata: this.props.data });
-  }
-  // createPdf = html => Doc.createPdf(html);
-  // deleteQuestion = index => {
-  //   let templist = this.state.editabledata;
-  //   templist.splice(index, 1);
-  //   this.setState({ editabledata: templist });
-  //   // console.log(templist);
-  //   localStorage.setItem("Previewdata", JSON.stringify(templist));
-  // };
-  render() {
-    return (
-      <Container>
-        <div
-          style={{
-            padding: "0.5em 1.5em"
-          }}
-        >
-          {this.state.editabledata &&
-            this.state.editabledata.map((item, index) => {
-              return (
-                <Row
-                  noGutters={true}
-                  key={item.questionId}
-                  style={{
-                    margin: "0.5em 0em"
-                    // borderBottom: "1px #c2c2c2 solid"
-                  }}
-                >
-                  <Col
-                    style={{
-                      paddingLeft: "0em",
-                      paddingRight: "0em"
-                    }}
-                  >
-                    <Card
-                      style={{
-                        background: "transparent",
-                        borderColor: "transparent"
-                      }}
-                    >
-                      <Card.Body style={{ padding: "0", margin: "0.5em 0" }}>
-                        <Card.Title style={{ fontSize: "medium" }}>
-                          <Row noGutters={true}>
-                            <Col lg="1">
-                              <span>
-                                <small>
-                                  <b>#</b>{" "}
-                                </small>
-                                <span style={{ color: "dimgrey" }}>
-                                  {item.questionId}
-                                </span>
-                              </span>
-                            </Col>
+// class QuestionShowData extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       editabledata: [],
+//       selectedLanguage: localStorage.getItem("TestPreviewLanguage")
+//     };
+//   }
+//   componentDidMount() {
+//     this.setState({ editabledata: this.props.data });
+//   }
+//   // createPdf = html => Doc.createPdf(html);
+//   // deleteQuestion = index => {
+//   //   let templist = this.state.editabledata;
+//   //   templist.splice(index, 1);
+//   //   this.setState({ editabledata: templist });
+//   //   // console.log(templist);
+//   //   localStorage.setItem("Previewdata", JSON.stringify(templist));
+//   // };
+//   render() {
+//     return (
+//       <Container>
+//         <div
+//           style={{
+//             padding: "0.5em 1.5em"
+//           }}
+//         >
+//           {this.state.editabledata &&
+//             this.state.editabledata.map((item, index) => {
+//               return (
+//                 <Row
+//                   noGutters={true}
+//                   key={item.questionId}
+//                   style={{
+//                     margin: "0.5em 0em"
+//                     // borderBottom: "1px #c2c2c2 solid"
+//                   }}
+//                 >
+//                   <Col
+//                     style={{
+//                       paddingLeft: "0em",
+//                       paddingRight: "0em"
+//                     }}
+//                   >
+//                     <Card
+//                       style={{
+//                         background: "transparent",
+//                         borderColor: "transparent"
+//                       }}
+//                     >
+//                       <Card.Body style={{ padding: "0", margin: "0.5em 0" }}>
+//                         <Card.Title style={{ fontSize: "medium" }}>
+//                           <Row noGutters={true}>
+//                             <Col lg="1">
+//                               <span>
+//                                 <small>
+//                                   <b>#</b>{" "}
+//                                 </small>
+//                                 <span style={{ color: "dimgrey" }}>
+//                                   {item.questionId}
+//                                 </span>
+//                               </span>
+//                             </Col>
 
-                            <Col>
-                              <span
-                                style={{
-                                  // float: "right",
-                                  fontSize: "15px",
-                                  fontWeight: "600"
-                                }}
-                              >
-                                <b>Tags: </b>
-                                <span style={{ color: "#1D4B7F" }}>
-                                  Difficulty:{" "}
-                                  {item.level === "EASY"
-                                    ? item.level === "MILD"
-                                      ? "++"
-                                      : "+"
-                                    : item.level === "MILD"
-                                    ? "++"
-                                    : "+++"}
-                                </span>
-                                ,
-                                <span
-                                  style={{
-                                    color: "darkgreen",
-                                    textTransform: "lowercase"
-                                  }}
-                                >
-                                  {" "}
-                                  {item.type}
-                                </span>
-                              </span>
-                            </Col>
-                            <Col lg="3">
-                              <Button
-                                className="backbuttonprint"
-                                style={{
-                                  float: "right",
-                                  color: "grey",
-                                  fontSize: "0.8em"
-                                }}
-                                variant="link"
-                                onClick={this.deleteQuestion.bind(this, index)}
-                              >
-                                X Delete
-                              </Button>
-                            </Col>
-                          </Row>
-                        </Card.Title>
+//                             <Col>
+//                               <span
+//                                 style={{
+//                                   // float: "right",
+//                                   fontSize: "15px",
+//                                   fontWeight: "600"
+//                                 }}
+//                               >
+//                                 <b>Tags: </b>
+//                                 <span style={{ color: "#1D4B7F" }}>
+//                                   Difficulty:{" "}
+//                                   {item.level === "EASY"
+//                                     ? item.level === "MILD"
+//                                       ? "++"
+//                                       : "+"
+//                                     : item.level === "MILD"
+//                                     ? "++"
+//                                     : "+++"}
+//                                 </span>
+//                                 ,
+//                                 <span
+//                                   style={{
+//                                     color: "darkgreen",
+//                                     textTransform: "lowercase"
+//                                   }}
+//                                 >
+//                                   {" "}
+//                                   {item.type}
+//                                 </span>
+//                               </span>
+//                             </Col>
+//                             <Col lg="3">
+//                               <Button
+//                                 className="backbuttonprint"
+//                                 style={{
+//                                   float: "right",
+//                                   color: "grey",
+//                                   fontSize: "0.8em"
+//                                 }}
+//                                 variant="link"
+//                                 onClick={this.deleteQuestion.bind(this, index)}
+//                               >
+//                                 X Delete
+//                               </Button>
+//                             </Col>
+//                           </Row>
+//                         </Card.Title>
 
-                        <Card.Text style={{ marginBottom: "0.5em" }}>
-                          <b>{"Q. "}</b>
-                          {item.questionVersions
-                            .filter(
-                              obbj =>
-                                obbj.language === this.state.selectedLanguage
-                            )[0]
-                            .content.replace(/<\/?[^>]+(>|$)/g, "")}
-                        </Card.Text>
-                        <Row>
-                          {item.questionVersions
-                            .filter(
-                              obbj =>
-                                obbj.language === this.state.selectedLanguage
-                            )[0]
-                            .options.map((optionitem, optionindex) => {
-                              return (
-                                <React.Fragment key={optionindex}>
-                                  <Col lg="6" style={{ margin: "0.5em 0" }}>
-                                    {optionindex + 1}
-                                    {") "}{" "}
-                                    {optionitem.content.replace(
-                                      /<\/?[^>]+(>|$)/g,
-                                      ""
-                                    )}{" "}
-                                    <sub
-                                    // style={{border:' dimgrey solid',padding:'0.1em'}}
-                                    >
-                                      -<b> {optionitem.weightage}</b>
-                                    </sub>
-                                  </Col>
-                                </React.Fragment>
-                              );
-                            })}{" "}
-                        </Row>
-                        <Row style={{ margin: "0.2em 0.1em" }}>
-                          <b> Sol- </b>
-                          {item.questionVersions
-                            .filter(
-                              obbj =>
-                                obbj.language === this.state.selectedLanguage
-                            )[0]
-                            .solution.replace(/<\/?[^>]+(>|$)/g, "")}
-                        </Row>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
-              );
-            })}
-        </div>
-      </Container>
-    );
-  }
-}
+//                         <Card.Text style={{ marginBottom: "0.5em" }}>
+//                           <b>{"Q. "}</b>
+//                           {item.questionVersions
+//                             .filter(
+//                               obbj =>
+//                                 obbj.language === this.state.selectedLanguage
+//                             )[0]
+//                             .content.replace(/<\/?[^>]+(>|$)/g, "")}
+//                         </Card.Text>
+//                         <Row>
+//                           {item.questionVersions
+//                             .filter(
+//                               obbj =>
+//                                 obbj.language === this.state.selectedLanguage
+//                             )[0]
+//                             .options.map((optionitem, optionindex) => {
+//                               return (
+//                                 <React.Fragment key={optionindex}>
+//                                   <Col lg="6" style={{ margin: "0.5em 0" }}>
+//                                     {optionindex + 1}
+//                                     {") "}{" "}
+//                                     {optionitem.content.replace(
+//                                       /<\/?[^>]+(>|$)/g,
+//                                       ""
+//                                     )}{" "}
+//                                     <sub
+//                                     // style={{border:' dimgrey solid',padding:'0.1em'}}
+//                                     >
+//                                       -<b> {optionitem.weightage}</b>
+//                                     </sub>
+//                                   </Col>
+//                                 </React.Fragment>
+//                               );
+//                             })}{" "}
+//                         </Row>
+//                         <Row style={{ margin: "0.2em 0.1em" }}>
+//                           <b> Sol- </b>
+//                           {item.questionVersions
+//                             .filter(
+//                               obbj =>
+//                                 obbj.language === this.state.selectedLanguage
+//                             )[0]
+//                             .solution.replace(/<\/?[^>]+(>|$)/g, "")}
+//                         </Row>
+//                       </Card.Body>
+//                     </Card>
+//                   </Col>
+//                 </Row>
+//               );
+//             })}
+//         </div>
+//       </Container>
+//     );
+//   }
+// }
 export default Previewtest;

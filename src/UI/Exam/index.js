@@ -66,9 +66,9 @@ class Exam extends Component {
     tempsectionlist[index].questions.push("");
     this.setState({ listOfSection: tempsectionlist });
   };
-  deleteSectionQuestion = index => {
+  deleteSectionQuestion = (index,indexquestion) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].questions.pop();
+    tempsectionlist[index].questions.splice(indexquestion,1)
     this.setState({ listOfSection: tempsectionlist });
   };
   handlSectionQuestionValueChange = (index, indexquestion, e) => {

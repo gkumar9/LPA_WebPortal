@@ -91,7 +91,7 @@ class Dashboard extends Component {
                         }
                   }
                 >
-                  <span style={{ fontSize: "larger" }}>Exams</span>
+                  <span style={{ fontSize: "larger" }}>Tests</span>
                 </Nav.Link>
               </Col>
               <Col></Col>

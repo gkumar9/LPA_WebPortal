@@ -420,7 +420,7 @@ class Examtab extends Component {
                   }}
                 >
                   {" "}
-                  + Add Exam
+                  + Add Test
                 </Button>
               </Link>
               {/* </BrowserRouter> */}

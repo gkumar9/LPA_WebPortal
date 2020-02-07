@@ -284,20 +284,21 @@ class RightExamPanel extends Component {
                               style={{ borderRadius: "0" }}
                             />
                           </Col>
-                          {item.questions.length === indexquestion + 1 && (
+                          {/* {item.questions.length === indexquestion + 1 && ( */}
                             <Col>
                               <Button
                                 style={{ float: "left", color: "grey" }}
                                 variant="link"
                                 onClick={this.props.deleteSectionQuestion.bind(
                                   this,
-                                  index
+                                  index,
+                                  indexquestion
                                 )}
                               >
                                 X Delete
                               </Button>
                             </Col>
-                          )}
+                          {/* )} */}
                         </Row>
                       );
                     })}
