@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Row, Col, Button, Form, Card } from "react-bootstrap";
+import { Row, Col, Button, Form, Card,OverlayTrigger,
+  Tooltip } from "react-bootstrap";
 // import Bucket from "@material-ui/icons/Https";
 import Edit from "@material-ui/icons/Edit";
 import View from "@material-ui/icons/Visibility";
@@ -501,12 +502,17 @@ class Examtab extends Component {
                               </span>
                             </span>
                             <span style={{ marginLeft: "2em" }}>
-                            <Link
+                            
+                            <OverlayTrigger
+                                    placement="top"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={renderTooltip("Edit test")}
+                                  ><Link
                                 to={`/editexam/${item.testId}`}
                                 target="_self"
                               >
                                 <Button
-                                  title="Edit"
+                                  // title="Edit"
                                   size="sm"
                                   style={{
                                     borderRadius: "0",
@@ -520,9 +526,14 @@ class Examtab extends Component {
                                 >
                                   {<Edit className="svg_icons" />}{" "}
                                 </Button>
-                              </Link>
-                              <Button
-                                title="Preview test"
+                              </Link></OverlayTrigger>
+                                
+                            <OverlayTrigger
+                                    placement="top"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={renderTooltip("Preview test")}
+                                  ><Button
+                                // title="Preview test"
                                 size="sm"
                                 style={{
                                   borderRadius: "0",
@@ -540,7 +551,7 @@ class Examtab extends Component {
                               >
                                 {<View className="svg_icons" />}{" "}
                               </Button>
-                              
+                              </OverlayTrigger>
                             </span>
                             <span
                               style={{
@@ -608,5 +619,8 @@ class Examtab extends Component {
       </Row>
     );
   }
+}
+function renderTooltip(name) {
+  return <Tooltip>{name}</Tooltip>;
 }
 export default Examtab;

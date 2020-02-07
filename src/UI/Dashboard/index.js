@@ -16,19 +16,26 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      key: "first"
+      key: localStorage.getItem("DashboardTabKey")
+        ? localStorage.getItem("DashboardTabKey")
+        : "first"
     };
   }
   setKey = key => {
-    this.setState({
-      key: key
-    });
+    this.setState(
+      {
+        key: key
+      },
+      () => {
+        localStorage.setItem("DashboardTabKey", key);
+      }
+    );
   };
 
   render() {
     return (
       <React.Fragment>
-        <Header props={this.props}/>
+        <Header props={this.props} />
         <Container fluid style={{ width: "auto", background: "#EEEEEE" }}>
           <Tab.Container
             activeKey={this.state.key}

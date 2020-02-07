@@ -334,10 +334,10 @@ class QAtab extends Component {
                     })
                     .catch(e => {
                       // swal('Error', "No data found","error");
-                      alert(e)
-        // this.props.history.push({
-        //   pathname: "/"
-        // });
+                      alert(e);
+                      // this.props.history.push({
+                      //   pathname: "/"
+                      // });
                     });
                 }
               );
@@ -349,11 +349,11 @@ class QAtab extends Component {
           .catch(e => {
             console.log(e);
             // alert(e);
-            alert(e)
+            alert(e);
             // swal('Error', "No data found","error");
-        // this.props.history.push({
-        //   pathname: "/"
-        // });
+            // this.props.history.push({
+            //   pathname: "/"
+            // });
             this.setState({ isLoading: false });
           });
       }
@@ -640,17 +640,24 @@ class QAtab extends Component {
                 <Col>
                   <Button
                     onClick={this.OnPreviewClick}
-                    style={{
+                    style={this.state.listOfselectedPreview.length>0?{
                       fontSize: "1em",
                       fontWeight: "700",
-                      background: "#FF8976",
-                      borderColor: "#FF8976",
+                      background: "rgb(255, 109, 86)",
+                      borderColor: "rgb(255, 109, 86)",
+                      borderRadius: "0",
+                      float: "right"
+                    }:{
+                      fontSize: "1em",
+                      fontWeight: "700",
+                      background: "rgb(238, 179, 170)",
+                      borderColor: "rgb(238, 179, 170)",
                       borderRadius: "0",
                       float: "right"
                     }}
                   >
                     {" "}
-                    {/* <View className="svg_icons" /> */}
+                    {/* <View className="svg_icons" /> rgb(238, 179, 170)*/}
                     <img
                       src={BucketIcon}
                       width="20"
@@ -790,28 +797,34 @@ class QAtab extends Component {
                                   </span>
                                 </span>
                                 <span style={{ marginLeft: "2.2em" }}>
-                                  <Link
-                                    to={`/editques/${this.state.selectedLanguage}/${item.questionId}`}
-                                    target="_self"
+                                  <OverlayTrigger
+                                    placement="top"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={renderTooltip("Edit questions")}
                                   >
-                                    <Button
-                                      title="Edit"
-                                      size="sm"
-                                      style={{
-                                        borderRadius: "0",
-
-                                        padding: ".15rem .15rem",
-                                        background: "transparent",
-                                        color: "rgb(106, 163, 255) ",
-                                        border: "none"
-                                      }}
-                                      variant="secondary"
-
-                                      // onClick={this.handleQAEdit.bind(this,item.questionId)}
+                                    <Link
+                                      to={`/editques/${this.state.selectedLanguage}/${item.questionId}`}
+                                      target="_self"
                                     >
-                                      {<Edit className="svg_icons" />}{" "}
-                                    </Button>
-                                  </Link>
+                                      <Button
+                                        // title="Edit"
+                                        size="sm"
+                                        style={{
+                                          borderRadius: "0",
+
+                                          padding: ".15rem .15rem",
+                                          background: "transparent",
+                                          color: "rgb(106, 163, 255) ",
+                                          border: "none"
+                                        }}
+                                        variant="secondary"
+
+                                        // onClick={this.handleQAEdit.bind(this,item.questionId)}
+                                      >
+                                        {<Edit className="svg_icons" />}{" "}
+                                      </Button>
+                                    </Link>
+                                  </OverlayTrigger>
                                   <OverlayTrigger
                                     placement="top"
                                     delay={{ show: 250, hide: 400 }}
