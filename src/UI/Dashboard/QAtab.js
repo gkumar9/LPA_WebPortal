@@ -17,13 +17,13 @@ class QAtab extends Component {
     super(props);
     this.state = {
       listOfSubject: [],
-      selectedSubjectID: "",
+      selectedSubjectID: 0,
       listOfChapter: [],
-      selectedChapterID: "",
+      selectedChapterID: 0,
       listOfTopic: [],
-      selectedTopicID: "",
+      selectedTopicID: 0,
       listOfSubTopic: [],
-      selectedSubTopicID: "",
+      selectedSubTopicID: 0,
       selectedLanguage: "ENGLISH",
       listOfLanguage: ["ENGLISH", "HINDI"],
       searchbox: "",
@@ -40,8 +40,8 @@ class QAtab extends Component {
     );
     tempsearchlistselected.map(item => {
       // console.log(item);
-      
-      return (this.onAddpreviewdata(item.id));
+
+      return this.onAddpreviewdata(item.id);
     });
   };
   handleSelectAllCheck = e => {
@@ -86,10 +86,9 @@ class QAtab extends Component {
         item => item.questionId === id
       );
       if (filterchecktemp.length > 0) {
-        // console.log('>0')
         let templist = this.state.listOfselectedPreview;
         templist = templist.filter(obj => obj.questionId !== id);
-        console.log(templist);
+
         this.setState(
           {
             listOfselectedPreview: templist,
@@ -144,7 +143,7 @@ class QAtab extends Component {
   };
   handleSearchboxChange = e => {
     e.preventDefault();
-    console.log(e.target.value);
+    // console.log(e.target.value);
     this.setState({ searchbox: e.target.value });
     if (e.target.value !== "") {
       axios({
@@ -153,19 +152,17 @@ class QAtab extends Component {
         data: {
           authToken: "string",
           language: this.state.selectedLanguage,
-          questionId: e.target.value,
+          questionId: e.target.value ? parseInt(e.target.value) : 0,
           sectionId: this.state.selectedChapterID
             ? this.state.selectedChapterID
-            : null,
+            : 0,
           subjectId: this.state.selectedSubjectID
             ? this.state.selectedSubjectID
-            : null,
+            : 0,
           subtopicId: this.state.selectedSubTopicID
             ? this.state.selectedSubTopicID
-            : null,
-          topicId: this.state.selectedTopicID
-            ? this.state.selectedTopicID
-            : null
+            : 0,
+          topicId: this.state.selectedTopicID ? this.state.selectedTopicID : 0
         },
         headers: {
           "Content-Type": "application/json"
@@ -201,7 +198,7 @@ class QAtab extends Component {
       data: {
         authToken: "string",
         language: this.state.selectedLanguage,
-        questionId: this.state.selected,
+        questionId: this.state.searchbox ? parseInt(this.state.searchbox) : 0,
         sectionId: this.state.selectedChapterID,
         subjectId: this.state.selectedSubjectID,
         subtopicId: this.state.selectedSubTopicID,
@@ -238,13 +235,13 @@ class QAtab extends Component {
         // listOfsearchselected: [],
         searchbox: "",
         listOfChapter: [],
-        selectedChapterID: "",
+        selectedChapterID: 0,
         // listOfSubject:[],
-        selectedSubjectID: "",
+        selectedSubjectID: 0,
         listOfTopic: [],
-        selectedTopicID: "",
+        selectedTopicID: 0,
         listOfSubTopic: [],
-        selectedSubTopicID: ""
+        selectedSubTopicID: 0
       },
       () => {
         this.handlesearchWithFilter();
@@ -281,7 +278,7 @@ class QAtab extends Component {
               this.setState(
                 {
                   listOfSubject: res.data.data.list,
-                  selectedSubjectID: "",
+                  selectedSubjectID: 0,
                   isLoading: false
                 },
                 () => {
@@ -291,11 +288,11 @@ class QAtab extends Component {
                     data: {
                       authToken: "string",
                       language: this.state.selectedLanguage,
-                      questionId: null,
-                      sectionId: null,
-                      subjectId: null,
-                      subtopicId: null,
-                      topicId: null
+                      questionId: 0,
+                      sectionId: 0,
+                      subjectId: 0,
+                      subtopicId: 0,
+                      topicId: 0
                     },
                     headers: {
                       "Content-Type": "application/json"
@@ -362,7 +359,7 @@ class QAtab extends Component {
                 selectedChapterID:
                   res.data.data.list.length > 0
                     ? res.data.data.list[0].subjectSection.sectionId
-                    : ""
+                    : 0
               },
               () => {
                 this.callApiForTopic();
@@ -383,11 +380,11 @@ class QAtab extends Component {
       );
       this.setState({
         listOfChapter: [],
-        selectedChapterID: "",
+        selectedChapterID: 0,
         listOfTopic: [],
-        selectedTopicID: "",
+        selectedTopicID: 0,
         listOfSubTopic: [],
-        selectedSubTopicID: "",
+        selectedSubTopicID: 0,
         isLoading: false
       });
     }
@@ -415,7 +412,7 @@ class QAtab extends Component {
                 selectedTopicID:
                   res.data.data.list.length > 0
                     ? res.data.data.list[0].subjectTopic.topicId
-                    : ""
+                    : 0
               },
               () => {
                 this.callApiForSubTopic();
@@ -436,9 +433,9 @@ class QAtab extends Component {
       );
       this.setState({
         listOfTopic: [],
-        selectedTopicID: "",
+        selectedTopicID: 0,
         listOfSubTopic: [],
-        selectedSubTopicID: ""
+        selectedSubTopicID: 0
       });
     }
   };
@@ -464,7 +461,7 @@ class QAtab extends Component {
               selectedSubTopicID:
                 res.data.data.list.length > 0
                   ? res.data.data.list[0].subjectSubtopic.subtopicId
-                  : ""
+                  : 0
             });
           } else {
             alert("Unexpected code");
@@ -477,7 +474,7 @@ class QAtab extends Component {
         });
     } else {
       console.log("(English)topicid is blank.API not called. checktopic list");
-      this.setState({ listOfSubTopic: [], selectedSubTopicID: "" });
+      this.setState({ listOfSubTopic: [], selectedSubTopicID: 0 });
     }
   };
   handleSubjectChange = e => {
@@ -486,7 +483,7 @@ class QAtab extends Component {
     if (e.target.value === "") {
       this.setState(
         {
-          selectedSubjectID: ""
+          selectedSubjectID: 0
         },
         () => {
           this.callApiForChapter();
@@ -566,7 +563,7 @@ class QAtab extends Component {
                 // borderRight: "1px solid #cac2c2",
                 boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -3px",
                 zIndex: "88",
-                position: "relative",
+                position: "relative"
                 // margin: "2em 0em"
               }}
             >
@@ -710,7 +707,7 @@ class QAtab extends Component {
                   padding: "0.4em"
                 }}
               >
-                {this.state.searchResultList.length > 0 &&
+                {this.state.searchResultList.length > 0 ? (
                   this.state.searchResultList.map((item, index) => {
                     return (
                       <Row
@@ -913,7 +910,12 @@ class QAtab extends Component {
                         </Col>
                       </Row>
                     );
-                  })}{" "}
+                  })
+                ) : (
+                  <Row style={{ margin: "0.5em 0em" }}>
+                    <h5>No data found</h5>
+                  </Row>
+                )}
               </div>
             </Col>
           </Row>

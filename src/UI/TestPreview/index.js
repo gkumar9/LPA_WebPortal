@@ -1,44 +1,57 @@
 import React, { Component } from "react";
-import Error404 from "./404.js";
-import { Button, Container, Card, Row, Col } from "react-bootstrap";
 import Header from "../Header/index";
-import "./index.css";
-import PdfContainer from "./pdf.js";
-import Doc from "./doc";
-
-class PreviewQues extends Component {
+import { Button, Container, Card, Row, Col } from "react-bootstrap";
+import Error404 from "../QuesPreview/404.js";
+import "../QuesPreview/index.css";
+import PdfContainer from "../QuesPreview/pdf.js";
+import Doc from "../QuesPreview/doc";
+import axios from "axios";
+import URL from "../../Assets/url";
+class Previewtest extends Component {
   constructor(props) {
     super(props);
-    this.state = { isData: false, data: [] };
+    this.state = { isData: false, testId: null, data: [] };
   }
   componentDidMount() {
-    if (
-      this.props.location.state !== undefined &&
-      this.props.location.state.data.length > 0
-    ) {
-      this.setState({ isData: true, data: this.props.location.state.data });
+    let testId = JSON.parse(localStorage.getItem("TestPreviewId"));
+    if (testId && testId !== undefined && testId !== "") {
+      this.setState({ testId: testId }, () => {
+        axios({
+          method: "POST",
+          url: URL.getexamcontent + this.state.testId,
+          data: { authToken: "string" },
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+          .then(res => {
+            console.log(res.data.data);
+            if(res.status===200){
+                let testdataresponse=res.data.data.test;
+                
+
+            }
+          })
+          .catch(e => {
+            alert(e);
+            this.props.history.push({
+              pathname: "/"
+            });
+          });
+      });
     } else {
-      if (
-        localStorage.getItem("Previewdata") !== null &&
-        JSON.parse(localStorage.getItem("Previewdata")).length > 0
-      ) {
-        this.setState({
-          isData: true,
-          data: JSON.parse(localStorage.getItem("Previewdata"))
-        });
-      } else {
-        var path = document.getElementById("tail");
-        path.setAttribute(
-          "d",
-          "M89,315c2.2-15.2-23-13.2-21.6,4.8c1.7,22.3,24.4,22.1,42.5,9.1c10.8-7.8,15.3-1.8,19.1,1.1 c2.3,1.7,6.7,3.3,11-3"
-        );
-      }
+      var path = document.getElementById("tail");
+      path.setAttribute(
+        "d",
+        "M89,315c2.2-15.2-23-13.2-21.6,4.8c1.7,22.3,24.4,22.1,42.5,9.1c10.8-7.8,15.3-1.8,19.1,1.1 c2.3,1.7,6.7,3.3,11-3"
+      );
     }
   }
+
   render() {
     return (
       <React.Fragment>
-        <Header props={this.props}/>
+        <Header props={this.props} />
         {this.state.isData && localStorage.getItem("previewLanguage") ? (
           <ShowData data={this.state.data} />
         ) : (
@@ -66,7 +79,7 @@ class ShowData extends Component {
     templist.splice(index, 1);
     this.setState({ editabledata: templist });
     // console.log(templist);
-    localStorage.setItem('Previewdata',JSON.stringify(templist))
+    localStorage.setItem("Previewdata", JSON.stringify(templist));
   };
   render() {
     return (
@@ -129,9 +142,9 @@ class ShowData extends Component {
                                       ? item.level === "MILD"
                                         ? "++"
                                         : "+"
-                                      :  item.level === "MILD"
-                                        ? "++"
-                                        : "+++"}
+                                      : item.level === "MILD"
+                                      ? "++"
+                                      : "+++"}
                                   </span>
                                   ,
                                   <span
@@ -221,4 +234,4 @@ class ShowData extends Component {
     );
   }
 }
-export default PreviewQues;
+export default Previewtest;

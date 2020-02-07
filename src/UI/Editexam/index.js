@@ -7,6 +7,8 @@ import Header from "../Header/index";
 import axios from "axios";
 import URL from "../../Assets/url";
 import EditComponentExam from "./editcomponentexam.js";
+import swal from 'sweetalert';
+
 // const MyBack = styled(Back)({
 //   color: "dimgrey",
 //   marginTop: "-0.2em",
@@ -35,7 +37,7 @@ class EditExam extends Component {
         this.setState({ fetchedData: res.data.data.test });
       }
     }).catch((e)=>{
-      alert(e);
+      swal(e, "error");
       this.props.history.push({
         pathname: "/"
       });

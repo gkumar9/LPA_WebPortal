@@ -7,6 +7,8 @@ import Header from "../Header/index";
 import axios from "axios";
 import URL from "../../Assets/url";
 import EditComponent from "./editcomponent.js";
+import swal from 'sweetalert';
+
 // const MyBack = styled(Back)({
 //   color: "dimgrey",
 //   marginTop: "-0.2em",
@@ -38,7 +40,7 @@ class Editques extends Component {
         }
       })
       .catch(e => {
-        alert(e);
+        swal(e, "error");
         this.props.history.push({
           pathname: "/"
         });

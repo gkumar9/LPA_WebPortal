@@ -4,6 +4,7 @@ import LeftPanelexam from "./leftpanelexam.js";
 import axios from "axios";
 import URL from "../../Assets/url";
 import RightExamPanel from "./rightpanelexam.js";
+import swal from "sweetalert";
 
 class ExamEditComponent extends Component {
   constructor(props) {
@@ -42,7 +43,7 @@ class ExamEditComponent extends Component {
       selectedType: this.props.fetchedData.type,
       selectedTypeYear: this.props.fetchedData.year
         ? this.props.fetchedData.year
-        : null,
+        : "",
       listOfSection: this.props.fetchedData.testSections,
       englishtestVersionId: this.props.fetchedData.testVersions.filter(
         item => item.language === "ENGLISH"
@@ -82,20 +83,24 @@ class ExamEditComponent extends Component {
   handleNegativeMarksPerQuesChange = (index, e) => {
     // console.log(index,e)
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].negativeMarksPerQuestion = e.target.value;
+    tempsectionlist[index].negativeMarksPerQuestion = e.target.value
+      ? parseInt(e.target.value)
+      : 0;
     this.setState({ listOfSection: tempsectionlist });
   };
   handleMarksperQuesChange = (index, e) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].marksPerQuestion = e.target.value;
+    tempsectionlist[index].marksPerQuestion = e.target.value
+      ? parseInt(e.target.value)
+      : 0;
     this.setState({ listOfSection: tempsectionlist });
   };
   addSection = () => {
     // console.log('add section');
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist.push({
-      marksPerQuestion: "",
-      negativeMarksPerQuestion: "",
+      marksPerQuestion: 0,
+      negativeMarksPerQuestion: 0,
       questions: [],
 
       testSectionVersions: [
@@ -435,7 +440,7 @@ class ExamEditComponent extends Component {
       mm = "0" + mm;
     }
     var startDate = yyyy + "-" + mm + "-" + dd;
-    var endDatetemp = this.state.startDate;
+    var endDatetemp = this.state.endDate;
 
     var ddendDatetemp = endDatetemp.getDate();
     var mmendDatetemp = endDatetemp.getMonth() + 1; //January is 0!
@@ -476,7 +481,10 @@ class ExamEditComponent extends Component {
         ],
         time:
           parseFloat(this.state.hour) +
-          parseFloat(Number(parseInt(this.state.minute) / 60)),
+          parseFloat(Number(parseInt(this.state.minute) / 60))
+            ? parseFloat(this.state.hour) +
+              parseFloat(Number(parseInt(this.state.minute) / 60))
+            : 0,
         type: this.state.selectedType,
         year: this.state.selectedTypeYear
       },
@@ -487,12 +495,14 @@ class ExamEditComponent extends Component {
       .then(res => {
         if (res.status === 200) {
           console.log(res.data.data);
-          alert(res.data.data)
+          // alert(res.data.data)
+          swal("Success", `Data updated`, "success");
         }
       })
       .catch(e => {
         console.log(e);
-        alert(e)
+        // alert(e)
+        swal(e, "error");
       });
   };
   render() {

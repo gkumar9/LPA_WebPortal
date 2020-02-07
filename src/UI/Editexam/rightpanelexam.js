@@ -262,8 +262,8 @@ class RightExamPanel extends Component {
                       />
                     </div>
                   </div>
-                  {item.questions &&
-                    item.questions.map((itemquestion, indexquestion) => {
+                  {item.testSectionMapping &&
+                    item.testSectionMapping.map((itemquestion, indexquestion) => {
                       return (
                         <Row style={{ marginTop: "0.5em" }}>
                           {/* <Col lg="2"></Col> */}
@@ -282,8 +282,9 @@ class RightExamPanel extends Component {
                           </Col>
                           <Col lg="3" style={{}}>
                             <Form.Control
+                              disabled
                               type="number"
-                              value={itemquestion}
+                              value={itemquestion.questionId}
                               onChange={this.props.handlSectionQuestionValueChange.bind(
                                 this,
                                 index,
@@ -293,7 +294,7 @@ class RightExamPanel extends Component {
                               style={{ borderRadius: "0" }}
                             />
                           </Col>
-                          {item.questions.length === indexquestion + 1 && (
+                          {/* {item.questions.length === indexquestion + 1 && (
                             <Col>
                               <Button
                                 style={{ float: "left", color: "grey" }}
@@ -306,7 +307,7 @@ class RightExamPanel extends Component {
                                 X Delete
                               </Button>
                             </Col>
-                          )}
+                          )} */}
                         </Row>
                       );
                     })}

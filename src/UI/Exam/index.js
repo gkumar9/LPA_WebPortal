@@ -8,6 +8,7 @@ import LeftPanelexam from "./leftpanelexam.js";
 import axios from "axios";
 import URL from "../../Assets/url";
 import RightExamPanel from "./rightpanelexam.js";
+import swal from "sweetalert";
 
 // const MyBack = styled(Back)({
 //   color: "dimgrey",
@@ -27,7 +28,7 @@ class Exam extends Component {
       selectedChapterID: "",
       listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
       selectedType: "Free",
-      selectedTypeYear: null,
+      selectedTypeYear: '',
       hour: "",
       minute: "",
       startDate: new Date(),
@@ -38,21 +39,21 @@ class Exam extends Component {
       testInstructionHindi: "",
       listOfSection: [
         {
-          marksPerQuestion: "",
-          negativeMarksPerQuestion: "",
+          marksPerQuestion: 0,
+          negativeMarksPerQuestion: 0,
           questions: [],
 
           versions: [
             {
               content: "",
               language: "ENGLISH",
-              name: "string",
+              name: "",
               sectionName: ""
             },
             {
               content: "",
               language: "HINDI",
-              name: "string",
+              name: "",
               sectionName: ""
             }
           ]
@@ -86,20 +87,20 @@ class Exam extends Component {
   handleNegativeMarksPerQuesChange = (index, e) => {
     // console.log(index,e)
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].negativeMarksPerQuestion = e.target.value;
+    tempsectionlist[index].negativeMarksPerQuestion = e.target.value?parseInt(e.target.value):0;
     this.setState({ listOfSection: tempsectionlist });
   };
   handleMarksperQuesChange = (index, e) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].marksPerQuestion = e.target.value;
+    tempsectionlist[index].marksPerQuestion = e.target.value?parseInt(e.target.value):0;
     this.setState({ listOfSection: tempsectionlist });
   };
   addSection = () => {
     // console.log('add section');
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist.push({
-      marksPerQuestion: '',
-      negativeMarksPerQuestion: '',
+      marksPerQuestion: 0,
+      negativeMarksPerQuestion: 0,
       questions: [],
 
       versions: [
@@ -119,7 +120,7 @@ class Exam extends Component {
     });
     this.setState({ listOfSection: tempsectionlist });
   };
-  deleteSection = (index) => {
+  deleteSection = index => {
     let tempsectionlist = this.state.listOfSection;
     // tempsectionlist.pop();
     tempsectionlist.splice(index, 1);
@@ -129,7 +130,7 @@ class Exam extends Component {
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].versions.filter(
       item => item.language === language
-    )[0].sectionName = e.target.value;
+    )[0].name = e.target.value;
     this.setState({ listOfSection: tempsectionlist });
   };
   handleEnglishTestNameChange = e => {
@@ -194,6 +195,7 @@ class Exam extends Component {
       })
       .catch(e => {
         console.log(e);
+        swal(e, "error");
       });
   }
   callApiForSubject = () => {
@@ -361,7 +363,7 @@ class Exam extends Component {
       mm = "0" + mm;
     }
     var startDate = yyyy + "-" + mm + "-" + dd;
-    var endDatetemp = this.state.startDate;
+    var endDatetemp = this.state.endDate;
 
     var ddendDatetemp = endDatetemp.getDate();
     var mmendDatetemp = endDatetemp.getMonth() + 1; //January is 0!
@@ -399,8 +401,9 @@ class Exam extends Component {
           }
         ],
         time:
-          parseFloat(this.state.hour) +
-          parseFloat(Number(parseInt(this.state.minute) / 60)),
+          (parseFloat(this.state.hour) +
+          parseFloat(Number(parseInt(this.state.minute) / 60)))?(parseFloat(this.state.hour) +
+          parseFloat(Number(parseInt(this.state.minute) / 60))):0,
         type: this.state.selectedType,
         year: this.state.selectedTypeYear
       },
@@ -411,11 +414,13 @@ class Exam extends Component {
       .then(res => {
         if (res.status === 200) {
           console.log(res.data.data);
-          alert("Success:", res.data.data);
+          // alert("Success:", res.data.data);
+          swal("Success", `TestId:${res.data.data.testId}`, "success");
         }
       })
       .catch(e => {
         console.log(e);
+        swal(e, "error");
       });
   };
   render() {

@@ -217,6 +217,7 @@ class EditComponent extends Component {
       })
       .catch(e => {
         console.log(e);
+        alert(e);
       });
   }
   callApiForChapter = () => {
@@ -539,6 +540,7 @@ class EditComponent extends Component {
       })
       .catch(e => {
         console.log(e);
+        alert(e);
       });
   };
   render() {

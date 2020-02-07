@@ -95,7 +95,7 @@ class Dashboard extends Component {
                 <QATab history={this.props.history} />
               </Tab.Pane>
               <Tab.Pane eventKey="second">
-                <ExamTab />
+                <ExamTab history={this.props.history} />
               </Tab.Pane>
             </Tab.Content>
           </Tab.Container>

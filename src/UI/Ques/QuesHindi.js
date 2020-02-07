@@ -10,26 +10,27 @@ import ReactTags from "react-tag-autocomplete";
 import Difficulty from "./difficulty.js";
 // import "react-tagsinput/react-tagsinput.css";
 import "./index.css";
+import swal from "sweetalert";
 
 class QuesHindi extends Component {
   constructor(props) {
     super(props);
     this.state = {
       listOfSubject: [],
-      selectedSubjectID: "",
+      selectedSubjectID: 0,
       listOfChapter: [],
-      selectedChapterID: "",
+      selectedChapterID: 0,
       listOfTopic: [],
-      selectedTopicID: "",
+      selectedTopicID: 0,
       listOfSubTopic: [],
-      selectedSubTopicID: "",
+      selectedSubTopicID: 0,
       // tags: [],
       difficulty: "",
       questionData: "",
       explanationData: "",
       listOfOptions: [
-        { name: "Option A", content: "", weightage: null },
-        { name: "Option B", content: "", weightage: null }
+        { name: "Option A", content: "", weightage: 0 },
+        { name: "Option B", content: "", weightage: 0 }
       ],
       letterchartcode: 67,
       tags: [],
@@ -109,7 +110,7 @@ class QuesHindi extends Component {
     let currentCharCode = this.state.letterchartcode;
     let name = "Option " + String.fromCharCode(currentCharCode);
     let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption.push({ name: name, content: "", weightage: null });
+    currentArrayOfOption.push({ name: name, content: "", weightage: 0 });
     this.setState({
       listOfOptions: currentArrayOfOption,
       letterchartcode: currentCharCode + 1
@@ -156,7 +157,7 @@ class QuesHindi extends Component {
               selectedSubjectID:
                 res.data.data.list.length > 0
                   ? res.data.data.list[0].subject.subjectId
-                  : ""
+                  : 0
             },
             () => {
               this.callApiForChapter();
@@ -188,7 +189,7 @@ class QuesHindi extends Component {
                 selectedChapterID:
                   res.data.data.list.length > 0
                     ? res.data.data.list[0].subjectSection.sectionId
-                    : ""
+                    : 0
               },
               () => {
                 this.callApiForTopic();
@@ -207,11 +208,11 @@ class QuesHindi extends Component {
       );
       this.setState({
         listOfChapter: [],
-        selectedChapterID: "",
+        selectedChapterID: 0,
         listOfTopic: [],
-        selectedTopicID: "",
+        selectedTopicID: 0,
         listOfSubTopic: [],
-        selectedSubTopicID: ""
+        selectedSubTopicID: 0
       });
     }
   };
@@ -234,7 +235,7 @@ class QuesHindi extends Component {
                 selectedTopicID:
                   res.data.data.list.length > 0
                     ? res.data.data.list[0].subjectTopic.topicId
-                    : ""
+                    : 0
               },
               () => {
                 this.callApiForSubTopic();
@@ -253,9 +254,9 @@ class QuesHindi extends Component {
       );
       this.setState({
         listOfTopic: [],
-        selectedTopicID: "",
+        selectedTopicID: 0,
         listOfSubTopic: [],
-        selectedSubTopicID: ""
+        selectedSubTopicID: 0
       });
     }
   };
@@ -277,7 +278,7 @@ class QuesHindi extends Component {
               selectedSubTopicID:
                 res.data.data.list.length > 0
                   ? res.data.data.list[0].subjectSubtopic.subtopicId
-                  : ""
+                  : 0
             });
           } else {
             alert("Unexpected code");
@@ -288,7 +289,7 @@ class QuesHindi extends Component {
         });
     } else {
       console.log("(Hindi)topicid is blank.API not called. checktopic list");
-      this.setState({ listOfSubTopic: [], selectedSubTopicID: "" });
+      this.setState({ listOfSubTopic: [], selectedSubTopicID: 0 });
     }
   };
   handleSubjectChange = e => {
@@ -358,7 +359,7 @@ class QuesHindi extends Component {
     e.preventDefault();
     // console.log(typeof parseInt(e.target.value));
     let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption[index].weightage = (e.target.value);
+    currentArrayOfOption[index].weightage = e.target.value?parseInt(e.target.value):0;
     this.setState({
       listOfOptions: currentArrayOfOption
     });
@@ -379,10 +380,14 @@ class QuesHindi extends Component {
       default:
         break;
     }
+    let converttags = this.state.tags.map(item => {
+      return { tagId: item.id ? item.id : 0, tag: item.name };
+    });
+
     axios({
       method: "POST",
       url:
-        this.props.questionId === ""
+        this.props.questionId === 0
           ? URL.createQuestion
           : URL.createQuestionNewVersion,
       data: {
@@ -392,7 +397,7 @@ class QuesHindi extends Component {
         sectionId: this.state.selectedChapterID,
         subjectId: this.state.selectedSubjectID,
         subtopicId: this.state.selectedSubTopicID,
-        tags: this.state.tags,
+        tags: converttags,
         topicId: this.state.selectedTopicID,
         type: "SINGLE_CHOICE",
         version: {
@@ -411,21 +416,20 @@ class QuesHindi extends Component {
         console.log(res.data.data);
         if (res.status === 200) {
           alert("Success:", res.data.data);
-          if (this.props.questionId === "") {
-            alert("success in Hindi:", res.data.data);
-            this.props.handleChange.bind(this, res.data.data.questionId);
-            this.props.handleSelect();
-          }
+          swal("Success", `QuestionId:${res.data.data.questionId}`, "success");
+          // if (this.props.questionId === 0) {
+          // swal("Success", `QuestionId:${res.data.data}`, "success");
+          this.props.handleChange.bind(this, res.data.data.questionId);
+          this.props.handleSelect();
+          // }
         } else {
-          console.log("questionId exist");
+          swal(`Status Code:${res.status}`, "error");
         }
-        // if (res.status === 200) {
-
-        // }
       })
       .catch(e => {
         console.log(e);
-        alert(e);
+        // alert(e);
+        swal(e, "error");
       });
   };
   render() {
@@ -522,7 +526,7 @@ class RightpanelHindi extends Component {
                     <Form.Control
                       style={{ borderRadius: "0", background: "#f9f9f9" }}
                       type="number"
-                      value={item.weightage || ''}
+                      value={item.weightage }
                       onChange={this.props.handleOptionWeightageChange.bind(
                         this,
                         index
@@ -600,7 +604,7 @@ class RightpanelHindi extends Component {
             }}
             onClick={this.props.saveHindidata}
           >
-            {this.props.questionId === "" || this.props.questionId === undefined
+            {this.props.questionId === 0 || this.props.questionId === undefined
               ? "Save & move to English section"
               : "Save & finish"}
           </Button>

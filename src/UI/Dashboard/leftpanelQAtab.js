@@ -193,7 +193,7 @@ class LeftPanelQAtab extends Component {
         <>
           <Row>
             <Col xs style={{ paddingRight: "0" }}>
-              {this.props.searchResultListLength > 0 && (
+              {/* {this.props.searchResultListLength > 0 && ( */}
                 <Button
                   size="sm"
                   onClick={this.props.clearSearchFromFilters}
@@ -208,7 +208,7 @@ class LeftPanelQAtab extends Component {
                   {/* <span style={{ fontSize: "12px" }}>&#10005; </span> */}
                   Clear Search
                 </Button>
-              )}
+              {/* )} */}
             </Col>
             <Col xs lg="7" style={{ paddingLeft: "0" }}>
               <Button

@@ -6,6 +6,7 @@ import Editques from "./UI/Editques/index.js";
 import React, { Component } from "react";
 import PreviewQues from "./UI/QuesPreview/index.js";
 import EditExam from "./UI/Editexam/index.js";
+import PreviewTest from './UI/TestPreview/index.js';
 import { createBrowserHistory } from "history";
 import {
   Route,
@@ -65,6 +66,11 @@ class Navigation extends Component {
           authenticated={this.props.authenticated}
           path="/quespreview"
           component={PreviewQues}
+        />
+        <ProtectedRoute
+          authenticated={this.props.authenticated}
+          path="/testpreview"
+          component={PreviewTest}
         />
         <ProtectedRoute
           authenticated={this.props.authenticated}

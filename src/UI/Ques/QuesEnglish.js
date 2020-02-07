@@ -6,26 +6,27 @@ import URL from "../../Assets/url";
 import Difficulty from "./difficulty.js";
 import "./index.css";
 import ReactTags from "react-tag-autocomplete";
+import swal from 'sweetalert';
 
 class QuesEnglish extends Component {
   constructor(props) {
     super(props);
     this.state = {
       listOfSubject: [],
-      selectedSubjectID: "",
+      selectedSubjectID: 0,
       listOfChapter: [],
-      selectedChapterID: "",
+      selectedChapterID: 0,
       listOfTopic: [],
-      selectedTopicID: "",
+      selectedTopicID: 0,
       listOfSubTopic: [],
-      selectedSubTopicID: "",
+      selectedSubTopicID: 0,
       // tags: [],
       difficulty: "",
       questionData: "",
       explanationData: "",
       listOfOptions: [
-        { name: "Option A", content: "", weightage: null },
-        { name: "Option B", content: "", weightage: null }
+        { name: "Option A", content: "", weightage: 0 },
+        { name: "Option B", content: "", weightage: 0 }
       ],
       letterchartcode: 67,
       tags: [],
@@ -51,7 +52,7 @@ class QuesEnglish extends Component {
     let currentCharCode = this.state.letterchartcode;
     let name = "Option " + String.fromCharCode(currentCharCode);
     let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption.push({ name: name, content: "", weightage: null });
+    currentArrayOfOption.push({ name: name, content: "", weightage: 0 });
     this.setState({
       listOfOptions: currentArrayOfOption,
       letterchartcode: currentCharCode + 1
@@ -149,7 +150,7 @@ class QuesEnglish extends Component {
               selectedSubjectID:
                 res.data.data.list.length > 0
                   ? res.data.data.list[0].subject.subjectId
-                  : ""
+                  : 0
             },
             () => {
               this.callApiForChapter();
@@ -161,7 +162,8 @@ class QuesEnglish extends Component {
       })
       .catch(e => {
         console.log(e);
-        alert(e);
+        swal( e, "error");
+
       });
   }
   callApiForChapter = () => {
@@ -182,7 +184,7 @@ class QuesEnglish extends Component {
                 selectedChapterID:
                   res.data.data.list.length > 0
                     ? res.data.data.list[0].subjectSection.sectionId
-                    : ""
+                    : 0
               },
               () => {
                 this.callApiForTopic();
@@ -201,11 +203,11 @@ class QuesEnglish extends Component {
       );
       this.setState({
         listOfChapter: [],
-        selectedChapterID: "",
+        selectedChapterID: 0,
         listOfTopic: [],
-        selectedTopicID: "",
+        selectedTopicID: 0,
         listOfSubTopic: [],
-        selectedSubTopicID: ""
+        selectedSubTopicID: 0
       });
     }
   };
@@ -228,7 +230,7 @@ class QuesEnglish extends Component {
                 selectedTopicID:
                   res.data.data.list.length > 0
                     ? res.data.data.list[0].subjectTopic.topicId
-                    : ""
+                    : 0
               },
               () => {
                 this.callApiForSubTopic();
@@ -247,9 +249,9 @@ class QuesEnglish extends Component {
       );
       this.setState({
         listOfTopic: [],
-        selectedTopicID: "",
+        selectedTopicID: 0,
         listOfSubTopic: [],
-        selectedSubTopicID: ""
+        selectedSubTopicID: 0
       });
     }
   };
@@ -271,7 +273,7 @@ class QuesEnglish extends Component {
               selectedSubTopicID:
                 res.data.data.list.length > 0
                   ? res.data.data.list[0].subjectSubtopic.subtopicId
-                  : ""
+                  : 0
             });
           } else {
             alert("Unexpected code");
@@ -282,7 +284,7 @@ class QuesEnglish extends Component {
         });
     } else {
       console.log("(English)topicid is blank.API not called. checktopic list");
-      this.setState({ listOfSubTopic: [], selectedSubTopicID: "" });
+      this.setState({ listOfSubTopic: [], selectedSubTopicID: 0 });
     }
   };
   handleSubjectChange = e => {
@@ -349,7 +351,7 @@ class QuesEnglish extends Component {
     e.preventDefault();
     // console.log(typeof parseInt(e.target.value));
     let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption[index].weightage = (e.target.value);
+    currentArrayOfOption[index].weightage = (e.target.value)?parseInt(e.target.value):0;
     this.setState({
       listOfOptions: currentArrayOfOption
     });
@@ -370,13 +372,13 @@ class QuesEnglish extends Component {
         break;
     }
     let converttags=this.state.tags.map((item)=>{
-      return{tagId:item.id,tag:item.name}
+      return{tagId:item.id?item.id:0,tag:item.name}
     });
 
     axios({
       method: "POST",
       url:
-        this.props.questionId === null
+        this.props.questionId === 0
           ? URL.createQuestion
           : URL.createQuestionNewVersion,
       data: {
@@ -405,14 +407,19 @@ class QuesEnglish extends Component {
         if (res.status === 200) {
           console.log(res.data.data);
           //   this.setState({ activetab: "2" });
-          alert("Success in English:", res.data.data);
+          // alert("Success in English:", res.data.data);
+          swal("Success", `QuestionId:${res.data.data.questionId}`, "success");
           this.props.handleChange(res.data.data.questionId);
           this.props.handleSelect();
+        }
+        else{
+          swal( `Status Code:${res.status}`, "error");
         }
       })
       .catch(e => {
         console.log(e);
-        alert(e);
+        // alert(e);
+        swal( e, "error");
       });
   };
   render() {
@@ -511,7 +518,7 @@ class RightpanelEnglish extends Component {
                     <Form.Control
                       style={{ borderRadius: "0", background: "#f9f9f9" }}
                       type="number"
-                      value={item.weightage || ''}
+                      value={item.weightage}
                       onChange={this.props.handleOptionWeightageChange.bind(
                         this,
                         index
@@ -595,7 +602,7 @@ class RightpanelEnglish extends Component {
             }}
             onClick={this.props.saveEnglishdata}
           >
-            {this.props.questionId === "" || this.props.questionId === undefined
+            {this.props.questionId === 0 || this.props.questionId === undefined
               ? "Save & move to Hindi section"
               : "Save & finish"}
           </Button>

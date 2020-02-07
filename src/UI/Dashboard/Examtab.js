@@ -14,11 +14,11 @@ class Examtab extends Component {
     super(props);
     this.state = {
       listOfExam: [],
-      selectedExamID: "",
+      selectedExamID: 0,
       listOfSubject: [],
-      selectedSubjectID: "",
+      selectedSubjectID: 0,
       listOfChapter: [],
-      selectedChapterID: "",
+      selectedChapterID: 0,
       selectedLanguage: "ENGLISH",
       listOfLanguage: ["ENGLISH", "HINDI"],
       searchbox: "",
@@ -40,14 +40,14 @@ class Examtab extends Component {
       data: {
         authToken: "string",
         language: this.state.selectedLanguage,
-        examId: this.state.selectedExamID ? this.state.selectedExamID : null,
-        testId: this.state.searchbox,
+        examId: this.state.selectedExamID ? this.state.selectedExamID : 0,
+        testId: this.state.searchbox ? parseInt(this.state.searchbox) : 0,
         sectionId: this.state.selectedChapterID
           ? this.state.selectedChapterID
-          : null,
+          : 0,
         subjectId: this.state.selectedSubjectID
           ? this.state.selectedSubjectID
-          : null,
+          : 0,
         type: this.state.selectedType ? this.state.selectedType : null
       },
       headers: {
@@ -67,11 +67,11 @@ class Examtab extends Component {
         // listOfsearchselected: [],
         searchbox: "",
         // listOfExam: [],
-        selectedExamID: "",
+        selectedExamID: 0,
         listOfSubject: [],
-        selectedSubjectID: "",
+        selectedSubjectID: 0,
         listOfChapter: [],
-        selectedChapterID: "",
+        selectedChapterID: 0,
         selectedType: ""
       },
       () => {
@@ -97,13 +97,13 @@ class Examtab extends Component {
           authToken: "string",
           language: this.state.selectedLanguage,
           examId: this.state.selectedExamID ? this.state.selectedExamID : null,
-          testId: e.target.value,
+          testId: e.target.value ? parseInt(e.target.value) : 0,
           sectionId: this.state.selectedChapterID
             ? this.state.selectedChapterID
-            : null,
+            : 0,
           subjectId: this.state.selectedSubjectID
             ? this.state.selectedSubjectID
-            : null,
+            : 0,
           type: this.state.selectedType ? this.state.selectedType : null
         },
         headers: {
@@ -140,7 +140,7 @@ class Examtab extends Component {
           this.setState(
             {
               listOfExam: res.data.data.list,
-              selectedExamID: ""
+              selectedExamID: 0
               // selectedExamID:
               //   res.data.data.list.length > 0
               //     ? res.data.data.list[0].exam.examId
@@ -153,10 +153,10 @@ class Examtab extends Component {
                 data: {
                   authToken: "string",
                   language: this.state.selectedLanguage,
-                  examId: null,
-                  testId: null,
-                  sectionId: null,
-                  subjectId: null,
+                  examId: 0,
+                  testId: 0,
+                  sectionId: 0,
+                  subjectId: 0,
                   type: null
                 },
                 headers: {
@@ -223,7 +223,7 @@ class Examtab extends Component {
                     selectedSubjectID:
                       tempsubjectlist.length > 0
                         ? tempsubjectlist[0].subject.subjectId
-                        : ""
+                        : 0
                   },
                   () => {
                     this.callApiForChapter();
@@ -242,10 +242,10 @@ class Examtab extends Component {
       console.log("(English)examid is blank. API not called. exam list");
       this.setState({
         listOfChapter: [],
-        selectedChapterID: "",
+        selectedChapterID: 0,
 
         listOfSubject: [],
-        selectedSubjectId: ""
+        selectedSubjectId: 0
       });
     }
   };
@@ -271,7 +271,7 @@ class Examtab extends Component {
                 selectedChapterID:
                   res.data.data.list.length > 0
                     ? res.data.data.list[0].subjectSection.sectionId
-                    : ""
+                    : 0
               },
               () => {
                 // this.callApiForTopic();
@@ -290,7 +290,7 @@ class Examtab extends Component {
       );
       this.setState({
         listOfChapter: [],
-        selectedChapterID: ""
+        selectedChapterID: 0
       });
     }
   };
@@ -300,7 +300,7 @@ class Examtab extends Component {
     if (e.target.value === "") {
       this.setState(
         {
-          selectedExamID: ""
+          selectedExamID: 0
         },
         () => {
           this.callApiForSubject();
@@ -344,6 +344,13 @@ class Examtab extends Component {
         // this.callApiForTopic();
       }
     );
+  };
+  handlePreviewTest = testid => {
+    localStorage.setItem("TestPreviewId", JSON.stringify(testid));
+    localStorage.setItem("TestPreviewLanguage", this.state.selectedLanguage);
+    this.props.history.push({
+      pathname: "/testpreview"
+    });
   };
   render() {
     return (
@@ -501,8 +508,10 @@ class Examtab extends Component {
                                   border: "none"
                                 }}
                                 variant="secondary"
-
-                                // onClick={this.handleQAEdit.bind(this,item.questionId)}
+                                onClick={this.handlePreviewTest.bind(
+                                  this,
+                                  item.testId
+                                )}
                               >
                                 {<View className="svg_icons" />}{" "}
                               </Button>

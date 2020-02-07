@@ -24,7 +24,7 @@ class Ques extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      questionId: null,
+      questionId: 0,
       activetab: "english"
     };
   }
