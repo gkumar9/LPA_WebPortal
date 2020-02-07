@@ -47,7 +47,8 @@ class Editques extends Component {
         }
       })
       .catch(e => {
-        swal('Error', "No data found","error");
+        // swal('Error', "No data found","error");
+        alert(e)
         this.props.history.push({
           pathname: "/"
         });

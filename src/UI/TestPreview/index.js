@@ -60,6 +60,7 @@ class Previewtest extends Component {
                     object.testSectionMapping = newquestionsectionlist;
                     return object;
                   }
+                  
                 });
                 testdataresponse.testSections = newsectionlist;
                 this.setState({ data: testdataresponse, isData: true });

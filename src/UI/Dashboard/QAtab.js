@@ -23,7 +23,7 @@ import BucketIcon from "./../../Assets/image.png";
 // import BucketIconBlack from "./../../Assets/image2.png";
 import BucketIconOrange from "./../../Assets/image3.png";
 import BucketIconLightOrange from "./../../Assets/image4.png";
-import swal from "sweetalert";
+// import swal from "sweetalert";
 
 class QAtab extends Component {
   constructor(props) {
@@ -333,7 +333,8 @@ class QAtab extends Component {
                       }
                     })
                     .catch(e => {
-                      swal('Error', "No data found","error");
+                      // swal('Error', "No data found","error");
+                      alert(e)
         // this.props.history.push({
         //   pathname: "/"
         // });
@@ -348,7 +349,8 @@ class QAtab extends Component {
           .catch(e => {
             console.log(e);
             // alert(e);
-            swal('Error', "No data found","error");
+            alert(e)
+            // swal('Error', "No data found","error");
         // this.props.history.push({
         //   pathname: "/"
         // });

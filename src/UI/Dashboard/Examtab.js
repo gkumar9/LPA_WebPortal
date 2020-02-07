@@ -8,7 +8,7 @@ import axios from "axios";
 import "./index.css";
 import LeftpanelExamtab from "./leftpanelExamtab.js";
 import URL from "../../Assets/url";
-import swal from "sweetalert";
+// import swal from "sweetalert";
 
 class Examtab extends Component {
   constructor(props) {
@@ -171,18 +171,21 @@ class Examtab extends Component {
                   }
                 })
                 .catch(e => {
-                  swal('Error', "No data found","error");
+                  alert(e)
+                  // swal('Error', "No data found","error");
                 });
               // this.callApiForSubject();
             }
           );
         } else {
-          swal('Error', "No data found","error");
+          // swal('Error', "No data found","error");
+          alert('Error')
         }
       })
       .catch(e => {
         console.log(e);
-        swal('Error', "No data found","error");
+        alert(e);
+        // swal('Error', "No data found","error");
       });
   }
   callApiForSubject = () => {
@@ -498,6 +501,26 @@ class Examtab extends Component {
                               </span>
                             </span>
                             <span style={{ marginLeft: "2em" }}>
+                            <Link
+                                to={`/editexam/${item.testId}`}
+                                target="_self"
+                              >
+                                <Button
+                                  title="Edit"
+                                  size="sm"
+                                  style={{
+                                    borderRadius: "0",
+                                    // marginLeft: "0.8em",
+                                    padding: ".15rem .15rem",
+                                    background: "transparent",
+                                    color: "rgb(106, 163, 255)",
+                                    border: "none"
+                                  }}
+                                  variant="secondary"
+                                >
+                                  {<Edit className="svg_icons" />}{" "}
+                                </Button>
+                              </Link>
                               <Button
                                 title="Preview test"
                                 size="sm"
@@ -517,26 +540,7 @@ class Examtab extends Component {
                               >
                                 {<View className="svg_icons" />}{" "}
                               </Button>
-                              <Link
-                                to={`/editexam/${item.testId}`}
-                                target="_self"
-                              >
-                                <Button
-                                  title="Edit"
-                                  size="sm"
-                                  style={{
-                                    borderRadius: "0",
-                                    marginLeft: "0.8em",
-                                    padding: ".15rem .15rem",
-                                    background: "transparent",
-                                    color: "rgb(106, 163, 255)",
-                                    border: "none"
-                                  }}
-                                  variant="secondary"
-                                >
-                                  {<Edit className="svg_icons" />}{" "}
-                                </Button>
-                              </Link>
+                              
                             </span>
                             <span
                               style={{
