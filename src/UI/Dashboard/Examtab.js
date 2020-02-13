@@ -1,7 +1,13 @@
 import React, { Component } from "react";
-import { Row, Col, Button, Form, Card,OverlayTrigger,
-  Tooltip } from "react-bootstrap";
-// import Bucket from "@material-ui/icons/Https";
+import {
+  Row,
+  Col,
+  Button,
+  Form,
+  Card,
+  OverlayTrigger,
+  Tooltip
+} from "react-bootstrap";
 import Edit from "@material-ui/icons/Edit";
 import View from "@material-ui/icons/Visibility";
 import { Link } from "react-router-dom";
@@ -9,7 +15,7 @@ import axios from "axios";
 import "./index.css";
 import LeftpanelExamtab from "./leftpanelExamtab.js";
 import URL from "../../Assets/url";
-// import swal from "sweetalert";
+import BottomScrollListener from "react-bottom-scroll-listener";
 
 class Examtab extends Component {
   constructor(props) {
@@ -32,13 +38,15 @@ class Examtab extends Component {
         "Previous year paper",
         ""
       ],
-      selectedType: ""
+      selectedType: "",
+      hasMore: null,
+      pageNo: 1
     };
   }
   handlesearchWithFilter = () => {
     axios({
       method: "POST",
-      url: URL.searchexam + "1",
+      url: URL.searchexam + '1',
       data: {
         authToken: "string",
         language: this.state.selectedLanguage,
@@ -58,7 +66,11 @@ class Examtab extends Component {
     }).then(res => {
       // console.log(res.data.data.list);
       if (res.status === 200) {
-        this.setState({ searchResultList: res.data.data.list });
+        this.setState({
+          searchResultList: res.data.data.list,
+          pageNo:  1,
+          hasMore: res.data.data.hasMore
+        });
       }
     });
   };
@@ -74,7 +86,9 @@ class Examtab extends Component {
         selectedSubjectID: 0,
         listOfChapter: [],
         selectedChapterID: 0,
-        selectedType: ""
+        selectedType: "",
+        pageNo:1,
+        hasMore:true
       },
       () => {
         this.handlesearchWithFilter();
@@ -90,7 +104,7 @@ class Examtab extends Component {
   handleSearchboxChange = e => {
     e.preventDefault();
 
-    this.setState({ searchbox: e.target.value });
+    this.setState({ searchbox: e.target.value, pageNo: 1 });
     if (e.target.value !== "") {
       axios({
         method: "POST",
@@ -114,7 +128,11 @@ class Examtab extends Component {
       }).then(res => {
         // console.log(res.data.data.list);
         if (res.status === 200) {
-          this.setState({ searchResultList: res.data.data.list });
+          this.setState({
+            searchResultList: res.data.data.list,
+            pageNo: this.state.pageNo + 1,
+            hasMore: res.data.data.hasMore
+          });
         }
       });
     } else {
@@ -151,7 +169,7 @@ class Examtab extends Component {
             () => {
               axios({
                 method: "POST",
-                url: URL.searchexam + "1",
+                url: URL.searchexam + this.state.pageNo,
                 data: {
                   authToken: "string",
                   language: this.state.selectedLanguage,
@@ -168,11 +186,15 @@ class Examtab extends Component {
                 .then(res => {
                   // console.log(res.data.data.list);
                   if (res.status === 200) {
-                    this.setState({ searchResultList: res.data.data.list });
+                    this.setState({
+                      searchResultList: res.data.data.list,
+                      pageNo: this.state.pageNo + 1,
+                      hasMore: res.data.data.hasMore
+                    });
                   }
                 })
                 .catch(e => {
-                  alert(e)
+                  alert(e);
                   // swal('Error', "No data found","error");
                 });
               // this.callApiForSubject();
@@ -180,7 +202,7 @@ class Examtab extends Component {
           );
         } else {
           // swal('Error', "No data found","error");
-          alert('Error')
+          alert("Error");
         }
       })
       .catch(e => {
@@ -358,6 +380,41 @@ class Examtab extends Component {
       pathname: "/testpreview"
     });
   };
+  callbackofend = () => {
+    if (this.state.hasMore) {
+      axios({
+        method: "POST",
+        url: URL.searchexam + this.state.pageNo,
+        data: {
+          authToken: "string",
+          language: this.state.selectedLanguage,
+          examId: 0,
+          testId: 0,
+          sectionId: 0,
+          subjectId: 0,
+          type: null
+        },
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => {
+          // console.log(res.data.data.list);
+          let currsearchResultList = this.state.searchResultList;
+          if (res.status === 200) {
+            this.setState({
+              searchResultList: currsearchResultList.concat(res.data.data.list),
+              pageNo: this.state.pageNo + 1,
+              hasMore: res.data.data.hasMore
+            });
+          }
+        })
+        .catch(e => {
+          alert(e);
+          // swal('Error', "No data found","error");
+        });
+    }
+  };
   render() {
     return (
       <Row style={{ height: "90vh" }}>
@@ -462,129 +519,131 @@ class Examtab extends Component {
               </Form>
             </Col>
           </Row>
-
-          <div
-            style={{
-              marginBottom: "2em",
-              padding: "0.4em"
-            }}
-          >
-            {this.state.searchResultList.length > 0 ? (
-              this.state.searchResultList.map((item, index) => {
-                return (
-                  <Row
-                    key={index}
-                    style={{
-                      margin: "1.5em 0em"
-                      // borderTop: "1px #c2c2c2 solid"
-                    }}
-                  >
-                    <Col
+          <BottomScrollListener onBottom={this.callbackofend}>
+            <div
+              style={{
+                marginBottom: "2em",
+                padding: "0.4em"
+              }}
+            >
+              {this.state.searchResultList.length > 0 ? (
+                this.state.searchResultList.map((item, index) => {
+                  return (
+                    <Row
+                      key={index}
                       style={{
-                        paddingLeft: "0em",
-                        paddingRight: "0em"
+                        margin: "1.5em 0em"
+                        // borderTop: "1px #c2c2c2 solid"
                       }}
                     >
-                      <Card
+                      <Col
                         style={{
-                          background: "transparent",
-                          borderColor: "transparent"
+                          paddingLeft: "0em",
+                          paddingRight: "0em"
                         }}
                       >
-                        <Card.Body style={{ padding: "0em" }}>
-                          <Card.Title style={{ fontSize: "medium" }}>
-                            {/* <Form.Check inline type="checkbox" /> */}
+                        <Card
+                          style={{
+                            background: "transparent",
+                            borderColor: "transparent"
+                          }}
+                        >
+                          <Card.Body style={{ padding: "0em" }}>
+                            <Card.Title style={{ fontSize: "medium" }}>
+                              {/* <Form.Check inline type="checkbox" /> */}
 
-                            <span>
-                              <b>Id#</b>{" "}
-                              <span style={{ color: "dimgrey" }}>
-                                {item.testId}
+                              <span>
+                                <b>Id#</b>{" "}
+                                <span style={{ color: "dimgrey" }}>
+                                  {item.testId}
+                                </span>
                               </span>
-                            </span>
-                            <span style={{ marginLeft: "2em" }}>
-                            
-                            <OverlayTrigger
-                                    placement="top"
-                                    delay={{ show: 250, hide: 400 }}
-                                    overlay={renderTooltip("Edit test")}
-                                  ><Link
-                                to={`/editexam/${item.testId}`}
-                                target="_self"
-                              >
-                                <Button
-                                  // title="Edit"
-                                  size="sm"
-                                  style={{
-                                    borderRadius: "0",
-                                    // marginLeft: "0.8em",
-                                    padding: ".15rem .15rem",
-                                    background: "transparent",
-                                    color: "rgb(106, 163, 255)",
-                                    border: "none"
-                                  }}
-                                  variant="secondary"
+                              <span style={{ marginLeft: "2em" }}>
+                                <OverlayTrigger
+                                  placement="top"
+                                  delay={{ show: 250, hide: 400 }}
+                                  overlay={renderTooltip("Edit test")}
                                 >
-                                  {<Edit className="svg_icons" />}{" "}
-                                </Button>
-                              </Link></OverlayTrigger>
-                                
-                            <OverlayTrigger
-                                    placement="top"
-                                    delay={{ show: 250, hide: 400 }}
-                                    overlay={renderTooltip("Preview test")}
-                                  ><Button
-                                // title="Preview test"
-                                size="sm"
-                                style={{
-                                  borderRadius: "0",
-                                  marginLeft: "1em",
-                                  padding: ".15rem .15rem",
-                                  background: "transparent",
-                                  color: "rgb(255, 137, 118)",
-                                  border: "none"
-                                }}
-                                variant="secondary"
-                                onClick={this.handlePreviewTest.bind(
-                                  this,
-                                  item.testId
-                                )}
-                              >
-                                {<View className="svg_icons" />}{" "}
-                              </Button>
-                              </OverlayTrigger>
-                            </span>
-                            <span
-                              style={{
-                                float: "right",
-                                fontSize: "15px",
-                                fontWeight: "600"
-                              }}
-                            >
-                              <b>Tags: </b>
+                                  <Link
+                                    to={`/editexam/${item.testId}`}
+                                    target="_self"
+                                  >
+                                    <Button
+                                      // title="Edit"
+                                      size="sm"
+                                      style={{
+                                        borderRadius: "0",
+                                        // marginLeft: "0.8em",
+                                        padding: ".15rem .15rem",
+                                        background: "transparent",
+                                        color: "rgb(106, 163, 255)",
+                                        border: "none"
+                                      }}
+                                      variant="secondary"
+                                    >
+                                      {<Edit className="svg_icons" />}{" "}
+                                    </Button>
+                                  </Link>
+                                </OverlayTrigger>
+
+                                <OverlayTrigger
+                                  placement="top"
+                                  delay={{ show: 250, hide: 400 }}
+                                  overlay={renderTooltip("Preview test")}
+                                >
+                                  <Button
+                                    // title="Preview test"
+                                    size="sm"
+                                    style={{
+                                      borderRadius: "0",
+                                      marginLeft: "1em",
+                                      padding: ".15rem .15rem",
+                                      background: "transparent",
+                                      color: "rgb(255, 137, 118)",
+                                      border: "none"
+                                    }}
+                                    variant="secondary"
+                                    onClick={this.handlePreviewTest.bind(
+                                      this,
+                                      item.testId
+                                    )}
+                                  >
+                                    {<View className="svg_icons" />}{" "}
+                                  </Button>
+                                </OverlayTrigger>
+                              </span>
                               <span
                                 style={{
-                                  color: "darkgreen",
-                                  // fontSize:'0.5em',
-                                  textTransform: "capitalize"
+                                  float: "right",
+                                  fontSize: "15px",
+                                  fontWeight: "600"
                                 }}
                               >
-                                {item.type.toLowerCase()}
-                              </span>
-                              {item.year && (
-                                <span>
-                                  {", "}
-                                  {/* <b>Year: </b> */}
-                                  {item.year}
+                                <b>Tags: </b>
+                                <span
+                                  style={{
+                                    color: "darkgreen",
+                                    // fontSize:'0.5em',
+                                    textTransform: "capitalize"
+                                  }}
+                                >
+                                  {item.type.toLowerCase()}
                                 </span>
-                              )}
-                            </span>
-                          </Card.Title>
+                                {item.year && (
+                                  <span>
+                                    {", "}
+                                    {/* <b>Year: </b> */}
+                                    {item.year}
+                                  </span>
+                                )}
+                              </span>
+                            </Card.Title>
 
-                          <Card.Text style={{ marginBottom: "0.5em" }}>
-                            {""}
-                            {item.name}
-                          </Card.Text>
-                          {/* <div style={{ float: "right" }}>
+                            <Card.Text style={{ marginBottom: "0.5em" }}>
+                              {""}
+                              {item.name}
+                            </Card.Text>
+                            {/* <div style={{ float: "right" }}>
                             <Link
                               to={`/editexam/${item.testId}`}
                               target="_self"
@@ -602,19 +661,20 @@ class Examtab extends Component {
                               </Button>
                             </Link>
                           </div> */}
-                        </Card.Body>
-                        {/* <hr /> */}
-                      </Card>
-                    </Col>
-                  </Row>
-                );
-              })
-            ) : (
-              <Row style={{ margin: "0.5em 0em" }}>
-                <h5>No data found</h5>
-              </Row>
-            )}{" "}
-          </div>
+                          </Card.Body>
+                          {/* <hr /> */}
+                        </Card>
+                      </Col>
+                    </Row>
+                  );
+                })
+              ) : (
+                <Row style={{ margin: "0.5em 0em" }}>
+                  <h5>No data found</h5>
+                </Row>
+              )}{" "}
+            </div>
+          </BottomScrollListener>
         </Col>
       </Row>
     );

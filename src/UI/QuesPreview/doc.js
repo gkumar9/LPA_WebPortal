@@ -5,7 +5,8 @@ class DocService {
     savePDF(html, { 
       paperSize: 'Letter',
       fileName: 'form.pdf',
-      margin: 3
+      margin: '20px',
+      scale:0.6
     })
   }
 }

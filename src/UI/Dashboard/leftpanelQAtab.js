@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 // import Difficulty from '../Ques/difficulty'
 // import TagsInput from "react-tagsinput";
+import ReactTags from "react-tag-autocomplete";
 
 class LeftPanelQAtab extends Component {
   render() {
@@ -58,6 +59,23 @@ class LeftPanelQAtab extends Component {
                 );
               })}
           </Form.Control>
+        </Form.Group>
+        <Form.Group >
+          <Form.Label
+            style={{
+              fontWeight: "600"
+            }}
+          >
+            Tags
+          </Form.Label>
+          <ReactTags
+            // style={{width:'100%'}}
+            tags={this.props.tags}
+            onInput={this.props.handleChangeTags}
+            suggestions={this.props.suggestions}
+            onDelete={this.props.onDelete.bind(this)}
+            onAddition={this.props.onAddition.bind(this)}
+          />
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect1">
           <Form.Label
@@ -167,6 +185,7 @@ class LeftPanelQAtab extends Component {
               })}
           </Form.Control>
         </Form.Group>
+        
         {/* <Form.Group controlId="exampleForm.ControlInput1">
           <Form.Label
             style={{

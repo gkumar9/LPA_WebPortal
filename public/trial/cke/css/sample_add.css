@@ -1,0 +1,35 @@
+@font-face {
+    font-family: "shree0900";
+    src: url("../fonts/shree0900.woff") format('woff');
+    font-weight: normal;
+    font-style: normal;
+    }
+
+@font-face {
+    font-family: "shree0900";
+    src: url("fonts/shree0900-b.woff") format('woff');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "shree0900";
+    src: url("fonts/shree0900-bi.woff") format('woff');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "shree0900";
+    src: url("fonts/shree0900-i.woff") format('woff');
+    font-style: italic;
+}
+
+
+
+
+
+body
+{
+	/* Font */
+	font-family: shree0900;
+    }

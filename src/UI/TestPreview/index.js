@@ -12,7 +12,6 @@ class Previewtest extends Component {
     super(props);
     this.state = { isData: false, testId: null, data: {} };
   }
-  // createPdf = html => Doc.createPdf(html);
   componentDidMount() {
     let testId = JSON.parse(localStorage.getItem("TestPreviewId"));
 

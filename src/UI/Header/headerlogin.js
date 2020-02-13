@@ -9,7 +9,7 @@ function HeaderLogin() {
   return (
     <Navbar expand="lg" style={{ borderBottom: "solid 1px #cccbcb" }}>
       <Navbar.Brand href="/">
-      <h3 style={{margin:'0.3em 0.6em',color:'black'}}>Manuprakashan</h3>
+      <h4 style={{margin:'0.3em 0.6em',color:'black'}}>Manuprakashan</h4>
       </Navbar.Brand>
       <Nav className="mr-auto"></Nav>
       <Nav justify>

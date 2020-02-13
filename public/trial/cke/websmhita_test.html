@@ -1,0 +1,27 @@
+<html>
+<head>
+<!-- Use this URL to get language support in live page-->
+<!--<script src="http://www.modular-infotech.com/demo/websam/js/Unicode.js" > </script>-->
+    <script src="js/Unicode.js" type="text/javascript"></script>
+</head>
+
+<!-- Call following JS functions for language support in page load-->
+<body onload="SetPath('../');initdef();setLang();">
+
+<!-- Following controls are essential for language support -->
+<select  id="txtLanguage" onchange="setLang();"> 
+<option value="8">Telugu</option>
+<option value="1">Devnagari</option>
+<option value="0">English</option>
+</select>
+<select   id="txtKeyboard"> <option value="TypeWrit">TypeWrit</option></select>
+<div id="floatTutor"></div>
+
+<!-- Following controls are sample controls from live site -->
+<label for="name">Name:</label> <input type="text" id="name" width="500px" onfocus="hook(this);"> 
+<label for="surname">Surname:</label> <input type="text" id="surname" width="500px" onfocus="hook(this);"> 
+<p><label for="address">Div Example:</label><div style="border:1px black;" id="address" contenteditable="true" onfocus="hook(this);">Type here</div></p>
+<!-- Following button is essential to show on-screen keyboard tutor. Remove this button in case keyboard tutor is not necessary in the live site. -->
+<input type="button" onclick="DisplayHideTutor(true);" value="Virtual Keyboard" />
+</body>
+</html>

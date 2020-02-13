@@ -1,0 +1,169 @@
+<html>
+<head>
+	<title>Web Samhita Demo Page</title>
+    <!--
+When one of the buttons is clicked, that button passes it's own value to the insertString() function.
+That function will then insert that string into the textarea where the cursor is.
+
+The textarea is setup to call setCursorPos() whenever it changes.
+The purpose of setCursorPos() is to keep track of the cursor position
+in a global variable since when a button is clicked to insert text
+into the textarea the cursor is actually gone from the textarea at that point.
+So, we save off the cursor position and actually use that saved off value
+rather than the actual cursor position (which is on the button).
+-->
+    <style type="text/css">
+        #editor
+        {
+            height: 100%;
+            width: 500px;
+            overflow: auto;
+        }
+        
+        @font-face
+        {
+            font-family: 'USUBAK';
+            src: url('fonts/USUBAK0.eot');
+            src: url('fonts/USUBAK0.eot?#iefix') format('embedded-opentype'), url('fonts/USUBAK.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html;charset=csUnicode" />
+    
+    
+	<!--- <script type="text/javascript" src="RSA/BigInt.js"></script>
+    <script type="text/javascript" src="RSA/Barrett.js"></script>
+    <script type="text/javascript" src="RSA/RSA.js"></script>
+    <script type="text/javascript" src="Locking.js"></script>
+    <script type="text/javascript" src="Drag.js"></script>
+	-->
+    
+	<script language="Javascript" type="text/javascript">
+
+        
+
+        //var st = srvTime();
+        //var date = new Date(st);
+        function savetext()
+        {
+            wrap_setCopyPasteOption('true');
+        }
+
+    </script>
+</head>
+<!--<BODY onload="hook()">-->
+<body onload="initdef();setActivationKey(145); SetPath('.');">
+    <h2 style="text-align:center">Web Samhita Test Page</h2>	
+	<form name="myForm">
+    <!-- 
+	<input id="Button1" type="button" value="click" onclick="savetext();" />
+    -->
+	<select id="txtLanguage" onchange="setLang();">
+        <option value="0" selected="selected">English</option>
+        <option value="8">Telugu</option>
+    </select>
+    <select id="txtKeyboard" onchange="changeKB()" disabled="disabled">
+        <option value="Inscript">Inscript</option>
+        <option value="TypeWrit">TypeWrit</option>
+        <!-- <option value="Modular">Modular</option> -->
+        <option value="Godrej">Godrej</option>
+    </select>
+    &nbsp;<br>
+    <br />
+    <br />
+    <table style="border-right: black 1px groove; border-top: black 1px groove; border-left: black 1px groove;
+        border-bottom: black 1px groove;">
+        <tr>
+            <td style="width: 145px">
+                <label id="keybdtr" style="vertical-align: middle; text-align: center">
+                    Keyboard Tutor : &nbsp;<img src="tutor.jpg" onclick="wrap_showTutor(true);" style="width: 24px;
+                        height: 24px" />&nbsp;
+                </label>
+            </td>
+        </tr>
+    </table>
+	
+    <table>
+        <tr>
+            <td>
+                <b>Single Line</b>
+            </td>
+            <td style="font-weight: bold">
+                <input type="text" value="" id="myInput" style="line-height: 70px; font-family: USUBAK;
+                    font-size: 26; height: 70; width: 840px;" onfocus="hook(this);" />&nbsp;<br />
+                <label name="sngLnChars">
+                    <b style="color: black">&nbsp;Ch:</b></label><label id="singleLineCharCnt">0</label>
+                &nbsp;
+                <label name="sngLnWords">
+                    <b style="color: black">&nbsp;Words:</b></label><label id="singleLineWordCnt">0</label>
+                <br />
+            </td>
+        </tr>
+        <br />
+        <tr>
+            <td>
+                <b>Multi Line</b>
+            </td>
+            <td>
+                <textarea name="myTextArea1" style="line-height: 70px; font-family: USUBAK; font-size: 40;
+                    width: 840px; height: 200;" id="myTextArea1" onfocus="hook(this);">
+</textarea>
+                <br />
+				<div style="margin: 5px; padding: 10px; border: 1px solid #eee; text-align: center; font-size: 1.1em;">
+	<a href="#" onclick="javascript:wrap_pluginValid('myTextArea1')">Spellcheck</a>
+	</div>
+                <label name="multiLineChars">
+                    <b>Ch:</b></label><label id="multiLineCharCnt">0</label>
+                <label name="multiLineWords">
+                    <b>Words:</b></label><label id="multiLineWordCnt">0</label>
+                <label name="multiLineLines">
+                    <b>Lines:</b></label><label id="multiLineLineCnt">0</label>
+            </td>
+        </tr>
+    </table>
+    <div id="helpCnts" style="font-size: 30">
+    </div>
+    <img src="imgs/bold.png" id="mi_bold" alt="Bold" onclick="editing(1);" />
+    <img src="imgs/italic.png" id="mi_italic" alt="Italic" onclick="editing(2);" />
+    <img src="imgs/underline.png" id="mi_underline" alt="Underline" onclick="editing(3);" />
+    <img src="imgs/strike_through.png" id="mi_strikethrough" alt="Srikethrough" onclick="editing(4);" />
+    <img src="imgs/justify_center.png" id="mi_center" alt="Center" onclick="editing(5);" />
+    <img src="imgs/justify_full.png" id="mi_full" alt="Full" onclick="editing(6);" />
+    <img src="imgs/justify_left.png" id="mi_left" alt="Left" onclick="editing(7);" />
+    <img src="imgs/justify_right.png" id="mi_right" alt="Right" onclick="editing(8);" />
+    <img src="imgs/magnify.png" onclick="FnR('imgfnd');" id="imgfnd" />
+    <div id="divfnr" style="position: absolute; background-color: White; display: none;
+        width: 600; vertical-align: top;">
+        Find<input id="find" name="find" style="height: 17px;" type="text" onkeydown="hKd(event)" />
+        Replacment<input id="replace" name="replace" style="height: 17px;" type="text" />
+        <input type="button" value="Find" id="btnfind" style="height: 17px; font-size: xx-small;"
+            onclick="findMyText(document.getElementById('find').value, document.getElementById('replace').value,'btnfind');" />
+        <input type="button" value="Replace" id="btnreplace" style="height: 17px; font-size: xx-small;"
+            onclick="findMyText(document.getElementById('find').value, document.getElementById('replace').value,'btnreplace');" />
+        <img src="imgs/close.png" onclick="FnR('imgclose');" id="imgclose" title="Close"
+            alt="Close" />
+    </div>
+    <object id="plugin0" type="application/x-spellcheckplugin" width="100" height="30">
+    </object>
+    <div id="editor" onkeydown="changeLang();" style="line-height: 70px; font-family: USUBAK;
+        font-size: 20pt; border: 1px solid #464f5a; height: 200px; font-size: 40; width: 840px;
+        height: 200;" contenteditable="true"onfocus="hook(this);">
+    </div>
+    <label name="htmlLineChars">
+        <b>Ch:</b></label><label id="htmllinecharcnt">0</label>
+    <label name="htmlWords">
+        <b>Words:</b></label><label id="htmlWordCnt">0</label>
+    <label name="htmlLines">
+        <b>Lines:</b></label><label id="htmlLineCnt">0</label>
+    <br />
+    <input type="button" onclick="Upper()" value="HTML" />
+    <div id="Div1" style="font-family: USUBAK; font-size: medium;">
+    </div>
+    <textarea id="htmlText" style="width: 200; height: 200;" name="htmlText"></textarea>
+    <input type="button" value="copy unicode text" onclick="wrap_copyUnicodeText(document.getElementById('myTextArea').value);" />
+    </form>
+    <script type="text/javascript" src="Unicode.js"></script>
+    <script type="text/javascript" src="wrapperJS.js"></script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Button, Form, Container } from "react-bootstrap";
+import { Row, Col, Button, Form } from "react-bootstrap";
 // import TagsInput from "react-tagsinput";
 import Difficulty from "./difficulty.js";
 // import CKEditor from "@ckeditor/ckeditor5-react";
@@ -27,8 +27,8 @@ class EditComponent extends Component {
       selectedSubTopicID: "",
       // tags: [],
       difficulty: "",
-      questionData: "",
-      explanationData: "",
+      questionData: " ",
+      explanationData: " ",
       listOfOptions: [],
       letterchartcode: 65,
       tags: [],
@@ -127,9 +127,6 @@ class EditComponent extends Component {
     e.preventDefault();
     this.setState({ difficulty: e.target.value });
   };
-  // handleChangeTags = tags => {
-  //   this.setState({ tags });
-  // };
   componentDidMount() {
     let difficultyvalue;
     switch (this.props.fetchedData.level) {
@@ -145,34 +142,44 @@ class EditComponent extends Component {
       default:
         break;
     }
-    let converttags=this.props.fetchedData.tags.map((item)=>{
-      return{id:item.tagId,name:item.tag}
-    })
-
-    this.setState({
-      difficulty: difficultyvalue,
-      questionData: this.props.fetchedData.questionVersions.filter(
-        item => item.language === this.props.match.params.lang
-      )[0].content,
-      explanationData: this.props.fetchedData.questionVersions.filter(
-        item => item.language === this.props.match.params.lang
-      )[0].solution,
-      listOfOptions: this.props.fetchedData.questionVersions.filter(
-        item => item.language === this.props.match.params.lang
-      )[0].options,
-      letterchartcode:
-        this.props.fetchedData.questionVersions.filter(
-          item => item.language === this.props.match.params.lang
-        )[0].options.length + 65,
-        tags:converttags
+    let converttags = this.props.fetchedData.tags.map(item => {
+      return { id: item.tagId, name: item.tag };
     });
+    if (
+      this.props.fetchedData.questionVersions.filter(
+        item => item.language === this.props.lang
+      ).length > 0
+    ) {
+      this.setState({
+        difficulty: difficultyvalue,
+        questionData: this.props.fetchedData.questionVersions.filter(
+          item => item.language === this.props.lang
+        )[0].content,
+        explanationData: this.props.fetchedData.questionVersions.filter(
+          item => item.language === this.props.lang
+        )[0].solution,
+        listOfOptions: this.props.fetchedData.questionVersions.filter(
+          item => item.language === this.props.lang
+        )[0].options,
+        letterchartcode:
+          this.props.fetchedData.questionVersions.filter(
+            item => item.language === this.props.lang
+          )[0].options.length + 65,
+        tags: converttags
+      });
+    } else {
+      this.setState({
+        difficulty: difficultyvalue,
+        // questionData: "",
+        // explanationData: "",
+        // listOfOptions: [],
+        // letterchartcode: 65,
+        tags: converttags
+      });
+    }
     axios({
       method: "POST",
-      url:
-        URL.fetchSubject +
-        this.props.fetchedData.questionVersions.filter(
-          item => item.language === this.props.match.params.lang
-        )[0].language,
+      url: URL.fetchSubject + this.props.lang,
       data: { authToken: "string" },
       headers: {
         "Content-Type": "application/json"
@@ -229,9 +236,7 @@ class EditComponent extends Component {
           URL.fetchChapter +
           this.state.selectedSubjectID +
           "/" +
-          this.props.fetchedData.questionVersions.filter(
-            item => item.language === this.props.match.params.lang
-          )[0].language,
+          this.props.lang,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -297,12 +302,7 @@ class EditComponent extends Component {
       axios({
         method: "POST",
         url:
-          URL.fetchTopic +
-          this.state.selectedChapterID +
-          "/" +
-          this.props.fetchedData.questionVersions.filter(
-            item => item.language === this.props.match.params.lang
-          )[0].language,
+          URL.fetchTopic + this.state.selectedChapterID + "/" + this.props.lang,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -369,9 +369,7 @@ class EditComponent extends Component {
           URL.fetchSubTopic +
           this.state.selectedTopicID +
           "/" +
-          this.props.fetchedData.questionVersions.filter(
-            item => item.language === this.props.match.params.lang
-          )[0].language,
+          this.props.lang,
         data: { authToken: "string" },
         headers: {
           "Content-Type": "application/json"
@@ -462,6 +460,7 @@ class EditComponent extends Component {
     });
   };
   handleQuestionEditor = data => {
+    console.log(data);
     this.setState({ questionData: data });
   };
   handleExplanationEditor = data => {
@@ -501,9 +500,10 @@ class EditComponent extends Component {
       default:
         break;
     }
-    let converttags=this.state.tags.map((item)=>{
-      return{tagId:item.id,tag:item.name}
+    let converttags = this.state.tags.map(item => {
+      return { tagId: item.id, tag: item.name };
     });
+    // console.log(this.state.questionData);
     axios({
       method: "POST",
       url: URL.updateExistingQuestionVersion,
@@ -520,11 +520,11 @@ class EditComponent extends Component {
         version: {
           content: this.state.questionData,
           language: this.props.fetchedData.questionVersions.filter(
-            item => item.language === this.props.match.params.lang
+            item => item.language === this.props.lang
           )[0].language,
           options: this.state.listOfOptions,
           questionVersionId: this.props.fetchedData.questionVersions.filter(
-            item => item.language === this.props.match.params.lang
+            item => item.language === this.props.lang
           )[0].questionVersionId,
           solution: this.state.explanationData
         }
@@ -538,6 +538,7 @@ class EditComponent extends Component {
           console.log(res.data.data);
           // alert("success", res.data.data);
           swal("Success", `Data updated`, "success");
+          localStorage.setItem("editquesdata", null);
         }
       })
       .catch(e => {
@@ -547,75 +548,75 @@ class EditComponent extends Component {
   };
   render() {
     return (
-      //   <Container>
-      <Container
-        fluid
-        style={{ width: "auto", background: "#EEEEEE", padding: "0" }}
-      >
-        <Row noGutters={true}>
-          <Col
-            lg="3"
-            style={{
-              padding: "2.5em 3em",
-              background: "#EEE",
-              // borderRight: "1px solid #cac2c2",
-              boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -4px",
-              zIndex: "88",
-              position: "relative"
-              // margin: "2em 0em"
-            }}
-          >
-            <div
+      <div>
+        {this.props.fetchedData.questionVersions.filter(
+          item => item.language === this.props.lang
+        ).length > 0 ? (
+          <Row noGutters={true}>
+            <Col
+              lg="3"
               style={{
-                width: "auto"
-                // margin: "2.5em 0em"
-                //   height: "0.5em"
+                padding: "2.5em 3em",
+                background: "#EEE",
+                boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -4px",
+                zIndex: "88",
+                position: "relative"
               }}
             >
-              <LeftPanel
-                listOfSubject={this.state.listOfSubject}
-                listOfChapter={this.state.listOfChapter}
-                listOfTopic={this.state.listOfTopic}
-                listOfSubTopic={this.state.listOfSubTopic}
-                handleSubjectChange={this.handleSubjectChange}
-                handleChapterChange={this.handleChapterChange}
-                handleTopicChange={this.handleTopicChange}
-                handleSubTopicChange={this.handleSubTopicChange}
-                selectedSubjectID={this.state.selectedSubjectID}
-                selectedChapterID={this.state.selectedChapterID}
-                selectedTopicID={this.state.selectedTopicID}
-                selectedSubTopicID={this.state.selectedSubTopicID}
-                tags={this.state.tags}
-              suggestions={this.state.suggestions}
-              onAddition={this.onAddition}
-              onDelete={this.onDelete}
-              handleChangeTags={this.handleChangeTags}
-                difficulty={this.state.difficulty}
-                handleDifficultyRadio={this.handleDifficultyRadio}
-              />
-            </div>
-          </Col>
-          {/* <Col lg="1"></Col> */}
-          <Col style={{ background: "#EEEEEE", padding: "0em 4em" }}>
-            <div style={{ margin: "2.5em 0em" }}>
-              <RightpanelEnglish
-                handleQuestionEditor={this.handleQuestionEditor}
-                questionData={this.state.questionData}
-                handleExplanationEditor={this.handleExplanationEditor}
-                explanationData={this.state.explanationData}
-                listOfOptions={this.state.listOfOptions}
-                letterchartcode={this.state.letterchartcode}
-                handleOptioncontentchange={this.handleOptioncontentchange}
-                handleOptionWeightageChange={this.handleOptionWeightageChange}
-                addoptionfn={this.addoptionfn}
-                deleteOption={this.deleteOption}
-                savedata={this.savedata}
-              />
-            </div>
-          </Col>
-          {/* <Col lg="1"></Col> */}
-        </Row>
-      </Container>
+              <div
+                style={{
+                  width: "auto"
+                }}
+              >
+                <LeftPanel
+                  listOfSubject={this.state.listOfSubject}
+                  listOfChapter={this.state.listOfChapter}
+                  listOfTopic={this.state.listOfTopic}
+                  listOfSubTopic={this.state.listOfSubTopic}
+                  handleSubjectChange={this.handleSubjectChange}
+                  handleChapterChange={this.handleChapterChange}
+                  handleTopicChange={this.handleTopicChange}
+                  handleSubTopicChange={this.handleSubTopicChange}
+                  selectedSubjectID={this.state.selectedSubjectID}
+                  selectedChapterID={this.state.selectedChapterID}
+                  selectedTopicID={this.state.selectedTopicID}
+                  selectedSubTopicID={this.state.selectedSubTopicID}
+                  tags={this.state.tags}
+                  suggestions={this.state.suggestions}
+                  onAddition={this.onAddition}
+                  onDelete={this.onDelete}
+                  handleChangeTags={this.handleChangeTags}
+                  difficulty={this.state.difficulty}
+                  handleDifficultyRadio={this.handleDifficultyRadio}
+                />
+              </div>
+            </Col>
+            <Col style={{ background: "#EEEEEE", padding: "0em 4em" }}>
+              <div style={{ margin: "2.5em 0em" }}>
+                <RightpanelEnglish
+                  handleQuestionEditor={this.handleQuestionEditor}
+                  questionData={this.state.questionData}
+                  handleExplanationEditor={this.handleExplanationEditor}
+                  explanationData={this.state.explanationData}
+                  listOfOptions={this.state.listOfOptions}
+                  letterchartcode={this.state.letterchartcode}
+                  handleOptioncontentchange={this.handleOptioncontentchange}
+                  handleOptionWeightageChange={this.handleOptionWeightageChange}
+                  addoptionfn={this.addoptionfn}
+                  deleteOption={this.deleteOption}
+                  savedata={this.savedata}
+                />
+              </div>
+            </Col>
+          </Row>
+        ) : (
+          <div style={{ top: "50%", left: "40%", position: "absolute" }}>
+            <center>
+              <h5>Data for this version not available</h5>
+            </center>
+          </div>
+        )}
+      </div>
     );
   }
 }
@@ -647,7 +648,7 @@ class LeftPanel extends Component {
       : "";
     return (
       <Form>
-        <Form.Group controlId="exampleForm.ControlSelect1">
+        <Form.Group>
           <Form.Label
             style={{
               fontWeight: "600"
@@ -673,7 +674,7 @@ class LeftPanel extends Component {
               })}
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelect2">
+        <Form.Group>
           <Form.Label
             style={{
               fontWeight: "600"
@@ -698,7 +699,7 @@ class LeftPanel extends Component {
               })}
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelect3">
+        <Form.Group>
           <Form.Label
             style={{
               fontWeight: "600"
@@ -723,7 +724,7 @@ class LeftPanel extends Component {
               })}
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelect4">
+        <Form.Group>
           <Form.Label
             style={{
               fontWeight: "600"
@@ -748,7 +749,7 @@ class LeftPanel extends Component {
               })}
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="exampleForm.ControlInput1">
+        <Form.Group>
           <Form.Label
             style={{
               fontWeight: "600"
@@ -765,7 +766,7 @@ class LeftPanel extends Component {
             onAddition={this.props.onAddition.bind(this)}
           />
         </Form.Group>
-        <Form.Group controlId="exampleForm.ControlTextarea1">
+        <Form.Group>
           <Form.Label
             style={{
               fontWeight: "600"
@@ -788,13 +789,13 @@ class RightpanelEnglish extends Component {
     // console.log(this.props.questionData);
     return (
       <Form>
-        {this.props.questionData && (
+        {/* {this.props.questionData && ( */}
           <QuestionComp
             // ClassicEditor={ClassicEditor}
             handleQuestionEditor={this.props.handleQuestionEditor}
             questionData={this.props.questionData}
           />
-        )}
+        {/* )} */}
         {this.props.listOfOptions &&
           this.props.listOfOptions.map((item, index) => {
             return (
@@ -872,12 +873,12 @@ class RightpanelEnglish extends Component {
           </Col>
         </Row>
         <div style={{ margin: "2em 0" }}>
-          {this.props.explanationData && (
+          {/* {this.props.explanationData && ( */}
             <ExplanationComp
               handleExplanationEditor={this.props.handleExplanationEditor}
               explanationData={this.props.explanationData}
             />
-          )}
+          {/* )} */}
         </div>
 
         <div style={{ margin: "1em 0", textAlign: "center" }}>
@@ -901,7 +902,7 @@ class RightpanelEnglish extends Component {
 }
 function QuestionComp({ questionData, handleQuestionEditor }) {
   return (
-    <Form.Group controlId="exampleForm.EControlInput3">
+    <Form.Group>
       <Form.Label
         style={{
           fontWeight: "600"
@@ -944,7 +945,7 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
 function ExplanationComp({ explanationData, handleExplanationEditor }) {
   //   console.log(explanationData);
   return (
-    <Form.Group controlId="exampleForm.EControlInput1">
+    <Form.Group>
       <Form.Label
         style={{
           fontWeight: "600"

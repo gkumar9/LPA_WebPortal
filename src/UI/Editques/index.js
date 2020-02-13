@@ -1,109 +1,178 @@
 import React, { Component } from "react";
-// import { Container, Button } from "react-bootstrap";
+import { Tab, Container, Row, Col, Nav } from "react-bootstrap";
 import Header from "../Header/index";
-// import Back from "@material-ui/icons/ArrowBack";
-// import { styled } from "@material-ui/styles";
-// import { Link } from "react-router-dom";
 import axios from "axios";
 import URL from "../../Assets/url";
 import EditComponent from "./editcomponent.js";
-import swal from 'sweetalert';
+import swal from "sweetalert";
 
-// const MyBack = styled(Back)({
-//   color: "dimgrey",
-//   marginTop: "-0.2em",
-//   width: "1em"
-// });
+const style = {
+  textAlign: "center",
+  background: "white",
+  borderRadius: "2em",
+  color: "black",
+  padding: " 0.3em 2em",
+  letterSpacing: "0.2em"
+};
 class Editques extends Component {
   constructor(props) {
     super(props);
     this.state = {
       questionId: this.props.match.params.id,
-      fetchedData: null
-      // activetab: "1"
+      fetchedData: null,
+      activetab: this.props.match.params.lang
     };
   }
+  handleSelect = () => {
+    let activetab = this.state.activetab;
+    if (activetab === "ENGLISH") {
+      this.setState({ activetab: "HINDI" });
+    } else {
+      this.setState({ activetab: "ENGLISH" });
+    }
+  };
   componentDidMount() {
     // console.log(this.props.match.params.lang)
-    axios({
-      method: "POST",
-      url: URL.geteditques + this.state.questionId,
-      data: { authToken: "string" },
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => {
-        console.log(res.data.data.question);
-        if (res.status === 200) {
-          this.setState({ fetchedData: res.data.data.question });
-        }
-        else{
-          swal('Error', "No data found","error");
-          // alert(e);
-        this.props.history.push({
-          pathname: "/"
-        });
+    if (
+      JSON.parse(localStorage.getItem("editquesdata")) &&
+      JSON.parse(localStorage.getItem("editquesdata")) !== null
+    ) {
+      this.setState({
+        fetchedData: JSON.parse(localStorage.getItem("editquesdata"))
+      });
+    } else {
+      // alert("No Data found");
+      axios({
+        method: "POST",
+        url: URL.geteditques + this.state.questionId,
+        data: { authToken: "string" },
+        headers: {
+          "Content-Type": "application/json"
         }
       })
-      .catch(e => {
-        // swal('Error', "No data found","error");
-        alert(e)
-        this.props.history.push({
-          pathname: "/"
+        .then(res => {
+          console.log(res.data.data.question);
+          if (res.status === 200) {
+            this.setState({ fetchedData: res.data.data.question });
+            localStorage.setItem(
+              "editquesdata",
+              JSON.stringify(res.data.data.question)
+            );
+          } else {
+            swal("Error", "No data found", "error");
+            // alert(e);
+            this.props.history.push({
+              pathname: "/"
+            });
+          }
+        })
+        .catch(e => {
+          // swal('Error', "No data found","error");
+          alert(e);
+          this.props.history.push({
+            pathname: "/"
+          });
         });
-      });
+    }
   }
-  // handleSelect = () => {
-  //   let activetab = this.state.activetab;
-  //   if (activetab === "1") {
-  //     this.setState({ activetab: "2" });
-  //   } else {
-  //     this.setState({ activetab: "1" });
-  //   }
-  // };
-  // handleChange = data => {
-  //   console.log("Id from english response", data);
-  //   this.setState({ questionId: data });
-  // };
   render() {
     return (
       <React.Fragment>
-        <Header props={this.props}/>
-        {/* <div
-          style={{
-            boxShadow: "0px 3px 5px lightgrey",
-            width: "auto",
-            height: "4.5em",
-            padding: "1em 3em"
-          }}
+        <Header props={this.props} />
+        <Container
+          fluid
+          style={{ width: "auto", background: "#EEEEEE", padding: "0" }}
         >
-          <Link to="/" target="_self">
-            <Button
-              variant="light"
-              style={{ background: "transparent", border: "transparent" }}
+          <Tab.Container
+            activeKey={this.state.activetab}
+            onSelect={key => this.handleSelect(key)}
+          >
+            <Row
+              style={{
+                margin: "0",
+                padding: "1em 0em",
+                borderBottom: "1px solid #cac2c2",
+                boxShadow: "-1px 3px 4px -5px rgba(0, 0, 0, 0.75)",
+                zIndex: "99",
+                position: "relative"
+              }}
             >
-              <MyBack />
-              <span
+              <Col
+                lg="1.5"
                 style={{
-                  marginLeft: "1em",
-                  fontSize: "1.2em",
-                  color: "dimgrey"
+                  margin: "0px 0em 0em 3em"
                 }}
               >
-                Back to dashboard
-              </span>
-            </Button>
-          </Link>
-        </div> */}
-        
-          {this.state.fetchedData && (
-            <EditComponent
-              fetchedData={this.state.fetchedData}
-              match={this.props.match}
-            />
-          )}
-        {/* </Container> */}
+                <Nav.Link
+                  eventKey="ENGLISH"
+                  style={
+                    this.state.activetab === "ENGLISH"
+                      ? style
+                      : {
+                          color: "dimgrey",
+                          letterSpacing: "0.2em",
+                          padding: " 0.3em 2em"
+                        }
+                  }
+                >
+                  <span style={{ fontSize: "larger" }}>English </span>
+                </Nav.Link>
+              </Col>
+              <Col
+                lg="1.5"
+                style={{
+                  padding: "0 "
+                }}
+              >
+                <Nav.Link
+                  eventKey="HINDI"
+                  style={
+                    this.state.activetab === "HINDI"
+                      ? style
+                      : {
+                          color: "dimgrey",
+                          letterSpacing: "0.2em",
+                          padding: " 0.3em 2em"
+                        }
+                  }
+                >
+                  <span style={{ fontSize: "larger" }}>Hindi</span>
+                </Nav.Link>
+              </Col>
+              <Col>
+                <h6
+                  style={{
+                    float: "right",
+                    marginTop: "0.5em",
+                    marginRight: "1em"
+                  }}
+                >
+                  Editing question Id: #{this.state.questionId}
+                </h6>
+              </Col>
+            </Row>
+            <Tab.Content>
+              <Tab.Pane eventKey="ENGLISH">
+                {this.state.fetchedData && (
+                  <EditComponent
+                    fetchedData={this.state.fetchedData}
+                    match={this.props.match}
+                    lang="ENGLISH"
+                  />
+                )}
+              </Tab.Pane>
+              <Tab.Pane eventKey="HINDI">
+                {this.state.fetchedData && (
+                  <EditComponent
+                    fetchedData={this.state.fetchedData}
+                    match={this.props.match}
+                    lang="HINDI"
+                  />
+                )}
+              </Tab.Pane>
+            </Tab.Content>
+          </Tab.Container>
+        </Container>
       </React.Fragment>
     );
   }

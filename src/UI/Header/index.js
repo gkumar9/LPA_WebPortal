@@ -11,14 +11,16 @@ function Header({ props }) {
   return (
     <Navbar expand="lg" style={{ borderBottom: "solid 1px #cccbcb" }}>
       <Navbar.Brand>
-        {/* <Link to="/" target="_self" style={{textDecoration:'none'}}> */}
-          <h3 style={{margin:'0.3em 0.6em',color:'black'}}>Manuprakashan</h3>
+        <Link to="/" target="_self" style={{ textDecoration: "none" }}>
+          <h4 style={{ margin: "0.3em 0.6em", color: "black" }}>
+            Manuprakashan
+          </h4>
           {/* <img
             src={Logo}
             className="d-inline-block align-top img-responsive"
             alt="React Bootstrap logo"
           /> */}
-        {/* </Link> */}
+        </Link>
       </Navbar.Brand>
       {/* <Navbar.Brand style={{fontSize:'1em'}}>
         <Link
@@ -43,8 +45,8 @@ function Header({ props }) {
             target="_self"
             style={
               props.location.pathname === "/"
-                ? { textDecoration: "none", color: "black" }
-                : { color: "grey", textDecoration: "none" }
+                ? { textDecoration: "none", color: "black", fontSize: "1.1em" }
+                : { color: "grey", textDecoration: "none", fontSize: "1.1em" }
             }
           >
             Dashboard
@@ -52,6 +54,7 @@ function Header({ props }) {
         </Nav.Link>
         <Nav.Link
           eventKey={2}
+          style={{fontSize: '1.1em',}}
           onSelect={() => {
             firebase
               .auth()

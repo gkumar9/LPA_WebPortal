@@ -8,9 +8,7 @@ import {
   OverlayTrigger,
   Tooltip
 } from "react-bootstrap";
-// import Bucket from "@material-ui/icons/Https";
 import Edit from "@material-ui/icons/Edit";
-// import View from "@material-ui/icons/Visibility";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./index.css";
@@ -20,10 +18,10 @@ import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { withRouter } from "react-router-dom";
 import BucketIcon from "./../../Assets/image.png";
-import BucketIconBlack from "./../../Assets/image2.png";
 import BucketIconOrange from "./../../Assets/image3.png";
 import BucketIconGrey from "./../../Assets/image4.png";
-// import swal from "sweetalert";
+import swal from "@sweetalert/with-react";
+import BottomScrollListener from "react-bottom-scroll-listener";
 
 class QAtab extends Component {
   constructor(props) {
@@ -44,9 +42,82 @@ class QAtab extends Component {
       listOfselectedPreview: [],
       isLoading: false,
       listOfsearchselected: [],
-      searchSelectAll: false
+      searchSelectAll: false,
+      pageNo: 1,
+      hasMore: null,
+      tags: [],
+      apisugges: [],
+      suggestions: []
     };
   }
+  onDelete = i => {
+    // e.preventDefault()
+    const tags = this.state.tags.slice(0);
+    tags.splice(i, 1);
+    this.setState({ tags });
+  };
+
+  onAddition = tag => {
+    // e.preventDefault()
+    const tags = [].concat(this.state.tags, tag);
+    let suggestions = this.state.apisugges;
+    // let tempapisugges = this.state.apisugges;
+    this.setState({ tags, suggestions });
+  };
+  handleChangeTags = tags => {
+    // console.log(tags);
+    let tempsugg = this.state.suggestions;
+    let tempapisugges = this.state.apisugges;
+    // console.log("apisugges", tempapisugges);
+    // tempsugg=tempsugg.filter((item)=>item.id!==999)
+    // tempsugg.push({ id: null, name: tags });
+    // this.setState({ suggestions: tempsugg }, () => {
+    if (tags) {
+      axios({
+        method: "POST",
+        url: URL.tagsearch + tags,
+        data: { authToken: "string" },
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(res => {
+        if (res.status === 200) {
+          if (res.data.data.list.length > 0) {
+            let temp = res.data.data.list.map(item => {
+              return { id: item.tagId, name: item.tag };
+            });
+            tempsugg = temp;
+            tempsugg = tempsugg.concat(tempapisugges);
+            // eslint-disable-next-line array-callback-return
+            tempsugg = tempsugg.filter(function(a) {
+              var key = a.id + "|" + a.name;
+              if (!this[key]) {
+                this[key] = true;
+                return true;
+              }
+            }, Object.create(null));
+            tempapisugges = tempapisugges.concat(temp);
+            // eslint-disable-next-line array-callback-return
+            let result = tempapisugges.filter(function(a) {
+              var key = a.id + "|" + a.name;
+              if (!this[key]) {
+                this[key] = true;
+                return true;
+              }
+            }, Object.create(null));
+            // tempsugg.push({ id: null, name: tags });
+            this.setState({ suggestions: tempsugg, apisugges: result });
+            // console.log(tempsugg);
+          } else {
+            // console.log(tempsugg);
+          }
+        }
+      });
+    }
+    // });
+
+    // console.log(tempsugg)
+  };
   handleAddToBucket = () => {
     let tempsearchlistselected = this.state.listOfsearchselected.filter(
       item => item.status === true
@@ -106,7 +177,7 @@ class QAtab extends Component {
   };
 
   onAddpreviewdata = id => {
-    this.setState({ isLoading: true }, () => {
+    this.setState({ isLoading: false }, () => {
       let filterchecktemp = this.state.listOfselectedPreview.filter(
         item => item.questionId === id
       );
@@ -185,7 +256,7 @@ class QAtab extends Component {
   handleSearchboxChange = e => {
     e.preventDefault();
     // console.log(e.target.value);
-    this.setState({ searchbox: e.target.value });
+    this.setState({ searchbox: e.target.value, pageNo: 1 });
     if (e.target.value !== "") {
       axios({
         method: "POST",
@@ -224,7 +295,9 @@ class QAtab extends Component {
           // console.log(templist);
           this.setState({
             searchResultList: res.data.data.list,
-            listOfsearchselected: templist
+            listOfsearchselected: templist,
+            pageNo: this.state.pageNo + 1,
+            hasMore: res.data.data.hasMore
           });
         }
       });
@@ -243,7 +316,10 @@ class QAtab extends Component {
         sectionId: this.state.selectedChapterID,
         subjectId: this.state.selectedSubjectID,
         subtopicId: this.state.selectedSubTopicID,
-        topicId: this.state.selectedTopicID
+        topicId: this.state.selectedTopicID,
+        tags:this.state.tags.map((item)=>{
+          return item.id
+        })
       },
       headers: {
         "Content-Type": "application/json"
@@ -264,7 +340,9 @@ class QAtab extends Component {
         // console.log(templist);
         this.setState({
           searchResultList: res.data.data.list,
-          listOfsearchselected: templist
+          listOfsearchselected: templist,
+          pageNo: 1,
+          hasMore: res.data.data.hasMore
         });
       }
     });
@@ -282,7 +360,10 @@ class QAtab extends Component {
         listOfTopic: [],
         selectedTopicID: 0,
         listOfSubTopic: [],
-        selectedSubTopicID: 0
+        selectedSubTopicID: 0,
+        pageNo: 1,
+        hasMore: true,
+        tags:[]
       },
       () => {
         this.handlesearchWithFilter();
@@ -325,7 +406,7 @@ class QAtab extends Component {
                 () => {
                   axios({
                     method: "POST",
-                    url: URL.searchquestion + "1",
+                    url: URL.searchquestion + this.state.pageNo,
                     data: {
                       authToken: "string",
                       language: this.state.selectedLanguage,
@@ -355,7 +436,9 @@ class QAtab extends Component {
                         // console.log(templist);
                         this.setState({
                           searchResultList: res.data.data.list,
-                          listOfsearchselected: templist
+                          listOfsearchselected: templist,
+                          pageNo: this.state.pageNo + 1,
+                          hasMore: res.data.data.hasMore
                         });
                       }
                     })
@@ -590,6 +673,234 @@ class QAtab extends Component {
     tempsearchlist[index].status = e.target.checked;
     this.setState({ listOfsearchselected: tempsearchlist });
   };
+  handleeditafterpreview = data => {
+    // console.log(data);
+    localStorage.setItem("editquesdata", JSON.stringify(data));
+    this.props.history.push({
+      pathname:
+        "/editques/" + this.state.selectedLanguage + "/" + data.questionId
+    });
+    swal.close();
+  };
+  onEditClickques = id => {
+    axios({
+      method: "POST",
+      url: URL.geteditques + id,
+      data: { authToken: "string" },
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(res => {
+      console.log(res);
+      swal({
+        buttons: false,
+        content: (
+          <div>
+            <Row
+              // noGutters={true}
+              // key={res.data.data.question.questionId}
+              style={{
+                margin: "0.5em 0em",
+                textAlign: "left"
+                // borderBottom: "1px #c2c2c2 solid"
+              }}
+            >
+              <Col
+                style={{
+                  paddingLeft: "0em",
+                  paddingRight: "0em"
+                }}
+              >
+                <Card
+                  style={{
+                    background: "transparent",
+                    borderColor: "transparent"
+                  }}
+                >
+                  <Card.Body style={{ padding: "0", margin: "0.5em 0" }}>
+                    <Card.Title style={{ fontSize: "medium" }}>
+                      <Row noGutters={true}>
+                        <Col lg="1">
+                          <span>
+                            <small>
+                              <b>#</b>{" "}
+                            </small>
+                            <span style={{ color: "dimgrey" }}>
+                              {res.data.data.question.questionId}
+                            </span>
+                          </span>
+                        </Col>
+
+                        <Col>
+                          <span
+                            style={{
+                              float: "right",
+                              fontSize: "15px",
+                              fontWeight: "600"
+                            }}
+                          >
+                            <b>Tags: </b>
+                            <span style={{ color: "#1D4B7F" }}>
+                              {/* Difficulty:{" "} */}
+                              {res.data.data.question.level === "EASY"
+                                ? res.data.data.question.level === "MILD"
+                                  ? "++"
+                                  : "+"
+                                : res.data.data.question.level === "MILD"
+                                ? "++"
+                                : "+++"}
+                            </span>
+                            ,
+                            <span
+                              style={{
+                                color: "darkgreen",
+                                textTransform: "lowercase"
+                              }}
+                            >
+                              {" "}
+                              {res.data.data.question.type}
+                            </span>
+                            <span
+                              style={{
+                                color: "darkgoldenrod",
+                                textTransform: "lowercase"
+                              }}
+                            >
+                              {res.data.data.question.tags.length > 0 &&
+                                res.data.data.question.tags.map(itm => {
+                                  return `, ${itm.tag}`;
+                                })}
+                            </span>
+                          </span>
+                        </Col>
+                      </Row>
+                    </Card.Title>
+
+                    <Card.Text style={{ marginBottom: "0.5em" }}>
+                      <b>{"Q. "}</b>
+                      {res.data.data.question.questionVersions
+                        .filter(
+                          obbj => obbj.language === this.state.selectedLanguage
+                        )[0]
+                        .content.replace(/<\/?[^>]+(>|$)/g, "")}
+                    </Card.Text>
+                    <Row>
+                      {res.data.data.question.questionVersions
+                        .filter(
+                          obbj => obbj.language === this.state.selectedLanguage
+                        )[0]
+                        .options.map((optionitem, optionindex) => {
+                          return (
+                            <React.Fragment key={optionindex}>
+                              <Col lg="6" style={{ margin: "0.5em 0" }}>
+                                {optionindex + 1}
+                                {") "}{" "}
+                                {optionitem.content.replace(
+                                  /<\/?[^>]+(>|$)/g,
+                                  ""
+                                )}{" "}
+                                <sub
+                                // style={{border:' dimgrey solid',padding:'0.1em'}}
+                                >
+                                  (<b> {optionitem.weightage} </b>)
+                                </sub>
+                              </Col>
+                            </React.Fragment>
+                          );
+                        })}{" "}
+                    </Row>
+                    <Row style={{ margin: "0.2em 0.1em" }}>
+                      <b>{" Sol. "}</b>&nbsp;
+                      {res.data.data.question.questionVersions
+                        .filter(
+                          obbj => obbj.language === this.state.selectedLanguage
+                        )[0]
+                        .solution.replace(/<\/?[^>]+(>|$)/g, "")}
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+            {/* <Link
+              to={`/editques/${this.state.selectedLanguage}/${res.data.data.question.questionId}`}
+              target="_self"
+            > */}{" "}
+            <Button
+              // title="Edit"
+              onClick={this.handleeditafterpreview.bind(
+                this,
+                res.data.data.question
+              )}
+              size="sm"
+              style={{
+                fontSize: "1em",
+                fontWeight: "700",
+                background: "#6AA3FF",
+                borderColor: "#6AA3FF",
+                borderRadius: "0",
+                paddingRight: "1.1em"
+              }}
+              // variant="secondary"
+
+              // onClick={this.handleQAEdit.bind(this,item.questionId)}
+            >
+              {<Edit className="svg_icons" />}
+              {" Edit"}
+            </Button>
+            {/* </Link> */}
+          </div>
+        )
+      });
+    });
+  };
+  callbackofend = () => {
+    console.log("end");
+    if (this.state.hasMore) {
+      axios({
+        method: "POST",
+        url: URL.searchquestion + this.state.pageNo,
+        data: {
+          authToken: "string",
+          language: this.state.selectedLanguage,
+          questionId: this.state.searchbox ? parseInt(this.state.searchbox) : 0,
+          sectionId: this.state.selectedChapterID
+            ? this.state.selectedChapterID
+            : 0,
+          subjectId: this.state.selectedSubjectID
+            ? this.state.selectedSubjectID
+            : 0,
+          subtopicId: this.state.selectedSubTopicID
+            ? this.state.selectedSubTopicID
+            : 0,
+          topicId: this.state.selectedTopicID ? this.state.selectedTopicID : 0
+        },
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(res => {
+        if (res.status === 200) {
+          let templist = res.data.data.list.map(item => {
+            let filtertemplist = this.state.listOfselectedPreview.filter(
+              obj => obj.questionId === item.questionId
+            );
+            if (filtertemplist.length > 0) {
+              return { id: item.questionId, status: true };
+            } else {
+              return { id: item.questionId, status: false };
+            }
+          });
+          let currsearchResultList = this.state.searchResultList;
+          let currlistOfsearchselected = this.state.listOfsearchselected;
+          this.setState({
+            searchResultList: currsearchResultList.concat(res.data.data.list),
+            listOfsearchselected: currlistOfsearchselected.concat(templist),
+            pageNo: this.state.pageNo + 1,
+            hasMore: res.data.data.hasMore
+          });
+        }
+      });
+    }
+  };
   render() {
     return (
       <React.Fragment>
@@ -636,6 +947,11 @@ class QAtab extends Component {
                 listOfLanguage={this.state.listOfLanguage}
                 selectedlanguage={this.state.selectedLanguage}
                 handleLanguageChange={this.handleLanguageChange}
+                tags={this.state.tags}
+                suggestions={this.state.suggestions}
+                onAddition={this.onAddition}
+                onDelete={this.onDelete}
+                handleChangeTags={this.handleChangeTags}
               />
             </Col>
             <Col
@@ -644,6 +960,7 @@ class QAtab extends Component {
                 // height: "90vh",
                 padding: "0em 4em"
               }}
+              onScroll={this.handleScroll}
             >
               <Row style={{ margin: "2em 0em" }}>
                 <Col lg="1.5">
@@ -664,7 +981,7 @@ class QAtab extends Component {
                   </Link>
                   {/* </BrowserRouter> */}
                 </Col>
-                <Col>
+                <Col style={{ padding: "0" }}>
                   <Button
                     onClick={this.OnPreviewClick}
                     style={
@@ -691,7 +1008,7 @@ class QAtab extends Component {
                     {/* <View className="svg_icons" /> rgb(238, 179, 170)*/}
                     <img
                       src={BucketIcon}
-                      width="20"
+                      width="22"
                       alt="bucket"
                       style={{ paddingBottom: "0.2em", marginRight: "0.3em" }}
                     />
@@ -735,128 +1052,135 @@ class QAtab extends Component {
                   </Form>
                 </Col>
               </Row>
-
-              {this.state.searchResultList.length > 0 && (
-                <Row style={{ margin: "0 0em 1em" }}>
-                  <Col
-                    style={{ paddingLeft: "0.5em", paddingTop: "0.3em" }}
-                    lg="1.5"
-                  >
-                    <Form.Check
-                      id="custom-switch"
-                      label="Select all"
-                      checked={this.state.searchSelectAll}
-                      onChange={this.handleSelectAllCheck}
-                    />
-                  </Col>
-
-                  <Col style={{ paddingRight: "0em" }}>
-                    <Button
-                      onClick={this.handleAddToBucket}
-                      variant="outline-light"
-                      size="sm"
-                      style={{
-                        color: "black",
-                        borderColor: "transparent"
-                      }}
+              <BottomScrollListener onBottom={this.callbackofend}>
+                {this.state.searchResultList.length > 0 && (
+                  <Row style={{ margin: "0 0em 1em" }}>
+                    <Col
+                      style={{ paddingLeft: "0.5em", paddingTop: "0.3em" }}
+                      lg="1.5"
                     >
-                      <img
-                        src={
-                          this.state.listOfsearchselected.filter(
-                            item => item.status === true
-                          ).length > 0
-                            ? BucketIconOrange
-                            : BucketIconGrey
-                        }
-                        width="20"
-                        alt="bucket"
-                        style={{ paddingBottom: "0.2em", marginRight: "0.3em" }}
-                      />{" "}
-                      Add to bucket
-                    </Button>
-                  </Col>
-                  <Col lg="6" />
-                </Row>
-              )}
-              <div
-                style={{
-                  // height: "45vh",
-                  // overflow: "scroll",
-                  // border: "1px solid lightgrey",
-                  // background: "white",
-                  padding: "0.4em"
-                }}
-              >
-                {this.state.searchResultList.length > 0 ? (
-                  this.state.searchResultList.map((item, index) => {
-                    return (
-                      <Row
-                        key={item.questionId}
+                      <Form.Check
+                        id="custom-switch"
+                        label="Select all"
+                        checked={this.state.searchSelectAll}
+                        onChange={this.handleSelectAllCheck}
+                      />
+                    </Col>
+
+                    <Col style={{ paddingRight: "0em" }}>
+                      <Button
+                        onClick={this.handleAddToBucket}
+                        variant="outline-light"
+                        size="sm"
                         style={{
-                          margin: "1.2em 0em"
-                          // borderTop: "1px #c2c2c2 solid",
-                          // borderBottom: "1px #c2c2c2 solid"
+                          color: "black",
+                          borderColor: "transparent"
                         }}
                       >
-                        <Col
+                        <img
+                          src={
+                            this.state.listOfsearchselected.filter(
+                              item => item.status === true
+                            ).length > 0
+                              ? BucketIconOrange
+                              : BucketIconGrey
+                          }
+                          width="22"
+                          alt="bucket"
                           style={{
-                            paddingLeft: "0em",
-                            paddingRight: "0em"
+                            paddingBottom: "0.2em",
+                            marginRight: "0.3em"
+                          }}
+                        />{" "}
+                        Add to bucket
+                      </Button>
+                    </Col>
+                    <Col lg="6" />
+                  </Row>
+                )}
+                <div
+                  style={{
+                    // height: "45vh",
+                    // overflow: "scroll",
+                    // border: "1px solid lightgrey",
+                    // background: "white",
+                    padding: "0.4em"
+                  }}
+                >
+                  {this.state.searchResultList.length > 0 ? (
+                    this.state.searchResultList.map((item, index) => {
+                      return (
+                        <Row
+                          key={index}
+                          style={{
+                            margin: "1.2em 0em"
+                            // borderTop: "1px #c2c2c2 solid",
+                            // borderBottom: "1px #c2c2c2 solid"
                           }}
                         >
-                          <Card
+                          <Col
                             style={{
-                              background: "transparent",
-                              borderColor: "transparent"
+                              paddingLeft: "0em",
+                              paddingRight: "0em"
                             }}
                           >
-                            <Card.Body
-                              style={{ padding: "0", margin: "0.5em 0" }}
+                            <Card
+                              style={{
+                                background: "transparent",
+                                borderColor: "transparent"
+                              }}
                             >
-                              <Card.Title
-                                style={{
-                                  fontSize: "medium",
-                                  marginBottom: ".2rem"
-                                }}
+                              <Card.Body
+                                style={{ padding: "0", margin: "0.5em 0" }}
                               >
-                                <Form.Check
-                                  inline
-                                  disabled={
-                                    this.state.listOfselectedPreview.filter(
-                                      ob => ob.questionId === item.questionId
-                                    ).length > 0
-                                      ? true
-                                      : false
-                                  }
-                                  type="checkbox"
-                                  checked={
-                                    this.state.listOfsearchselected[index]
-                                      .status
-                                  }
-                                  onChange={this.handleInputChangeCheckboxlistsearch.bind(
-                                    this,
-                                    index
-                                  )}
-                                />
+                                <Card.Title
+                                  style={{
+                                    fontSize: "medium",
+                                    marginBottom: ".2rem"
+                                  }}
+                                >
+                                  <Form.Check
+                                    inline
+                                    disabled={
+                                      this.state.listOfselectedPreview.filter(
+                                        ob => ob.questionId === item.questionId
+                                      ).length > 0
+                                        ? true
+                                        : false
+                                    }
+                                    type="checkbox"
+                                    checked={
+                                      this.state.listOfsearchselected[index]
+                                        .status
+                                    }
+                                    onChange={this.handleInputChangeCheckboxlistsearch.bind(
+                                      this,
+                                      index
+                                    )}
+                                  />
 
-                                <span>
-                                  <b>Id#</b>{" "}
-                                  <span style={{ color: "dimgrey" }}>
-                                    {item.questionId}
+                                  <span>
+                                    <b>Id#</b>{" "}
+                                    <span style={{ color: "dimgrey" }}>
+                                      {item.questionId}
+                                    </span>
                                   </span>
-                                </span>
-                                <span style={{ marginLeft: "2.2em" }}>
-                                  <OverlayTrigger
-                                    placement="top"
-                                    delay={{ show: 250, hide: 400 }}
-                                    overlay={renderTooltip("Edit questions")}
-                                  >
-                                    <Link
+                                  <span style={{ marginLeft: "2.2em" }}>
+                                    <OverlayTrigger
+                                      placement="top"
+                                      delay={{ show: 250, hide: 400 }}
+                                      overlay={renderTooltip("Edit questions")}
+                                    >
+                                      {/* <Link
                                       to={`/editques/${this.state.selectedLanguage}/${item.questionId}`}
                                       target="_self"
-                                    >
+                                    > */}
                                       <Button
                                         // title="Edit"
+                                        onClick={this.onEditClickques.bind(
+                                          this,
+                                          item.questionId
+                                        )}
                                         size="sm"
                                         style={{
                                           borderRadius: "0",
@@ -872,98 +1196,98 @@ class QAtab extends Component {
                                       >
                                         {<Edit className="svg_icons" />}{" "}
                                       </Button>
-                                    </Link>
-                                  </OverlayTrigger>
-                                  <OverlayTrigger
-                                    placement="top"
-                                    delay={{ show: 250, hide: 400 }}
-                                    overlay={renderTooltip(
-                                      this.state.listOfselectedPreview.filter(
-                                        objj =>
-                                          objj.questionId === item.questionId
-                                      ).length > 0
-                                        ? "Remove from bucket"
-                                        : "Add to bucket"
-                                    )}
-                                  >
-                                    <Button
-                                      // title={
-                                      //   this.state.listOfselectedPreview.filter(
-                                      //     objj =>
-                                      //       objj.questionId === item.questionId
-                                      //   ).length > 0
-                                      //     ? "Added to bucket"
-                                      //     : "Add to bucket"
-                                      // }
-                                      size="sm"
-                                      style={{
-                                        borderRadius: "0",
-                                        marginLeft: "1em",
-                                        padding: ".15rem .15rem",
-                                        background: "transparent",
-                                        border: "none"
-                                      }}
-                                      onClick={this.onAddpreviewdata.bind(
-                                        this,
-                                        item.questionId
+                                      {/* </Link> */}
+                                    </OverlayTrigger>
+                                    <OverlayTrigger
+                                      placement="top"
+                                      delay={{ show: 250, hide: 400 }}
+                                      overlay={renderTooltip(
+                                        this.state.listOfselectedPreview.filter(
+                                          objj =>
+                                            objj.questionId === item.questionId
+                                        ).length > 0
+                                          ? "Remove from bucket"
+                                          : "Add to bucket"
                                       )}
-                                      variant="primary"
                                     >
-                                      {this.state.listOfselectedPreview.filter(
-                                        objj =>
-                                          objj.questionId === item.questionId
-                                      ).length > 0 ? (
-                                        <img
-                                          src={BucketIconGrey}
-                                          width="20"
-                                          alt="bucket"
-                                        />
-                                      ) : (
-                                        <img
-                                          src={BucketIconOrange}
-                                          width="20"
-                                          alt="bucket"
-                                        />
-                                      )}
-                                    </Button>
-                                  </OverlayTrigger>
-                                </span>
-                                <span
-                                  style={{
-                                    float: "right",
-                                    fontSize: "15px",
-                                    fontWeight: "600"
-                                  }}
-                                >
-                                  <b>Tags: </b>
-                                  <span style={{ color: "#1D4B7F" }}>
-                                    Difficulty:{" "}
-                                    {item.level === "EASY"
-                                      ? item.level === "MILD"
-                                        ? "++"
-                                        : "+"
-                                      : item.level === "MILD"
-                                      ? "++"
-                                      : "+++"}
+                                      <Button
+                                        // title={
+                                        //   this.state.listOfselectedPreview.filter(
+                                        //     objj =>
+                                        //       objj.questionId === item.questionId
+                                        //   ).length > 0
+                                        //     ? "Added to bucket"
+                                        //     : "Add to bucket"
+                                        // }
+                                        size="sm"
+                                        style={{
+                                          borderRadius: "0",
+                                          marginLeft: "1em",
+                                          padding: ".15rem .15rem",
+                                          background: "transparent",
+                                          border: "none"
+                                        }}
+                                        onClick={this.onAddpreviewdata.bind(
+                                          this,
+                                          item.questionId
+                                        )}
+                                        variant="primary"
+                                      >
+                                        {this.state.listOfselectedPreview.filter(
+                                          objj =>
+                                            objj.questionId === item.questionId
+                                        ).length > 0 ? (
+                                          <img
+                                            src={BucketIconGrey}
+                                            width="22"
+                                            alt="bucket"
+                                          />
+                                        ) : (
+                                          <img
+                                            src={BucketIconOrange}
+                                            width="22"
+                                            alt="bucket"
+                                          />
+                                        )}
+                                      </Button>
+                                    </OverlayTrigger>
                                   </span>
-                                  ,
                                   <span
                                     style={{
-                                      color: "darkgreen",
-                                      textTransform: "lowercase"
+                                      float: "right",
+                                      fontSize: "15px",
+                                      fontWeight: "600"
                                     }}
                                   >
-                                    {" "}
-                                    {item.type}
+                                    <b>Tags: </b>
+                                    <span style={{ color: "#1D4B7F" }}>
+                                      {/* Difficulty:{" "} */}
+                                      {item.level === "EASY"
+                                        ? item.level === "MILD"
+                                          ? "++"
+                                          : "+"
+                                        : item.level === "MILD"
+                                        ? "++"
+                                        : "+++"}
+                                    </span>
+                                    ,
+                                    <span
+                                      style={{
+                                        color: "darkgreen",
+                                        textTransform: "lowercase"
+                                      }}
+                                    >
+                                      {" "}
+                                      {item.type}
+                                    </span>
                                   </span>
-                                </span>
-                              </Card.Title>
+                                </Card.Title>
 
-                              <Card.Text style={{ marginBottom: "0.5em" }}>
-                                {""}
-                                {item.content.replace(/<\/?[^>]+(>|$)/g, "")}
-                              </Card.Text>
-                              {/* <div style={{ float: "right" }}>
+                                <Card.Text style={{ marginBottom: "0.5em" }}>
+                                  {""}
+                                  {item.content.replace(/<\/?[^>]+(>|$)/g, "")}
+                                </Card.Text>
+                                {/* <div style={{ float: "right" }}>
                                 <Button
                                   title={
                                     this.state.listOfselectedPreview.filter(
@@ -1017,19 +1341,20 @@ class QAtab extends Component {
                                   </Button>
                                 </Link>
                               </div> */}
-                            </Card.Body>
-                            {/* <hr /> */}
-                          </Card>
-                        </Col>
-                      </Row>
-                    );
-                  })
-                ) : (
-                  <Row style={{ margin: "0.5em 0em" }}>
-                    <h5>No data found</h5>
-                  </Row>
-                )}
-              </div>
+                              </Card.Body>
+                              {/* <hr /> */}
+                            </Card>
+                          </Col>
+                        </Row>
+                      );
+                    })
+                  ) : (
+                    <Row style={{ margin: "0.5em 0em" }}>
+                      <h5>No data found</h5>
+                    </Row>
+                  )}
+                </div>
+              </BottomScrollListener>
             </Col>
           </Row>
         )}

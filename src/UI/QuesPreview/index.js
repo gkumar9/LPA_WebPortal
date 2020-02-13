@@ -88,8 +88,8 @@ class ShowData extends Component {
                         noGutters={true}
                         key={item.questionId}
                         style={{
-                          margin: "0.5em 0em"
-                          // borderBottom: "1px #c2c2c2 solid"
+                          margin: "0.5em 0em",
+                          borderBottom: "1px #cecccc solid"
                         }}
                       >
                         <Col
@@ -107,7 +107,7 @@ class ShowData extends Component {
                             <Card.Body
                               style={{ padding: "0", margin: "0.5em 0" }}
                             >
-                              <Card.Title style={{ fontSize: "medium" }}>
+                              <Card.Title style={{ fontSize: "medium",marginBottom:'0' }}>
                                 <Row noGutters={true}>
                                   <Col lg="1">
                                     <span>
@@ -130,7 +130,7 @@ class ShowData extends Component {
                                     >
                                       <b>Tags: </b>
                                       <span style={{ color: "#1D4B7F" }}>
-                                        Difficulty:{" "}
+                                        {/* Difficulty:{" "} */}
                                         {item.level === "EASY"
                                           ? item.level === "MILD"
                                             ? "++"
@@ -148,6 +148,17 @@ class ShowData extends Component {
                                       >
                                         {" "}
                                         {item.type}
+                                      </span>
+                                      <span
+                                        style={{
+                                          color: "darkgoldenrod",
+                                          textTransform: "lowercase"
+                                        }}
+                                      >
+                                        {item.tags.length > 0 &&
+                                          item.tags.map(itm => {
+                                            return `, ${itm.tag}`;
+                                          })}
                                       </span>
                                     </span>
                                   </Col>
@@ -171,7 +182,7 @@ class ShowData extends Component {
                                 </Row>
                               </Card.Title>
 
-                              <Card.Text style={{ marginBottom: "0.5em" }}>
+                              <Card.Text style={{ marginBottom: "0em" }}>
                                 <b>{"Q. "}</b>
                                 {item.questionVersions
                                   .filter(
@@ -204,7 +215,7 @@ class ShowData extends Component {
                                           <sub
                                           // style={{border:' dimgrey solid',padding:'0.1em'}}
                                           >
-                                            -<b> {optionitem.weightage}</b>
+                                            (<b> {optionitem.weightage} </b>)
                                           </sub>
                                         </Col>
                                       </React.Fragment>
@@ -212,7 +223,7 @@ class ShowData extends Component {
                                   })}{" "}
                               </Row>
                               <Row style={{ margin: "0.2em 0.1em" }}>
-                                <b> Sol- </b>
+                                <b> Sol. </b>{" "}&nbsp;
                                 {item.questionVersions
                                   .filter(
                                     obbj =>
