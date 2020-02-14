@@ -35,7 +35,29 @@ class LeftPanelExam extends Component {
     //   : "";
     return (
       <Form>
+      <Form.Group>
+      <Form.Label
+            style={{
+              fontWeight: "600"
+            }}
+          >
+            Test id
+          </Form.Label>
+          <Form.Control
+            style={
+              {
+                // fontWeight: "600",
+                // margin: " 0 0.5em"
+              }
+            }
+            disabled
+            // plaintext
+            // readOnly
+            defaultValue={this.props.testID}
+          />
+      </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect1111">
+         
           <Form.Label
             style={{
               fontWeight: "600"
@@ -184,7 +206,7 @@ class LeftPanelExam extends Component {
             dateFormat="dd/MM/yyyy"
           />
         </Form.Group>
-        <Form.Group >
+        <Form.Group>
           <Form.Label
             style={{
               fontWeight: "600"
@@ -195,9 +217,9 @@ class LeftPanelExam extends Component {
           <Row noGutters={true}>
             <Col sm="5">
               <Form.Control
-              type="number"
+                type="number"
                 placeholder="Hours"
-                value={this.props.hour?this.props.hour:0}
+                value={this.props.hour ? this.props.hour : 0}
                 onChange={this.props.onHourChange.bind(this)}
               ></Form.Control>
             </Col>
@@ -215,9 +237,9 @@ class LeftPanelExam extends Component {
             </Col>
             <Col sm="5">
               <Form.Control
-              type="number"
+                type="number"
                 placeholder="Minutes"
-                value={this.props.minute?this.props.minute:0}
+                value={this.props.minute ? this.props.minute : 0}
                 onChange={this.props.onMinuteChange.bind(this)}
               ></Form.Control>
               {/* <TimePickerWrapper

@@ -8,11 +8,12 @@ class RightExamPanel extends Component {
     return (
       <div>
         <Row noGutters={true} style={{ height: "auto" }}>
+        
           <Container fluid style={{ padding: "0" }}>
             <Form.Control
               style={{
                 fontWeight: "600",
-                margin: " 0 0.5em"
+                // margin: " 0 0.5em"
               }}
               plaintext
               readOnly

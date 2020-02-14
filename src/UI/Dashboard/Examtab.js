@@ -68,7 +68,7 @@ class Examtab extends Component {
       if (res.status === 200) {
         this.setState({
           searchResultList: res.data.data.list,
-          pageNo: 1,
+          pageNo: 2,
           hasMore: res.data.data.hasMore
         });
       }
@@ -141,7 +141,7 @@ class Examtab extends Component {
   };
   handleLanguageChange = e => {
     e.preventDefault();
-    this.setState({ selectedLanguage: e.target.value }, () => {
+    this.setState({ selectedLanguage: e.target.value, pageNo: 1, hasMore: true }, () => {
       this.componentDidMount();
     });
   };

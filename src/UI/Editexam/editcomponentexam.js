@@ -459,7 +459,6 @@ class ExamEditComponent extends Component {
       delete item.testSectionMapping;
       return item;
     });
-    
 
     axios({
       method: "POST",
@@ -539,6 +538,7 @@ class ExamEditComponent extends Component {
             >
               <div>
                 <LeftPanelexam
+                  testID={this.props.fetchedData.testId}
                   startDate={this.state.startDate}
                   endDate={this.state.endDate}
                   handleEndDateChange={this.handleEndDateChange}
