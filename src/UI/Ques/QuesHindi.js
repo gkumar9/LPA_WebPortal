@@ -1,14 +1,10 @@
 import React, { Component } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
-// import CKEditor from "@ckeditor/ckeditor5-react";
-// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import CKEditor from "ckeditor4-react";
 import axios from "axios";
 import URL from "../../Assets/url";
-// import TagsInput from "react-tagsinput";
 import ReactTags from "react-tag-autocomplete";
 import Difficulty from "./difficulty.js";
-// import "react-tagsinput/react-tagsinput.css";
 import "./index.css";
 import swal from "sweetalert";
 
@@ -16,96 +12,16 @@ class QuesHindi extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listOfSubject: [],
-      selectedSubjectID: 0,
-      listOfChapter: [],
-      selectedChapterID: 0,
-      listOfTopic: [],
-      selectedTopicID: 0,
-      listOfSubTopic: [],
-      selectedSubTopicID: 0,
-      // tags: [],
-      difficulty: "+",
       questionData: "",
       explanationData: "",
       listOfOptions: [
         { name: "Option A", content: "", weightage: 0 },
         { name: "Option B", content: "", weightage: 0 }
       ],
-      letterchartcode: 67,
-      tags: [],
-      suggestions: [],
-      apisugges: []
+      letterchartcode: 67
     };
   }
-  onDelete = i => {
-    // e.preventDefault()
-    const tags = this.state.tags.slice(0);
-    tags.splice(i, 1);
-    this.setState({ tags });
-  };
 
-  onAddition = tag => {
-    // e.preventDefault()
-    const tags = [].concat(this.state.tags, tag);
-    let suggestions = this.state.apisugges;
-    // let tempapisugges = this.state.apisugges;
-    this.setState({ tags, suggestions });
-  };
-  handleChangeTags = tags => {
-    // console.log(tags);
-    let tempsugg = this.state.suggestions;
-    let tempapisugges = this.state.apisugges;
-    // console.log("apisugges", tempapisugges);
-    // tempsugg=tempsugg.filter((item)=>item.id!==999)
-    tempsugg.push({ id: null, name: tags });
-    this.setState({ suggestions: tempsugg }, () => {
-      if (tags) {
-        axios({
-          method: "POST",
-          url: URL.tagsearch + tags,
-          data: { authToken: "string" },
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }).then(res => {
-          if (res.status === 200) {
-            if (res.data.data.list.length > 0) {
-              let temp = res.data.data.list.map(item => {
-                return { id: item.tagId, name: item.tag };
-              });
-              tempsugg = temp;
-              tempsugg = tempsugg.concat(tempapisugges);
-              // eslint-disable-next-line array-callback-return
-              tempsugg = tempsugg.filter(function(a) {
-                var key = a.id + "|" + a.name;
-                if (!this[key]) {
-                  this[key] = true;
-                  return true;
-                }
-              }, Object.create(null));
-              tempapisugges = tempapisugges.concat(temp);
-              // eslint-disable-next-line array-callback-return
-              let result = tempapisugges.filter(function(a) {
-                var key = a.id + "|" + a.name;
-                if (!this[key]) {
-                  this[key] = true;
-                  return true;
-                }
-              }, Object.create(null));
-              tempsugg.push({ id: null, name: tags });
-              this.setState({ suggestions: tempsugg, apisugges: result });
-              // console.log(tempsugg);
-            } else {
-              // console.log(tempsugg);
-            }
-          }
-        });
-      }
-    });
-
-    // console.log(tempsugg)
-  };
   addoptionfn = () => {
     let currentCharCode = this.state.letterchartcode;
     let name = "Option " + String.fromCharCode(currentCharCode);
@@ -132,213 +48,7 @@ class QuesHindi extends Component {
       letterchartcode: letterchartcode
     });
   };
-  handleDifficultyRadio = e => {
-    e.preventDefault();
-    this.setState({ difficulty: e.target.value });
-  };
-  // handleChangeTags = tags => {
-  //   this.setState({ tags });
-  // };
-  componentDidMount() {
-    axios({
-      method: "POST",
-      url: URL.fetchSubject + "HINDI",
-      data: { authToken: "string" },
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => {
-        // console.log(res.data.data);
-        if (res.status === 200) {
-          this.setState(
-            {
-              listOfSubject: res.data.data.list,
-              selectedSubjectID:
-                res.data.data.list.length > 0
-                  ? res.data.data.list[0].subject.subjectId
-                  : 0
-            },
-            () => {
-              this.callApiForChapter();
-            }
-          );
-        } else {
-          alert("Unexpected code");
-        }
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-  callApiForChapter = () => {
-    if (this.state.selectedSubjectID !== "") {
-      axios({
-        method: "POST",
-        url: URL.fetchChapter + this.state.selectedSubjectID + "/HINDI",
-        data: { authToken: "string" },
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => {
-          if (res.status === 200) {
-            this.setState(
-              {
-                listOfChapter: res.data.data.list,
-                selectedChapterID:
-                  res.data.data.list.length > 0
-                    ? res.data.data.list[0].subjectSection.sectionId
-                    : 0
-              },
-              () => {
-                this.callApiForTopic();
-              }
-            );
-          } else {
-            alert("Unexpected code");
-          }
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    } else {
-      console.log(
-        "(Hindi)subjectid is blank. API not called. checksubject list"
-      );
-      this.setState({
-        listOfChapter: [],
-        selectedChapterID: 0,
-        listOfTopic: [],
-        selectedTopicID: 0,
-        listOfSubTopic: [],
-        selectedSubTopicID: 0
-      });
-    }
-  };
-  callApiForTopic = () => {
-    if (this.state.selectedChapterID !== "") {
-      axios({
-        method: "POST",
-        url: URL.fetchTopic + this.state.selectedChapterID + "/HINDI",
-        data: { authToken: "string" },
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => {
-          // console.log(res.data.data);
-          if (res.status === 200) {
-            this.setState(
-              {
-                listOfTopic: res.data.data.list,
-                selectedTopicID:
-                  res.data.data.list.length > 0
-                    ? res.data.data.list[0].subjectTopic.topicId
-                    : 0
-              },
-              () => {
-                this.callApiForSubTopic();
-              }
-            );
-          } else {
-            alert("Unexpected code");
-          }
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    } else {
-      console.log(
-        "(Hindi)chapterid is blank.API not called. checkchapter list"
-      );
-      this.setState({
-        listOfTopic: [],
-        selectedTopicID: 0,
-        listOfSubTopic: [],
-        selectedSubTopicID: 0
-      });
-    }
-  };
-  callApiForSubTopic = () => {
-    if (this.state.selectedTopicID !== "") {
-      axios({
-        method: "POST",
-        url: URL.fetchSubTopic + this.state.selectedTopicID + "/HINDI",
-        data: { authToken: "string" },
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => {
-          // console.log(res.data.data);
-          if (res.status === 200) {
-            this.setState({
-              listOfSubTopic: res.data.data.list,
-              selectedSubTopicID:
-                res.data.data.list.length > 0
-                  ? res.data.data.list[0].subjectSubtopic.subtopicId
-                  : 0
-            });
-          } else {
-            alert("Unexpected code");
-          }
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    } else {
-      console.log("(Hindi)topicid is blank.API not called. checktopic list");
-      this.setState({ listOfSubTopic: [], selectedSubTopicID: 0 });
-    }
-  };
-  handleSubjectChange = e => {
-    e.preventDefault();
 
-    this.setState(
-      {
-        selectedSubjectID: this.state.listOfSubject[
-          e.target.options.selectedIndex
-        ].subject.subjectId
-      },
-      () => {
-        this.callApiForChapter();
-      }
-    );
-  };
-  handleChapterChange = e => {
-    e.preventDefault();
-    this.setState(
-      {
-        selectedChapterID: this.state.listOfChapter[
-          e.target.options.selectedIndex
-        ].subjectSection.sectionId
-      },
-      () => {
-        this.callApiForTopic();
-      }
-    );
-  };
-  handleTopicChange = e => {
-    e.preventDefault();
-    this.setState(
-      {
-        selectedTopicID: this.state.listOfTopic[e.target.options.selectedIndex]
-          .subjectTopic.topicId
-      },
-      () => {
-        this.callApiForSubTopic();
-      }
-    );
-  };
-  handleSubTopicChange = e => {
-    e.preventDefault();
-    this.setState({
-      selectedSubTopicID: this.state.listOfSubTopic[
-        e.target.options.selectedIndex
-      ].subjectSubtopic.subtopicId
-    });
-  };
   handleQuestionEditor = data => {
     this.setState({ questionData: data });
   };
@@ -359,7 +69,9 @@ class QuesHindi extends Component {
     e.preventDefault();
     // console.log(typeof parseInt(e.target.value));
     let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption[index].weightage = e.target.value?parseInt(e.target.value):0;
+    currentArrayOfOption[index].weightage = e.target.value
+      ? parseInt(e.target.value)
+      : 0;
     this.setState({
       listOfOptions: currentArrayOfOption
     });
@@ -367,7 +79,7 @@ class QuesHindi extends Component {
   saveHindidata = () => {
     console.log("questionId:", this.props.questionId);
     let difficultyvalue;
-    switch (this.state.difficulty) {
+    switch (this.props.difficulty) {
       case "+":
         difficultyvalue = "EASY";
         break;
@@ -380,7 +92,7 @@ class QuesHindi extends Component {
       default:
         break;
     }
-    let converttags = this.state.tags.map(item => {
+    let converttags = this.props.tags.map(item => {
       return { tagId: item.id ? item.id : 0, tag: item.name };
     });
 
@@ -392,13 +104,13 @@ class QuesHindi extends Component {
           : URL.createQuestionNewVersion,
       data: {
         authToken: "string",
-        difficulty: difficultyvalue?difficultyvalue:'EASY',
+        difficulty: difficultyvalue ? difficultyvalue : "EASY",
         questionId: this.props.questionId,
-        sectionId: this.state.selectedChapterID,
-        subjectId: this.state.selectedSubjectID,
-        subtopicId: this.state.selectedSubTopicID,
+        sectionId: this.props.selectedChapterID,
+        subjectId: this.props.selectedSubjectID,
+        subtopicId: this.props.selectedSubTopicID,
         tags: converttags,
-        topicId: this.state.selectedTopicID,
+        topicId: this.props.selectedTopicID,
         type: "SINGLE_CHOICE",
         version: {
           content: this.state.questionData,
@@ -415,10 +127,7 @@ class QuesHindi extends Component {
       .then(res => {
         console.log(res.data.data);
         if (res.status === 200) {
-          // alert("Success:", res.data.data);
           swal("Success", `QuestionId:${res.data.data.questionId}`, "success");
-          // if (this.props.questionId === 0) {
-          // swal("Success", `QuestionId:${res.data.data}`, "success");
           this.props.handleChange.bind(this, res.data.data.questionId);
           this.props.handleSelect();
           // }
@@ -428,7 +137,6 @@ class QuesHindi extends Component {
       })
       .catch(e => {
         console.log(e);
-        // alert(e);
         swal(e, "error");
       });
   };
@@ -455,25 +163,25 @@ class QuesHindi extends Component {
               }}
             ></div>
             <LeftPanel
-              listOfSubject={this.state.listOfSubject}
-              listOfChapter={this.state.listOfChapter}
-              listOfTopic={this.state.listOfTopic}
-              listOfSubTopic={this.state.listOfSubTopic}
-              handleSubjectChange={this.handleSubjectChange}
-              handleChapterChange={this.handleChapterChange}
-              handleTopicChange={this.handleTopicChange}
-              handleSubTopicChange={this.handleSubTopicChange}
-              selectedSubjectID={this.state.selectedSubjectID}
-              selectedChapterID={this.state.selectedChapterID}
-              selectedTopicID={this.state.selectedTopicID}
-              selectedSubTopicID={this.state.selectedSubTopicID}
-              tags={this.state.tags}
-              suggestions={this.state.suggestions}
-              onAddition={this.onAddition}
-              onDelete={this.onDelete}
-              handleChangeTags={this.handleChangeTags}
-              difficulty={this.state.difficulty}
-              handleDifficultyRadio={this.handleDifficultyRadio}
+              listOfSubject={this.props.listOfSubject}
+              listOfChapter={this.props.listOfChapter}
+              listOfTopic={this.props.listOfTopic}
+              listOfSubTopic={this.props.listOfSubTopic}
+              handleSubjectChange={this.props.handleSubjectChange}
+              handleChapterChange={this.props.handleChapterChange}
+              handleTopicChange={this.props.handleTopicChange}
+              handleSubTopicChange={this.props.handleSubTopicChange}
+              selectedSubjectID={this.props.selectedSubjectID}
+              selectedChapterID={this.props.selectedChapterID}
+              selectedTopicID={this.props.selectedTopicID}
+              selectedSubTopicID={this.props.selectedSubTopicID}
+              tags={this.props.tags}
+              suggestions={this.props.suggestions}
+              onAddition={this.props.onAddition}
+              onDelete={this.props.onDelete}
+              handleChangeTags={this.props.handleChangeTags}
+              difficulty={this.props.difficulty}
+              handleDifficultyRadio={this.props.handleDifficultyRadio}
             />
           </Col>
 
@@ -510,7 +218,6 @@ class RightpanelHindi extends Component {
     return (
       <Form>
         <QuestionComp
-          // ClassicEditor={ClassicEditor}
           handleQuestionEditor={this.props.handleQuestionEditor}
           questionData={this.props.questionData}
         />
@@ -526,7 +233,7 @@ class RightpanelHindi extends Component {
                     <Form.Control
                       style={{ borderRadius: "0", background: "#f9f9f9" }}
                       type="number"
-                      value={item.weightage }
+                      value={item.weightage}
                       onChange={this.props.handleOptionWeightageChange.bind(
                         this,
                         index
