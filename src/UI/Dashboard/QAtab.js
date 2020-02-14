@@ -28,14 +28,24 @@ class QAtab extends Component {
     super(props);
     this.state = {
       listOfSubject: [],
-      selectedSubjectID: 0,
+      selectedSubjectID: localStorage.getItem("selectedSubjectIDQA")
+        ? parseInt(localStorage.getItem("selectedSubjectIDQA"))
+        : 0,
       listOfChapter: [],
-      selectedChapterID: 0,
+      selectedChapterID: localStorage.getItem("selectedChapterIDQA")
+        ? parseInt(localStorage.getItem("selectedChapterIDQA"))
+        : 0,
       listOfTopic: [],
-      selectedTopicID: 0,
+      selectedTopicID: localStorage.getItem("selectedTopicIDQA")
+        ? parseInt(localStorage.getItem("selectedTopicIDQA"))
+        : 0,
       listOfSubTopic: [],
-      selectedSubTopicID: 0,
-      selectedLanguage: "ENGLISH",
+      selectedSubTopicID: localStorage.getItem("selectedSubTopicID")
+        ? parseInt(localStorage.getItem("selectedSubTopicID"))
+        : 0,
+      selectedLanguage: localStorage.getItem("selectedlanguageQA")
+        ? localStorage.getItem("selectedlanguageQA")
+        : "ENGLISH",
       listOfLanguage: ["ENGLISH", "HINDI"],
       searchbox: "",
       searchResultList: [],
@@ -45,7 +55,9 @@ class QAtab extends Component {
       searchSelectAll: false,
       pageNo: 1,
       hasMore: null,
-      tags: [],
+      tags: localStorage.getItem("selectedTagsQA")
+        ? JSON.parse(localStorage.getItem("selectedTagsQA"))
+        : [],
       apisugges: [],
       suggestions: []
     };
@@ -54,6 +66,7 @@ class QAtab extends Component {
     // e.preventDefault()
     const tags = this.state.tags.slice(0);
     tags.splice(i, 1);
+    localStorage.setItem("selectedTagsQA", JSON.stringify(tags));
     this.setState({ tags });
   };
 
@@ -62,6 +75,7 @@ class QAtab extends Component {
     const tags = [].concat(this.state.tags, tag);
     let suggestions = this.state.apisugges;
     // let tempapisugges = this.state.apisugges;
+    localStorage.setItem("selectedTagsQA", JSON.stringify(tags));
     this.setState({ tags, suggestions });
   };
   handleChangeTags = tags => {
@@ -349,6 +363,10 @@ class QAtab extends Component {
     });
   };
   clearSearchFromFilters = () => {
+    localStorage.setItem("selectedSubjectIDQA", "0");
+    localStorage.setItem("selectedChapterIDQA", "0");
+    localStorage.setItem("selectedTopicIDQA", "0");
+    localStorage.setItem("selectedSubTopicID", "0");
     this.setState(
       {
         // searchResultList: [],
@@ -373,6 +391,7 @@ class QAtab extends Component {
   };
   handleLanguageChange = e => {
     e.preventDefault();
+    localStorage.setItem("selectedlanguageQA", e.target.value);
     this.setState(
       { selectedLanguage: e.target.value, pageNo: 1, hasMore: true },
       () => {
@@ -404,10 +423,39 @@ class QAtab extends Component {
               this.setState(
                 {
                   listOfSubject: res.data.data.list,
-                  selectedSubjectID: 0,
+                  selectedSubjectID:
+                    localStorage.getItem("selectedSubjectIDQA") &&
+                    res.data.data.list.filter(
+                      itm =>
+                        itm.subject.subjectId ===
+                        parseInt(localStorage.getItem("selectedSubjectIDQA"))
+                    ).length > 0
+                      ? parseInt(localStorage.getItem("selectedSubjectIDQA"))
+                      : 0,
                   isLoading: false
                 },
                 () => {
+                  if (
+                    localStorage.getItem("selectedSubjectIDQA") &&
+                    parseInt(localStorage.getItem("selectedSubjectIDQA")) !== 0
+                  ) {
+                    localStorage.setItem(
+                      "selectedSubjectIDQA",
+                      localStorage.getItem("selectedSubjectIDQA") &&
+                        res.data.data.list.filter(
+                          itm =>
+                            itm.subject.subjectId ===
+                            parseInt(
+                              localStorage.getItem("selectedSubjectIDQA")
+                            )
+                        ).length > 0
+                        ? parseInt(
+                            localStorage.getItem("selectedSubjectIDQA")
+                          ).toString()
+                        : "0"
+                    );
+                    this.callApiForChapter();
+                  }
                   axios({
                     method: "POST",
                     url: URL.searchquestion + this.state.pageNo,
@@ -415,10 +463,34 @@ class QAtab extends Component {
                       authToken: "string",
                       language: this.state.selectedLanguage,
                       questionId: 0,
-                      sectionId: 0,
-                      subjectId: 0,
-                      subtopicId: 0,
-                      topicId: 0,
+                      sectionId:
+                        localStorage.getItem("selectedChapterIDQA") &&
+                        parseInt(localStorage.getItem("selectedChapterIDQA"))
+                          ? parseInt(
+                              localStorage.getItem("selectedChapterIDQA")
+                            )
+                          : 0,
+                      subjectId:
+                        localStorage.getItem("selectedSubjectIDQA") &&
+                        parseInt(
+                          localStorage.getItem("selectedSubjectIDQA")
+                        ) !== 0
+                          ? parseInt(
+                              localStorage.getItem("selectedSubjectIDQA")
+                            )
+                          : 0,
+                      subtopicId:
+                        localStorage.getItem("selectedSubTopicID") &&
+                        parseInt(localStorage.getItem("selectedSubTopicID")) !==
+                          0
+                          ? parseInt(localStorage.getItem("selectedSubTopicID"))
+                          : 0,
+                      topicId:
+                        localStorage.getItem("selectedTopicIDQA") &&
+                        parseInt(localStorage.getItem("selectedTopicIDQA")) !==
+                          0
+                          ? parseInt(localStorage.getItem("selectedTopicIDQA"))
+                          : 0,
                       tags: this.state.tags.map(item => {
                         return item.id;
                       })
@@ -477,6 +549,7 @@ class QAtab extends Component {
     );
   }
   callApiForChapter = () => {
+    console.log("call for chapter");
     // console.log(this.state.selectedSubjectID);
     if (this.state.selectedSubjectID !== "") {
       axios({
@@ -498,10 +571,32 @@ class QAtab extends Component {
                 listOfChapter: res.data.data.list,
                 selectedChapterID:
                   res.data.data.list.length > 0
-                    ? res.data.data.list[0].subjectSection.sectionId
+                    ? localStorage.getItem("selectedChapterIDQA") &&
+                      res.data.data.list.filter(
+                        itm =>
+                          itm.subjectSection.sectionId ===
+                          parseInt(localStorage.getItem("selectedChapterIDQA"))
+                      ).length > 0
+                      ? parseInt(localStorage.getItem("selectedChapterIDQA"))
+                      : res.data.data.list[0].subjectSection.sectionId
                     : 0
               },
               () => {
+                localStorage.setItem(
+                  "selectedChapterIDQA",
+                  res.data.data.list.length > 0
+                    ? localStorage.getItem("selectedChapterIDQA") &&
+                      res.data.data.list.filter(
+                        itm =>
+                          itm.subjectSection.sectionId ===
+                          parseInt(localStorage.getItem("selectedChapterIDQA"))
+                      ).length > 0
+                      ? parseInt(
+                          localStorage.getItem("selectedChapterIDQA")
+                        ).toString()
+                      : res.data.data.list[0].subjectSection.sectionId.toString()
+                    : "0"
+                );
                 this.callApiForTopic();
               }
             );
@@ -518,6 +613,9 @@ class QAtab extends Component {
       console.log(
         "(English)subjectid is blank. API not called. checksubject list"
       );
+      localStorage.setItem("selectedChapterIDQA", "0");
+      localStorage.setItem("selectedTopicIDQA", "0");
+      localStorage.setItem("selectedSubTopicID", "0");
       this.setState({
         listOfChapter: [],
         selectedChapterID: 0,
@@ -544,17 +642,38 @@ class QAtab extends Component {
         }
       })
         .then(res => {
-          // console.log(res.data.data);
           if (res.status === 200) {
             this.setState(
               {
                 listOfTopic: res.data.data.list,
                 selectedTopicID:
                   res.data.data.list.length > 0
-                    ? res.data.data.list[0].subjectTopic.topicId
+                    ? localStorage.getItem("selectedTopicIDQA") &&
+                      res.data.data.list.filter(
+                        itm =>
+                          itm.subjectTopic.topicId ===
+                          parseInt(localStorage.getItem("selectedTopicIDQA"))
+                      ).length > 0
+                      ? parseInt(localStorage.getItem("selectedTopicIDQA"))
+                      : res.data.data.list[0].subjectTopic.topicId
                     : 0
               },
               () => {
+                localStorage.setItem(
+                  "selectedTopicIDQA",
+                  res.data.data.list.length > 0
+                    ? localStorage.getItem("selectedTopicIDQA") &&
+                      res.data.data.list.filter(
+                        itm =>
+                          itm.subjectTopic.topicId ===
+                          parseInt(localStorage.getItem("selectedTopicIDQA"))
+                      ).length > 0
+                      ? parseInt(
+                          localStorage.getItem("selectedTopicIDQA")
+                        ).toString()
+                      : res.data.data.list[0].subjectTopic.topicId.toString()
+                    : "0"
+                );
                 this.callApiForSubTopic();
               }
             );
@@ -571,6 +690,8 @@ class QAtab extends Component {
       console.log(
         "(English)chapterid is blank.API not called. checkchapter list"
       );
+      localStorage.setItem("selectedTopicIDQA", "0");
+      localStorage.setItem("selectedSubTopicID", "0");
       this.setState({
         listOfTopic: [],
         selectedTopicID: 0,
@@ -600,9 +721,31 @@ class QAtab extends Component {
               listOfSubTopic: res.data.data.list,
               selectedSubTopicID:
                 res.data.data.list.length > 0
-                  ? res.data.data.list[0].subjectSubtopic.subtopicId
+                  ? localStorage.getItem("selectedSubTopicID") &&
+                    res.data.data.list.filter(
+                      itm =>
+                        itm.subjectSubtopic.subtopicId ===
+                        parseInt(localStorage.getItem("selectedSubTopicID"))
+                    ).length > 0
+                    ? parseInt(localStorage.getItem("selectedSubTopicID"))
+                    : res.data.data.list[0].subjectSubtopic.subtopicId
                   : 0
             });
+            localStorage.setItem(
+              "selectedSubTopicID",
+              res.data.data.list.length > 0
+                ? localStorage.getItem("selectedSubTopicID") &&
+                  res.data.data.list.filter(
+                    itm =>
+                      itm.subjectSubtopic.subtopicId ===
+                      parseInt(localStorage.getItem("selectedSubTopicID"))
+                  ).length > 0
+                  ? parseInt(
+                      localStorage.getItem("selectedSubTopicID")
+                    ).toString()
+                  : res.data.data.list[0].subjectSubtopic.subtopicId.toString()
+                : "0"
+            );
           } else {
             alert("Unexpected code");
           }
@@ -614,6 +757,7 @@ class QAtab extends Component {
         });
     } else {
       console.log("(English)topicid is blank.API not called. checktopic list");
+      localStorage.setItem("selectedSubTopicID", "0");
       this.setState({ listOfSubTopic: [], selectedSubTopicID: 0 });
     }
   };
@@ -621,6 +765,7 @@ class QAtab extends Component {
     e.preventDefault();
     // console.log(e.target.value)
     if (e.target.value === "") {
+      localStorage.setItem("selectedSubjectIDQA", "0");
       this.setState(
         {
           selectedSubjectID: 0
@@ -630,6 +775,12 @@ class QAtab extends Component {
         }
       );
     } else {
+      localStorage.setItem(
+        "selectedSubjectIDQA",
+        this.state.listOfSubject[
+          e.target.options.selectedIndex
+        ].subject.subjectId.toString()
+      );
       this.setState(
         {
           selectedSubjectID: this.state.listOfSubject[
@@ -644,6 +795,13 @@ class QAtab extends Component {
   };
   handleChapterChange = e => {
     e.preventDefault();
+
+    localStorage.setItem(
+      "selectedChapterIDQA",
+      this.state.listOfChapter[
+        e.target.options.selectedIndex
+      ].subjectSection.sectionId.toString()
+    );
     this.setState(
       {
         selectedChapterID: this.state.listOfChapter[
@@ -657,6 +815,12 @@ class QAtab extends Component {
   };
   handleTopicChange = e => {
     e.preventDefault();
+    localStorage.setItem(
+      "selectedTopicIDQA",
+      this.state.listOfTopic[
+        e.target.options.selectedIndex
+      ].subjectTopic.topicId.toString()
+    );
     this.setState(
       {
         selectedTopicID: this.state.listOfTopic[e.target.options.selectedIndex]
@@ -669,6 +833,12 @@ class QAtab extends Component {
   };
   handleSubTopicChange = e => {
     e.preventDefault();
+    localStorage.setItem(
+      "selectedSubTopicID",
+      this.state.listOfSubTopic[
+        e.target.options.selectedIndex
+      ].subjectSubtopic.subtopicId.toString()
+    );
     this.setState({
       selectedSubTopicID: this.state.listOfSubTopic[
         e.target.options.selectedIndex
