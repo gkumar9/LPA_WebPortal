@@ -46,7 +46,7 @@ class Examtab extends Component {
   handlesearchWithFilter = () => {
     axios({
       method: "POST",
-      url: URL.searchexam + '1',
+      url: URL.searchexam + "1",
       data: {
         authToken: "string",
         language: this.state.selectedLanguage,
@@ -68,7 +68,7 @@ class Examtab extends Component {
       if (res.status === 200) {
         this.setState({
           searchResultList: res.data.data.list,
-          pageNo:  1,
+          pageNo: 1,
           hasMore: res.data.data.hasMore
         });
       }
@@ -87,8 +87,8 @@ class Examtab extends Component {
         listOfChapter: [],
         selectedChapterID: 0,
         selectedType: "",
-        pageNo:1,
-        hasMore:true
+        pageNo: 1,
+        hasMore: true
       },
       () => {
         this.handlesearchWithFilter();
@@ -380,7 +380,8 @@ class Examtab extends Component {
       pathname: "/testpreview"
     });
   };
-  callbackofend = () => {
+  callbackofendexam = () => {
+    console.log("exam");
     if (this.state.hasMore) {
       axios({
         method: "POST",
@@ -519,131 +520,133 @@ class Examtab extends Component {
               </Form>
             </Col>
           </Row>
-          <BottomScrollListener onBottom={this.callbackofend}>
-            <div
-              style={{
-                marginBottom: "2em",
-                padding: "0.4em"
-              }}
-            >
-              {this.state.searchResultList.length > 0 ? (
-                this.state.searchResultList.map((item, index) => {
-                  return (
-                    <Row
-                      key={index}
-                      style={{
-                        margin: "1.5em 0em"
-                        // borderTop: "1px #c2c2c2 solid"
-                      }}
-                    >
-                      <Col
+          <BottomScrollListener onBottom={this.callbackofendexam}>
+            {/* {scrollRef => ( */}
+              <div
+                // ref={scrollRef}
+                style={{
+                  marginBottom: "2em",
+                  padding: "0.4em"
+                }}
+              >
+                {this.state.searchResultList.length > 0 ? (
+                  this.state.searchResultList.map((item, index) => {
+                    return (
+                      <Row
+                        key={index}
                         style={{
-                          paddingLeft: "0em",
-                          paddingRight: "0em"
+                          margin: "1.5em 0em"
+                          // borderTop: "1px #c2c2c2 solid"
                         }}
                       >
-                        <Card
+                        <Col
                           style={{
-                            background: "transparent",
-                            borderColor: "transparent"
+                            paddingLeft: "0em",
+                            paddingRight: "0em"
                           }}
                         >
-                          <Card.Body style={{ padding: "0em" }}>
-                            <Card.Title style={{ fontSize: "medium" }}>
-                              {/* <Form.Check inline type="checkbox" /> */}
+                          <Card
+                            style={{
+                              background: "transparent",
+                              borderColor: "transparent"
+                            }}
+                          >
+                            <Card.Body style={{ padding: "0em" }}>
+                              <Card.Title style={{ fontSize: "medium",marginBottom: '0.2em' }}>
+                                {/* <Form.Check inline type="checkbox" /> */}
 
-                              <span>
-                                <b>Id#</b>{" "}
-                                <span style={{ color: "dimgrey" }}>
-                                  {item.testId}
+                                <span>
+                                  <b>Id#</b>{" "}
+                                  <span style={{ color: "dimgrey" }}>
+                                    {item.testId}
+                                  </span>
                                 </span>
-                              </span>
-                              <span style={{ marginLeft: "2em" }}>
-                                <OverlayTrigger
-                                  placement="top"
-                                  delay={{ show: 250, hide: 400 }}
-                                  overlay={renderTooltip("Edit test")}
-                                >
-                                  <Link
-                                    to={`/editexam/${item.testId}`}
-                                    target="_self"
+                                <span style={{ marginLeft: "2em" }}>
+                                  <OverlayTrigger
+                                    placement="top"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={renderTooltip("Edit test")}
+                                  >
+                                    <Link
+                                      to={`/editexam/${item.testId}`}
+                                      target="_self"
+                                    >
+                                      <Button
+                                        // title="Edit"
+                                        size="sm"
+                                        style={{
+                                          borderRadius: "0",
+                                          // marginLeft: "0.8em",
+                                          padding: ".15rem .15rem",
+                                          background: "transparent",
+                                          color: "rgb(106, 163, 255)",
+                                          border: "none"
+                                        }}
+                                        variant="secondary"
+                                      >
+                                        {<Edit className="svg_icons" />}{" "}
+                                      </Button>
+                                    </Link>
+                                  </OverlayTrigger>
+
+                                  <OverlayTrigger
+                                    placement="top"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={renderTooltip("Preview test")}
                                   >
                                     <Button
-                                      // title="Edit"
+                                      // title="Preview test"
                                       size="sm"
                                       style={{
                                         borderRadius: "0",
-                                        // marginLeft: "0.8em",
+                                        marginLeft: "1em",
                                         padding: ".15rem .15rem",
                                         background: "transparent",
-                                        color: "rgb(106, 163, 255)",
+                                        color: "rgb(255, 137, 118)",
                                         border: "none"
                                       }}
                                       variant="secondary"
+                                      onClick={this.handlePreviewTest.bind(
+                                        this,
+                                        item.testId
+                                      )}
                                     >
-                                      {<Edit className="svg_icons" />}{" "}
+                                      {<View className="svg_icons" />}{" "}
                                     </Button>
-                                  </Link>
-                                </OverlayTrigger>
-
-                                <OverlayTrigger
-                                  placement="top"
-                                  delay={{ show: 250, hide: 400 }}
-                                  overlay={renderTooltip("Preview test")}
-                                >
-                                  <Button
-                                    // title="Preview test"
-                                    size="sm"
-                                    style={{
-                                      borderRadius: "0",
-                                      marginLeft: "1em",
-                                      padding: ".15rem .15rem",
-                                      background: "transparent",
-                                      color: "rgb(255, 137, 118)",
-                                      border: "none"
-                                    }}
-                                    variant="secondary"
-                                    onClick={this.handlePreviewTest.bind(
-                                      this,
-                                      item.testId
-                                    )}
-                                  >
-                                    {<View className="svg_icons" />}{" "}
-                                  </Button>
-                                </OverlayTrigger>
-                              </span>
-                              <span
-                                style={{
-                                  float: "right",
-                                  fontSize: "15px",
-                                  fontWeight: "600"
-                                }}
-                              >
-                                <b>Tags: </b>
+                                  </OverlayTrigger>
+                                </span>
                                 <span
                                   style={{
-                                    color: "darkgreen",
-                                    // fontSize:'0.5em',
-                                    textTransform: "capitalize"
+                                    float: "right",
+                                    fontSize: "15px",
+                                    fontWeight: "600"
                                   }}
                                 >
-                                  {item.type.toLowerCase()}
-                                </span>
-                                {item.year && (
-                                  <span>
-                                    {", "}
-                                    {/* <b>Year: </b> */}
-                                    {item.year}
+                                  <b>Tags: </b>
+                                  <span
+                                    style={{
+                                      color: "darkgreen",
+                                      // fontSize:'0.5em',
+                                      textTransform: "capitalize"
+                                    }}
+                                  >
+                                    {item.type.toLowerCase()}
                                   </span>
-                                )}
-                              </span>
-                            </Card.Title>
+                                  {item.year && (
+                                    <span>
+                                      {", "}
+                                      {/* <b>Year: </b> */}
+                                      {item.year}
+                                    </span>
+                                  )}
+                                </span>
+                              </Card.Title>
 
-                            <Card.Text style={{ marginBottom: "0.5em" }}>
-                              {""}
-                              {item.name}
-                            </Card.Text>
-                            {/* <div style={{ float: "right" }}>
+                              <Card.Text style={{ marginBottom: "0.5em" }}>
+                                {""}
+                                {item.name}
+                              </Card.Text>
+                              {/* <div style={{ float: "right" }}>
                             <Link
                               to={`/editexam/${item.testId}`}
                               target="_self"
@@ -661,19 +664,20 @@ class Examtab extends Component {
                               </Button>
                             </Link>
                           </div> */}
-                          </Card.Body>
-                          {/* <hr /> */}
-                        </Card>
-                      </Col>
-                    </Row>
-                  );
-                })
-              ) : (
-                <Row style={{ margin: "0.5em 0em" }}>
-                  <h5>No data found</h5>
-                </Row>
-              )}{" "}
-            </div>
+                            </Card.Body>
+                            {/* <hr /> */}
+                          </Card>
+                        </Col>
+                      </Row>
+                    );
+                  })
+                ) : (
+                  <Row style={{ margin: "0.5em 0em" }}>
+                    <h5>No data found</h5>
+                  </Row>
+                )}{" "}
+              </div>
+            {/* )} */}
           </BottomScrollListener>
         </Col>
       </Row>

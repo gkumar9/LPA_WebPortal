@@ -257,7 +257,7 @@ class QAtab extends Component {
     e.preventDefault();
     // console.log(e.target.value);
     this.setState({ searchbox: e.target.value, pageNo: 1 });
-    if (e.target.value !== "") {
+    if (e.target.value && e.target.value !== "") {
       axios({
         method: "POST",
         url: URL.searchquestion + "1",
@@ -303,6 +303,7 @@ class QAtab extends Component {
       });
     } else {
       this.setState({ searchResultList: [], listOfsearchselected: [] });
+      // this.handlesearchWithFilter();
     }
   };
   handlesearchWithFilter = () => {
@@ -317,8 +318,8 @@ class QAtab extends Component {
         subjectId: this.state.selectedSubjectID,
         subtopicId: this.state.selectedSubTopicID,
         topicId: this.state.selectedTopicID,
-        tags:this.state.tags.map((item)=>{
-          return item.id
+        tags: this.state.tags.map(item => {
+          return item.id;
         })
       },
       headers: {
@@ -341,7 +342,7 @@ class QAtab extends Component {
         this.setState({
           searchResultList: res.data.data.list,
           listOfsearchselected: templist,
-          pageNo: 1,
+          pageNo: 2,
           hasMore: res.data.data.hasMore
         });
       }
@@ -363,7 +364,7 @@ class QAtab extends Component {
         selectedSubTopicID: 0,
         pageNo: 1,
         hasMore: true,
-        tags:[]
+        tags: []
       },
       () => {
         this.handlesearchWithFilter();
@@ -372,9 +373,12 @@ class QAtab extends Component {
   };
   handleLanguageChange = e => {
     e.preventDefault();
-    this.setState({ selectedLanguage: e.target.value }, () => {
-      this.componentDidMount();
-    });
+    this.setState(
+      { selectedLanguage: e.target.value, pageNo: 1, hasMore: true },
+      () => {
+        this.componentDidMount();
+      }
+    );
   };
   componentDidMount() {
     let templistOfselectedPreview =
@@ -414,7 +418,10 @@ class QAtab extends Component {
                       sectionId: 0,
                       subjectId: 0,
                       subtopicId: 0,
-                      topicId: 0
+                      topicId: 0,
+                      tags: this.state.tags.map(item => {
+                        return item.id;
+                      })
                     },
                     headers: {
                       "Content-Type": "application/json"
@@ -854,7 +861,7 @@ class QAtab extends Component {
     });
   };
   callbackofend = () => {
-    console.log("end");
+    console.log("questions");
     if (this.state.hasMore) {
       axios({
         method: "POST",
@@ -862,6 +869,7 @@ class QAtab extends Component {
         data: {
           authToken: "string",
           language: this.state.selectedLanguage,
+
           questionId: this.state.searchbox ? parseInt(this.state.searchbox) : 0,
           sectionId: this.state.selectedChapterID
             ? this.state.selectedChapterID
@@ -872,7 +880,10 @@ class QAtab extends Component {
           subtopicId: this.state.selectedSubTopicID
             ? this.state.selectedSubTopicID
             : 0,
-          topicId: this.state.selectedTopicID ? this.state.selectedTopicID : 0
+          topicId: this.state.selectedTopicID ? this.state.selectedTopicID : 0,
+          tags: this.state.tags.map(item => {
+            return item.id;
+          })
         },
         headers: {
           "Content-Type": "application/json"
@@ -1015,23 +1026,6 @@ class QAtab extends Component {
                     Bucket
                   </Button>
                 </Col>
-                {/* <Col
-              style={{
-                padding: "0.2em 1.5em"
-              }}
-            >
-              <p
-                style={{
-                  lineHeight: "1em",
-                  color: "dimgrey",
-                  fontWeight: "400"
-                }}
-              >
-                Add new and review prevoius question and answers.
-                <br></br>
-                Please select the filter on left for accessing best results.
-              </p>
-            </Col> */}
               </Row>
 
               <Row style={{ margin: "0em 0em" }}>
@@ -1053,6 +1047,8 @@ class QAtab extends Component {
                 </Col>
               </Row>
               <BottomScrollListener onBottom={this.callbackofend}>
+                {/* {scrollRefQ => ( */}
+                {/* <div ref={scrollRefQ}> */}
                 {this.state.searchResultList.length > 0 && (
                   <Row style={{ margin: "0 0em 1em" }}>
                     <Col
@@ -1354,6 +1350,8 @@ class QAtab extends Component {
                     </Row>
                   )}
                 </div>
+                {/* </div> */}
+                {/* )} */}
               </BottomScrollListener>
             </Col>
           </Row>

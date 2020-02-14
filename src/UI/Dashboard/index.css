@@ -22,6 +22,12 @@
   padding: 0.3em 1.5em;
   letter-spacing: 0.2em;
 } */
-.btn-outline-light:hover{
-  background-color:transparent
+.btn-outline-light:hover {
+  background-color: transparent;
+}
+.react-tags__search input {
+  background-color: transparent;
+}
+.react-tags {
+  background: #f9f9f9;
 }

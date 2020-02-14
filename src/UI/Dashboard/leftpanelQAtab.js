@@ -70,6 +70,7 @@ class LeftPanelQAtab extends Component {
           </Form.Label>
           <ReactTags
             // style={{width:'100%'}}
+            placeholderText="Search tag"
             tags={this.props.tags}
             onInput={this.props.handleChangeTags}
             suggestions={this.props.suggestions}
