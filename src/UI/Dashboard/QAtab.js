@@ -47,7 +47,9 @@ class QAtab extends Component {
         ? localStorage.getItem("selectedlanguageQA")
         : "ENGLISH",
       listOfLanguage: ["ENGLISH", "HINDI"],
-      searchbox: "",
+      searchbox: localStorage.getItem("selectedsearchboxQA")
+        ? parseInt(localStorage.getItem("selectedsearchboxQA"))
+        : "",
       searchResultList: [],
       listOfselectedPreview: [],
       isLoading: false,
@@ -271,6 +273,7 @@ class QAtab extends Component {
     e.preventDefault();
     // console.log(e.target.value);
     this.setState({ searchbox: e.target.value, pageNo: 1 });
+    localStorage.setItem("selectedsearchboxQA", e.target.value);
     if (e.target.value && e.target.value !== "") {
       axios({
         method: "POST",
@@ -367,6 +370,8 @@ class QAtab extends Component {
     localStorage.setItem("selectedChapterIDQA", "0");
     localStorage.setItem("selectedTopicIDQA", "0");
     localStorage.setItem("selectedSubTopicID", "0");
+    localStorage.setItem("selectedsearchboxQA", "");
+    localStorage.setItem("selectedTagsQA", JSON.stringify([]));
     this.setState(
       {
         // searchResultList: [],
@@ -462,7 +467,7 @@ class QAtab extends Component {
                     data: {
                       authToken: "string",
                       language: this.state.selectedLanguage,
-                      questionId: 0,
+                      questionId: this.state.searchbox,
                       sectionId:
                         localStorage.getItem("selectedChapterIDQA") &&
                         parseInt(localStorage.getItem("selectedChapterIDQA"))
