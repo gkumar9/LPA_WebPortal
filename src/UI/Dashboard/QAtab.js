@@ -371,7 +371,7 @@ class QAtab extends Component {
     localStorage.setItem("selectedTopicIDQA", "0");
     localStorage.setItem("selectedSubTopicID", "0");
     localStorage.setItem("selectedsearchboxQA", "");
-    localStorage.setItem("selectedTagsQA", JSON.stringify([]));
+    localStorage.setItem("selectedTagsQA",JSON.stringify([]));
     this.setState(
       {
         // searchResultList: [],

@@ -22,23 +22,29 @@ class Examtab extends Component {
     super(props);
     this.state = {
       listOfExam: [],
-      selectedExamID: 0,
+      selectedExamID: localStorage.getItem("selectedExamIDTest")
+        ? parseInt(localStorage.getItem("selectedExamIDTest"))
+        : 0,
       listOfSubject: [],
-      selectedSubjectID: 0,
+      selectedSubjectID: localStorage.getItem("selectedSubjectIDTest")
+        ? parseInt(localStorage.getItem("selectedSubjectIDTest"))
+        : 0,
       listOfChapter: [],
-      selectedChapterID: 0,
-      selectedLanguage: "ENGLISH",
+      selectedChapterID: localStorage.getItem("selectedChapterIDTest")
+        ? parseInt(localStorage.getItem("selectedChapterIDTest"))
+        : 0,
+      selectedLanguage: localStorage.getItem("selectedLanguageTest")
+        ? localStorage.getItem("selectedLanguageTest")
+        : "ENGLISH",
       listOfLanguage: ["ENGLISH", "HINDI"],
-      searchbox: "",
+      searchbox: localStorage.getItem("selectedsearchboxTest")
+        ? parseInt(localStorage.getItem("selectedsearchboxTest"))
+        : "",
       searchResultList: [],
-      listOfType: [
-        "Free",
-        "Weekly",
-        "Practise test",
-        "Previous year paper",
-        ""
-      ],
-      selectedType: "",
+      listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
+      selectedType: localStorage.getItem("selectedTypeTest")
+        ? localStorage.getItem("selectedTypeTest")
+        : "",
       hasMore: null,
       pageNo: 1
     };
@@ -75,6 +81,11 @@ class Examtab extends Component {
     });
   };
   clearSearchFromFilters = () => {
+    localStorage.setItem("selectedExamIDTest", "0");
+    localStorage.setItem("selectedSubjectIDTest", "0");
+    localStorage.setItem("selectedChapterIDTest", "0");
+    localStorage.setItem("selectedsearchboxTest", "");
+    localStorage.setItem("selectedTypeTest", "");
     this.setState(
       {
         // searchResultList: [],
@@ -97,6 +108,7 @@ class Examtab extends Component {
   };
   handleTypeChange = e => {
     e.preventDefault();
+    localStorage.setItem("selectedTypeTest", e.target.value);
     this.setState({ selectedType: e.target.value }, () => {
       // this.componentDidMount();
     });
@@ -105,6 +117,7 @@ class Examtab extends Component {
     e.preventDefault();
 
     this.setState({ searchbox: e.target.value, pageNo: 1 });
+    localStorage.setItem("selectedsearchboxTest", e.target.value);
     if (e.target.value !== "") {
       axios({
         method: "POST",
@@ -112,7 +125,7 @@ class Examtab extends Component {
         data: {
           authToken: "string",
           language: this.state.selectedLanguage,
-          examId: this.state.selectedExamID ? this.state.selectedExamID : null,
+          examId: this.state.selectedExamID ? this.state.selectedExamID : 0,
           testId: e.target.value ? parseInt(e.target.value) : 0,
           sectionId: this.state.selectedChapterID
             ? this.state.selectedChapterID
@@ -141,9 +154,13 @@ class Examtab extends Component {
   };
   handleLanguageChange = e => {
     e.preventDefault();
-    this.setState({ selectedLanguage: e.target.value, pageNo: 1, hasMore: true }, () => {
-      this.componentDidMount();
-    });
+    localStorage.setItem("selectedLanguageTest", e.target.value);
+    this.setState(
+      { selectedLanguage: e.target.value, pageNo: 1, hasMore: true },
+      () => {
+        this.componentDidMount();
+      }
+    );
   };
   componentDidMount() {
     axios({
@@ -160,24 +177,68 @@ class Examtab extends Component {
           this.setState(
             {
               listOfExam: res.data.data.list,
-              selectedExamID: 0
+              selectedExamID:
+                localStorage.getItem("selectedExamIDTest") &&
+                res.data.data.list.filter(
+                  itm =>
+                    itm.exam.examId ===
+                    parseInt(localStorage.getItem("selectedExamIDTest"))
+                ).length > 0
+                  ? parseInt(localStorage.getItem("selectedExamIDTest"))
+                  : 0
               // selectedExamID:
               //   res.data.data.list.length > 0
               //     ? res.data.data.list[0].exam.examId
               //     : ""
             },
             () => {
+              if (
+                localStorage.getItem("selectedExamIDTest") &&
+                parseInt(localStorage.getItem("selectedExamIDTest")) !== 0
+              ) {
+                localStorage.setItem(
+                  "selectedExamIDTest",
+                  localStorage.getItem("selectedExamIDTest") &&
+                    res.data.data.list.filter(
+                      itm =>
+                        itm.exam.examId ===
+                        parseInt(localStorage.getItem("selectedExamIDTest"))
+                    ).length > 0
+                    ? parseInt(
+                        localStorage.getItem("selectedExamIDTest")
+                      ).toString()
+                    : "0"
+                );
+                this.callApiForSubject();
+              }
               axios({
                 method: "POST",
                 url: URL.searchexam + this.state.pageNo,
                 data: {
                   authToken: "string",
                   language: this.state.selectedLanguage,
-                  examId: 0,
-                  testId: 0,
-                  sectionId: 0,
-                  subjectId: 0,
-                  type: null
+                  examId:
+                    localStorage.getItem("selectedExamIDTest") &&
+                    parseInt(localStorage.getItem("selectedExamIDTest")) !== 0
+                      ? parseInt(localStorage.getItem("selectedExamIDTest"))
+                      : 0,
+                  testId: localStorage.getItem("selectedsearchboxTest")
+                    ? parseInt(localStorage.getItem("selectedsearchboxTest"))
+                    : 0,
+                  sectionId:
+                    localStorage.getItem("selectedChapterIDTest") &&
+                    parseInt(localStorage.getItem("selectedChapterIDTest"))
+                      ? parseInt(localStorage.getItem("selectedChapterIDTest"))
+                      : 0,
+                  subjectId:
+                    localStorage.getItem("selectedSubjectIDTest") &&
+                    parseInt(localStorage.getItem("selectedSubjectIDTest")) !==
+                      0
+                      ? parseInt(localStorage.getItem("selectedSubjectIDTest"))
+                      : 0,
+                  type: localStorage.getItem("selectedTypeTest")
+                    ? localStorage.getItem("selectedTypeTest")
+                    : null
                 },
                 headers: {
                   "Content-Type": "application/json"
@@ -250,10 +311,41 @@ class Examtab extends Component {
                     listOfSubject: tempsubjectlist,
                     selectedSubjectID:
                       tempsubjectlist.length > 0
-                        ? tempsubjectlist[0].subject.subjectId
+                        ? localStorage.getItem("selectedSubjectIDTest") &&
+                          tempsubjectlist.filter(
+                            itm =>
+                              itm.subject.subjectId ===
+                              parseInt(
+                                localStorage.getItem("selectedSubjectIDTest")
+                              )
+                          ).length > 0
+                          ? parseInt(
+                              localStorage.getItem("selectedSubjectIDTest")
+                            )
+                          : tempsubjectlist[0].subject.subjectId
                         : 0
+                    // tempsubjectlist.length > 0
+                    //   ? tempsubjectlist[0].subject.subjectId
+                    //   : 0
                   },
                   () => {
+                    localStorage.setItem(
+                      "selectedSubjectIDTest",
+                      tempsubjectlist.length > 0
+                        ? localStorage.getItem("selectedSubjectIDTest") &&
+                          tempsubjectlist.filter(
+                            itm =>
+                              itm.subject.subjectId ===
+                              parseInt(
+                                localStorage.getItem("selectedSubjectIDTest")
+                              )
+                          ).length > 0
+                          ? parseInt(
+                              localStorage.getItem("selectedSubjectIDTest")
+                            ).toString()
+                          : tempsubjectlist[0].subject.subjectId.toString()
+                        : "0"
+                    );
                     this.callApiForChapter();
                   }
                 );
@@ -268,12 +360,14 @@ class Examtab extends Component {
         });
     } else {
       console.log("(English)examid is blank. API not called. exam list");
+      localStorage.setItem("selectedSubjectIDTest", "0");
+      localStorage.setItem("selectedChapterIDTest", "0");
       this.setState({
         listOfChapter: [],
         selectedChapterID: 0,
 
         listOfSubject: [],
-        selectedSubjectId: 0
+        selectedSubjectID: 0
       });
     }
   };
@@ -298,10 +392,36 @@ class Examtab extends Component {
                 listOfChapter: res.data.data.list,
                 selectedChapterID:
                   res.data.data.list.length > 0
-                    ? res.data.data.list[0].subjectSection.sectionId
+                    ? localStorage.getItem("selectedChapterIDTest") &&
+                      res.data.data.list.filter(
+                        itm =>
+                          itm.subjectSection.sectionId ===
+                          parseInt(
+                            localStorage.getItem("selectedChapterIDTest")
+                          )
+                      ).length > 0
+                      ? parseInt(localStorage.getItem("selectedChapterIDTest"))
+                      : res.data.data.list[0].subjectSection.sectionId
                     : 0
               },
               () => {
+                localStorage.setItem(
+                  "selectedChapterIDTest",
+                  res.data.data.list.length > 0
+                    ? localStorage.getItem("selectedChapterIDTest") &&
+                      res.data.data.list.filter(
+                        itm =>
+                          itm.subjectSection.sectionId ===
+                          parseInt(
+                            localStorage.getItem("selectedChapterIDTest")
+                          )
+                      ).length > 0
+                      ? parseInt(
+                          localStorage.getItem("selectedChapterIDTest")
+                        ).toString()
+                      : res.data.data.list[0].subjectSection.sectionId.toString()
+                    : "0"
+                );
                 // this.callApiForTopic();
               }
             );
@@ -316,6 +436,7 @@ class Examtab extends Component {
       console.log(
         "(English)subjectid is blank. API not called. checksubject list"
       );
+      localStorage.setItem("selectedChapterIDTest", "0");
       this.setState({
         listOfChapter: [],
         selectedChapterID: 0
@@ -326,6 +447,7 @@ class Examtab extends Component {
     e.preventDefault();
 
     if (e.target.value === "") {
+      localStorage.setItem("selectedExamIDTest", "0");
       this.setState(
         {
           selectedExamID: 0
@@ -335,6 +457,12 @@ class Examtab extends Component {
         }
       );
     } else {
+      localStorage.setItem(
+        "selectedExamIDTest",
+        this.state.listOfExam[
+          e.target.options.selectedIndex
+        ].exam.examId.toString()
+      );
       this.setState(
         {
           selectedExamID: this.state.listOfExam[e.target.options.selectedIndex]
@@ -348,7 +476,10 @@ class Examtab extends Component {
   };
   handleSubjectChange = e => {
     e.preventDefault();
-
+    localStorage.setItem(
+      "selectedSubjectIDTest",
+      this.state.listOfSubject[e.target.options.selectedIndex].subject.subjectId
+    );
     this.setState(
       {
         selectedSubjectID: this.state.listOfSubject[
@@ -362,6 +493,12 @@ class Examtab extends Component {
   };
   handleChapterChange = e => {
     e.preventDefault();
+    localStorage.setItem(
+      "selectedChapterIDTest",
+      this.state.listOfChapter[
+        e.target.options.selectedIndex
+      ].subjectSection.sectionId.toString()
+    );
     this.setState(
       {
         selectedChapterID: this.state.listOfChapter[
@@ -522,131 +659,136 @@ class Examtab extends Component {
           </Row>
           <BottomScrollListener onBottom={this.callbackofendexam}>
             {/* {scrollRef => ( */}
-              <div
-                // ref={scrollRef}
-                style={{
-                  marginBottom: "2em",
-                  padding: "0.4em"
-                }}
-              >
-                {this.state.searchResultList.length > 0 ? (
-                  this.state.searchResultList.map((item, index) => {
-                    return (
-                      <Row
-                        key={index}
+            <div
+              // ref={scrollRef}
+              style={{
+                marginBottom: "2em",
+                padding: "0.4em"
+              }}
+            >
+              {this.state.searchResultList.length > 0 ? (
+                this.state.searchResultList.map((item, index) => {
+                  return (
+                    <Row
+                      key={index}
+                      style={{
+                        margin: "1.5em 0em"
+                        // borderTop: "1px #c2c2c2 solid"
+                      }}
+                    >
+                      <Col
                         style={{
-                          margin: "1.5em 0em"
-                          // borderTop: "1px #c2c2c2 solid"
+                          paddingLeft: "0em",
+                          paddingRight: "0em"
                         }}
                       >
-                        <Col
+                        <Card
                           style={{
-                            paddingLeft: "0em",
-                            paddingRight: "0em"
+                            background: "transparent",
+                            borderColor: "transparent"
                           }}
                         >
-                          <Card
-                            style={{
-                              background: "transparent",
-                              borderColor: "transparent"
-                            }}
-                          >
-                            <Card.Body style={{ padding: "0em" }}>
-                              <Card.Title style={{ fontSize: "medium",marginBottom: '0.2em' }}>
-                                {/* <Form.Check inline type="checkbox" /> */}
+                          <Card.Body style={{ padding: "0em" }}>
+                            <Card.Title
+                              style={{
+                                fontSize: "medium",
+                                marginBottom: "0.2em"
+                              }}
+                            >
+                              {/* <Form.Check inline type="checkbox" /> */}
 
-                                <span>
-                                  <b>Id#</b>{" "}
-                                  <span style={{ color: "dimgrey" }}>
-                                    {item.testId}
-                                  </span>
+                              <span>
+                                <b>Id#</b>{" "}
+                                <span style={{ color: "dimgrey" }}>
+                                  {item.testId}
                                 </span>
-                                <span style={{ marginLeft: "2em" }}>
-                                  <OverlayTrigger
-                                    placement="top"
-                                    delay={{ show: 250, hide: 400 }}
-                                    overlay={renderTooltip("Edit test")}
-                                  >
-                                    <Link
-                                      to={`/editexam/${item.testId}`}
-                                      target="_self"
-                                    >
-                                      <Button
-                                        // title="Edit"
-                                        size="sm"
-                                        style={{
-                                          borderRadius: "0",
-                                          // marginLeft: "0.8em",
-                                          padding: ".15rem .15rem",
-                                          background: "transparent",
-                                          color: "rgb(106, 163, 255)",
-                                          border: "none"
-                                        }}
-                                        variant="secondary"
-                                      >
-                                        {<Edit className="svg_icons" />}{" "}
-                                      </Button>
-                                    </Link>
-                                  </OverlayTrigger>
-
-                                  <OverlayTrigger
-                                    placement="top"
-                                    delay={{ show: 250, hide: 400 }}
-                                    overlay={renderTooltip("Preview test")}
+                              </span>
+                              <span style={{ marginLeft: "2em" }}>
+                                <OverlayTrigger
+                                  placement="top"
+                                  delay={{ show: 250, hide: 400 }}
+                                  overlay={renderTooltip("Edit test")}
+                                >
+                                  <Link
+                                    to={`/editexam/${item.testId}`}
+                                    target="_self"
                                   >
                                     <Button
-                                      // title="Preview test"
+                                      // title="Edit"
                                       size="sm"
                                       style={{
                                         borderRadius: "0",
-                                        marginLeft: "1em",
+                                        // marginLeft: "0.8em",
                                         padding: ".15rem .15rem",
                                         background: "transparent",
-                                        color: "rgb(255, 137, 118)",
+                                        color: "rgb(106, 163, 255)",
                                         border: "none"
                                       }}
                                       variant="secondary"
-                                      onClick={this.handlePreviewTest.bind(
-                                        this,
-                                        item.testId
-                                      )}
                                     >
-                                      {<View className="svg_icons" />}{" "}
+                                      {<Edit className="svg_icons" />}{" "}
                                     </Button>
-                                  </OverlayTrigger>
-                                </span>
+                                  </Link>
+                                </OverlayTrigger>
+
+                                <OverlayTrigger
+                                  placement="top"
+                                  delay={{ show: 250, hide: 400 }}
+                                  overlay={renderTooltip("Preview test")}
+                                >
+                                  <Button
+                                    // title="Preview test"
+                                    size="sm"
+                                    style={{
+                                      borderRadius: "0",
+                                      marginLeft: "1em",
+                                      padding: ".15rem .15rem",
+                                      background: "transparent",
+                                      color: "rgb(255, 137, 118)",
+                                      border: "none"
+                                    }}
+                                    variant="secondary"
+                                    onClick={this.handlePreviewTest.bind(
+                                      this,
+                                      item.testId
+                                    )}
+                                  >
+                                    {<View className="svg_icons" />}{" "}
+                                  </Button>
+                                </OverlayTrigger>
+                              </span>
+                              <span
+                                style={{
+                                  float: "right",
+                                  fontSize: "15px",
+                                  fontWeight: "600"
+                                }}
+                              >
+                                <b>Tags: </b>
                                 <span
                                   style={{
-                                    float: "right",
-                                    fontSize: "15px",
-                                    fontWeight: "600"
+                                    color: "darkgreen",
+                                    // fontSize:'0.5em',
+                                    textTransform: "capitalize"
                                   }}
                                 >
-                                  <b>Tags: </b>
-                                  <span
-                                    style={{
-                                      color: "darkgreen",
-                                      // fontSize:'0.5em',
-                                      textTransform: "capitalize"
-                                    }}
-                                  >
-                                    {item.type.toLowerCase()}
-                                  </span>
-                                  {item.year && (
-                                    <span>
-                                      {", "}
-                                      {/* <b>Year: </b> */}
-                                      {item.year}
-                                    </span>
-                                  )}
+                                  {item.type.toLowerCase()}
                                 </span>
-                              </Card.Title>
+                                {item.year && (
+                                  <span>
+                                    {", "}
+                                    {/* <b>Year: </b> */}
+                                    {item.year}
+                                  </span>
+                                )}
+                              </span>
+                            </Card.Title>
 
-                              <Card.Text style={{ marginBottom: "0.5em" }}>
-                                {""}
-                                {item.name}
-                              </Card.Text>
-                              {/* <div style={{ float: "right" }}>
+                            <Card.Text style={{ marginBottom: "0.5em" }}>
+                              {""}
+                              {item.name}
+                            </Card.Text>
+                            {/* <div style={{ float: "right" }}>
                             <Link
                               to={`/editexam/${item.testId}`}
                               target="_self"
@@ -664,19 +806,19 @@ class Examtab extends Component {
                               </Button>
                             </Link>
                           </div> */}
-                            </Card.Body>
-                            {/* <hr /> */}
-                          </Card>
-                        </Col>
-                      </Row>
-                    );
-                  })
-                ) : (
-                  <Row style={{ margin: "0.5em 0em" }}>
-                    <h5>No data found</h5>
-                  </Row>
-                )}{" "}
-              </div>
+                          </Card.Body>
+                          {/* <hr /> */}
+                        </Card>
+                      </Col>
+                    </Row>
+                  );
+                })
+              ) : (
+                <Row style={{ margin: "0.5em 0em" }}>
+                  <h5>No data found</h5>
+                </Row>
+              )}{" "}
+            </div>
             {/* )} */}
           </BottomScrollListener>
         </Col>

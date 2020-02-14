@@ -32,6 +32,7 @@ class LeftPanelExamtab extends Component {
     // currentvaluesubtopic = currentvaluesubtopic
     //   ? currentvaluesubtopic.title
     //   : "";
+    
     return (
       <Form>
         <Form.Group controlId="exampleForm.ControlSelect000">
@@ -48,7 +49,7 @@ class LeftPanelExamtab extends Component {
             as="select"
             // defaultValue=""
             onChange={this.props.handleLanguageChange}
-            value={this.props.selectedlanguage}
+            value={this.props.selectedLanguage}
           >
             {this.props.listOfLanguage &&
               this.props.listOfLanguage.map((item, index) => {
@@ -153,9 +154,14 @@ class LeftPanelExamtab extends Component {
             Type
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            // style={{ borderRadius: "0" }}
             size="sm"
             as="select"
+            style={
+              this.props.selectedType !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
             value={this.props.selectedType}
             onChange={this.props.handleTypeChange}
           >
@@ -167,6 +173,9 @@ class LeftPanelExamtab extends Component {
                   </option>
                 );
               })}
+              <option key="" value="">
+              Select
+            </option>
           </Form.Control>
         </Form.Group>
         <>
