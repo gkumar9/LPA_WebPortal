@@ -873,7 +873,7 @@ class QAtab extends Component {
         "Content-Type": "application/json"
       }
     }).then(res => {
-      console.log(res);
+      // console.log(res);
       swal({
         buttons: false,
         content: (

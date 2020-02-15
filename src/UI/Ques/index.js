@@ -224,16 +224,21 @@ class Ques extends Component {
           console.log(e);
         });
     } else {
-      console.log(
-        "(English)subjectid is blank. API not called. checksubject list"
-      );
+      // console.log(
+      //   "(English)subjectid is blank. API not called. checksubject list"
+      // );
       this.setState({
         listOfChapterEnglish: [],
         selectedChapterID: 0,
         listOfTopicEnglish: [],
         selectedTopicID: 0,
         listOfSubTopicEnglish: [],
-        selectedSubTopicID: 0
+        selectedSubTopicID: 0,
+        listOfChapterHindi: [],
+        // selectedChapterID: 0,
+        listOfTopicHindi: [],
+        // selectedTopicID: 0,
+        listOfSubTopicHindi: []
       });
     }
   };
@@ -269,9 +274,9 @@ class Ques extends Component {
           console.log(e);
         });
     } else {
-      console.log(
-        "(Hindi)subjectid is blank. API not called. checksubject list"
-      );
+      // console.log(
+      //   "(Hindi)subjectid is blank. API not called. checksubject list"
+      // );
       this.setState({
         listOfChapterHindi: [],
         selectedChapterID: 0,
@@ -316,14 +321,17 @@ class Ques extends Component {
           console.log(e);
         });
     } else {
-      console.log(
-        "(English)chapterid is blank.API not called. checkchapter list"
-      );
+      // console.log(
+      //   "(English)chapterid is blank.API not called. checkchapter list"
+      // );
       this.setState({
         listOfTopicEnglish: [],
         selectedTopicID: 0,
         listOfSubTopicEnglish: [],
-        selectedSubTopicID: 0
+        // selectedSubTopicID: 0,
+        listOfTopicHindi: [],
+        // selectedTopicID: 0,
+        listOfSubTopicHindi: []
       });
     }
   };
@@ -360,14 +368,15 @@ class Ques extends Component {
           console.log(e);
         });
     } else {
-      console.log(
-        "(Hindi)chapterid is blank.API not called. checkchapter list"
-      );
+      // console.log(
+      //   "(Hindi)chapterid is blank.API not called. checkchapter list"
+      // );
       this.setState({
         listOfTopicHindi: [],
         selectedTopicID: 0,
         listOfSubTopicHindi: [],
         selectedSubTopicID: 0
+        // listOfSubTopicHindi: [],
       });
     }
   };
@@ -404,8 +413,12 @@ class Ques extends Component {
           console.log(e);
         });
     } else {
-      console.log("(English)topicid is blank.API not called. checktopic list");
-      this.setState({ listOfSubTopicEnglish: [], selectedSubTopicID: 0 });
+      // console.log("(English)topicid is blank.API not called. checktopic list");
+      this.setState({
+        listOfSubTopicEnglish: [],
+        listOfSubTopicHindi: [],
+        selectedSubTopicID: 0
+      });
     }
   };
   callApiForSubTopicHindi = () => {
@@ -442,51 +455,120 @@ class Ques extends Component {
   };
   handleSubjectChange = e => {
     e.preventDefault();
-
-    this.setState(
-      {
-        selectedSubjectID: this.state.listOfSubjectEnglish[
-          e.target.options.selectedIndex
-        ].subject.subjectId
-      },
-      () => {
-        this.callApiForChapter();
-      }
-    );
+    if (
+      e.target.value.split("").filter(function(char) {
+        var charCode = char.charCodeAt();
+        return charCode >= 2309 && charCode <= 2361;
+      }).length > 0
+    ) {
+      this.setState(
+        {
+          selectedSubjectID: this.state.listOfSubjectHindi[
+            e.target.options.selectedIndex
+          ].subject.subjectId
+        },
+        () => {
+          this.callApiForChapter();
+        }
+      );
+    } else {
+      this.setState(
+        {
+          selectedSubjectID: this.state.listOfSubjectEnglish[
+            e.target.options.selectedIndex
+          ].subject.subjectId
+        },
+        () => {
+          this.callApiForChapter();
+        }
+      );
+    }
   };
   handleChapterChange = e => {
     e.preventDefault();
-    this.setState(
-      {
-        selectedChapterID: this.state.listOfChapterEnglish[
-          e.target.options.selectedIndex
-        ].subjectSection.sectionId
-      },
-      () => {
-        this.callApiForTopic();
-      }
-    );
+    // console.log( e.target.value)
+    if (
+      e.target.value.split("").filter(function(char) {
+        var charCode = char.charCodeAt();
+        return charCode >= 2309 && charCode <= 2361;
+      }).length > 0
+    ) {
+      // console.log('hindi')
+      this.setState(
+        {
+          selectedChapterID: this.state.listOfChapterHindi[
+            e.target.options.selectedIndex
+          ].subjectSection.sectionId
+        },
+        () => {
+          this.callApiForTopic();
+        }
+      );
+    } else {
+      // console.log('english')
+      this.setState(
+        {
+          selectedChapterID: this.state.listOfChapterEnglish[
+            e.target.options.selectedIndex
+          ].subjectSection.sectionId
+        },
+        () => {
+          this.callApiForTopic();
+        }
+      );
+    }
   };
   handleTopicChange = e => {
     e.preventDefault();
-    this.setState(
-      {
-        selectedTopicID: this.state.listOfTopicEnglish[
-          e.target.options.selectedIndex
-        ].subjectTopic.topicId
-      },
-      () => {
-        this.callApiForSubTopic();
-      }
-    );
+    if (
+      e.target.value.split("").filter(function(char) {
+        var charCode = char.charCodeAt();
+        return charCode >= 2309 && charCode <= 2361;
+      }).length > 0
+    ) {
+      this.setState(
+        {
+          selectedTopicID: this.state.listOfTopicHindi[
+            e.target.options.selectedIndex
+          ].subjectTopic.topicId
+        },
+        () => {
+          this.callApiForSubTopic();
+        }
+      );
+    } else {
+      this.setState(
+        {
+          selectedTopicID: this.state.listOfTopicEnglish[
+            e.target.options.selectedIndex
+          ].subjectTopic.topicId
+        },
+        () => {
+          this.callApiForSubTopic();
+        }
+      );
+    }
   };
   handleSubTopicChange = e => {
     e.preventDefault();
-    this.setState({
-      selectedSubTopicID: this.state.listOfSubTopicEnglish[
-        e.target.options.selectedIndex
-      ].subjectSubtopic.subtopicId
-    });
+    if (
+      e.target.value.split("").filter(function(char) {
+        var charCode = char.charCodeAt();
+        return charCode >= 2309 && charCode <= 2361;
+      }).length > 0
+    ) {
+      this.setState({
+        selectedSubTopicID: this.state.listOfSubTopicHindi[
+          e.target.options.selectedIndex
+        ].subjectSubtopic.subtopicId
+      });
+    } else {
+      this.setState({
+        selectedSubTopicID: this.state.listOfSubTopicEnglish[
+          e.target.options.selectedIndex
+        ].subjectSubtopic.subtopicId
+      });
+    }
   };
   render() {
     return (
