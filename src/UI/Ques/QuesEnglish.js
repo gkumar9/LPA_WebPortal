@@ -120,10 +120,32 @@ class QuesEnglish extends Component {
     })
       .then(res => {
         if (res.status === 200) {
-          console.log(res.data.data);
-          swal("Success", `QuestionId:${res.data.data.questionId}`, "success");
+          // console.log(res.data.data);
+          if (this.props.questionId === 0) {
+            swal(
+              "Success",
+              `Added new Question, Id:${res.data.data.questionId}`,
+              "success"
+            );
+          } else {
+            swal(
+              "Success",
+              `Added new Version of Question, Id:${res.data.data.questionId}`,
+              "success"
+            );
+          }
+
           this.props.handleChange(res.data.data.questionId);
           this.props.handleSelect();
+          this.setState({
+            questionData: "",
+            explanationData: "",
+            listOfOptions: [
+              { name: "Option A", content: "", weightage: 0 },
+              { name: "Option B", content: "", weightage: 0 }
+            ],
+            letterchartcode: 67
+          });
         } else {
           swal(`Status Code:${res.status}`, "error");
         }

@@ -77,7 +77,7 @@ class QuesHindi extends Component {
     });
   };
   saveHindidata = () => {
-    console.log("questionId:", this.props.questionId);
+    // console.log("questionId:", this.props.questionId);
     let difficultyvalue;
     switch (this.props.difficulty) {
       case "+":
@@ -125,11 +125,33 @@ class QuesHindi extends Component {
       }
     })
       .then(res => {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         if (res.status === 200) {
-          swal("Success", `QuestionId:${res.data.data.questionId}`, "success");
-          this.props.handleChange.bind(this, res.data.data.questionId);
+          if (this.props.questionId === 0) {
+            swal(
+              "Success",
+              `Added new Question, Id:${res.data.data.questionId}`,
+              "success"
+            );
+          } else {
+            swal(
+              "Success",
+              `Added new Version of Question, Id:${res.data.data.questionId}`,
+              "success"
+            );
+          }
+          // swal("Success", `QuestionId:${res.data.data.questionId}`, "success");
+          this.props.handleChange(res.data.data.questionId);
           this.props.handleSelect();
+          this.setState({
+            questionData: "",
+            explanationData: "",
+            listOfOptions: [
+              { name: "Option A", content: "", weightage: 0 },
+              { name: "Option B", content: "", weightage: 0 }
+            ],
+            letterchartcode: 67
+          });
           // }
         } else {
           swal(`Status Code:${res.status}`, "error");

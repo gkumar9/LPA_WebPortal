@@ -66,9 +66,9 @@ class Exam extends Component {
     tempsectionlist[index].questions.push("");
     this.setState({ listOfSection: tempsectionlist });
   };
-  deleteSectionQuestion = (index,indexquestion) => {
+  deleteSectionQuestion = (index, indexquestion) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].questions.splice(indexquestion,1)
+    tempsectionlist[index].questions.splice(indexquestion, 1);
     this.setState({ listOfSection: tempsectionlist });
   };
   handlSectionQuestionValueChange = (index, indexquestion, e) => {
@@ -421,7 +421,39 @@ class Exam extends Component {
         if (res.status === 200) {
           console.log(res.data.data);
           // alert("Success:", res.data.data);
-          swal("Success", `TestId:${res.data.data.testId}`, "success");
+          swal(
+            "Success",
+            `Added newTest, Id:${res.data.data.testId}`,
+            "success"
+          );
+          this.setState({
+            testnameEnglish: "",
+            testnameHindi: "",
+            testInstructionEnglish: "",
+            testInstructionHindi: "",
+            listOfSection: [
+              {
+                marksPerQuestion: 0,
+                negativeMarksPerQuestion: 0,
+                questions: [],
+
+                versions: [
+                  {
+                    content: "",
+                    language: "ENGLISH",
+                    name: "",
+                    sectionName: ""
+                  },
+                  {
+                    content: "",
+                    language: "HINDI",
+                    name: "",
+                    sectionName: ""
+                  }
+                ]
+              }
+            ]
+          });
         }
       })
       .catch(e => {

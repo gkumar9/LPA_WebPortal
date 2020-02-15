@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Tab, Nav, Row, Col } from "react-bootstrap";
+import { Button, Container, Tab, Nav, Row, Col } from "react-bootstrap";
 import Header from "../Header/index"; // If using WebPack and style-loader.
 import "./index.css";
 import EnglishHQuesTab from "./QuesEnglish.js";
@@ -53,9 +53,18 @@ class Ques extends Component {
     }
   };
   handleChange = data => {
-    console.log("Id from english response", data);
-    this.setState({ questionId: data });
+    // console.log("Id from english response", data,this.state.questionId);
+    if(data&&this.state.questionId===0){
+
+      this.setState({ questionId: data });
+    }else if(data){
+      this.setState({ questionId: 0 });
+    }
   };
+  handlereset=()=>{
+    this.setState({ questionId: 0 });
+    this.handleSelect();
+  }
   onDelete = i => {
     // e.preventDefault()
     const tags = this.state.tags.slice(0);
@@ -632,7 +641,26 @@ class Ques extends Component {
                   <span style={{ fontSize: "larger" }}>Hindi</span>
                 </Nav.Link>
               </Col>
-              <Col></Col>
+              <Col>
+                {this.state.questionId !== 0 && this.state.questionId && (
+                  <Button
+                  onClick={this.handlereset}
+                    style={{
+                      float: "right",
+                      fontSize: "1em",
+                      fontWeight: "500",
+                      background: "#dad8d8",
+                      borderColor: "#dad8d8",
+                      borderRadius: "0",
+                      marginRight: "3em",
+                      color: " #676767"
+                    }}
+                  >
+                    {" "}
+                    Skip version
+                  </Button>
+                )}
+              </Col>
             </Row>
             <Tab.Content>
               <Tab.Pane eventKey="english">
