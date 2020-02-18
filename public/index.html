@@ -16,9 +16,10 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
     <!-- <script src="http://www.wiris.com/plugins/demo/ckeditor4/php/ckeditor4/ckeditor.js"></script> -->
     <script src="./customckeditor/ckeditor.js"></script>
-   
 
     <title>Lakshya content portal</title>
   </head>
@@ -36,12 +37,10 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <script>
-      // CKEDITOR.config.extraPlugins = "timestamp";
-      // CKEDITOR.config.allowedContent = true;
-      // CKEDITOR.editorConfig = function(config) {
-      //   extraPlugins = "timestamp";
-      //   // Allow MathML content.
-      //   allowedContent = true;
+      // CKEDITOR.config.removePlugins = "image";
+      CKEDITOR.config.extraPlugins = "imgur";
+      CKEDITOR.config.imgurClientId = "6dd38a6bb34bf35";
+      CKEDITOR.config.allowedContent = true;
       // };
     </script>
     <script

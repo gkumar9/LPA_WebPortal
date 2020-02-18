@@ -5,6 +5,8 @@ import Header from "../Header/index";
 import "./index.css";
 import PdfContainer from "./pdf.js";
 import Doc from "./doc";
+// import ReactHtmlParser from "react-html-parser";
+import MathJax from "react-mathjax-preview";
 
 class PreviewQues extends Component {
   constructor(props) {
@@ -107,7 +109,12 @@ class ShowData extends Component {
                             <Card.Body
                               style={{ padding: "0", margin: "0.5em 0" }}
                             >
-                              <Card.Title style={{ fontSize: "medium",marginBottom:'0' }}>
+                              <Card.Title
+                                style={{
+                                  fontSize: "medium",
+                                  marginBottom: "0"
+                                }}
+                              >
                                 <Row noGutters={true}>
                                   <Col lg="1">
                                     <span>
@@ -184,13 +191,41 @@ class ShowData extends Component {
 
                               <Card.Text style={{ marginBottom: "0em" }}>
                                 <b>{"Q. "}</b>
-                                {item.questionVersions
+                                {/* <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: item.questionVersions.filter(
+                                      obbj =>
+                                        obbj.language ===
+                                        this.state.selectedLanguage
+                                    )[0].content
+                                  }}
+                                ></div> */}
+                                <span>
+                                  <MathJax
+                                    style={{ display: "inline-flex" }}
+                                    math={
+                                      item.questionVersions.filter(
+                                        obbj =>
+                                          obbj.language ===
+                                          this.state.selectedLanguage
+                                      )[0].content
+                                    }
+                                  />
+                                  {/* {ReactHtmlParser(
+                                  item.questionVersions.filter(
+                                    obbj =>
+                                      obbj.language ===
+                                      this.state.selectedLanguage
+                                  )[0].content
+                                )} */}
+                                </span>
+                                {/* {item.questionVersions
                                   .filter(
                                     obbj =>
                                       obbj.language ===
                                       this.state.selectedLanguage
                                   )[0]
-                                  .content.replace(/<\/?[^>]+(>|$)/g, "")}
+                                  .content.replace(/<\/?[^>]+(>|$)/g, "")} */}
                               </Card.Text>
                               <Row>
                                 {item.questionVersions
@@ -208,10 +243,15 @@ class ShowData extends Component {
                                         >
                                           {optionindex + 1}
                                           {") "}{" "}
-                                          {optionitem.content.replace(
+                                          <MathJax
+                                            style={{ display: "inline-flex" }}
+                                            math={optionitem.content}
+                                          />
+                                          {/* {ReactHtmlParser(optionitem.content)} */}
+                                          {/* {optionitem.content.replace(
                                             /<\/?[^>]+(>|$)/g,
                                             ""
-                                          )}{" "}
+                                          )}{" "} */}
                                           <sub
                                           // style={{border:' dimgrey solid',padding:'0.1em'}}
                                           >
@@ -223,14 +263,31 @@ class ShowData extends Component {
                                   })}{" "}
                               </Row>
                               <Row style={{ margin: "0.2em 0.1em" }}>
-                                <b> Sol. </b>{" "}&nbsp;
-                                {item.questionVersions
+                                <b> Sol. </b> &nbsp;
+                                <MathJax
+                                  style={{ display: "inline-flex" }}
+                                  math={
+                                    item.questionVersions.filter(
+                                      obbj =>
+                                        obbj.language ===
+                                        this.state.selectedLanguage
+                                    )[0].solution
+                                  }
+                                />
+                                {/* {ReactHtmlParser(
+                                  item.questionVersions.filter(
+                                    obbj =>
+                                      obbj.language ===
+                                      this.state.selectedLanguage
+                                  )[0].solution
+                                )} */}
+                                {/* {item.questionVersions
                                   .filter(
                                     obbj =>
                                       obbj.language ===
                                       this.state.selectedLanguage
                                   )[0]
-                                  .solution.replace(/<\/?[^>]+(>|$)/g, "")}
+                                  .solution.replace(/<\/?[^>]+(>|$)/g, "")} */}
                               </Row>
                             </Card.Body>
                           </Card>

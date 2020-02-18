@@ -58,6 +58,12 @@ class RightExamPanel extends Component {
                   height: 80
                   // placeholder: "Test description and instruction in English"
                 }}
+                onFocus={event=>{
+                  event.editor.insertHtml( ' ' );
+                  this.props.handleEnglishInstructionChange(
+                    event.editor.getData()
+                  );
+                }}
                 data={this.props.testInstructionEnglish}
                 onChange={event => {
                   // const data = editor.getData();
@@ -77,6 +83,12 @@ class RightExamPanel extends Component {
                   // placeholder: "Test description and instruction in Hindi"
                 }}
                 data={this.props.testInstructionHindi}
+                onFocus={event=>{
+                  event.editor.insertHtml( ' ' );
+                  this.props.handleHindiInstructionChange(
+                    event.editor.getData()
+                  );
+                }}
                 onChange={event => {
                   // const data = editor.getData();
                   this.props.handleHindiInstructionChange(
@@ -223,6 +235,14 @@ class RightExamPanel extends Component {
                           // placeholder:
                           //   "Section description and instruction in English"
                         }}
+                        onFocus={event=>{
+                          event.editor.insertHtml( ' ' );
+                          this.props.handleSectionDescriptionChange(
+                            index,
+                            "ENGLISH",
+                            event.editor.getData()
+                          );
+                        }}
                         onChange={event => {
                           // const data = editor.getData();
                           this.props.handleSectionDescriptionChange(
@@ -251,6 +271,14 @@ class RightExamPanel extends Component {
                           height: 80,
                           placeholder:
                             "Section description and instruction in Hindi"
+                        }}
+                        onFocus={event=>{
+                          event.editor.insertHtml( ' ' );
+                          this.props.handleSectionDescriptionChange(
+                            index,
+                            "HINDI",
+                            event.editor.getData()
+                          );
                         }}
                         onChange={event => {
                           // const data = editor.getData();

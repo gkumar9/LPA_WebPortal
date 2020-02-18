@@ -48,6 +48,7 @@ class QuesEnglish extends Component {
     });
   };
   handleQuestionEditor = data => {
+    // console.log('data',data)
     this.setState({ questionData: data });
   };
   handleExplanationEditor = data => {
@@ -285,6 +286,12 @@ class RightpanelEnglish extends Component {
                       // extraPlugins:MathType,
                       height: 80
                       // placeholder: "Test description and instruction in English"
+                    }}
+                    onFocus={event=>{
+                      event.editor.insertHtml( ' ' );
+                      const data = event.editor.getData();
+                      this.props.handleOptioncontentchange(index, data);
+                    
                     }}
                     data={item.content}
                     onChange={event => {
@@ -535,8 +542,16 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
             // placeholder: "Test description and instruction in English"
           }}
           data={questionData}
-          onChange={(event, editor) => {
+          onFocus={event=>{
+            event.editor.insertHtml( ' ' );
             const data = event.editor.getData();
+            // console.log('focus change',data)
+            handleQuestionEditor(data);
+          
+          }}
+          onChange={(event) => {
+            const data = event.editor.getData();
+            // console.log('data change')
             handleQuestionEditor(data);
           }}
         />
@@ -568,6 +583,12 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
             height: "80px"
           }}
           data={explanationData}
+          onFocus={event=>{
+            event.editor.insertHtml( ' ' );
+            const data = event.editor.getData();
+            handleExplanationEditor(data);
+          
+          }}
           onChange={(event, editor) => {
             const data = event.editor.getData();
             handleExplanationEditor(data);

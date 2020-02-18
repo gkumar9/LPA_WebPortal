@@ -57,7 +57,6 @@ var CKBUILDER_CONFIG = {
 		'basicstyles' : 1,
 		'blockquote' : 1,
 		'ckeditor_wiris' : 1,
-		'timestamp':1,
 		'clipboard' : 1,
 		'contextmenu' : 1,
 		'elementspath' : 1,

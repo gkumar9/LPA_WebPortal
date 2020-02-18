@@ -54,6 +54,11 @@ class RightExamPanel extends Component {
               <CKEditor
                 // editor={ClassicEditor}
                 onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+                onFocus={event=>{
+                  event.editor.insertHtml( ' ' );
+                  const data = event.editor.getData();
+                  this.props.handleEnglishInstructionChange(data);
+                }}
                 config={{
                   height: 80
                   // placeholder: "Test description and instruction in English"
@@ -75,6 +80,11 @@ class RightExamPanel extends Component {
                   // placeholder: "Test description and instruction in English"
                 }}
                 data={this.props.testInstructionHindi}
+                onFocus={event=>{
+                  event.editor.insertHtml( ' ' );
+                  const data = event.editor.getData();
+                  this.props.handleHindiInstructionChange(data);
+                }}
                 onChange={(event, editor) => {
                   const data = event.editor.getData();
                   this.props.handleHindiInstructionChange(data);
@@ -215,6 +225,15 @@ class RightExamPanel extends Component {
                             object => object.language === "ENGLISH"
                           )[0].content
                         }
+                        onFocus={event=>{
+                          event.editor.insertHtml( ' ' );
+                          const data = event.editor.getData();
+                          this.props.handleSectionDescriptionChange(
+                            index,
+                            "ENGLISH",
+                            data
+                          );
+                        }}
                         onChange={(event, editor) => {
                           const data = event.editor.getData();
                           this.props.handleSectionDescriptionChange(
@@ -242,6 +261,15 @@ class RightExamPanel extends Component {
                             object => object.language === "HINDI"
                           )[0].content
                         }
+                        onFocus={event=>{
+                          event.editor.insertHtml( ' ' );
+                          const data = event.editor.getData();
+                          this.props.handleSectionDescriptionChange(
+                            index,
+                            "HINDI",
+                            data
+                          );
+                        }}
                         onChange={(event, editor) => {
                           const data = event.editor.getData();
                           this.props.handleSectionDescriptionChange(

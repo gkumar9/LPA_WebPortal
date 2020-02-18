@@ -7,6 +7,8 @@ import axios from "axios";
 import URL from "../../Assets/url";
 import PdfContainer from "./../QuesPreview/pdf";
 import Doc from "./../QuesPreview/doc";
+// import ReactHtmlParser from "react-html-parser";
+import MathJax from "react-mathjax-preview";
 
 class Previewtest extends Component {
   constructor(props) {
@@ -54,43 +56,43 @@ class Previewtest extends Component {
   }
   createPdfexam = html => Doc.createPdf(html);
   render() {
-    console.log(this.state.data, this.state.isData);
+    // console.log(this.state.data, this.state.isData);
     return (
       <React.Fragment>
         <Header props={this.props} />
         {this.state.isData && localStorage.getItem("TestPreviewLanguage") ? (
           <PdfContainer createPdf={this.createPdfexam}>
-          <Container style={{marginTop:'1em'}}>
-            <center style={{ margin: "0 2em", textTransform: "capitalize" }}>
-              <h3>
-                {
-                  this.state.data.testVersions.filter(
-                    item =>
-                      item.language ===
-                      localStorage.getItem("TestPreviewLanguage")
-                  )[0].name
-                }
-              </h3>
-            </center>
-            <Row>
-              <Col lg="4">
-                {" "}
-                Time allowed:
-                {this.state.data.time ? this.state.data.time : " NA"}
-              </Col>
-              <Col />
-              <Col lg="4">
-                <span style={{ float: "right" }}>
-                  Maximum marks:
-                  {this.state.data.maximumMarks
-                    ? this.state.data.maximumMarks
-                    : " NA"}
-                </span>
-              </Col>
-            </Row>
-            <hr />
-            <center>INSTRUCTION</center>
-            <div
+            <Container style={{ marginTop: "1em" }}>
+              <center style={{ margin: "0 2em", textTransform: "capitalize" }}>
+                <h3>
+                  {
+                    this.state.data.testVersions.filter(
+                      item =>
+                        item.language ===
+                        localStorage.getItem("TestPreviewLanguage")
+                    )[0].name
+                  }
+                </h3>
+              </center>
+              <Row>
+                <Col lg="4">
+                  {" "}
+                  Time allowed:
+                  {this.state.data.time ? this.state.data.time : " NA"}
+                </Col>
+                <Col />
+                <Col lg="4">
+                  <span style={{ float: "right" }}>
+                    Maximum marks:
+                    {this.state.data.maximumMarks
+                      ? this.state.data.maximumMarks
+                      : " NA"}
+                  </span>
+                </Col>
+              </Row>
+              <hr />
+              <center>INSTRUCTION</center>
+              {/* <div
               dangerouslySetInnerHTML={{
                 __html: this.state.data.testVersions.filter(
                   item =>
@@ -98,7 +100,24 @@ class Previewtest extends Component {
                     localStorage.getItem("TestPreviewLanguage")
                 )[0].instructions
               }}
-            >
+            > */}
+              <div>
+                <MathJax
+                  style={{ display: "inline-flex" }}
+                  math={
+                    this.state.data.testVersions.filter(
+                      item =>
+                        item.language ===
+                        localStorage.getItem("TestPreviewLanguage")
+                    )[0].instructions
+                  }
+                />
+                {/* {ReactHtmlParser(this.state.data.testVersions.filter(
+                  item =>
+                    item.language ===
+                    localStorage.getItem("TestPreviewLanguage")
+                )[0].instructions)} */}
+              </div>
               {/* {
                   this.state.data.testVersions.filter(
                     item =>
@@ -106,42 +125,60 @@ class Previewtest extends Component {
                       localStorage.getItem("TestPreviewLanguage")
                   )[0].instructions
                 } */}
-            </div>
-            <br />
-            {this.state.data.testSections.map((item, index) => {
-              return (
-                <div key={index}>
-                  <center>
-                    <h6>
-                      {
+              {/* </div> */}
+              <br />
+              {this.state.data.testSections.map((item, index) => {
+                return (
+                  <div key={index}>
+                    <center>
+                      <h6>
+                        {
+                          item.testSectionVersions.filter(
+                            obj =>
+                              obj.language ===
+                              localStorage.getItem("TestPreviewLanguage")
+                          )[0].sectionName
+                        }
+                      </h6>
+                    </center>
+                    <br />
+                    <div
+                      // dangerouslySetInnerHTML={{
+                      //   __html: item.testSectionVersions.filter(
+                      //     obj =>
+                      //       obj.language ===
+                      //       localStorage.getItem("TestPreviewLanguage")
+                      //   )[0].content
+                      // }}
+                      style={{ borderBottom: "1px #cecccc solid" }}
+                    >
+                      <MathJax
+                        style={{ display: "inline-flex" }}
+                        math={
+                          item.testSectionVersions.filter(
+                            obj =>
+                              obj.language ===
+                              localStorage.getItem("TestPreviewLanguage")
+                          )[0].content
+                        }
+                      />
+                      {/* {ReactHtmlParser(
                         item.testSectionVersions.filter(
                           obj =>
                             obj.language ===
                             localStorage.getItem("TestPreviewLanguage")
-                        )[0].sectionName
-                      }
-                    </h6>
-                  </center>
-                  <br />
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: item.testSectionVersions.filter(
-                        obj =>
-                          obj.language ===
-                          localStorage.getItem("TestPreviewLanguage")
-                      )[0].content
-                    }}
-                    style={{ borderBottom: "1px #cecccc solid" }}
-                  ></div>
+                        )[0].content
+                      )} */}
+                    </div>
 
-                  <QuestionShowData
-                    key={index}
-                    data={item.testSectionMapping}
-                  />
-                </div>
-              );
-            })}
-          </Container>
+                    <QuestionShowData
+                      key={index}
+                      data={item.testSectionMapping}
+                    />
+                  </div>
+                );
+              })}
+            </Container>
           </PdfContainer>
         ) : (
           <Error404 />
@@ -269,12 +306,27 @@ class QuestionShowData extends Component {
 
                         <Card.Text style={{ marginBottom: "0.5em" }}>
                           <b>{"Q. "}</b>
-                          {item.questionVersions
+                          <MathJax
+                            style={{ display: "inline-flex" }}
+                            math={
+                              item.questionVersions.filter(
+                                obbj =>
+                                  obbj.language === this.state.selectedLanguage
+                              )[0].content
+                            }
+                          />
+                          {/* {ReactHtmlParser(
+                            item.questionVersions.filter(
+                              obbj =>
+                                obbj.language === this.state.selectedLanguage
+                            )[0].content
+                          )} */}
+                          {/* {item.questionVersions
                             .filter(
                               obbj =>
                                 obbj.language === this.state.selectedLanguage
                             )[0]
-                            .content.replace(/<\/?[^>]+(>|$)/g, "")}
+                            .content.replace(/<\/?[^>]+(>|$)/g, "")} */}
                         </Card.Text>
                         <Row>
                           {item.questionVersions
@@ -287,16 +339,21 @@ class QuestionShowData extends Component {
                                 <React.Fragment key={optionindex}>
                                   <Col lg="6" style={{ margin: "0.5em 0" }}>
                                     {optionindex + 1}
-                                    {") "}{" "}
-                                    {optionitem.content.replace(
+                                    {") "}
+                                    <MathJax
+                                      style={{ display: "inline-flex" }}
+                                      math={optionitem.content}
+                                    />
+                                    {/* {ReactHtmlParser(optionitem.content)} */}
+                                    {/* {optionitem.content.replace(
                                       /<\/?[^>]+(>|$)/g,
                                       ""
-                                    )}{" "}
+                                    )}{" "} */}
                                     <sub
-                                          // style={{border:' dimgrey solid',padding:'0.1em'}}
-                                          >
-                                            (<b> {optionitem.weightage} </b>)
-                                          </sub>
+                                    // style={{border:' dimgrey solid',padding:'0.1em'}}
+                                    >
+                                      (<b> {optionitem.weightage} </b>)
+                                    </sub>
                                   </Col>
                                 </React.Fragment>
                               );
@@ -304,12 +361,27 @@ class QuestionShowData extends Component {
                         </Row>
                         <Row style={{ margin: "0.2em 0.1em" }}>
                           <b> Sol- </b>
-                          {item.questionVersions
+                          <MathJax
+                            style={{ display: "inline-flex" }}
+                            math={
+                              item.questionVersions.filter(
+                                obbj =>
+                                  obbj.language === this.state.selectedLanguage
+                              )[0].solution
+                            }
+                          />
+                          {/* {ReactHtmlParser(
+                            item.questionVersions.filter(
+                              obbj =>
+                                obbj.language === this.state.selectedLanguage
+                            )[0].solution
+                          )} */}
+                          {/* {item.questionVersions
                             .filter(
                               obbj =>
                                 obbj.language === this.state.selectedLanguage
                             )[0]
-                            .solution.replace(/<\/?[^>]+(>|$)/g, "")}
+                            .solution.replace(/<\/?[^>]+(>|$)/g, "")} */}
                         </Row>
                       </Card.Body>
                     </Card>

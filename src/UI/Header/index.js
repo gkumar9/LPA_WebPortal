@@ -39,22 +39,34 @@ function Header({ props }) {
       <Nav justify>
         {/* <Link to="/" target="_self"> */}{" "}
         {/* <Nav.Link href="#">Welcome User</Nav.Link> */}
-        <Nav.Link>
-          <Link
-            to="/"
-            target="_self"
-            style={
-              props.location.pathname === "/"
-                ? { textDecoration: "none", color: "black", fontSize: "1.1em" }
-                : { color: "grey", textDecoration: "none", fontSize: "1.1em" }
-            }
-          >
-            Dashboard
-          </Link>
-        </Nav.Link>
+        {/* <Nav.Link eventKey={1}> */}
+        <Link
+          to="/"
+          target="_self"
+          style={
+            props.location.pathname === "/"
+              ? {
+                  textDecoration: "none",
+                  color: "black",
+                  fontSize: "1.1em",
+                  marginTop: "0.5em",
+                  marginRight: "0.5em"
+                }
+              : {
+                  color: "grey",
+                  textDecoration: "none",
+                  fontSize: "1.1em",
+                  marginTop: "0.5em",
+                  marginRight: "0.5em"
+                }
+          }
+        >
+          Dashboard
+        </Link>
+        {/* </Nav.Link> */}
         <Nav.Link
           eventKey={2}
-          style={{fontSize: '1.1em',}}
+          style={{ fontSize: "1.1em" }}
           onSelect={() => {
             firebase
               .auth()

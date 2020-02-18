@@ -1000,7 +1000,7 @@ class Editques extends Component {
                           color: "dimgrey"
                         }}
                       >
-                        <supr>*</supr>You are adding new version to this Id
+                        <sup>*</sup>You are adding new version to this Id
                       </small>
                     )}
                 </h6>

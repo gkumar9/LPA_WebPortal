@@ -50,6 +50,7 @@ class QuesHindi extends Component {
   };
 
   handleQuestionEditor = data => {
+    // console.log('data')
     this.setState({ questionData: data });
   };
   handleExplanationEditor = data => {
@@ -283,6 +284,12 @@ class RightpanelHindi extends Component {
                     config={{
                       height: 80
                       // placeholder: "Test description and instruction in English"
+                    }}
+                    onFocus={event=>{
+                      event.editor.insertHtml( ' ' );
+                      const data = event.editor.getData();
+                      this.props.handleOptioncontentchange(index, data);
+                    
                     }}
                     data={item.content}
                     onChange={event => {
@@ -533,6 +540,12 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           //   // You can store the "editor" and use when it is needed.
           //   // console.log("Editor is ready to use!", editor);
           // }}
+          onFocus={event=>{
+            event.editor.insertHtml( ' ' );
+            const data = event.editor.getData();
+            // console.log(data)
+            handleQuestionEditor(data);
+          }}
           onChange={event => {
             const data = event.editor.getData();
             // console.log(data)
@@ -576,9 +589,14 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
             // placeholder: "Test description and instruction in English"
           }}
           data={explanationData}
-          onInit={editor => {
-            // You can store the "editor" and use when it is needed.
-            // console.log("Editor is ready to use!", editor);
+          // onInit={editor => {
+          //   // You can store the "editor" and use when it is needed.
+          //   // console.log("Editor is ready to use!", editor);
+          // }}
+          onFocus={event=>{
+            event.editor.insertHtml( ' ' );
+            const data = event.editor.getData();
+            handleExplanationEditor(data);
           }}
           onChange={(event, editor) => {
             const data = event.editor.getData();

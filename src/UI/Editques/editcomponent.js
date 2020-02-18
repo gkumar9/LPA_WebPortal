@@ -20,7 +20,7 @@ class EditComponent extends Component {
       questionData: " ",
       explanationData: " ",
       listOfOptions: [],
-      letterchartcode: 65,
+      letterchartcode: 65
     };
   }
   addoptionfn = () => {
@@ -49,7 +49,7 @@ class EditComponent extends Component {
       letterchartcode: letterchartcode
     });
   };
-  
+
   componentDidMount() {
     let difficultyvalue;
     switch (this.props.fetchedData.level) {
@@ -103,19 +103,20 @@ class EditComponent extends Component {
         tags: converttags
       });
     }
-   
   }
   handleQuestionEditor = data => {
-    
     this.setState({ questionData: data });
   };
   handleExplanationEditor = data => {
+    // console.log(data);
     this.setState({ explanationData: data });
   };
   handleOptioncontentchange = (index, data) => {
+    // e.preventDefault();
+    // console.log('in fn')
     // let currentCharCode = this.state.letterchartcode;
     // let name = "Option " + String.fromCharCode(currentCharCode);
-    // console.log(index, data);
+    // console.log(this.state.listOfOptions[index], data);
     let currentArrayOfOption = this.state.listOfOptions;
     currentArrayOfOption[index].content = data;
     this.setState({
@@ -124,7 +125,7 @@ class EditComponent extends Component {
   };
   handleOptionWeightageChange = (index, e) => {
     e.preventDefault();
-    // console.log(typeof parseInt(e.target.value));
+    // console.log(index,e);
     let currentArrayOfOption = this.state.listOfOptions;
     currentArrayOfOption[index].weightage = parseInt(e.target.value);
     this.setState({
@@ -149,7 +150,7 @@ class EditComponent extends Component {
     let converttags = this.props.tags.map(item => {
       return { tagId: item.id, tag: item.name };
     });
-    console.log(this.props.selectedTopicID);
+    console.log(this.state.listOfOptions);
     axios({
       method: "POST",
       url: URL.updateExistingQuestionVersion,
@@ -184,6 +185,12 @@ class EditComponent extends Component {
           console.log(res.data.data);
           // alert("success", res.data.data);
           swal("Success", `Data updated`, "success");
+          let data = JSON.parse(localStorage.getItem("Previewdata"));
+          let finditem = data.filter(
+            item => item.questionId === this.props.questionId
+          );
+          if (finditem.length > 0) {
+          }
           localStorage.setItem("editquesdata", null);
         }
       })
@@ -243,6 +250,8 @@ class EditComponent extends Component {
           console.log(res.data.data);
           // alert("success", res.data.data);
           swal("Success", `Data updated`, "success");
+          let data = JSON.parse(localStorage.getItem("Previewdata"));
+          console.log(data);
           localStorage.setItem("editquesdata", null);
         }
       })
@@ -392,7 +401,7 @@ class LeftPanel extends Component {
     currentvaluechapter = currentvaluechapter
       ? currentvaluechapter.sectionName
       : "";
-      // console.log(currentvaluechapter,this.props.listOfChapter)
+    // console.log(currentvaluechapter,this.props.listOfChapter)
     let currentvaluetopic = this.props.listOfTopic.filter(
       item => item.subjectTopic.topicId === this.props.selectedTopicID
     )[0];
@@ -449,7 +458,7 @@ class LeftPanel extends Component {
             {this.props.listOfChapter &&
               this.props.listOfChapter.map((item, index) => {
                 return (
-                  <option key={item.sectionId} datakey={item.sectionId} value={item.sectionName}>
+                  <option key={index} value={item.sectionName}>
                     {item.sectionName}
                   </option>
                 );
@@ -563,7 +572,7 @@ class Rightpanel extends Component {
                   </Form.Label>
                   <Col sm="2">
                     <Form.Control
-                      disabled
+                      // disabled
                       style={{ borderRadius: "0", background: "#f9f9f9" }}
                       type="number"
                       value={item.weightage || 0}
@@ -591,6 +600,15 @@ class Rightpanel extends Component {
                     onBeforeLoad={CKEDITOR =>
                       (CKEDITOR.disableAutoInline = true)
                     }
+                    onFocus={event => {
+                      // let data = event.editor.getData();
+                      // console.log('focus')
+                      event.editor.insertHtml( ' ' );
+                      this.props.handleOptioncontentchange(
+                        index,
+                        event.editor.getData()
+                      );
+                    }}
                     config={{
                       height: 80
 
@@ -598,7 +616,8 @@ class Rightpanel extends Component {
                     }}
                     data={item.content}
                     onChange={event => {
-                      // const data = editor.getData();
+                      // let data = editor.getData();
+                      // console.log('change')
                       this.props.handleOptioncontentchange(
                         index,
                         event.editor.getData()
@@ -686,12 +705,18 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
             // }
             // placeholder: "Test description and instruction in English"
           }}
+          onFocus={event => {
+            event.editor.insertHtml( ' ' );
+            let data = event.editor.getData();
+            console.log('focus',data)
+            handleQuestionEditor(data);
+          }}
           data={questionData}
           //   config={{
           //     plugins: [Pramukhime]
           //   }}
           onChange={event => {
-            const data = event.editor.getData();
+            let data = event.editor.getData();
 
             handleQuestionEditor(data);
           }}
@@ -722,9 +747,18 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
             height: 80
             // placeholder: "Test description and instruction in English"
           }}
+          // onBlur={event=>{
+          //   console.log('blur',event)
+          // }}
+          onFocus={event => {
+            event.editor.insertHtml( ' ' );
+            let data = event.editor.getData();
+
+            handleExplanationEditor(data);
+          }}
           data={explanationData}
           onChange={event => {
-            const data = event.editor.getData();
+            let data = event.editor.getData();
             handleExplanationEditor(data);
           }}
         />
@@ -787,9 +821,19 @@ class RightpanelNewVersion extends Component {
 
                       // placeholder: "Test description and instruction in English"
                     }}
+                    onFocus={event => {
+                      // let data = event.editor.getData();
+                      // console.log('focus')
+                      event.editor.insertHtml( ' ' );
+                      this.props.handleOptioncontentchange(
+                        index,
+                        event.editor.getData()
+                      );
+                    }}
                     data={item.content}
                     onChange={event => {
-                      // const data = editor.getData();
+                      // let data = editor.getData();
+                      // console.log('change')
                       this.props.handleOptioncontentchange(
                         index,
                         event.editor.getData()

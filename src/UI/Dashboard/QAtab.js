@@ -22,6 +22,8 @@ import BucketIconOrange from "./../../Assets/image3.png";
 import BucketIconGrey from "./../../Assets/image4.png";
 import swal from "@sweetalert/with-react";
 import BottomScrollListener from "react-bottom-scroll-listener";
+// import ReactHtmlParser from "react-html-parser";
+import MathJax from "react-mathjax-preview";
 
 class QAtab extends Component {
   constructor(props) {
@@ -371,7 +373,7 @@ class QAtab extends Component {
     localStorage.setItem("selectedTopicIDQA", "0");
     localStorage.setItem("selectedSubTopicID", "0");
     localStorage.setItem("selectedsearchboxQA", "");
-    localStorage.setItem("selectedTagsQA",JSON.stringify([]));
+    localStorage.setItem("selectedTagsQA", JSON.stringify([]));
     this.setState(
       {
         // searchResultList: [],
@@ -905,7 +907,7 @@ class QAtab extends Component {
                         <Col lg="1">
                           <span>
                             <small>
-                              <b>#</b>{" "}
+                              <b>#</b>
                             </small>
                             <span style={{ color: "dimgrey" }}>
                               {res.data.data.question.questionId}
@@ -960,11 +962,20 @@ class QAtab extends Component {
 
                     <Card.Text style={{ marginBottom: "0.5em" }}>
                       <b>{"Q. "}</b>
-                      {res.data.data.question.questionVersions
+                      <MathJax
+                        style={{ display: "inline-flex" }}
+                        math={
+                          res.data.data.question.questionVersions.filter(
+                            obbj =>
+                              obbj.language === this.state.selectedLanguage
+                          )[0].content
+                        }
+                      />
+                      {/* {res.data.data.question.questionVersions
                         .filter(
                           obbj => obbj.language === this.state.selectedLanguage
                         )[0]
-                        .content.replace(/<\/?[^>]+(>|$)/g, "")}
+                        .content.replace(/<\/?[^>]+(>|$)/g, "")} */}
                     </Card.Text>
                     <Row>
                       {res.data.data.question.questionVersions
@@ -977,10 +988,14 @@ class QAtab extends Component {
                               <Col lg="6" style={{ margin: "0.5em 0" }}>
                                 {optionindex + 1}
                                 {") "}{" "}
-                                {optionitem.content.replace(
+                                <MathJax
+                                  style={{ display: "inline-flex" }}
+                                  math={optionitem.content}
+                                />
+                                {/* {optionitem.content.replace(
                                   /<\/?[^>]+(>|$)/g,
                                   ""
-                                )}{" "}
+                                )}{" "} */}
                                 <sub
                                 // style={{border:' dimgrey solid',padding:'0.1em'}}
                                 >
@@ -993,11 +1008,20 @@ class QAtab extends Component {
                     </Row>
                     <Row style={{ margin: "0.2em 0.1em" }}>
                       <b>{" Sol. "}</b>&nbsp;
-                      {res.data.data.question.questionVersions
+                      <MathJax
+                        style={{ display: "inline-flex" }}
+                        math={
+                          res.data.data.question.questionVersions.filter(
+                            obbj =>
+                              obbj.language === this.state.selectedLanguage
+                          )[0].solution
+                        }
+                      />
+                      {/* {res.data.data.question.questionVersions
                         .filter(
                           obbj => obbj.language === this.state.selectedLanguage
                         )[0]
-                        .solution.replace(/<\/?[^>]+(>|$)/g, "")}
+                        .solution.replace(/<\/?[^>]+(>|$)/g, "")} */}
                     </Row>
                   </Card.Body>
                 </Card>
@@ -1456,7 +1480,11 @@ class QAtab extends Component {
 
                                 <Card.Text style={{ marginBottom: "0.5em" }}>
                                   {""}
-                                  {item.content.replace(/<\/?[^>]+(>|$)/g, "")}
+                                  {/* {item.content.replace(/<\/?[^>]+(>|$)/g, "")} */}
+                                  <MathJax
+                                    style={{ display: "inline-flex" }}
+                                    math={item.content}
+                                  />
                                 </Card.Text>
                                 {/* <div style={{ float: "right" }}>
                                 <Button
