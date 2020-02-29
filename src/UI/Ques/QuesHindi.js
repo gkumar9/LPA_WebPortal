@@ -285,11 +285,10 @@ class RightpanelHindi extends Component {
                       height: 80
                       // placeholder: "Test description and instruction in English"
                     }}
-                    onFocus={event=>{
-                      event.editor.insertHtml( ' ' );
+                    onFocus={event => {
+                      event.editor.insertHtml(" ");
                       const data = event.editor.getData();
                       this.props.handleOptioncontentchange(index, data);
-                    
                     }}
                     data={item.content}
                     onChange={event => {
@@ -529,6 +528,19 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           margin: "0.5em 0"
         }}
       >
+        <select id="txtLanguage" className="selectpicker" onChange={window.setLang}>
+          <option value="0">English</option>
+          <option value="1">Devnagari</option>
+        </select>
+
+        <select
+          id="txtKeyboard"
+          className="selectpicker"
+          onChange={window.changeKB}
+        >
+          <option value="Phonetic">Phonetic</option>
+          <option value="Typewrit">TypeWrit</option>
+        </select>
         <CKEditor
           onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
           config={{
@@ -540,28 +552,44 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           //   // You can store the "editor" and use when it is needed.
           //   // console.log("Editor is ready to use!", editor);
           // }}
-          onFocus={event=>{
-            event.editor.insertHtml( ' ' );
+          onFocus={event => {
+            event.editor.insertHtml(" ");
             const data = event.editor.getData();
             // console.log(data)
             handleQuestionEditor(data);
+            window.hook(
+              document
+
+                .getElementsByTagName("iframe")[0]
+                .contentDocument.getElementsByTagName("body")[0]
+            );
+          }}
+          oninstanceReady={event => {
+            console.log("CKE Instance Ready");
+            var a = document.getElementById("txtLanguage");
+
+            a.selectedIndex = 1;
+
+            window.setLang();
+
+            var b = document.getElementById("txtKeyboard");
+
+            b.selectedIndex = 0;
+
+            window.changeKB();
+
+            window.hook(
+              document
+
+                .getElementsByTagName("iframe")[0]
+                .contentDocument.getElementsByTagName("body")[0]
+            );
           }}
           onChange={event => {
             const data = event.editor.getData();
-            // console.log(data)
+            console.log(data);
             handleQuestionEditor(data);
-            // console.log({
-            //   event,
-            //   editor,
-            //   data
-            // });
           }}
-          // onBlur={(event, editor) => {
-          //   console.log("Blur.", editor);
-          // }}
-          // onFocus={(event, editor) => {
-          //   console.log("Focus.", editor);
-          // }}
         />
       </div>
     </Form.Group>
@@ -593,8 +621,8 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
           //   // You can store the "editor" and use when it is needed.
           //   // console.log("Editor is ready to use!", editor);
           // }}
-          onFocus={event=>{
-            event.editor.insertHtml( ' ' );
+          onFocus={event => {
+            event.editor.insertHtml(" ");
             const data = event.editor.getData();
             handleExplanationEditor(data);
           }}

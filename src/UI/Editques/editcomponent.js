@@ -185,12 +185,12 @@ class EditComponent extends Component {
           console.log(res.data.data);
           // alert("success", res.data.data);
           swal("Success", `Data updated`, "success");
-          let data = JSON.parse(localStorage.getItem("Previewdata"));
-          let finditem = data.filter(
-            item => item.questionId === this.props.questionId
-          );
-          if (finditem.length > 0) {
-          }
+          // let data = JSON.parse(localStorage.getItem("Previewdata"));
+          // let finditem = data.filter(
+          //   item => item.questionId === this.props.questionId
+          // );
+          // if (finditem.length > 0) {
+          // }
           localStorage.setItem("editquesdata", null);
         }
       })
@@ -250,8 +250,8 @@ class EditComponent extends Component {
           console.log(res.data.data);
           // alert("success", res.data.data);
           swal("Success", `Data updated`, "success");
-          let data = JSON.parse(localStorage.getItem("Previewdata"));
-          console.log(data);
+          // let data = JSON.parse(localStorage.getItem("Previewdata"));
+          // console.log(data);
           localStorage.setItem("editquesdata", null);
         }
       })
@@ -708,7 +708,7 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           onFocus={event => {
             event.editor.insertHtml( ' ' );
             let data = event.editor.getData();
-            console.log('focus',data)
+            // console.log('focus',data)
             handleQuestionEditor(data);
           }}
           data={questionData}

@@ -211,6 +211,11 @@ class ShowData extends Component {
                                       )[0].content
                                     }
                                   />
+                                  {/* {item.questionVersions.filter(
+                                        obbj =>
+                                          obbj.language ===
+                                          this.state.selectedLanguage
+                                      )[0].content} */}
                                   {/* {ReactHtmlParser(
                                   item.questionVersions.filter(
                                     obbj =>
