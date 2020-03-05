@@ -217,7 +217,7 @@ class EditComponent extends Component {
     let converttags = this.props.tags.map(item => {
       return { tagId: item.id, tag: item.name };
     });
-    console.log(this.props.selectedTopicID);
+    // console.log(this.props.selectedTopicID);
     axios({
       method: "POST",
       url: URL.createQuestionNewVersion,
@@ -319,6 +319,7 @@ class EditComponent extends Component {
                   addoptionfn={this.addoptionfn}
                   deleteOption={this.deleteOption}
                   savedata={this.savedata}
+                  lang={this.props.lang}
                 />
               </div>
             </Col>
@@ -377,6 +378,7 @@ class EditComponent extends Component {
                   addoptionfn={this.addoptionfn}
                   deleteOption={this.deleteOption}
                   savedata={this.savedatanewversion}
+                  lang={this.props.lang}
                 />
               </div>
             </Col>
@@ -558,6 +560,7 @@ class Rightpanel extends Component {
         {/* {this.props.questionData && ( */}
         <QuestionComp
           // ClassicEditor={ClassicEditor}
+          lang={this.props.lang}
           handleQuestionEditor={this.props.handleQuestionEditor}
           questionData={this.props.questionData}
         />
@@ -596,34 +599,66 @@ class Rightpanel extends Component {
                   )} */}
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
-                  <CKEditor
-                    onBeforeLoad={CKEDITOR =>
-                      (CKEDITOR.disableAutoInline = true)
-                    }
-                    onFocus={event => {
-                      // let data = event.editor.getData();
-                      // console.log('focus')
-                      event.editor.insertHtml( ' ' );
-                      this.props.handleOptioncontentchange(
-                        index,
-                        event.editor.getData()
-                      );
-                    }}
-                    config={{
-                      height: 80
+                  {this.props.lang === "HINDI" ? (
+                    <CKEditor
+                      onBeforeLoad={CKEDITOR =>
+                        (CKEDITOR.disableAutoInline = true)
+                      }
+                      onFocus={event => {
+                        window.hook(event.editor.document.$.body);
+                        // let data = event.editor.getData();
+                        // console.log('focus')
+                        event.editor.insertHtml(" ");
+                        this.props.handleOptioncontentchange(
+                          index,
+                          event.editor.getData()
+                        );
+                      }}
+                      config={{
+                        height: 80
 
-                      // placeholder: "Test description and instruction in English"
-                    }}
-                    data={item.content}
-                    onChange={event => {
-                      // let data = editor.getData();
-                      // console.log('change')
-                      this.props.handleOptioncontentchange(
-                        index,
-                        event.editor.getData()
-                      );
-                    }}
-                  />
+                        // placeholder: "Test description and instruction in English"
+                      }}
+                      data={item.content}
+                      onChange={event => {
+                        // let data = editor.getData();
+                        // console.log('change')
+                        this.props.handleOptioncontentchange(
+                          index,
+                          event.editor.getData()
+                        );
+                      }}
+                    />
+                  ) : (
+                    <CKEditor
+                      onBeforeLoad={CKEDITOR =>
+                        (CKEDITOR.disableAutoInline = true)
+                      }
+                      onFocus={event => {
+                        // let data = event.editor.getData();
+                        // console.log('focus')
+                        event.editor.insertHtml(" ");
+                        this.props.handleOptioncontentchange(
+                          index,
+                          event.editor.getData()
+                        );
+                      }}
+                      config={{
+                        height: 80
+
+                        // placeholder: "Test description and instruction in English"
+                      }}
+                      data={item.content}
+                      onChange={event => {
+                        // let data = editor.getData();
+                        // console.log('change')
+                        this.props.handleOptioncontentchange(
+                          index,
+                          event.editor.getData()
+                        );
+                      }}
+                    />
+                  )}
                 </div>
               </React.Fragment>
             );
@@ -651,6 +686,7 @@ class Rightpanel extends Component {
         <div style={{ margin: "2em 0" }}>
           {/* {this.props.explanationData && ( */}
           <ExplanationComp
+            lang={this.props.lang}
             handleExplanationEditor={this.props.handleExplanationEditor}
             explanationData={this.props.explanationData}
           />
@@ -677,7 +713,8 @@ class Rightpanel extends Component {
   }
 }
 
-function QuestionComp({ questionData, handleQuestionEditor }) {
+function QuestionComp({ lang, questionData, handleQuestionEditor }) {
+  // console.log(props);
   return (
     <Form.Group>
       <Form.Label
@@ -692,7 +729,87 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           margin: "0.5em 0"
         }}
       >
-        <CKEditor
+        {lang === "HINDI" ? (
+          <div>
+            <select
+              id="txtLanguage"
+              className="selectpicker"
+              onChange={window.setLang}
+              style={{ display: "none" }}
+            >
+              <option value="0">English</option>
+              <option value="1">Devnagari</option>
+            </select>
+
+            <select
+              id="txtKeyboard"
+              className="selectpicker"
+              onChange={window.changeKB}
+              style={{ display: "none" }}
+            >
+              <option value="Phonetic">Phonetic</option>
+              <option value="Typewrit">TypeWrit</option>
+            </select>
+            <CKEditor
+              onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+              config={{
+                height: 80
+              }}
+              onFocus={event => {
+                window.hook(event.editor.document.$.body);
+                event.editor.insertHtml(" ");
+                let data = event.editor.getData();
+                // console.log('focus',data)
+                handleQuestionEditor(data);
+              }}
+              oninstanceReady={event => {
+                var a = document.getElementById("txtLanguage");
+                a.selectedIndex = 1;
+                window.setLang();
+                var b = document.getElementById("txtKeyboard");
+                b.selectedIndex = 0;
+                window.changeKB();
+              }}
+              data={questionData}
+              onChange={event => {
+                let data = event.editor.getData();
+
+                handleQuestionEditor(data);
+              }}
+            />
+          </div>
+        ) : (
+          <CKEditor
+            onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+            config={{
+              height: 80
+              // font_defaultLabel: "lato",
+              // fontSize_sizes: "16/16px;24/24px;48/48px;",
+              // font_style: {
+              //   element: "p",
+              //   styles: { "font-size": "18px" },
+              //   overrides: [{ element: "font", attributes: { face: null } }]
+              // }
+              // placeholder: "Test description and instruction in English"
+            }}
+            onFocus={event => {
+              event.editor.insertHtml(" ");
+              let data = event.editor.getData();
+              // console.log('focus',data)
+              handleQuestionEditor(data);
+            }}
+            data={questionData}
+            //   config={{
+            //     plugins: [Pramukhime]
+            //   }}
+            onChange={event => {
+              let data = event.editor.getData();
+
+              handleQuestionEditor(data);
+            }}
+          />
+        )}
+        {/* <CKEditor
           onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
           config={{
             height: 80
@@ -706,7 +823,7 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
             // placeholder: "Test description and instruction in English"
           }}
           onFocus={event => {
-            event.editor.insertHtml( ' ' );
+            event.editor.insertHtml(" ");
             let data = event.editor.getData();
             // console.log('focus',data)
             handleQuestionEditor(data);
@@ -720,12 +837,12 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
 
             handleQuestionEditor(data);
           }}
-        />
+        /> */}
       </div>
     </Form.Group>
   );
 }
-function ExplanationComp({ explanationData, handleExplanationEditor }) {
+function ExplanationComp({ lang, explanationData, handleExplanationEditor }) {
   //   console.log(explanationData);
   return (
     <Form.Group>
@@ -741,7 +858,53 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
           margin: "0.5em 0"
         }}
       >
-        <CKEditor
+        {lang === "HINDI" ? (
+          <CKEditor
+            onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+            config={{
+              height: 80
+              // placeholder: "Test description and instruction in English"
+            }}
+            // onBlur={event=>{
+            //   console.log('blur',event)
+            // }}
+            onFocus={event => {
+              window.hook(event.editor.document.$.body);
+              event.editor.insertHtml(" ");
+              let data = event.editor.getData();
+
+              handleExplanationEditor(data);
+            }}
+            data={explanationData}
+            onChange={event => {
+              let data = event.editor.getData();
+              handleExplanationEditor(data);
+            }}
+          />
+        ) : (
+          <CKEditor
+            onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+            config={{
+              height: 80
+              // placeholder: "Test description and instruction in English"
+            }}
+            // onBlur={event=>{
+            //   console.log('blur',event)
+            // }}
+            onFocus={event => {
+              event.editor.insertHtml(" ");
+              let data = event.editor.getData();
+
+              handleExplanationEditor(data);
+            }}
+            data={explanationData}
+            onChange={event => {
+              let data = event.editor.getData();
+              handleExplanationEditor(data);
+            }}
+          />
+        )}
+        {/* <CKEditor
           onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
           config={{
             height: 80
@@ -751,7 +914,7 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
           //   console.log('blur',event)
           // }}
           onFocus={event => {
-            event.editor.insertHtml( ' ' );
+            event.editor.insertHtml(" ");
             let data = event.editor.getData();
 
             handleExplanationEditor(data);
@@ -761,7 +924,7 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
             let data = event.editor.getData();
             handleExplanationEditor(data);
           }}
-        />
+        /> */}
       </div>
     </Form.Group>
   );
@@ -774,6 +937,7 @@ class RightpanelNewVersion extends Component {
         {/* {this.props.questionData && ( */}
         <QuestionComp
           // ClassicEditor={ClassicEditor}
+          lang={this.props.lang}
           handleQuestionEditor={this.props.handleQuestionEditor}
           questionData={this.props.questionData}
         />
@@ -812,7 +976,7 @@ class RightpanelNewVersion extends Component {
                   {/* )} */}
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
-                  <CKEditor
+                  {/* <CKEditor
                     onBeforeLoad={CKEDITOR =>
                       (CKEDITOR.disableAutoInline = true)
                     }
@@ -824,7 +988,7 @@ class RightpanelNewVersion extends Component {
                     onFocus={event => {
                       // let data = event.editor.getData();
                       // console.log('focus')
-                      event.editor.insertHtml( ' ' );
+                      event.editor.insertHtml(" ");
                       this.props.handleOptioncontentchange(
                         index,
                         event.editor.getData()
@@ -839,7 +1003,67 @@ class RightpanelNewVersion extends Component {
                         event.editor.getData()
                       );
                     }}
-                  />
+                  /> */}
+                  {this.props.lang === "HINDI" ? (
+                    <CKEditor
+                      onBeforeLoad={CKEDITOR =>
+                        (CKEDITOR.disableAutoInline = true)
+                      }
+                      onFocus={event => {
+                        window.hook(event.editor.document.$.body);
+                        // let data = event.editor.getData();
+                        // console.log('focus')
+                        event.editor.insertHtml(" ");
+                        this.props.handleOptioncontentchange(
+                          index,
+                          event.editor.getData()
+                        );
+                      }}
+                      config={{
+                        height: 80
+
+                        // placeholder: "Test description and instruction in English"
+                      }}
+                      data={item.content}
+                      onChange={event => {
+                        // let data = editor.getData();
+                        // console.log('change')
+                        this.props.handleOptioncontentchange(
+                          index,
+                          event.editor.getData()
+                        );
+                      }}
+                    />
+                  ) : (
+                    <CKEditor
+                      onBeforeLoad={CKEDITOR =>
+                        (CKEDITOR.disableAutoInline = true)
+                      }
+                      onFocus={event => {
+                        // let data = event.editor.getData();
+                        // console.log('focus')
+                        event.editor.insertHtml(" ");
+                        this.props.handleOptioncontentchange(
+                          index,
+                          event.editor.getData()
+                        );
+                      }}
+                      config={{
+                        height: 80
+
+                        // placeholder: "Test description and instruction in English"
+                      }}
+                      data={item.content}
+                      onChange={event => {
+                        // let data = editor.getData();
+                        // console.log('change')
+                        this.props.handleOptioncontentchange(
+                          index,
+                          event.editor.getData()
+                        );
+                      }}
+                    />
+                  )}
                 </div>
               </React.Fragment>
             );
@@ -867,6 +1091,7 @@ class RightpanelNewVersion extends Component {
         <div style={{ margin: "2em 0" }}>
           {/* {this.props.explanationData && ( */}
           <ExplanationComp
+            lang={this.props.lang}
             handleExplanationEditor={this.props.handleExplanationEditor}
             explanationData={this.props.explanationData}
           />

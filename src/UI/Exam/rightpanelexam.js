@@ -54,8 +54,8 @@ class RightExamPanel extends Component {
               <CKEditor
                 // editor={ClassicEditor}
                 onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
-                onFocus={event=>{
-                  event.editor.insertHtml( ' ' );
+                onFocus={event => {
+                  event.editor.insertHtml(" ");
                   const data = event.editor.getData();
                   this.props.handleEnglishInstructionChange(data);
                 }}
@@ -73,6 +73,25 @@ class RightExamPanel extends Component {
 
             <div style={{ margin: "1em 0em", width: "100%" }}>
               <small>Test description and instruction in Hindi</small>
+              <select
+                id="txtLanguage"
+                className="selectpicker"
+                onChange={window.setLang}
+                style={{ display: "none" }}
+              >
+                <option value="0">English</option>
+                <option value="1">Devnagari</option>
+              </select>
+
+              <select
+                id="txtKeyboard"
+                className="selectpicker"
+                onChange={window.changeKB}
+                style={{ display: "none" }}
+              >
+                <option value="Phonetic">Phonetic</option>
+                <option value="Typewrit">TypeWrit</option>
+              </select>
               <CKEditor
                 onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
                 config={{
@@ -80,14 +99,23 @@ class RightExamPanel extends Component {
                   // placeholder: "Test description and instruction in English"
                 }}
                 data={this.props.testInstructionHindi}
-                onFocus={event=>{
-                  event.editor.insertHtml( ' ' );
+                onFocus={event => {
+                  window.hook(event.editor.document.$.body);
+                  event.editor.insertHtml(" ");
                   const data = event.editor.getData();
                   this.props.handleHindiInstructionChange(data);
                 }}
                 onChange={(event, editor) => {
                   const data = event.editor.getData();
                   this.props.handleHindiInstructionChange(data);
+                }}
+                oninstanceReady={event => {
+                  var a = document.getElementById("txtLanguage");
+                  a.selectedIndex = 1;
+                  window.setLang();
+                  var b = document.getElementById("txtKeyboard");
+                  b.selectedIndex = 0;
+                  window.changeKB();
                 }}
               />
             </div>
@@ -225,8 +253,8 @@ class RightExamPanel extends Component {
                             object => object.language === "ENGLISH"
                           )[0].content
                         }
-                        onFocus={event=>{
-                          event.editor.insertHtml( ' ' );
+                        onFocus={event => {
+                          event.editor.insertHtml(" ");
                           const data = event.editor.getData();
                           this.props.handleSectionDescriptionChange(
                             index,
@@ -261,8 +289,9 @@ class RightExamPanel extends Component {
                             object => object.language === "HINDI"
                           )[0].content
                         }
-                        onFocus={event=>{
-                          event.editor.insertHtml( ' ' );
+                        onFocus={event => {
+                          window.hook(event.editor.document.$.body);
+                          event.editor.insertHtml(" ");
                           const data = event.editor.getData();
                           this.props.handleSectionDescriptionChange(
                             index,
@@ -313,19 +342,19 @@ class RightExamPanel extends Component {
                             />
                           </Col>
                           {/* {item.questions.length === indexquestion + 1 && ( */}
-                            <Col>
-                              <Button
-                                style={{ float: "left", color: "grey" }}
-                                variant="link"
-                                onClick={this.props.deleteSectionQuestion.bind(
-                                  this,
-                                  index,
-                                  indexquestion
-                                )}
-                              >
-                                X Delete
-                              </Button>
-                            </Col>
+                          <Col>
+                            <Button
+                              style={{ float: "left", color: "grey" }}
+                              variant="link"
+                              onClick={this.props.deleteSectionQuestion.bind(
+                                this,
+                                index,
+                                indexquestion
+                              )}
+                            >
+                              X Delete
+                            </Button>
+                          </Col>
                           {/* )} */}
                         </Row>
                       );

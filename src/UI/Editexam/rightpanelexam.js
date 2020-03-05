@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {  Row, Col, Form, Container } from "react-bootstrap";
+import { Row, Col, Form, Container } from "react-bootstrap";
 // import CKEditor from "@ckeditor/ckeditor5-react";
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import CKEditor from "ckeditor4-react";
@@ -8,11 +8,10 @@ class RightExamPanel extends Component {
     return (
       <div>
         <Row noGutters={true} style={{ height: "auto" }}>
-        
           <Container fluid style={{ padding: "0" }}>
             <Form.Control
               style={{
-                fontWeight: "600",
+                fontWeight: "600"
                 // margin: " 0 0.5em"
               }}
               plaintext
@@ -58,8 +57,8 @@ class RightExamPanel extends Component {
                   height: 80
                   // placeholder: "Test description and instruction in English"
                 }}
-                onFocus={event=>{
-                  event.editor.insertHtml( ' ' );
+                onFocus={event => {
+                  event.editor.insertHtml(" ");
                   this.props.handleEnglishInstructionChange(
                     event.editor.getData()
                   );
@@ -75,6 +74,25 @@ class RightExamPanel extends Component {
             </div>
             <div style={{ margin: "1em 0em", width: "100%" }}>
               <small>Test description and instruction in Hindi</small>
+              <select
+                id="txtLanguage"
+                className="selectpicker"
+                onChange={window.setLang}
+                style={{ display: "none" }}
+              >
+                <option value="0">English</option>
+                <option value="1">Devnagari</option>
+              </select>
+
+              <select
+                id="txtKeyboard"
+                className="selectpicker"
+                onChange={window.changeKB}
+                style={{ display: "none" }}
+              >
+                <option value="Phonetic">Phonetic</option>
+                <option value="Typewrit">TypeWrit</option>
+              </select>
               <CKEditor
                 onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
                 // editor={ClassicEditor}
@@ -83,8 +101,9 @@ class RightExamPanel extends Component {
                   // placeholder: "Test description and instruction in Hindi"
                 }}
                 data={this.props.testInstructionHindi}
-                onFocus={event=>{
-                  event.editor.insertHtml( ' ' );
+                onFocus={event => {
+                  window.hook(event.editor.document.$.body);
+                  event.editor.insertHtml(" ");
                   this.props.handleHindiInstructionChange(
                     event.editor.getData()
                   );
@@ -94,6 +113,14 @@ class RightExamPanel extends Component {
                   this.props.handleHindiInstructionChange(
                     event.editor.getData()
                   );
+                }}
+                oninstanceReady={event => {
+                  var a = document.getElementById("txtLanguage");
+                  a.selectedIndex = 1;
+                  window.setLang();
+                  var b = document.getElementById("txtKeyboard");
+                  b.selectedIndex = 0;
+                  window.changeKB();
                 }}
               />
             </div>
@@ -235,8 +262,8 @@ class RightExamPanel extends Component {
                           // placeholder:
                           //   "Section description and instruction in English"
                         }}
-                        onFocus={event=>{
-                          event.editor.insertHtml( ' ' );
+                        onFocus={event => {
+                          event.editor.insertHtml(" ");
                           this.props.handleSectionDescriptionChange(
                             index,
                             "ENGLISH",
@@ -272,8 +299,9 @@ class RightExamPanel extends Component {
                           placeholder:
                             "Section description and instruction in Hindi"
                         }}
-                        onFocus={event=>{
-                          event.editor.insertHtml( ' ' );
+                        onFocus={event => {
+                          window.hook(event.editor.document.$.body);
+                          event.editor.insertHtml(" ");
                           this.props.handleSectionDescriptionChange(
                             index,
                             "HINDI",
@@ -292,38 +320,39 @@ class RightExamPanel extends Component {
                     </div>
                   </div>
                   {item.testSectionMapping &&
-                    item.testSectionMapping.map((itemquestion, indexquestion) => {
-                      return (
-                        <Row style={{ marginTop: "0.5em" }}>
-                          {/* <Col lg="2"></Col> */}
-                          <Col lg="1">
-                            <Form.Control
-                              style={{
-                                fontWeight: "500",
-                                margin: " 0 0.5em",
-                                textAlign: "right"
-                                // paddingRight:'0'
-                              }}
-                              plaintext
-                              readOnly
-                              defaultValue={`Q ${indexquestion + 1}`}
-                            />
-                          </Col>
-                          <Col lg="3" style={{}}>
-                            <Form.Control
-                              disabled
-                              type="number"
-                              value={itemquestion.questionId}
-                              onChange={this.props.handlSectionQuestionValueChange.bind(
-                                this,
-                                index,
-                                indexquestion
-                              )}
-                              placeholder="Question ID#"
-                              style={{ borderRadius: "0" }}
-                            />
-                          </Col>
-                          {/* {item.questions.length === indexquestion + 1 && (
+                    item.testSectionMapping.map(
+                      (itemquestion, indexquestion) => {
+                        return (
+                          <Row style={{ marginTop: "0.5em" }}>
+                            {/* <Col lg="2"></Col> */}
+                            <Col lg="1">
+                              <Form.Control
+                                style={{
+                                  fontWeight: "500",
+                                  margin: " 0 0.5em",
+                                  textAlign: "right"
+                                  // paddingRight:'0'
+                                }}
+                                plaintext
+                                readOnly
+                                defaultValue={`Q ${indexquestion + 1}`}
+                              />
+                            </Col>
+                            <Col lg="3" style={{}}>
+                              <Form.Control
+                                disabled
+                                type="number"
+                                value={itemquestion.questionId}
+                                onChange={this.props.handlSectionQuestionValueChange.bind(
+                                  this,
+                                  index,
+                                  indexquestion
+                                )}
+                                placeholder="Question ID#"
+                                style={{ borderRadius: "0" }}
+                              />
+                            </Col>
+                            {/* {item.questions.length === indexquestion + 1 && (
                             <Col>
                               <Button
                                 style={{ float: "left", color: "grey" }}
@@ -337,9 +366,10 @@ class RightExamPanel extends Component {
                               </Button>
                             </Col>
                           )} */}
-                        </Row>
-                      );
-                    })}
+                          </Row>
+                        );
+                      }
+                    )}
                   <Row style={{ marginTop: "0.5em" }}>
                     <Col lg="1"></Col>
                     <Col>

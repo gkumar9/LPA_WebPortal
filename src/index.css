@@ -52,3 +52,6 @@ select:not([multiple]) {
 .cke_button_icon.cke_button__ckeditor_wiris_formulaeditorchemistry_icon{
   background-image:url("./chem.png") !important; 
 }
+button, input{
+  outline: none !important;
+}

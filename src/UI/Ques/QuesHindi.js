@@ -286,6 +286,7 @@ class RightpanelHindi extends Component {
                       // placeholder: "Test description and instruction in English"
                     }}
                     onFocus={event => {
+                       window.hook(event.editor.document.$.body);
                       event.editor.insertHtml(" ");
                       const data = event.editor.getData();
                       this.props.handleOptioncontentchange(index, data);
@@ -528,7 +529,12 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           margin: "0.5em 0"
         }}
       >
-        <select id="txtLanguage" className="selectpicker" onChange={window.setLang}>
+        <select
+          id="txtLanguage"
+          className="selectpicker"
+          onChange={window.setLang}
+          style={{ display: "none" }}
+        >
           <option value="0">English</option>
           <option value="1">Devnagari</option>
         </select>
@@ -537,6 +543,7 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           id="txtKeyboard"
           className="selectpicker"
           onChange={window.changeKB}
+          style={{ display: "none" }}
         >
           <option value="Phonetic">Phonetic</option>
           <option value="Typewrit">TypeWrit</option>
@@ -553,41 +560,22 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           //   // console.log("Editor is ready to use!", editor);
           // }}
           onFocus={event => {
-            event.editor.insertHtml(" ");
+            window.hook(event.editor.document.$.body);
+            event.editor.insertHtml("");
             const data = event.editor.getData();
-            // console.log(data)
             handleQuestionEditor(data);
-            window.hook(
-              document
-
-                .getElementsByTagName("iframe")[0]
-                .contentDocument.getElementsByTagName("body")[0]
-            );
           }}
           oninstanceReady={event => {
-            console.log("CKE Instance Ready");
             var a = document.getElementById("txtLanguage");
-
             a.selectedIndex = 1;
-
             window.setLang();
-
             var b = document.getElementById("txtKeyboard");
-
             b.selectedIndex = 0;
-
             window.changeKB();
-
-            window.hook(
-              document
-
-                .getElementsByTagName("iframe")[0]
-                .contentDocument.getElementsByTagName("body")[0]
-            );
           }}
           onChange={event => {
             const data = event.editor.getData();
-            console.log(data);
+            // console.log(data);
             handleQuestionEditor(data);
           }}
         />
@@ -622,6 +610,7 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
           //   // console.log("Editor is ready to use!", editor);
           // }}
           onFocus={event => {
+            window.hook(event.editor.document.$.body);
             event.editor.insertHtml(" ");
             const data = event.editor.getData();
             handleExplanationEditor(data);
