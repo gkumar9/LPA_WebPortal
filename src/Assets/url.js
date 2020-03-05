@@ -11,12 +11,12 @@ let URL = {
   searchexam: Base_url + "/api/test/list/",
   fetchExam: Base_url + "/api/exams/",
   fetchSubjectForExam: Base_url + "/api/exam/subject/mapping/",
-  addnewExam:Base_url+'/api/add/new/test',
-  geteditques:Base_url+'/api/question/content/',
-  updateExistingQuestionVersion:Base_url+'/api/update/existing/question/version',
-  getexamcontent:Base_url+'/api/test/content/',
-  updatetest:Base_url+'/api/update/test',
-  tagsearch:Base_url+'/api/tag/search/'
-
+  addnewExam: Base_url + "/api/add/new/test",
+  geteditques: Base_url + "/api/question/content/",
+  updateExistingQuestionVersion:
+    Base_url + "/api/update/existing/question/version",
+  getexamcontent: Base_url + "/api/test/content/",
+  updatetest: Base_url + "/api/update/test",
+  tagsearch: Base_url + "/api/tag/search/"
 };
 export default URL;

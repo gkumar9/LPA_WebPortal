@@ -323,7 +323,10 @@ class RightExamPanel extends Component {
                     item.testSectionMapping.map(
                       (itemquestion, indexquestion) => {
                         return (
-                          <Row style={{ marginTop: "0.5em" }}>
+                          <Row
+                            style={{ marginTop: "0.5em" }}
+                            key={indexquestion}
+                          >
                             {/* <Col lg="2"></Col> */}
                             <Col lg="1">
                               <Form.Control

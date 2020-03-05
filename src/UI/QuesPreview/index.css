@@ -1,42 +1,61 @@
 @media print {
-    @page {
-      /* size: landscape; */
-    }
-    .backbuttonprint {
-      visibility: hidden;
-    }
-    .backbuttonprint.btn.btn-link{
-      color:white;
-    }
-   
+  @page {
+    /* size: landscape; */
   }
-  
+  .backbuttonprint {
+    visibility: hidden;
+  }
+  .backbuttonprint.btn.btn-link {
+    color: white;
+  }
+
+  .col-lg-6 {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .col-lg-4 {
+    -ms-flex: 0 0 33.333333%;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+  }
+  .col-lg-1 {
+    -ms-flex: 0 0 8.333333%;
+    flex: 0 0 8.333333%;
+    max-width: 8.333333%;
+  }
+}
+
 /*
     The example loads the DejaVu Sans from the Kendo UI CDN.
     Other fonts have to be hosted from your application.
     The official site of the Deja Vu Fonts project is
     https://dejavu-fonts.github.io/.
   */
-  @font-face {
-    font-family: "DejaVu Sans";
-    src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans.ttf") format("truetype");
-  }
+@font-face {
+  font-family: "DejaVu Sans";
+  src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans.ttf")
+    format("truetype");
+}
 
-  @font-face {
-    font-family: "DejaVu Sans";
-    font-weight: bold;
-    src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans-Bold.ttf") format("truetype");
-  }
+@font-face {
+  font-family: "DejaVu Sans";
+  font-weight: bold;
+  src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans-Bold.ttf")
+    format("truetype");
+}
 
-  @font-face {
-    font-family: "DejaVu Sans";
-    font-style: italic;
-    src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans-Oblique.ttf") format("truetype");
-  }
+@font-face {
+  font-family: "DejaVu Sans";
+  font-style: italic;
+  src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans-Oblique.ttf")
+    format("truetype");
+}
 
-  @font-face {
-    font-family: "DejaVu Sans";
-    font-weight: bold;
-    font-style: italic;
-    src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans-Oblique.ttf") format("truetype");
-  }
+@font-face {
+  font-family: "DejaVu Sans";
+  font-weight: bold;
+  font-style: italic;
+  src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans-Oblique.ttf")
+    format("truetype");
+}

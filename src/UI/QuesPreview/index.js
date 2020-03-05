@@ -73,7 +73,7 @@ class ShowData extends Component {
   render() {
     return (
       <Container>
-        <PdfContainer createPdf={this.createPdf}>
+        <div>
           <div
             style={{
               padding: "0.5em 1.5em"
@@ -305,7 +305,7 @@ class ShowData extends Component {
                 );
               })}
           </div>
-        </PdfContainer>
+        </div>
       </Container>
     );
   }

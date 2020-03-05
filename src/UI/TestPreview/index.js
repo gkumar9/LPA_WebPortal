@@ -9,7 +9,7 @@ import PdfContainer from "./../QuesPreview/pdf";
 import Doc from "./../QuesPreview/doc";
 // import ReactHtmlParser from "react-html-parser";
 import MathJax from "react-mathjax-preview";
-
+import '../QuesPreview/index.css'
 class Previewtest extends Component {
   constructor(props) {
     super(props);
@@ -61,7 +61,7 @@ class Previewtest extends Component {
       <React.Fragment>
         <Header props={this.props} />
         {this.state.isData && localStorage.getItem("TestPreviewLanguage") ? (
-          <PdfContainer createPdf={this.createPdfexam}>
+          <div>
             <Container style={{ marginTop: "1em" }}>
               <center style={{ margin: "0 2em", textTransform: "capitalize" }}>
                 <h3>
@@ -179,7 +179,7 @@ class Previewtest extends Component {
                 );
               })}
             </Container>
-          </PdfContainer>
+          </div>
         ) : (
           <Error404 />
         )}

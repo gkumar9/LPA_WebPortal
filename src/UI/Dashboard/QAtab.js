@@ -1246,8 +1246,6 @@ class QAtab extends Component {
                 </Col>
               </Row>
               <BottomScrollListener onBottom={this.callbackofend}>
-                {/* {scrollRefQ => ( */}
-                {/* <div ref={scrollRefQ}> */}
                 {this.state.searchResultList.length > 0 && (
                   <Row style={{ margin: "0 0em 1em" }}>
                     <Col
@@ -1553,8 +1551,6 @@ class QAtab extends Component {
                     </Row>
                   )}
                 </div>
-                {/* </div> */}
-                {/* )} */}
               </BottomScrollListener>
             </Col>
           </Row>
