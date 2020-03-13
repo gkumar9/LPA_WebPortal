@@ -52,6 +52,7 @@ class ExamEditComponent extends Component {
         item => item.language === "HINDI"
       )[0].testVersionId
     };
+    window.ExamEditComponent=this;
   }
   addSectionQuestions = index => {
     let tempsectionlist = this.state.listOfSection;

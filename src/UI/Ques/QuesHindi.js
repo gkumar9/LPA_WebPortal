@@ -20,6 +20,10 @@ class QuesHindi extends Component {
       ],
       letterchartcode: 67
     };
+    this.myRefQuestion = React.createRef();
+    this.myRefExplanation = React.createRef();
+    this.refsArray = [];
+    window.QuesHindi = this;
   }
 
   addoptionfn = () => {
@@ -34,9 +38,12 @@ class QuesHindi extends Component {
   };
   deleteOption = index => {
     let currentArrayOfOption = this.state.listOfOptions;
-    let letterchartcode = 65;
 
+    let letterchartcode = 65;
+    console.log(this.refsArray);
     currentArrayOfOption.splice(index, 1);
+    // this.refsArray.splice(index,1);
+    console.log(currentArrayOfOption);
     currentArrayOfOption = currentArrayOfOption.map(item => {
       let name = "Option " + String.fromCharCode(letterchartcode);
       letterchartcode++;
@@ -50,7 +57,7 @@ class QuesHindi extends Component {
   };
 
   handleQuestionEditor = data => {
-    // console.log('data')
+    // console.log("handleQuestionEditor");
     this.setState({ questionData: data });
   };
   handleExplanationEditor = data => {
@@ -78,6 +85,11 @@ class QuesHindi extends Component {
     });
   };
   saveHindidata = () => {
+    // const nodequestion = this.myRefQuestion.current;
+    // // console.log(nodequestion.editor.getData());
+    // const nodeexplanation = this.myRefExplanation.current;
+    // // console.log(nodeexplanation.editor.getData());
+    // this.refsArray.map(item => console.log(item.editor.getData()));
     // console.log("questionId:", this.props.questionId);
     let difficultyvalue;
     switch (this.props.difficulty) {
@@ -96,7 +108,6 @@ class QuesHindi extends Component {
     let converttags = this.props.tags.map(item => {
       return { tagId: item.id ? item.id : 0, tag: item.name };
     });
-
     axios({
       method: "POST",
       url:
@@ -117,6 +128,14 @@ class QuesHindi extends Component {
           content: this.state.questionData,
           language: "HINDI",
           options: this.state.listOfOptions,
+          // .map((item, index) => {
+          //   item.content = this.refsArray[index].editor.getData();
+          //   return {
+          //     name: item.name,
+          //     content: item.content,
+          //     weightage: item.weightage
+          //   };
+          // }),
           // questionVersionId: 0,
           solution: this.state.explanationData
         }
@@ -217,6 +236,9 @@ class QuesHindi extends Component {
           >
             <div style={{ margin: "2.5em 0em" }}>
               <RightpanelHindi
+                myRefQuestion={this.myRefQuestion}
+                myRefExplanation={this.myRefExplanation}
+                refsArray={this.refsArray}
                 handleQuestionEditor={this.handleQuestionEditor}
                 questionData={this.state.questionData}
                 handleExplanationEditor={this.handleExplanationEditor}
@@ -241,6 +263,7 @@ class RightpanelHindi extends Component {
     return (
       <Form>
         <QuestionComp
+          // myRefQuestion={this.props.myRefQuestion}
           handleQuestionEditor={this.props.handleQuestionEditor}
           questionData={this.props.questionData}
         />
@@ -278,6 +301,11 @@ class RightpanelHindi extends Component {
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
+                    // ref={ref => {
+                    //   // Callback refs are preferable when
+                    //   // dealing with dynamic refs
+                    //   this.props.refsArray[index] = ref;
+                    // }}
                     onBeforeLoad={CKEDITOR =>
                       (CKEDITOR.disableAutoInline = true)
                     }
@@ -286,10 +314,11 @@ class RightpanelHindi extends Component {
                       // placeholder: "Test description and instruction in English"
                     }}
                     onFocus={event => {
-                       window.hook(event.editor.document.$.body);
+                      window.hook(event.editor.document.$.body);
                       event.editor.insertHtml(" ");
                       const data = event.editor.getData();
                       this.props.handleOptioncontentchange(index, data);
+                      installKeyupOption(index, event.editor);
                     }}
                     data={item.content}
                     onChange={event => {
@@ -323,6 +352,7 @@ class RightpanelHindi extends Component {
         </Row>
         <div style={{ margin: "2em 0" }}>
           <ExplanationComp
+            // myRefExplanation={this.props.myRefExplanation}
             handleExplanationEditor={this.props.handleExplanationEditor}
             explanationData={this.props.explanationData}
           />
@@ -549,21 +579,18 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           <option value="Typewrit">TypeWrit</option>
         </select>
         <CKEditor
+          // ref={myRefQuestion}
           onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
           config={{
             height: 80
-            // placeholder: "Test description and instruction in English"
           }}
           data={questionData}
-          // onInit={editor => {
-          //   // You can store the "editor" and use when it is needed.
-          //   // console.log("Editor is ready to use!", editor);
-          // }}
           onFocus={event => {
             window.hook(event.editor.document.$.body);
             event.editor.insertHtml("");
             const data = event.editor.getData();
             handleQuestionEditor(data);
+            installKeyupQuestion(event.editor);
           }}
           oninstanceReady={event => {
             var a = document.getElementById("txtLanguage");
@@ -583,7 +610,17 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
     </Form.Group>
   );
 }
-function ExplanationComp({ explanationData, handleExplanationEditor }) {
+// function displayData() {
+//   console.log("Keyup Event");
+//   // event.editor.insertHtml("");
+//   // window.QuesHindi.handleQuestionEditor(this.innerHTML);
+// }
+
+function ExplanationComp({
+  explanationData,
+  handleExplanationEditor
+  // myRefExplanation
+}) {
   return (
     <Form.Group controlId="exampleForm.EControlInput11">
       <Form.Label
@@ -599,35 +636,47 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
         }}
       >
         <CKEditor
+          // ref={myRefExplanation}
           onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
           config={{
             height: 80
-            // placeholder: "Test description and instruction in English"
           }}
           data={explanationData}
-          // onInit={editor => {
-          //   // You can store the "editor" and use when it is needed.
-          //   // console.log("Editor is ready to use!", editor);
-          // }}
           onFocus={event => {
             window.hook(event.editor.document.$.body);
             event.editor.insertHtml(" ");
             const data = event.editor.getData();
             handleExplanationEditor(data);
+            installKeyupSolution(event.editor);
           }}
           onChange={(event, editor) => {
             const data = event.editor.getData();
             handleExplanationEditor(data);
           }}
-          // onBlur={(event, editor) => {
-          //   console.log("Blur.", editor);
-          // }}
-          // onFocus={(event, editor) => {
-          //   console.log("Focus.", editor);
-          // }}
         />
       </div>
     </Form.Group>
   );
+}
+function installKeyupSolution(editor) {
+  editor.document.on("keyup", function(event) {
+    const data = editor.getData();
+
+    window.QuesHindi.handleExplanationEditor(data);
+  });
+}
+function installKeyupQuestion(editor) {
+  editor.document.on("keyup", function(event) {
+    const data = editor.getData();
+
+    window.QuesHindi.handleQuestionEditor(data);
+  });
+}
+function installKeyupOption(index, editor) {
+  editor.document.on("keyup", function(event) {
+    const data = editor.getData();
+
+    window.QuesHindi.handleOptioncontentchange(index, data);
+  });
 }
 export default QuesHindi;

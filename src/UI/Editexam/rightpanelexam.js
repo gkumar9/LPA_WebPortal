@@ -107,6 +107,7 @@ class RightExamPanel extends Component {
                   this.props.handleHindiInstructionChange(
                     event.editor.getData()
                   );
+                  installKeyupTestNameHindi(event.editor);
                 }}
                 onChange={event => {
                   // const data = editor.getData();
@@ -307,6 +308,7 @@ class RightExamPanel extends Component {
                             "HINDI",
                             event.editor.getData()
                           );
+                          installKeyupSection(index, "HINDI", event.editor);
                         }}
                         onChange={event => {
                           // const data = editor.getData();
@@ -426,6 +428,20 @@ class RightExamPanel extends Component {
       </div>
     );
   }
+}
+function installKeyupTestNameHindi(editor) {
+  editor.document.on("keyup", function(event) {
+    const data = editor.getData();
+
+    window.Exam.handleHindiInstructionChange(data);
+  });
+}
+function installKeyupSection(index, hindi, editor) {
+  editor.document.on("keyup", function(event) {
+    const data = editor.getData();
+
+    window.Exam.handleSectionDescriptionChange(index, hindi, data);
+  });
 }
 
 export default RightExamPanel;

@@ -60,6 +60,7 @@ class Exam extends Component {
         }
       ]
     };
+    window.Exam = this;
   }
   addSectionQuestions = index => {
     let tempsectionlist = this.state.listOfSection;

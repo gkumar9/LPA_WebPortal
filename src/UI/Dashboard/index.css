@@ -31,3 +31,10 @@
 .react-tags {
   background: #f9f9f9;
 }
+#previewcard img{
+  max-width: 200px;
+ max-height: 200px;
+}
+input[type=checkbox]{
+  transform: scale(1.3);
+}

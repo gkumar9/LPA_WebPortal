@@ -3,7 +3,7 @@ import Error404 from "./404.js";
 import { Button, Container, Card, Row, Col } from "react-bootstrap";
 import Header from "../Header/index";
 import "./index.css";
-import PdfContainer from "./pdf.js";
+// import PdfContainer from "./pdf.js";
 import Doc from "./doc";
 // import ReactHtmlParser from "react-html-parser";
 import MathJax from "react-mathjax-preview";
@@ -101,6 +101,7 @@ class ShowData extends Component {
                           }}
                         >
                           <Card
+                          id="cardpreview"
                             style={{
                               background: "transparent",
                               borderColor: "transparent"
@@ -189,17 +190,11 @@ class ShowData extends Component {
                                 </Row>
                               </Card.Title>
 
-                              <Card.Text style={{ marginBottom: "0em" }}>
+                              <Card.Text
+                                style={{ marginBottom: "0em", display: "flex" }}
+                              >
                                 <b>{"Q. "}</b>
-                                {/* <div
-                                  dangerouslySetInnerHTML={{
-                                    __html: item.questionVersions.filter(
-                                      obbj =>
-                                        obbj.language ===
-                                        this.state.selectedLanguage
-                                    )[0].content
-                                  }}
-                                ></div> */}
+
                                 <span>
                                   <MathJax
                                     style={{ display: "inline-flex" }}
@@ -211,18 +206,6 @@ class ShowData extends Component {
                                       )[0].content
                                     }
                                   />
-                                  {/* {item.questionVersions.filter(
-                                        obbj =>
-                                          obbj.language ===
-                                          this.state.selectedLanguage
-                                      )[0].content} */}
-                                  {/* {ReactHtmlParser(
-                                  item.questionVersions.filter(
-                                    obbj =>
-                                      obbj.language ===
-                                      this.state.selectedLanguage
-                                  )[0].content
-                                )} */}
                                 </span>
                                 {/* {item.questionVersions
                                   .filter(
@@ -244,30 +227,35 @@ class ShowData extends Component {
                                       <React.Fragment key={optionindex}>
                                         <Col
                                           lg="6"
-                                          style={{ margin: "0.5em 0" }}
+                                          style={{
+                                            margin: "0.5em 0",
+                                            display: "flex"
+                                          }}
                                         >
+                                          {" "}
                                           {optionindex + 1}
                                           {") "}{" "}
                                           <MathJax
                                             style={{ display: "inline-flex" }}
                                             math={optionitem.content}
                                           />
-                                          {/* {ReactHtmlParser(optionitem.content)} */}
-                                          {/* {optionitem.content.replace(
-                                            /<\/?[^>]+(>|$)/g,
-                                            ""
-                                          )}{" "} */}
                                           <sub
-                                          // style={{border:' dimgrey solid',padding:'0.1em'}}
+                                            style={{
+                                              display: "inline-block",
+                                              position: "absolute",
+                                              bottom: "0",
+                                              left: "0",
+                                              margin: " 0em 2em"
+                                            }}
                                           >
-                                            (<b> {optionitem.weightage} </b>)
+                                             <b>W: {optionitem.weightage} </b>
                                           </sub>
                                         </Col>
                                       </React.Fragment>
                                     );
                                   })}{" "}
                               </Row>
-                              <Row style={{ margin: "0.2em 0.1em" }}>
+                              <Row style={{ margin: "1em 0.1em" }}>
                                 <b> Sol. </b> &nbsp;
                                 <MathJax
                                   style={{ display: "inline-flex" }}

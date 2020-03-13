@@ -22,6 +22,7 @@ class EditComponent extends Component {
       listOfOptions: [],
       letterchartcode: 65
     };
+    window.EditComponent = this;
   }
   addoptionfn = () => {
     let currentCharCode = this.state.letterchartcode;
@@ -150,7 +151,7 @@ class EditComponent extends Component {
     let converttags = this.props.tags.map(item => {
       return { tagId: item.id, tag: item.name };
     });
-    console.log(this.state.listOfOptions);
+    // console.log(this.state.listOfOptions);
     axios({
       method: "POST",
       url: URL.updateExistingQuestionVersion,
@@ -613,6 +614,7 @@ class Rightpanel extends Component {
                           index,
                           event.editor.getData()
                         );
+                        installKeyupOption(index, event.editor);
                       }}
                       config={{
                         height: 80
@@ -761,6 +763,7 @@ function QuestionComp({ lang, questionData, handleQuestionEditor }) {
                 let data = event.editor.getData();
                 // console.log('focus',data)
                 handleQuestionEditor(data);
+                installKeyupQuestion(event.editor);
               }}
               oninstanceReady={event => {
                 var a = document.getElementById("txtLanguage");
@@ -874,6 +877,7 @@ function ExplanationComp({ lang, explanationData, handleExplanationEditor }) {
               let data = event.editor.getData();
 
               handleExplanationEditor(data);
+              installKeyupSolution(event.editor);
             }}
             data={explanationData}
             onChange={event => {
@@ -1018,6 +1022,7 @@ class RightpanelNewVersion extends Component {
                           index,
                           event.editor.getData()
                         );
+                        installKeyupOption(index, event.editor);
                       }}
                       config={{
                         height: 80
@@ -1116,5 +1121,26 @@ class RightpanelNewVersion extends Component {
       </Form>
     );
   }
+}
+function installKeyupSolution(editor) {
+  editor.document.on("keyup", function(event) {
+    const data = editor.getData();
+
+    window.EditComponent.handleExplanationEditor(data);
+  });
+}
+function installKeyupQuestion(editor) {
+  editor.document.on("keyup", function(event) {
+    const data = editor.getData();
+
+    window.EditComponent.handleQuestionEditor(data);
+  });
+}
+function installKeyupOption(index, editor) {
+  editor.document.on("keyup", function(event) {
+    const data = editor.getData();
+
+    window.EditComponent.handleOptioncontentchange(index, data);
+  });
 }
 export default EditComponent;

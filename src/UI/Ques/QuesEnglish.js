@@ -549,7 +549,7 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           }}
           onChange={event => {
             const data = event.editor.getData();
-            // console.log('data change')
+            console.log(data);
             handleQuestionEditor(data);
           }}
         />
@@ -557,6 +557,7 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
     </Form.Group>
   );
 }
+
 function ExplanationComp({ explanationData, handleExplanationEditor }) {
   return (
     <Form.Group controlId="exampleForm.EControlInput1">

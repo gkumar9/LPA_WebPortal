@@ -5,7 +5,7 @@ import Error404 from "../QuesPreview/404.js";
 import "../QuesPreview/index.css";
 import axios from "axios";
 import URL from "../../Assets/url";
-import PdfContainer from "./../QuesPreview/pdf";
+// import PdfContainer from "./../QuesPreview/pdf";
 import Doc from "./../QuesPreview/doc";
 // import ReactHtmlParser from "react-html-parser";
 import MathJax from "react-mathjax-preview";
@@ -198,7 +198,8 @@ class QuestionShowData extends Component {
     };
   }
   componentDidMount() {
-    this.state.editabledata.map(item => {
+    // eslint-disable-next-line array-callback-return
+    this.state.editabledata.map((item)=> {
       axios({
         method: "POST",
         url: URL.geteditques + item.questionId,

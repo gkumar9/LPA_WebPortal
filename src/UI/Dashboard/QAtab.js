@@ -896,6 +896,7 @@ class QAtab extends Component {
                 }}
               >
                 <Card
+                  id="previewcard"
                   style={{
                     background: "transparent",
                     borderColor: "transparent"
@@ -960,7 +961,9 @@ class QAtab extends Component {
                       </Row>
                     </Card.Title>
 
-                    <Card.Text style={{ marginBottom: "0.5em" }}>
+                    <Card.Text
+                      style={{ marginBottom: "0.5em", display: "flex" }}
+                    >
                       <b>{"Q. "}</b>
                       <MathJax
                         style={{ display: "inline-flex" }}
@@ -971,11 +974,6 @@ class QAtab extends Component {
                           )[0].content
                         }
                       />
-                      {/* {res.data.data.question.questionVersions
-                        .filter(
-                          obbj => obbj.language === this.state.selectedLanguage
-                        )[0]
-                        .content.replace(/<\/?[^>]+(>|$)/g, "")} */}
                     </Card.Text>
                     <Row>
                       {res.data.data.question.questionVersions
@@ -985,21 +983,27 @@ class QAtab extends Component {
                         .options.map((optionitem, optionindex) => {
                           return (
                             <React.Fragment key={optionindex}>
-                              <Col lg="6" style={{ margin: "0.5em 0" }}>
+                              <Col
+                                lg="6"
+                                style={{ margin: "1em 0", display: "flex" }}
+                              >
+                                {" "}
                                 {optionindex + 1}
                                 {") "}{" "}
                                 <MathJax
                                   style={{ display: "inline-flex" }}
                                   math={optionitem.content}
                                 />
-                                {/* {optionitem.content.replace(
-                                  /<\/?[^>]+(>|$)/g,
-                                  ""
-                                )}{" "} */}
                                 <sub
-                                // style={{border:' dimgrey solid',padding:'0.1em'}}
+                                  style={{
+                                    display: "inline-block",
+                                    position: "absolute",
+                                    bottom: "0",
+                                    left: "0",
+                                    margin: " 0em 2em"
+                                  }}
                                 >
-                                  (<b> {optionitem.weightage} </b>)
+                                  <b> W: {optionitem.weightage} </b>
                                 </sub>
                               </Col>
                             </React.Fragment>
