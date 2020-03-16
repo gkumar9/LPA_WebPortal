@@ -16,9 +16,11 @@ class QuesHindi extends Component {
       explanationData: "",
       listOfOptions: [
         { name: "Option A", content: "", weightage: 0 },
-        { name: "Option B", content: "", weightage: 0 }
+        { name: "Option B", content: "", weightage: 0 },
+        { name: "Option C", content: "", weightage: 0 },
+        { name: "Option D", content: "", weightage: 0 }
       ],
-      letterchartcode: 67
+      letterchartcode: 69
     };
     this.myRefQuestion = React.createRef();
     this.myRefExplanation = React.createRef();
@@ -57,10 +59,11 @@ class QuesHindi extends Component {
   };
 
   handleQuestionEditor = data => {
-    // console.log("handleQuestionEditor");
+    
     this.setState({ questionData: data });
   };
   handleExplanationEditor = data => {
+    
     this.setState({ explanationData: data });
   };
   handleOptioncontentchange = (index, data) => {
@@ -74,12 +77,12 @@ class QuesHindi extends Component {
     });
   };
   handleOptionWeightageChange = (index, e) => {
-    e.preventDefault();
+    // e.preventDefault();
     // console.log(typeof parseInt(e.target.value));
     let currentArrayOfOption = this.state.listOfOptions;
     currentArrayOfOption[index].weightage = e.target.value
       ? parseInt(e.target.value)
-      : 0;
+      : "";
     this.setState({
       listOfOptions: currentArrayOfOption
     });
@@ -168,9 +171,11 @@ class QuesHindi extends Component {
             explanationData: "",
             listOfOptions: [
               { name: "Option A", content: "", weightage: 0 },
-              { name: "Option B", content: "", weightage: 0 }
+              { name: "Option B", content: "", weightage: 0 },
+              { name: "Option C", content: "", weightage: 0 },
+              { name: "Option D", content: "", weightage: 0 }
             ],
-            letterchartcode: 67
+            letterchartcode: 69
           });
           // }
         } else {
@@ -651,6 +656,7 @@ function ExplanationComp({
           }}
           onChange={(event, editor) => {
             const data = event.editor.getData();
+            // console.log(data)
             handleExplanationEditor(data);
           }}
         />

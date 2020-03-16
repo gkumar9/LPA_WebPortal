@@ -16,9 +16,11 @@ class QuesEnglish extends Component {
       explanationData: "",
       listOfOptions: [
         { name: "Option A", content: "", weightage: 0 },
-        { name: "Option B", content: "", weightage: 0 }
+        { name: "Option B", content: "", weightage: 0 },
+        { name: "Option C", content: "", weightage: 0 },
+        { name: "Option D", content: "", weightage: 0 }
       ],
-      letterchartcode: 67
+      letterchartcode: 69
     };
   }
   addoptionfn = () => {
@@ -62,12 +64,13 @@ class QuesEnglish extends Component {
     });
   };
   handleOptionWeightageChange = (index, e) => {
-    e.preventDefault();
+    // e.preventDefault();
     // console.log(typeof parseInt(e.target.value));
     let currentArrayOfOption = this.state.listOfOptions;
     currentArrayOfOption[index].weightage = e.target.value
       ? parseInt(e.target.value)
-      : 0;
+      : "";
+    // currentArrayOfOption[index].weightage = parseInt(e.target.value);
     this.setState({
       listOfOptions: currentArrayOfOption
     });
@@ -143,9 +146,11 @@ class QuesEnglish extends Component {
             explanationData: "",
             listOfOptions: [
               { name: "Option A", content: "", weightage: 0 },
-              { name: "Option B", content: "", weightage: 0 }
+              { name: "Option B", content: "", weightage: 0 },
+              { name: "Option C", content: "", weightage: 0 },
+              { name: "Option D", content: "", weightage: 0 }
             ],
-            letterchartcode: 67
+            letterchartcode: 69
           });
         } else {
           swal(`Status Code:${res.status}`, "error");
@@ -521,7 +526,7 @@ class LeftPanel extends Component {
 
 function QuestionComp({ questionData, handleQuestionEditor }) {
   return (
-    <Form.Group controlId="exampleForm.EControlInput3">
+    <Form.Group>
       <Form.Label
         style={{
           fontWeight: "600"
@@ -542,6 +547,8 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           }}
           data={questionData}
           onFocus={event => {
+            console.log("in foucs");
+            // event.editor.removeAllListeners();
             event.editor.insertHtml(" ");
             const data = event.editor.getData();
             // console.log('focus change',data)
@@ -549,7 +556,7 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           }}
           onChange={event => {
             const data = event.editor.getData();
-            console.log(data);
+            // console.log(data);
             handleQuestionEditor(data);
           }}
         />

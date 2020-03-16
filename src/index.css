@@ -1,13 +1,13 @@
 body {
   margin: 0;
-  font-family: 'Lato', Helvetica, sans-serif;
+  font-family: "Lato", Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   /* -moz-osx-font-smoothing: grayscale; */
 }
 
 code {
-  font-family: 'Lato',lato, source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: "Lato", lato, source-code-pro, Menlo, Monaco, Consolas,
+    "Courier New", monospace;
 }
 select:not([multiple]) {
   -webkit-appearance: none;
@@ -30,9 +30,10 @@ select:not([multiple]) {
   height: 100px;
   animation: spin 2s linear infinite;
 }
-.btn.focus, .btn:focus{
-  outline:none;
-  box-shadow:none;
+.btn.focus,
+.btn:focus {
+  outline: none;
+  box-shadow: none;
 }
 /* .btn-primary:not(:disabled):not(.disabled).active:focus, .btn-primary:not(:disabled):not(.disabled):active:focus, .show>.btn-primary.dropdown-toggle:focus{
   box-shadow: none;
@@ -46,12 +47,13 @@ select:not([multiple]) {
   }
 }
 
-.cke_button_icon.cke_button__ckeditor_wiris_formulaeditor_icon{
-  background-image:url("./formula.png") !important;
+.cke_button_icon.cke_button__ckeditor_wiris_formulaeditor_icon {
+  background-image: url("./formula.png") !important;
 }
-.cke_button_icon.cke_button__ckeditor_wiris_formulaeditorchemistry_icon{
-  background-image:url("./chem.png") !important; 
+.cke_button_icon.cke_button__ckeditor_wiris_formulaeditorchemistry_icon {
+  background-image: url("./chem.png") !important;
 }
-button, input{
+button,
+input {
   outline: none !important;
 }

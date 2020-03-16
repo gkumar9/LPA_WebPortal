@@ -5,6 +5,9 @@
   .backbuttonprint {
     visibility: hidden;
   }
+  #clearpreview{
+    visibility: hidden;
+  }
   .backbuttonprint.btn.btn-link {
     color: white;
   }

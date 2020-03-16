@@ -13,51 +13,10 @@
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
-	<style>
-	
-		@font-face {
-			font-family: 'shreefonts';
-			src: url('fonts/SHREE_URD_OTF_7500.TTF') format('truetype');
-			font-weight: normal;
-		}
-		
-			@font-face {
-			font-family: 'shreefonts';
-			src: url('fonts/SHREE0900.TTF') format('truetype');
-			font-weight: normal;
-		}
-		
-			@font-face {
-			font-family: 'shreefonts';
-			src: url('fonts/SHREE0900-B.TTF') format('truetype');
-			font-weight: bold;
-		}
-			@font-face {
-			font-family: 'shreefonts';
-			src: url('fonts/SHREE0900-I.TTF') format('truetype');
-			font-style: italic;
-		}
-			@font-face {
-			font-family: 'shreefonts';
-			src: url('fonts/SHREE0900-BI.TTF') format('truetype');
-			font-style: italic;
-			font-weight: bold;
-			
-		}
-
-	
-
-
-		#myeditor {
-			font-family:shreefonts;
-			font-size: 1.5em;
-		}
-	   
-	</style>
 
   </head>
 
-  <body onload="initdef();setLang();setActivationKey('145')">
+  <body onload="initdef();setLang(); document.getElementById('txtKeyboard').value='Phonetic';changeKB()">
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top text-left">
@@ -107,50 +66,42 @@
 			<div class="col-auto my-1">
 		<label>Select Language</label>
 			<select id="txtLanguage" onchange="setLang();" class="custom-select mr-sm-2">
-				<option value="0" selected="selected">English</option>				
-				<option value="1">Devanagari</option>
+				<option value="0" >English</option>
+				<option value="1" selected="selected">Marathi</option>
+				<!-- <option value="8">Telugu</option> -->
+				<!-- <option value="11">Urdu</option> -->
+			</select>
+			</div>
+			
+		<div class="col-auto my-1">
+			<label>Keyboard Layout</label>
+			<select id="txtKeyboard" class="custom-select mr-sm-2" onchange="changeKB()">
 				
+				<option value="Phonetic" selected="selected">Phonetic</option>
+				<!--<option value="Inscript">Inscript</option>
+				<option value="Modular">Modular</option>
+				<option value="Godrej">Godrej</option>
+				<option value="Typewrit">TypeWrit</option>-->
+				 <option value="Ramington">Ramington</option> 
+				<!-- <option value="Network" >Network</option> -->
+				<!-- <option value="Ramington2">Ramington2</option> -->
+				<!-- <option value="Aftab">Aftab</option> -->
 			</select>
 			</div>
 			
-			<div class="col-auto my-1">
-				<label>Keyboard Layout</label>
-				<select id="txtKeyboard" class="custom-select mr-sm-2" onchange="changeKB()" disabled="disabled">							
-					
-			</select>
-			</div>
-			
-				<!-- <div class="col-auto my-1"> -->
-				<!-- <label>Floating Tutor</label> -->
-				<!-- <div id="floatTutor"></div> -->
-				<!-- <div onclick="ShowTutor(true);">Show</div> -->
-			<!-- </select> -->
-			<!-- </div> -->
-					<div class="col-auto my-1">
-						<label>Change Activation Key</label>
-						<select class="custom-select mr-sm-2" onchange="setActivationKey(this.value);" >							
-					<option value="145">Scroll Lock</option>
-					<option value="20">Caps Lock</option>
-					<option value="144">Num Lock</option>
-					
-						</select>
-						
-					</select>
-				</div>
-				<!--
 				<div class="col-auto my-1">
-				<p>Keyboard Help</p>
-					<div><a href="#nogo" onclick="DisplayHideTutor(true);">Show Virtual Keyboard</a></div>
-				</div>-->
-				
-				
+				<label>Floating Tutor</label>
+				<div id="floatTutor"></div>
+				<div onclick="ShowTutor(true);">Show</div>
+			</select>
+			</div>
+			
 			</div>
 		</div>
 	  </div>
 	</div>
 <div id="floatTutor"> </div>
- <!-- <input type="button" onclick="DisplayHideTutor(true);" value="Virtual Keyboard" />-->
- 
+<!-- <input type="button" onclick="DisplayHideTutor(true);" value="Virtual Keyboard" />-->
 	
 	<!------Web Samhita implementation>
 	
@@ -166,9 +117,22 @@
 					
 					<div style="border:1px black; text-align:left; height: 50vh; overflow: auto" contenteditable="true" onfocus="hook(this);" id='myeditor'>
 							
-							<span style="color: #aaa;" id='gray'>
-							यहां टाइप करें . एनविएरा टेक्नॉलॉजिज  डेमो.
-							</span>
+						<p>	नवी दिल्ली : बुलेट ट्रेनच्या मार्गात काटेच काटे दिसत असतानाच पूर्ण स्वदेशी बनावटीच्या व इंजिनविरहीत "ट्रेन-एटीन' म्हणजेच "टी-18'च्या चाचण्यांना आजपासून सुरवात झाली. ताशी 160 किलोमीटर वेगाने धावण्यासाठी या गाड्या सक्षम आहेत. पुढील महिन्यापासूनच सध्याच्या शताब्दी गाड्यांच्या जागी टप्प्याटप्प्याने नव्या गाड्या चालविण्याचा रेल्वेचा मानस आहे. यापाठोपाठ सध्याच्या राजधानी गाड्यांच्या जागी येणाऱ्या प्रस्तावित "ट्रेन-20' गाड्यांची तयारीही रेल्वेने वेगाने सुरू केली आहे. "सकाळ'ने याबाबतचे वृत्त याआधीच दिले आहे. </p>
+
+
+
+<p>सुरेश प्रभू यांच्या काळातच चाचण्या केलेल्या "टॅल्गो' गाड्यांना तांत्रिकतेची ठेच लागल्यावर त्यांचे पुढे काय झाले हे रेल्वेने गुलदस्तात ठेवले आहे. चेन्नईतील "इंटिग्रल कोच फॅक्‍टरी'त (आईसीएफ) नव्या "टी-18' गाडीची निर्मिती करण्यात आली आहे. 100 कोटी रुपये खर्चाच्या व बुलेट ट्रेनप्रमाणेच आकर्षक दिसणाऱ्या या गाडीचे उद्‌घाटन रेल्वे मंडळाचे अध्यक्ष अश्‍विनी लोहाणी यांनी दोन दिवसांपूर्वी केले होते. दिल्ली मेट्रोच्याच धर्तीवर या संपूर्ण वातानुकूलित गाडीची निर्मिती करण्यात आली आहे.
+</p>
+<p>
+इंजिनविरहीत व डब्यांमधील कपलिंगची रचना अमूलाग्र बदलल्याने वळणावर वेग कमी करण्याची गरज पडणार नाही, तसेच सध्याच्या शताब्दी-राजधानी गाड्यांना अधूनमधून जे झटके बसतात, त्यापासूनही मुक्तता होईल. 2019-20 च्या अखेरीस अशा पाच गाड्यांची निर्मिती चेन्नईतील कारखान्यात करण्याचा रेल्वेचा मानस आहे. शताब्दीच्या तुलनेत या गाड्या सरासरी 15 टक्के कमी वेळात पोचतील असा रेल्वेचा अंदाज आहे. 
+</p>
+<p>
+गाडीची वैशिष्ट्ये 
+</p>
+<p>
+झट्‌कन वेग पकडून तेवढ्याच कमी वेळात थांबणे हे या गाड्यांचे वैशिष्ट्य असेल. या वातानुकूलित गाडीला 16 डबे असतील. त्यात एक्‍झिक्‍यूटिव्ह व सामान्य अशा दोन वर्गांतील डब्यांचा समावेश आहे. यामध्ये अनुक्रमे 52 व 78 आसनांची क्षमता असेल. या गाडीला दिल्ली मेट्रोसारखेच स्वयंचलित दरवाजे असल्याने प्रवाशांनी धावतपळत जाऊन रेल्वे पकडण्याचे प्रकार थांबणार आहेत. 
+</p>
+
 							
 							</div>
 					<p></p>
@@ -206,19 +170,24 @@
 	
 	
     <!-- Bootstrap core JavaScript -->
+	<script src="Unicode.js" type="text/javascript"></script>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-	 <script src="Unicode.js" type="text/javascript"></script>
-	 <script>
-	 document.getElementById("myeditor").addEventListener("click", removeText);
-			function removeText(){
-				var node = document.getElementById("gray");
-				 document.getElementById("myeditor").removeEventListener("click",removeText);
-				if (node.parentNode) {
-				node.parentNode.removeChild(node);
-				}
-		};
 	 
+	 <script>
+	 <!-- document.getElementById("myeditor").addEventListener("click", removeText); -->
+			<!-- function removeText(){ -->
+				<!-- var node = document.getElementById("gray"); -->
+				 <!-- document.getElementById("myeditor").removeEventListener("click",removeText); -->
+				<!-- if (node.parentNode) { -->
+				<!-- node.parentNode.removeChild(node); -->
+				<!-- } -->
+		<!-- }; -->
+	 
+	 function saveStory() {
+ alert("Saving Story");
+ }
+
 	 </script>
 
   </body>

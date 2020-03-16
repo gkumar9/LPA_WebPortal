@@ -29,12 +29,22 @@ class RightExamPanel extends Component {
               </Col>
               <Col></Col>
               <Col lg="6" style={{ paddingLeft: "0.5em" }}>
-                <Form.Control
+                <CKEditor 
+                // style={{background:'white',border:'1px solid #ced4da'}}
+                data="<p>Some initial data</p>" 
+                config={{removePlugins:'imgur',height:'10'}}
+                type="inline"
+                onFocus={event => {
+                  window.hook(event.editor.document.$.body);
+                  
+                }}
+                 />
+                {/* <Form.Control
                   value={this.props.testnameHindi}
                   onChange={this.props.handleHindiTestNameChange}
                   placeholder="Test name in Hindi"
                   style={{ borderRadius: "0", float: "right" }}
-                />
+                /> */}
               </Col>
             </Row>
           </Container>

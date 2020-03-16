@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 <head>
 	<title>Web Samhita Demo Page</title>
     <!--
@@ -29,7 +29,7 @@ rather than the actual cursor position (which is on the button).
             font-style: normal;
         }
     </style>
-    <meta http-equiv="Content-Type" content="text/html;charset=csUnicode" />
+    
     
     
 	<!--- <script type="text/javascript" src="RSA/BigInt.js"></script>
@@ -38,22 +38,10 @@ rather than the actual cursor position (which is on the button).
     <script type="text/javascript" src="Locking.js"></script>
     <script type="text/javascript" src="Drag.js"></script>
 	-->
-    
-	<script language="Javascript" type="text/javascript">
 
-        
-
-        //var st = srvTime();
-        //var date = new Date(st);
-        function savetext()
-        {
-            wrap_setCopyPasteOption('true');
-        }
-
-    </script>
 </head>
 <!--<BODY onload="hook()">-->
-<body onload="initdef();setActivationKey(145); SetPath('.');">
+ <body onload="initdef();setLang();">
     <h2 style="text-align:center">Web Samhita Test Page</h2>	
 	<form name="myForm">
     <!-- 
@@ -61,13 +49,17 @@ rather than the actual cursor position (which is on the button).
     -->
 	<select id="txtLanguage" onchange="setLang();">
         <option value="0" selected="selected">English</option>
-        <option value="8">Telugu</option>
+        <option value="1">Marathi</option>
     </select>
     <select id="txtKeyboard" onchange="changeKB()" disabled="disabled">
+        <option value="Phonetic">Phonetic</option>
         <option value="Inscript">Inscript</option>
-        <option value="TypeWrit">TypeWrit</option>
-        <!-- <option value="Modular">Modular</option> -->
+        <option value="Ramington">Ramington</option>
+        <option value="Network">Network</option>
+        <option value="Typewrit">TypeWrit</option>
+        <option value="Modular">Modular</option>
         <option value="Godrej">Godrej</option>
+        <option value="Ramington2">Ramington2</option>
     </select>
     &nbsp;<br>
     <br />
@@ -78,7 +70,7 @@ rather than the actual cursor position (which is on the button).
             <td style="width: 145px">
                 <label id="keybdtr" style="vertical-align: middle; text-align: center">
                     Keyboard Tutor : &nbsp;<img src="tutor.jpg" onclick="wrap_showTutor(true);" style="width: 24px;
-                        height: 24px" />&nbsp;
+                        height: 24px" />&nbsp;<div id="floatTutor"></div>
                 </label>
             </td>
         </tr>
@@ -106,8 +98,26 @@ rather than the actual cursor position (which is on the button).
                 <b>Multi Line</b>
             </td>
             <td>
-                <textarea name="myTextArea1" style="line-height: 70px; font-family: USUBAK; font-size: 40;
-                    width: 840px; height: 200;" id="myTextArea1" onfocus="hook(this);">
+                <textarea name="myTextArea1" style="font-family: USUBAK; font-size: 30;
+                    width: 840px; height: 400;" id="myTextArea1" onfocus="hook(this);">
+मुंबई - ओला, उबर या ऍप्लिकेशन बेस्ड टॅक्‍सीच्या भाड्यावर कोणाचेही नियंत्रण नाही. काळी पिवळी टॅक्‍सी, रिक्षांच्या भाड्यावर नियंत्रण असले, तरी प्रत्यक्षात विमान प्रवास या सर्व पर्यायांपेक्षा स्वस्त आहे. मुंबई-दिल्ली या विमान प्रवासासाठी प्रत्येक किलोमीटरला साधारणत- आठ ते सव्वा आठ रुपये तिकीट पडते; मात्र रिक्षाचे भाडे प्रतिकिलोमीटरला 12 रुपये आहे. ओला, उबरचे किमान भाडे 18 ते 20 रुपयांपासून सुरू होऊन गरजेच्या वेळी ते 30 ते 35 रुपयांपर्यंतही असते. 
+रिक्षा आणि काळी पिवळी टॅक्‍सीचे भाडे राज्याच्या परिवहन विभागामार्फत निश्‍चित केले जाते. त्यासाठी काही वर्षांपूर्वी आयोगही नेमण्यात आला होता; मात्र ओला, उबरच्या भाड्यावर नियंत्रणासाठी कोणतेही धोरण अस्तित्वात नाही. ओला, उबरवर सरकारी नियंत्रण आणण्यासाठी धोरण तयार करण्यात आले; मात्र हे प्रकरण न्यायप्रविष्ट आहे. 
+दृष्टिक्षेपात भाडे 
+रिक्षा - किमान 1.5 किलोमीटरसाठी 18 रुपये; पुढे प्रत्येक 100 मीटरसाठी 1.20 रुपया 
+टॅक्‍सी - किमान 1.5 किलोमीटरसाठी 22 रुपये; पुढे प्रत्येक 100 मीटरसाठी 1.50 रुपया 
+ओला - सामान्य वेळी प्रत्येक किलोमीटरसाठी 19 रुपये 
+उबर - सामान्य वेळी प्रत्येक किलोमीटरसाठी 20 रुपये 
+					
+ओला-उबर या ऍप बेस्ड वाहतूक सेवेसाठी 40 पानांची नियमावली परिवहन विभागाने तयार केली; मात्र त्याविरोधात ओला-उबरने उच्च न्यायालयात धाव घेतल्याने कारवाईला स्थगिती दिली आहे. 
+- प्रकाश साबळे, उपसचिव, परिवहन विभाग 
+
+राज्य सरकारने प्रवाशांच्या सोईसाठी सर्व वाहतूकसेवा कायद्यांतर्गत आणल्या पाहिजेत. सध्या मेट्रो, मोनोनंतर आता ई-वाहतूकसुद्धा सुरू होण्याच्या मार्गावर आहे. त्यामुळे सर्व प्रवासी वाहतुकीत स्पर्धा कशी निर्माण करता येईल, याचा विचार व्हायला पाहिजे. त्यानंतरच प्रवाशांचे हित लक्षात घेतले पाहिजे. 
+- वर्षा राऊत, सदस्य, मुंबई ग्राहक पंचायत 
+
+ओला, उबरचे काही चालक अनेक वेळा मोबाईल ऍपद्वारे निश्‍चित झालेल्या भाड्यापेक्षा जास्त भाड्याची मागणी करतात. त्यातही महत्त्वाचे म्हणजे इच्छितस्थळ दूर असल्यास भाडेही नाकारले जाते. त्याचा प्रवाशांना त्रास सहन करावा लागतो. 
+- गौरव जाधव, प्रवासी 
+</p>
+					
 </textarea>
                 <br />
 				<div style="margin: 5px; padding: 10px; border: 1px solid #eee; text-align: center; font-size: 1.1em;">
@@ -165,5 +175,22 @@ rather than the actual cursor position (which is on the button).
     </form>
     <script type="text/javascript" src="Unicode.js"></script>
     <script type="text/javascript" src="wrapperJS.js"></script>
+	
+		 <script>
+window.addEventListener("keyup", myFunction);
+
+function myFunction() {
+  var x = document.getElementById("myTextArea1");
+ var wcount = wrap_charCount("myTextArea1");
+  console.log("Word Count is " + wcount);
+  
+}
+function saveStory() {
+ alert("Saving Story");
+ }
+
+</script>
+
+
 </body>
 </html>

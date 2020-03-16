@@ -7,6 +7,7 @@ import "./index.css";
 import Doc from "./doc";
 // import ReactHtmlParser from "react-html-parser";
 import MathJax from "react-mathjax-preview";
+import swal from "@sweetalert/with-react";
 
 class PreviewQues extends Component {
   constructor(props) {
@@ -37,12 +38,52 @@ class PreviewQues extends Component {
       }
     }
   }
+  handleclearpreview = () => {
+    swal({
+      title: "Are you sure?",
+      text: "All the question in this list will be cleared.",
+      icon: "warning",
+      buttons: true
+      // dangerMode: true
+    }).then(willDelete => {
+      if (willDelete) {
+        localStorage.setItem("Previewdata", []);
+        this.setState(
+          {
+            isData: false,
+            data: []
+          },
+          () => {
+            this.props.history.push({
+              pathname: "/"
+            });
+          }
+        );
+      }
+    });
+  };
   render() {
+    // console.log(this.state.isData,localStorage.getItem("previewLanguage"),this.state.data)
     return (
       <React.Fragment>
         <Header props={this.props} />
         {this.state.isData && localStorage.getItem("previewLanguage") ? (
-          <ShowData data={this.state.data} />
+          <React.Fragment>
+            <Row>
+              <Col>
+                <Button
+                  id="clearpreview"
+                  size="sm"
+                  variant="outline-secondary"
+                  style={{ float: "right", margin: "1em 1.5em" }}
+                  onClick={this.handleclearpreview}
+                >
+                  Clear preview list & go back
+                </Button>
+              </Col>
+            </Row>
+            <ShowData data={this.state.data} />
+          </React.Fragment>
         ) : (
           <Error404 />
         )}
@@ -72,7 +113,7 @@ class ShowData extends Component {
   };
   render() {
     return (
-      <Container>
+      <Container fluid>
         <div>
           <div
             style={{
@@ -101,7 +142,7 @@ class ShowData extends Component {
                           }}
                         >
                           <Card
-                          id="cardpreview"
+                            id="cardpreview"
                             style={{
                               background: "transparent",
                               borderColor: "transparent"
@@ -248,7 +289,7 @@ class ShowData extends Component {
                                               margin: " 0em 2em"
                                             }}
                                           >
-                                             <b>W: {optionitem.weightage} </b>
+                                            <b>W: {optionitem.weightage} </b>
                                           </sub>
                                         </Col>
                                       </React.Fragment>

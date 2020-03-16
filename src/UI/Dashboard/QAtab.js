@@ -985,7 +985,7 @@ class QAtab extends Component {
                             <React.Fragment key={optionindex}>
                               <Col
                                 lg="6"
-                                style={{ margin: "1em 0", display: "flex" }}
+                                style={{ margin: "0.5em 0", display: "flex" }}
                               >
                                 {" "}
                                 {optionindex + 1}
@@ -1000,7 +1000,7 @@ class QAtab extends Component {
                                     position: "absolute",
                                     bottom: "0",
                                     left: "0",
-                                    margin: " 0em 2em"
+                                    margin: "0em 2em"
                                   }}
                                 >
                                   <b> W: {optionitem.weightage} </b>

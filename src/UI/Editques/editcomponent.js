@@ -125,10 +125,12 @@ class EditComponent extends Component {
     });
   };
   handleOptionWeightageChange = (index, e) => {
-    e.preventDefault();
+    // e.preventDefault();
     // console.log(index,e);
     let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption[index].weightage = parseInt(e.target.value);
+    currentArrayOfOption[index].weightage = e.target.value
+    ? parseInt(e.target.value)
+    : "";
     this.setState({
       listOfOptions: currentArrayOfOption
     });
@@ -579,7 +581,7 @@ class Rightpanel extends Component {
                       // disabled
                       style={{ borderRadius: "0", background: "#f9f9f9" }}
                       type="number"
-                      value={item.weightage || 0}
+                      value={item.weightage}
                       onChange={this.props.handleOptionWeightageChange.bind(
                         this,
                         index
