@@ -1,20 +1,11 @@
 import React, { Component } from "react";
 import { Container, Button, Row, Col } from "react-bootstrap";
 import Header from "../Header/index";
-// import Back from "@material-ui/icons/ArrowBack";
-// import { styled } from "@material-ui/styles";
-// import { Link } from "react-router-dom";
 import LeftPanelexam from "./leftpanelexam.js";
 import axios from "axios";
 import URL from "../../Assets/url";
 import RightExamPanel from "./rightpanelexam.js";
 import swal from "sweetalert";
-
-// const MyBack = styled(Back)({
-//   color: "dimgrey",
-//   marginTop: "-0.2em",
-//   width: "1em"
-// });
 
 class Exam extends Component {
   constructor(props) {
@@ -60,6 +51,10 @@ class Exam extends Component {
         }
       ]
     };
+    this.myReftestdescEnglish = React.createRef();
+    this.myReftestdescHindi = React.createRef();
+    this.refsSectionEnglish = [];
+    this.refsSectionHindi = [];
     window.Exam = this;
   }
   addSectionQuestions = index => {
@@ -86,7 +81,6 @@ class Exam extends Component {
     this.setState({ listOfSection: tempsectionlist });
   };
   handleNegativeMarksPerQuesChange = (index, e) => {
-    // console.log(index,e)
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].negativeMarksPerQuestion = e.target.value
       ? parseInt(e.target.value)
@@ -126,8 +120,30 @@ class Exam extends Component {
     this.setState({ listOfSection: tempsectionlist });
   };
   deleteSection = index => {
-    let tempsectionlist = this.state.listOfSection;
-    // tempsectionlist.pop();
+    let tempsections = this.state.listOfSection.map((item, index) => {
+      return {
+        marksPerQuestion: item.marksPerQuestion,
+        negativeMarksPerQuestion: item.negativeMarksPerQuestion,
+        questions: item.questions,
+        versions: [
+          {
+            content: this.refsSectionEnglish[index].editor.getData(),
+            language: "ENGLISH",
+            name: item.versions[0].name,
+            sectionName: item.versions[0].sectionName
+          },
+          {
+            content: this.refsSectionHindi[index].editor.getData(),
+            language: "HINDI",
+            name: item.versions[1].name,
+            sectionName: item.versions[1].sectionName
+          }
+        ]
+      };
+    });
+    let tempsectionlist = tempsections;
+    this.refsSectionEnglish.splice(index, 1);
+    this.refsSectionHindi.splice(index, 1);
     tempsectionlist.splice(index, 1);
     this.setState({ listOfSection: tempsectionlist });
   };
@@ -354,7 +370,30 @@ class Exam extends Component {
     });
   };
   saveExamdata = () => {
-    // console.log(this.state.endDate,this.state.endDate.toDateString())
+    let testdescEnglish = this.myReftestdescEnglish.current;
+    let testdescHindi = this.myReftestdescHindi.current;
+    let tempsections = this.state.listOfSection.map((item, index) => {
+      return {
+        marksPerQuestion: item.marksPerQuestion,
+        negativeMarksPerQuestion: item.negativeMarksPerQuestion,
+        questions: item.questions,
+
+        versions: [
+          {
+            content: this.refsSectionEnglish[index].editor.getData(),
+            language: "ENGLISH",
+            name: item.versions[0].name,
+            sectionName: item.versions[0].sectionName
+          },
+          {
+            content: this.refsSectionHindi[index].editor.getData(),
+            language: "HINDI",
+            name: item.versions[1].name,
+            sectionName: item.versions[1].sectionName
+          }
+        ]
+      };
+    });
     var startDatetemp = this.state.startDate;
 
     var dd = startDatetemp.getDate();
@@ -390,17 +429,16 @@ class Exam extends Component {
         examId: this.state.selectedExamID,
         subjectId: this.state.selectedSubjectID,
         sectionId: this.state.selectedChapterID,
-        sections: this.state.listOfSection,
+        sections: tempsections,
         startDate: startDate,
         testInstructions: [
           {
-            instructions: this.state.testInstructionEnglish,
+            instructions: testdescEnglish.editor.getData(),
             language: "ENGLISH",
             name: this.state.testnameEnglish
-            // "testVersionId": 0
           },
           {
-            instructions: this.state.testInstructionHindi,
+            instructions: testdescHindi.editor.getData(),
             language: "HINDI",
             name: this.state.testnameHindi
           }
@@ -420,8 +458,6 @@ class Exam extends Component {
     })
       .then(res => {
         if (res.status === 200) {
-          console.log(res.data.data);
-          // alert("Success:", res.data.data);
           swal(
             "Success",
             `Added newTest, Id:${res.data.data.testId}`,
@@ -466,32 +502,6 @@ class Exam extends Component {
     return (
       <React.Fragment>
         <Header props={this.props} />
-        {/* <div
-          style={{
-            boxShadow: "0px 3px 5px lightgrey",
-            width: "auto",
-            height: "4.5em",
-            padding: "1em 3em"
-          }}
-        >
-          <Link to="/" target="_self">
-            <Button
-              variant="light"
-              style={{ background: "transparent", border: "transparent" }}
-            >
-              <MyBack />
-              <span
-                style={{
-                  marginLeft: "1em",
-                  fontSize: "1.2em",
-                  color: "dimgrey"
-                }}
-              >
-                Back to dashboard
-              </span>
-            </Button>
-          </Link>
-        </div> */}
         <Container
           fluid
           style={{
@@ -507,11 +517,9 @@ class Exam extends Component {
                 style={{
                   padding: "2.5em 3em",
                   background: "#EEE",
-                  // borderRight: "1px solid #cac2c2",
                   boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -4px",
                   zIndex: "88",
                   position: "relative"
-                  // margin: "2em 0em"
                 }}
               >
                 <div>
@@ -575,6 +583,10 @@ class Exam extends Component {
                     handlSectionQuestionValueChange={
                       this.handlSectionQuestionValueChange
                     }
+                    myReftestdescEnglish={this.myReftestdescEnglish}
+                    myReftestdescHindi={this.myReftestdescHindi}
+                    refsSectionEnglish={this.refsSectionEnglish}
+                    refsSectionHindi={this.refsSectionHindi}
                   />
                   <div style={{ margin: "1em 0", textAlign: "center" }}>
                     <Button
@@ -593,7 +605,6 @@ class Exam extends Component {
                   </div>
                 </div>
               </Col>
-              {/* <Col lg="1"></Col> */}
             </Row>
           </div>
         </Container>

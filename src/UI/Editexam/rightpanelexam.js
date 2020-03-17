@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Row, Col, Form, Container } from "react-bootstrap";
-// import CKEditor from "@ckeditor/ckeditor5-react";
-// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import CKEditor from "ckeditor4-react";
 class RightExamPanel extends Component {
   render() {
@@ -12,7 +10,6 @@ class RightExamPanel extends Component {
             <Form.Control
               style={{
                 fontWeight: "600"
-                // margin: " 0 0.5em"
               }}
               plaintext
               readOnly
@@ -39,23 +36,13 @@ class RightExamPanel extends Component {
             </Row>
           </Container>
           <div style={{ margin: "1.7em 0", width: "100%" }}>
-            {/* <Form.Control
-              style={{
-                fontWeight: "600",
-                margin: " 0 0.5em"
-              }}
-              plaintext
-              readOnly
-              defaultValue="Description and Instruction"
-            /> */}
             <div style={{ margin: "0em 0em", width: "100%" }}>
               <small>Test description and instruction in English</small>
               <CKEditor
+                ref={this.props.myReftestdescEnglish}
                 onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
-                // editor={ClassicEditor}
                 config={{
                   height: 80
-                  // placeholder: "Test description and instruction in English"
                 }}
                 onFocus={event => {
                   event.editor.insertHtml(" ");
@@ -65,7 +52,6 @@ class RightExamPanel extends Component {
                 }}
                 data={this.props.testInstructionEnglish}
                 onChange={event => {
-                  // const data = editor.getData();
                   this.props.handleEnglishInstructionChange(
                     event.editor.getData()
                   );
@@ -94,26 +80,14 @@ class RightExamPanel extends Component {
                 <option value="Ramington">Ramington</option>
               </select>
               <CKEditor
+                ref={this.props.myReftestdescHindi}
                 onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
-                // editor={ClassicEditor}
                 config={{
-                  height: 80
-                  // placeholder: "Test description and instruction in Hindi"
+                  height: 100
                 }}
                 data={this.props.testInstructionHindi}
                 onFocus={event => {
                   window.hook(event.editor.document.$.body);
-                  event.editor.insertHtml(" ");
-                  this.props.handleHindiInstructionChange(
-                    event.editor.getData()
-                  );
-                  installKeyupTestNameHindi(event.editor);
-                }}
-                onChange={event => {
-                  // const data = editor.getData();
-                  this.props.handleHindiInstructionChange(
-                    event.editor.getData()
-                  );
                 }}
                 oninstanceReady={event => {
                   var a = document.getElementById("txtLanguage");
@@ -150,28 +124,10 @@ class RightExamPanel extends Component {
                   }}
                 >
                   <Row noGutters={true} style={{ margin: "0em 0em" }}>
-                    <Col lg="4">
-                      {/* <Form.Control
-                        style={{
-                          fontWeight: "600"
-                          // margin: " 0 0.5em"
-                        }}
-                        plaintext
-                        readOnly
-                        defaultValue="Section A"
-                      /> */}
-                    </Col>
+                    <Col lg="4"></Col>
 
                     {this.props.listOfSection.length === index + 1 && (
-                      <Col>
-                        {/* <Button
-                          style={{ float: "right", color: "grey" }}
-                          variant="link"
-                          onClick={this.props.deleteSection}
-                        >
-                          X Delete
-                        </Button> */}
-                      </Col>
+                      <Col></Col>
                     )}
                   </Row>
                   <Row noGutters={true} style={{ margin: "0em 0em" }}>
@@ -212,7 +168,6 @@ class RightExamPanel extends Component {
                     </Col>
                   </Row>
                   <Row noGutters={true} style={{ margin: "1em 0em" }}>
-                    {/* <Col lg="2"></Col> */}
                     <Col lg="5">
                       <small>Marks/ ques</small>
                       <Form.Control
@@ -249,35 +204,20 @@ class RightExamPanel extends Component {
                         Section description and instruction in English
                       </small>
                       <CKEditor
+                        ref={ref => {
+                          this.props.refsSectionEnglish[index] = ref;
+                          return true;
+                        }}
                         onBeforeLoad={CKEDITOR =>
                           (CKEDITOR.disableAutoInline = true)
                         }
-                        // editor={ClassicEditor}
                         data={
                           item.testSectionVersions.filter(
                             object => object.language === "ENGLISH"
                           )[0].content
                         }
                         config={{
-                          height: 80
-                          // placeholder:
-                          //   "Section description and instruction in English"
-                        }}
-                        onFocus={event => {
-                          event.editor.insertHtml(" ");
-                          this.props.handleSectionDescriptionChange(
-                            index,
-                            "ENGLISH",
-                            event.editor.getData()
-                          );
-                        }}
-                        onChange={event => {
-                          // const data = editor.getData();
-                          this.props.handleSectionDescriptionChange(
-                            index,
-                            "ENGLISH",
-                            event.editor.getData()
-                          );
+                          height: 100
                         }}
                       />
                     </div>
@@ -286,37 +226,25 @@ class RightExamPanel extends Component {
                         Section description and instruction in Hindi
                       </small>
                       <CKEditor
+                        ref={ref => {
+                          this.props.refsSectionHindi[index] = ref;
+                          return true;
+                        }}
                         onBeforeLoad={CKEDITOR =>
                           (CKEDITOR.disableAutoInline = true)
                         }
-                        // editor={ClassicEditor}
                         data={
                           item.testSectionVersions.filter(
                             object => object.language === "HINDI"
                           )[0].content
                         }
                         config={{
-                          height: 80,
+                          height: 100,
                           placeholder:
                             "Section description and instruction in Hindi"
                         }}
                         onFocus={event => {
                           window.hook(event.editor.document.$.body);
-                          event.editor.insertHtml(" ");
-                          this.props.handleSectionDescriptionChange(
-                            index,
-                            "HINDI",
-                            event.editor.getData()
-                          );
-                          installKeyupSection(index, "HINDI", event.editor);
-                        }}
-                        onChange={event => {
-                          // const data = editor.getData();
-                          this.props.handleSectionDescriptionChange(
-                            index,
-                            "HINDI",
-                            event.editor.getData()
-                          );
                         }}
                       />
                     </div>
@@ -329,14 +257,12 @@ class RightExamPanel extends Component {
                             style={{ marginTop: "0.5em" }}
                             key={indexquestion}
                           >
-                            {/* <Col lg="2"></Col> */}
                             <Col lg="1">
                               <Form.Control
                                 style={{
                                   fontWeight: "500",
                                   margin: " 0 0.5em",
                                   textAlign: "right"
-                                  // paddingRight:'0'
                                 }}
                                 plaintext
                                 readOnly
@@ -357,46 +283,13 @@ class RightExamPanel extends Component {
                                 style={{ borderRadius: "0" }}
                               />
                             </Col>
-                            {/* {item.questions.length === indexquestion + 1 && (
-                            <Col>
-                              <Button
-                                style={{ float: "left", color: "grey" }}
-                                variant="link"
-                                onClick={this.props.deleteSectionQuestion.bind(
-                                  this,
-                                  index
-                                )}
-                              >
-                                X Delete
-                              </Button>
-                            </Col>
-                          )} */}
                           </Row>
                         );
                       }
                     )}
                   <Row style={{ marginTop: "0.5em" }}>
                     <Col lg="1"></Col>
-                    <Col>
-                      {/* <Button
-                        onClick={this.props.addSectionQuestions.bind(
-                          this,
-                          index
-                        )}
-                        varirant="info"
-                        style={{
-                          fontSize: "0.8em",
-                          fontWeight: "700",
-                          background: "#6992EF",
-                          borderColor: "#6992EF",
-                          borderRadius: "0",
-                          float: "left"
-                        }}
-                      >
-                        {" "}
-                        + Add question
-                      </Button> */}
-                    </Col>
+                    <Col></Col>
                   </Row>
                 </div>
               );
@@ -405,43 +298,13 @@ class RightExamPanel extends Component {
           <Container fluid style={{ paddingRight: "0" }}>
             <Row noGutters={true} style={{ margin: "1em 0em" }}>
               <Col lg="10"> </Col>
-              <Col>
-                {/* <Button
-                  onClick={this.props.addSection}
-                  varirant="info"
-                  style={{
-                    fontSize: "0.8em",
-                    fontWeight: "700",
-                    background: "#FF8976",
-                    borderColor: "#FF8976",
-                    borderRadius: "0",
-                    float: "right"
-                  }}
-                >
-                  {" "}
-                  + Add Section
-                </Button> */}
-              </Col>
+              <Col></Col>
             </Row>
           </Container>
         </Row>
       </div>
     );
   }
-}
-function installKeyupTestNameHindi(editor) {
-  editor.document.on("keyup", function(event) {
-    const data = editor.getData();
-
-    window.Exam.handleHindiInstructionChange(data);
-  });
-}
-function installKeyupSection(index, hindi, editor) {
-  editor.document.on("keyup", function(event) {
-    const data = editor.getData();
-
-    window.Exam.handleSectionDescriptionChange(index, hindi, data);
-  });
 }
 
 export default RightExamPanel;

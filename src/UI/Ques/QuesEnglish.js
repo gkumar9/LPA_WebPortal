@@ -38,18 +38,33 @@ class QuesEnglish extends Component {
     });
   };
   deleteOption = index => {
-    let currentArrayOfOption = this.state.listOfOptions;
+    let tempoption = this.state.listOfOptions.map((item, index) => {
+      return {
+        name: item.name,
+        content: this.refsArrayEnglish[index].editor.getData(),
+        weightage: item.weightage
+      };
+    });
+    let currentArrayOfOption = tempoption;
     let letterchartcode = 65;
+    this.refsArrayEnglish.splice(index, 1);
     currentArrayOfOption.splice(index, 1);
-    currentArrayOfOption = currentArrayOfOption.map(item => {
+    currentArrayOfOption = currentArrayOfOption.map((item,index) => {
       let name = "Option " + String.fromCharCode(letterchartcode);
       letterchartcode++;
       return { name: name, content: item.content, weightage: item.weightage };
     });
-
+    // this.refsArrayEnglish = [];
     this.setState({
       listOfOptions: currentArrayOfOption,
       letterchartcode: letterchartcode
+    });
+  };
+  handleOptioncontentchange = (index, data) => {
+    let currentArrayOfOption = this.state.listOfOptions;
+    currentArrayOfOption[index].content = data;
+    this.setState({
+      listOfOptions: currentArrayOfOption
     });
   };
   handleOptionWeightageChange = (index, e) => {
@@ -220,6 +235,7 @@ class QuesEnglish extends Component {
                 addoptionfn={this.addoptionfn}
                 deleteOption={this.deleteOption}
                 saveEnglishdata={this.saveEnglishdata}
+                handleOptioncontentchange={this.handleOptioncontentchange}
               />
             </div>
           </Col>
@@ -230,7 +246,6 @@ class QuesEnglish extends Component {
 }
 class RightpanelEnglish extends Component {
   render() {
-    // console.log(this.props.refsArrayEnglish, this.props.listOfOptions);
     return (
       <Form>
         <QuestionComp myRefQuestionEnglish={this.props.myRefQuestionEnglish} />
@@ -263,14 +278,14 @@ class RightpanelEnglish extends Component {
                       X Delete
                     </Button>
                   </Col>
-                  {/* )} */}
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
                     ref={ref => {
                       // Callback refs are preferable when
                       // dealing with dynamic refs
-
+                      // console.log(ref)
+                      // this.props.refsArrayEnglish[index] = null;
                       this.props.refsArrayEnglish[index] = ref;
                       return true;
                     }}
@@ -279,6 +294,16 @@ class RightpanelEnglish extends Component {
                     }}
                     config={{
                       height: 100
+                    }}
+                    data={item.content}
+                    onFocus={event => {
+                      // event.editor.insertHtml(" ");
+                      const data = event.editor.getData();
+                      this.props.handleOptioncontentchange(index, data);
+                    }}
+                    onChange={event => {
+                      let data = event.editor.getData();
+                      this.props.handleOptioncontentchange(index, data);
                     }}
                   />
                 </div>

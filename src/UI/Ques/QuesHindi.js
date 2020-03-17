@@ -37,22 +37,40 @@ class QuesHindi extends Component {
     });
   };
   deleteOption = (index, e) => {
-    console.log(index);
-    let currentArrayOfOption = this.state.listOfOptions;
+    let tempoption = this.state.listOfOptions.map((item, index) => {
+      return {
+        name: item.name,
+        content: this.refsArrayHindi[index].editor.getData(),
+        weightage: item.weightage
+      };
+    });
+    let currentArrayOfOption = tempoption;
     let letterchartcode = 65;
-    // this.refsArrayHindi = [];
-    // console.log(this.refsArrayHindi);
+    this.refsArrayHindi.splice(index, 1);
     currentArrayOfOption.splice(index, 1);
-    // console.log(currentArrayOfOption);
-    currentArrayOfOption = currentArrayOfOption.map(item => {
+    currentArrayOfOption = currentArrayOfOption.map((item, index) => {
       let name = "Option " + String.fromCharCode(letterchartcode);
       letterchartcode++;
-      return { name: name, content: item.content, weightage: item.weightage };
+      return {
+        name: name,
+        content: item.content,
+        weightage: item.weightage
+      };
     });
 
     this.setState({
       listOfOptions: currentArrayOfOption,
       letterchartcode: letterchartcode
+    });
+  };
+  handleOptioncontentchange = (index, data) => {
+    // let currentCharCode = this.state.letterchartcode;
+    // let name = "Option " + String.fromCharCode(currentCharCode);
+    // console.log(index, data);
+    let currentArrayOfOption = this.state.listOfOptions;
+    currentArrayOfOption[index].content = data;
+    this.setState({
+      listOfOptions: currentArrayOfOption
     });
   };
   handleOptionWeightageChange = (index, e) => {
@@ -219,6 +237,7 @@ class QuesHindi extends Component {
                 addoptionfn={this.addoptionfn}
                 deleteOption={this.deleteOption}
                 saveHindidata={this.saveHindidata}
+                handleOptioncontentchange={this.handleOptioncontentchange}
               />
             </div>
           </Col>
@@ -268,6 +287,7 @@ class RightpanelHindi extends Component {
                       // Callback refs are preferable when
                       // dealing with dynamic refs
                       this.props.refsArrayHindi[index] = ref;
+                      return true;
                     }}
                     onBeforeLoad={CKEDITOR =>
                       (CKEDITOR.disableAutoInline = true)
@@ -275,8 +295,19 @@ class RightpanelHindi extends Component {
                     config={{
                       height: 100
                     }}
+                    // onFocus={event => {
+                    //   window.hook(event.editor.document.$.body);
+                    // }}
                     onFocus={event => {
                       window.hook(event.editor.document.$.body);
+
+                      const data = event.editor.getData();
+                      this.props.handleOptioncontentchange(index, data);
+                    }}
+                    data={item.content}
+                    onChange={event => {
+                      const data = event.editor.getData();
+                      this.props.handleOptioncontentchange(index, data);
                     }}
                   />
                 </div>

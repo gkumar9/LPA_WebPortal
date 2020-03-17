@@ -41,8 +41,30 @@ class EditComponent extends Component {
       letterchartcode: currentCharCode + 1
     });
   };
-  deleteOption = index => {
-    let currentArrayOfOption = this.state.listOfOptions;
+  deleteOption = (index, lang) => {
+    let currentArrayOfOption;
+    if (lang === "ENGLISH") {
+      let tempoption = this.state.listOfOptions.map((item, index) => {
+        return {
+          name: item.name,
+          content: this.refsArrayEnglishNew[index].editor.getData(),
+          weightage: item.weightage
+        };
+      });
+      currentArrayOfOption = tempoption;
+      this.refsArrayEnglishNew.splice(index, 1);
+    } else {
+      let tempoption = this.state.listOfOptions.map((item, index) => {
+        return {
+          name: item.name,
+          content: this.refsArrayHindiNew[index].editor.getData(),
+          weightage: item.weightage
+        };
+      });
+      currentArrayOfOption = tempoption;
+      this.refsArrayHindiNew.splice(index, 1);
+    }
+    // let currentArrayOfOption = this.state.listOfOptions;
     let letterchartcode = 65;
 
     currentArrayOfOption.splice(index, 1);
@@ -98,31 +120,28 @@ class EditComponent extends Component {
           )[0].options.length + 65,
         tags: converttags
       });
-      if (this.props.lang === "ENGLISH") {
-        // this.myRefQuestionEnglish.current=<CKEditor />;
-        // console.log(this.myRefQuestionEnglish)
-      }
+      
     } else {
       this.setState({
         difficulty: difficultyvalue,
-        // questionData: "",
-        // explanationData: "",
         listOfOptions: [
           { name: "Option A", content: "", weightage: 0 },
-          { name: "Option B", content: "", weightage: 0 }
+          { name: "Option B", content: "", weightage: 0 },
+          { name: "Option C", content: "", weightage: 0 },
+          { name: "Option D", content: "", weightage: 0 }
         ],
-        letterchartcode: 67,
+        letterchartcode: 69,
         tags: converttags
       });
     }
   }
-  // handleOptioncontentchange = (index, data) => {
-  //   let currentArrayOfOption = this.state.listOfOptions;
-  //   currentArrayOfOption[index].content = data;
-  //   this.setState({
-  //     listOfOptions: currentArrayOfOption
-  //   });
-  // };
+  handleOptioncontentchange = (index, data) => {
+    let currentArrayOfOption = this.state.listOfOptions;
+    currentArrayOfOption[index].content = data;
+    this.setState({
+      listOfOptions: currentArrayOfOption
+    });
+  };
   handleOptionWeightageChange = (index, e) => {
     let currentArrayOfOption = this.state.listOfOptions;
     currentArrayOfOption[index].weightage = e.target.value
@@ -233,14 +252,12 @@ class EditComponent extends Component {
       });
   };
   savedatanewversion = () => {
-    // console.log(this.refsArrayEnglishNew);
     const questionEnglish = this.myRefQuestionEnglishNew.current;
     const solutionEnglish = this.myRefExplanationEnglishNew.current;
     let tempoptionEnglish =
       this.refsArrayEnglishNew.length > 0 &&
       this.state.listOfOptions.map((item, index) => {
         return {
-          // optionId: item.optionId,
           name: item.name,
           content: this.refsArrayEnglishNew[index].editor.getData(),
           weightage: item.weightage
@@ -252,7 +269,6 @@ class EditComponent extends Component {
       this.refsArrayHindiNew.length > 0 &&
       this.state.listOfOptions.map((item, index) => {
         return {
-          // optionId: item.optionId,
           name: item.name,
           content: this.refsArrayHindiNew[index].editor.getData(),
           weightage: item.weightage
@@ -446,7 +462,7 @@ class EditComponent extends Component {
                   explanationData={this.state.explanationData}
                   listOfOptions={this.state.listOfOptions}
                   letterchartcode={this.state.letterchartcode}
-                  // handleOptioncontentchange={this.handleOptioncontentchange}
+                  handleOptioncontentchange={this.handleOptioncontentchange}
                   handleOptionWeightageChange={this.handleOptionWeightageChange}
                   addoptionfn={this.addoptionfn}
                   deleteOption={this.deleteOption}
@@ -998,7 +1014,11 @@ class RightpanelNewVersion extends Component {
                     <Button
                       style={{ float: "right", color: "grey" }}
                       variant="link"
-                      onClick={this.props.deleteOption.bind(this, index)}
+                      onClick={this.props.deleteOption.bind(
+                        this,
+                        index,
+                        this.props.lang
+                      )}
                     >
                       X Delete
                     </Button>
@@ -1019,6 +1039,10 @@ class RightpanelNewVersion extends Component {
                       }}
                       onFocus={event => {
                         window.hook(event.editor.document.$.body);
+                        this.props.handleOptioncontentchange(
+                          index,
+                          event.editor.getData()
+                        );
                         // let data = event.editor.getData();
                         // console.log('focus')
                         // event.editor.insertHtml(" ");
@@ -1034,14 +1058,14 @@ class RightpanelNewVersion extends Component {
                         // placeholder: "Test description and instruction in English"
                       }}
                       data={item.content}
-                      // onChange={event => {
-                      //   // let data = editor.getData();
-                      //   // console.log('change')
-                      //   this.props.handleOptioncontentchange(
-                      //     index,
-                      //     event.editor.getData()
-                      //   );
-                      // }}
+                      onChange={event => {
+                        // let data = editor.getData();
+                        // console.log('change')
+                        this.props.handleOptioncontentchange(
+                          index,
+                          event.editor.getData()
+                        );
+                      }}
                     />
                   ) : (
                     <CKEditor
@@ -1055,29 +1079,24 @@ class RightpanelNewVersion extends Component {
                         this.props.refsArrayEnglishNew[index] = ref;
                         return true;
                       }}
-                      // onFocus={event => {
-                      //   // let data = event.editor.getData();
-                      //   // console.log('focus')
-                      //   event.editor.insertHtml(" ");
-                      //   this.props.handleOptioncontentchange(
-                      //     index,
-                      //     event.editor.getData()
-                      //   );
-                      // }}
+                      onFocus={event => {
+                        // let data = event.editor.getData();
+                        // console.log('focus')
+                        this.props.handleOptioncontentchange(
+                          index,
+                          event.editor.getData()
+                        );
+                      }}
                       config={{
                         height: 100
-
-                        // placeholder: "Test description and instruction in English"
                       }}
                       data={item.content}
-                      // onChange={event => {
-                      //   // let data = editor.getData();
-                      //   // console.log('change')
-                      //   this.props.handleOptioncontentchange(
-                      //     index,
-                      //     event.editor.getData()
-                      //   );
-                      // }}
+                      onChange={event => {
+                        this.props.handleOptioncontentchange(
+                          index,
+                          event.editor.getData()
+                        );
+                      }}
                     />
                   )}
                 </div>

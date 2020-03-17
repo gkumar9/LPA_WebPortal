@@ -52,7 +52,11 @@ class ExamEditComponent extends Component {
         item => item.language === "HINDI"
       )[0].testVersionId
     };
-    window.ExamEditComponent=this;
+    this.myReftestdescEnglish = React.createRef();
+    this.myReftestdescHindi = React.createRef();
+    this.refsSectionEnglish = [];
+    this.refsSectionHindi = [];
+    window.ExamEditComponent = this;
   }
   addSectionQuestions = index => {
     let tempsectionlist = this.state.listOfSection;
@@ -428,6 +432,36 @@ class ExamEditComponent extends Component {
     });
   };
   saveExamdata = () => {
+    let testdescEnglish = this.myReftestdescEnglish.current;
+    let testdescHindi = this.myReftestdescHindi.current;
+    // console.log(this.state.listOfSection);
+    let tempsections = this.state.listOfSection.map((item, index) => {
+      return {
+        testSectionId: item.testSectionId,
+        marksPerQuestion: item.marksPerQuestion,
+        negativeMarksPerQuestion: item.negativeMarksPerQuestion,
+        questions: item.questions,
+        testSectionMapping: item.testSectionMapping,
+        testSectionVersions: [
+          {
+            content: this.refsSectionEnglish[index].editor.getData(),
+            language: "ENGLISH",
+            name: item.testSectionVersions[0].name,
+            sectionName: item.testSectionVersions[0].sectionName,
+            testSectionVersionId:
+              item.testSectionVersions[0].testSectionVersionId
+          },
+          {
+            content: this.refsSectionHindi[index].editor.getData(),
+            language: "HINDI",
+            name: item.testSectionVersions[1].name,
+            sectionName: item.testSectionVersions[1].sectionName,
+            testSectionVersionId:
+              item.testSectionVersions[1].testSectionVersionId
+          }
+        ]
+      };
+    });
     var startDatetemp = this.state.startDate;
 
     var dd = startDatetemp.getDate();
@@ -455,7 +489,7 @@ class ExamEditComponent extends Component {
     }
     var endDate = yyyyendDatetemp + "-" + mmendDatetemp + "-" + ddendDatetemp;
 
-    let templistofsection = this.state.listOfSection.map(item => {
+    let templistofsection = tempsections.map(item => {
       item["versions"] = item["testSectionVersions"];
       delete item.testSectionMapping;
       return item;
@@ -475,13 +509,13 @@ class ExamEditComponent extends Component {
         testId: this.props.fetchedData.testId,
         testInstructions: [
           {
-            instructions: this.state.testInstructionEnglish,
+            instructions: testdescEnglish.editor.getData(),
             language: "ENGLISH",
             name: this.state.testnameEnglish,
             testVersionId: this.state.englishtestVersionId
           },
           {
-            instructions: this.state.testInstructionHindi,
+            instructions: testdescHindi.editor.getData(),
             language: "HINDI",
             name: this.state.testnameHindi,
             testVersionId: this.state.hinditestVersionId
@@ -503,13 +537,11 @@ class ExamEditComponent extends Component {
       .then(res => {
         if (res.status === 200) {
           console.log(res.data.data);
-          // alert(res.data.data)
           swal("Success", `Data updated`, "success");
         }
       })
       .catch(e => {
         console.log(e);
-        // alert(e)
         swal(e, "error");
       });
   };
@@ -530,11 +562,9 @@ class ExamEditComponent extends Component {
               style={{
                 padding: "2.5em 3em",
                 background: "#EEE",
-                // borderRight: "1px solid #cac2c2",
                 boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -4px",
                 zIndex: "88",
                 position: "relative"
-                // margin: "2em 0em"
               }}
             >
               <div>
@@ -565,7 +595,6 @@ class ExamEditComponent extends Component {
                 />
               </div>
             </Col>
-            {/* <Col lg="1"></Col> */}
             <Col
               style={{
                 background: "#EEEEEE",
@@ -600,6 +629,10 @@ class ExamEditComponent extends Component {
                 handlSectionQuestionValueChange={
                   this.handlSectionQuestionValueChange
                 }
+                myReftestdescEnglish={this.myReftestdescEnglish}
+                myReftestdescHindi={this.myReftestdescHindi}
+                refsSectionEnglish={this.refsSectionEnglish}
+                refsSectionHindi={this.refsSectionHindi}
               />
               <div style={{ margin: "1em 0", textAlign: "center" }}>
                 <Button
