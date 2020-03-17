@@ -9,14 +9,15 @@ class RightExamPanel extends Component {
           <Container fluid style={{ padding: "0" }}>
             <Form.Control
               style={{
-                fontWeight: "600"
+                fontWeight: "600",
+                margin: " 0 0.5em"
               }}
               plaintext
               readOnly
               defaultValue="Name"
             />
-            <Row style={{ margin: "0em 0" }}>
-              <Col lg="4" style={{ padding: "0" }}>
+            <Row style={{ margin: "0em 0" }} noGutters={true}>
+              <Col lg="6" style={{ paddingRight: "0.5em" }}>
                 <Form.Control
                   value={this.props.testnameEnglish}
                   onChange={this.props.handleEnglishTestNameChange}
@@ -25,7 +26,7 @@ class RightExamPanel extends Component {
                 />
               </Col>
               <Col></Col>
-              <Col lg="4" style={{ padding: "0" }}>
+              <Col lg="6" style={{ paddingLeft: "0.5em" }}>
                 <Form.Control
                   value={this.props.testnameHindi}
                   onChange={this.props.handleHindiTestNameChange}
@@ -44,18 +45,18 @@ class RightExamPanel extends Component {
                 config={{
                   height: 80
                 }}
-                onFocus={event => {
-                  event.editor.insertHtml(" ");
-                  this.props.handleEnglishInstructionChange(
-                    event.editor.getData()
-                  );
-                }}
+                // onFocus={event => {
+                //   // event.editor.insertHtml(" ");
+                //   this.props.handleEnglishInstructionChange(
+                //     event.editor.getData()
+                //   );
+                // }}
                 data={this.props.testInstructionEnglish}
-                onChange={event => {
-                  this.props.handleEnglishInstructionChange(
-                    event.editor.getData()
-                  );
-                }}
+                // onChange={event => {
+                //   this.props.handleEnglishInstructionChange(
+                //     event.editor.getData()
+                //   );
+                // }}
               />
             </div>
             <div style={{ margin: "1em 0em", width: "100%" }}>
@@ -131,7 +132,7 @@ class RightExamPanel extends Component {
                     )}
                   </Row>
                   <Row noGutters={true} style={{ margin: "0em 0em" }}>
-                    <Col lg="5">
+                    <Col lg="6" style={{ paddingRight: "0.5em" }}>
                       <small>Section Name in English</small>
                       <Form.Control
                         value={
@@ -148,8 +149,8 @@ class RightExamPanel extends Component {
                         style={{ borderRadius: "0" }}
                       />
                     </Col>
-                    <Col lg="2"></Col>
-                    <Col lg="5">
+                    {/* <Col lg="2"></Col> */}
+                    <Col lg="6" style={{ paddingLeft: "0.5em" }}>
                       <small>Section Name in Hindi</small>
                       <Form.Control
                         value={
@@ -168,7 +169,7 @@ class RightExamPanel extends Component {
                     </Col>
                   </Row>
                   <Row noGutters={true} style={{ margin: "1em 0em" }}>
-                    <Col lg="5">
+                    <Col lg="6" style={{ paddingRight: "0.5em" }}>
                       <small>Marks/ ques</small>
                       <Form.Control
                         disabled
@@ -182,8 +183,8 @@ class RightExamPanel extends Component {
                         style={{ borderRadius: "0" }}
                       />
                     </Col>
-                    <Col lg="2"></Col>
-                    <Col lg="5">
+                    {/* <Col lg="2"></Col> */}
+                    <Col lg="6" style={{ paddingLeft: "0.5em" }}>
                       <small>Negative marks / ques</small>
                       <Form.Control
                         disabled

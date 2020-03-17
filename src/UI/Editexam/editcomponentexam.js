@@ -434,7 +434,6 @@ class ExamEditComponent extends Component {
   saveExamdata = () => {
     let testdescEnglish = this.myReftestdescEnglish.current;
     let testdescHindi = this.myReftestdescHindi.current;
-    // console.log(this.state.listOfSection);
     let tempsections = this.state.listOfSection.map((item, index) => {
       return {
         testSectionId: item.testSectionId,
