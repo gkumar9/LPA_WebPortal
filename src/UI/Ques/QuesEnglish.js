@@ -12,8 +12,6 @@ class QuesEnglish extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      questionData: "",
-      explanationData: "",
       listOfOptions: [
         { name: "Option A", content: "", weightage: 0 },
         { name: "Option B", content: "", weightage: 0 },
@@ -22,7 +20,13 @@ class QuesEnglish extends Component {
       ],
       letterchartcode: 69
     };
+    this.myRefQuestionEnglish = React.createRef();
+    this.myRefExplanationEnglish = React.createRef();
+    this.refsArrayEnglish = [];
   }
+  // componentDidUpdate() {
+  //   this.refsArrayEnglish = [];
+  // }
   addoptionfn = () => {
     let currentCharCode = this.state.letterchartcode;
     let name = "Option " + String.fromCharCode(currentCharCode);
@@ -36,7 +40,6 @@ class QuesEnglish extends Component {
   deleteOption = index => {
     let currentArrayOfOption = this.state.listOfOptions;
     let letterchartcode = 65;
-
     currentArrayOfOption.splice(index, 1);
     currentArrayOfOption = currentArrayOfOption.map(item => {
       let name = "Option " + String.fromCharCode(letterchartcode);
@@ -47,20 +50,6 @@ class QuesEnglish extends Component {
     this.setState({
       listOfOptions: currentArrayOfOption,
       letterchartcode: letterchartcode
-    });
-  };
-  handleQuestionEditor = data => {
-    // console.log('data',data)
-    this.setState({ questionData: data });
-  };
-  handleExplanationEditor = data => {
-    this.setState({ explanationData: data });
-  };
-  handleOptioncontentchange = (index, data) => {
-    let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption[index].content = data;
-    this.setState({
-      listOfOptions: currentArrayOfOption
     });
   };
   handleOptionWeightageChange = (index, e) => {
@@ -76,6 +65,15 @@ class QuesEnglish extends Component {
     });
   };
   saveEnglishdata = () => {
+    const question = this.myRefQuestionEnglish.current;
+    const solution = this.myRefExplanationEnglish.current;
+    let tempoption = this.state.listOfOptions.map((item, index) => {
+      return {
+        name: item.name,
+        content: this.refsArrayEnglish[index].editor.getData(),
+        weightage: item.weightage
+      };
+    });
     let difficultyvalue;
     switch (this.props.difficulty) {
       case "+":
@@ -111,11 +109,10 @@ class QuesEnglish extends Component {
         topicId: this.props.selectedTopicID,
         type: "SINGLE_CHOICE",
         version: {
-          content: this.state.questionData,
+          content: question.editor.getData(),
           language: "ENGLISH",
-          options: this.state.listOfOptions,
-          // questionVersionId: 0,
-          solution: this.state.explanationData
+          options: tempoption,
+          solution: solution.editor.getData()
         }
       },
       headers: {
@@ -124,7 +121,6 @@ class QuesEnglish extends Component {
     })
       .then(res => {
         if (res.status === 200) {
-          // console.log(res.data.data);
           if (this.props.questionId === 0) {
             swal(
               "Success",
@@ -141,17 +137,20 @@ class QuesEnglish extends Component {
 
           this.props.handleChange(res.data.data.questionId);
           this.props.handleSelect();
-          this.setState({
-            questionData: "",
-            explanationData: "",
-            listOfOptions: [
-              { name: "Option A", content: "", weightage: 0 },
-              { name: "Option B", content: "", weightage: 0 },
-              { name: "Option C", content: "", weightage: 0 },
-              { name: "Option D", content: "", weightage: 0 }
-            ],
-            letterchartcode: 69
-          });
+          this.setState(
+            {
+              listOfOptions: [
+                { name: "Option A", content: "", weightage: 0 },
+                { name: "Option B", content: "", weightage: 0 },
+                { name: "Option C", content: "", weightage: 0 },
+                { name: "Option D", content: "", weightage: 0 }
+              ],
+              letterchartcode: 69
+            },
+            () => {
+              this.refsArrayEnglish = [];
+            }
+          );
         } else {
           swal(`Status Code:${res.status}`, "error");
         }
@@ -180,7 +179,6 @@ class QuesEnglish extends Component {
               style={{
                 width: "auto",
                 margin: "2.5em 0em"
-                // height: "0.5em"
               }}
             ></div>
             <LeftPanel
@@ -205,23 +203,19 @@ class QuesEnglish extends Component {
               handleDifficultyRadio={this.props.handleDifficultyRadio}
             />
           </Col>
-          {/* <Col lg="1"></Col> */}
           <Col
             style={{
               background: "#EEEEEE",
-              // height: "90vh",
               padding: "0em 4em"
             }}
           >
             <div style={{ margin: "2.5em 0em" }}>
               <RightpanelEnglish
-                handleQuestionEditor={this.handleQuestionEditor}
-                questionData={this.state.questionData}
-                handleExplanationEditor={this.handleExplanationEditor}
-                explanationData={this.state.explanationData}
+                myRefQuestionEnglish={this.myRefQuestionEnglish}
+                myRefExplanationEnglish={this.myRefExplanationEnglish}
+                refsArrayEnglish={this.refsArrayEnglish}
                 listOfOptions={this.state.listOfOptions}
                 letterchartcode={this.state.letterchartcode}
-                handleOptioncontentchange={this.handleOptioncontentchange}
                 handleOptionWeightageChange={this.handleOptionWeightageChange}
                 addoptionfn={this.addoptionfn}
                 deleteOption={this.deleteOption}
@@ -229,7 +223,6 @@ class QuesEnglish extends Component {
               />
             </div>
           </Col>
-          {/* <Col lg="1"></Col> */}
         </Row>
       </div>
     );
@@ -237,14 +230,10 @@ class QuesEnglish extends Component {
 }
 class RightpanelEnglish extends Component {
   render() {
-    // console.log(this.props.questionId);
+    // console.log(this.props.refsArrayEnglish, this.props.listOfOptions);
     return (
       <Form>
-        <QuestionComp
-          // ClassicEditor={ClassicEditor}
-          handleQuestionEditor={this.props.handleQuestionEditor}
-          questionData={this.props.questionData}
-        />
+        <QuestionComp myRefQuestionEnglish={this.props.myRefQuestionEnglish} />
         {this.props.listOfOptions &&
           this.props.listOfOptions.map((item, index) => {
             return (
@@ -265,7 +254,6 @@ class RightpanelEnglish extends Component {
                       placeholder="weightage"
                     />
                   </Col>
-                  {/* {this.props.listOfOptions.length === index + 1 && ( */}
                   <Col>
                     <Button
                       style={{ float: "right", color: "grey" }}
@@ -279,28 +267,18 @@ class RightpanelEnglish extends Component {
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
-                    // config={{
-                    //   plugins: [MathType],
-                    //   toolbar: { items: ["MathType"] }
-                    // }}
+                    ref={ref => {
+                      // Callback refs are preferable when
+                      // dealing with dynamic refs
+
+                      this.props.refsArrayEnglish[index] = ref;
+                      return true;
+                    }}
                     onBeforeLoad={CKEDITOR => {
                       CKEDITOR.disableAutoInline = true;
                     }}
                     config={{
-                      // extraPlugins:'ckeditor_wiris',
-                      // extraPlugins:MathType,
-                      height: 80
-                      // placeholder: "Test description and instruction in English"
-                    }}
-                    onFocus={event => {
-                      event.editor.insertHtml(" ");
-                      const data = event.editor.getData();
-                      this.props.handleOptioncontentchange(index, data);
-                    }}
-                    data={item.content}
-                    onChange={event => {
-                      const data = event.editor.getData();
-                      this.props.handleOptioncontentchange(index, data);
+                      height: 100
                     }}
                   />
                 </div>
@@ -329,8 +307,7 @@ class RightpanelEnglish extends Component {
         </Row>
         <div style={{ margin: "2em 0" }}>
           <ExplanationComp
-            handleExplanationEditor={this.props.handleExplanationEditor}
-            explanationData={this.props.explanationData}
+            myRefExplanationEnglish={this.props.myRefExplanationEnglish}
           />
         </div>
 
@@ -493,17 +470,12 @@ class LeftPanel extends Component {
             Tags
           </Form.Label>
           <ReactTags
-            // style={{width:'100%'}}
             tags={this.props.tags}
             onInput={this.props.handleChangeTags}
             suggestions={this.props.suggestions}
             onDelete={this.props.onDelete.bind(this)}
             onAddition={this.props.onAddition.bind(this)}
           />
-          {/* <TagsInput
-            value={this.props.tags}
-            onChange={this.props.handleChangeTags}
-          /> */}
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlTextarea1">
           <Form.Label
@@ -524,7 +496,7 @@ class LeftPanel extends Component {
   }
 }
 
-function QuestionComp({ questionData, handleQuestionEditor }) {
+function QuestionComp({ myRefQuestionEnglish }) {
   return (
     <Form.Group>
       <Form.Label
@@ -540,24 +512,10 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
         }}
       >
         <CKEditor
+          ref={myRefQuestionEnglish}
           onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
           config={{
-            height: 80
-            // placeholder: "Test description and instruction in English"
-          }}
-          data={questionData}
-          onFocus={event => {
-            console.log("in foucs");
-            // event.editor.removeAllListeners();
-            event.editor.insertHtml(" ");
-            const data = event.editor.getData();
-            // console.log('focus change',data)
-            handleQuestionEditor(data);
-          }}
-          onChange={event => {
-            const data = event.editor.getData();
-            // console.log(data);
-            handleQuestionEditor(data);
+            height: 100
           }}
         />
       </div>
@@ -565,7 +523,7 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
   );
 }
 
-function ExplanationComp({ explanationData, handleExplanationEditor }) {
+function ExplanationComp({ myRefExplanationEnglish }) {
   return (
     <Form.Group controlId="exampleForm.EControlInput1">
       <Form.Label
@@ -581,22 +539,11 @@ function ExplanationComp({ explanationData, handleExplanationEditor }) {
         }}
       >
         <CKEditor
+          ref={myRefExplanationEnglish}
           onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
-          // editorUrl="/Users/gauravkumar/Desktop/workspace/lpa-webportal/public/customckeditor/ckeditor.js"
           config={{
-            // extraPlugins : 'timestamp',
             allowedContent: true,
-            height: "80px"
-          }}
-          data={explanationData}
-          onFocus={event => {
-            event.editor.insertHtml(" ");
-            const data = event.editor.getData();
-            handleExplanationEditor(data);
-          }}
-          onChange={(event, editor) => {
-            const data = event.editor.getData();
-            handleExplanationEditor(data);
+            height: 100
           }}
         />
       </div>

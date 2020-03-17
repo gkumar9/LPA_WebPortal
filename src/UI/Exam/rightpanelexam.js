@@ -29,7 +29,7 @@ class RightExamPanel extends Component {
               </Col>
               <Col></Col>
               <Col lg="6" style={{ paddingLeft: "0.5em" }}>
-                <CKEditor 
+                {/* <CKEditor 
                 // style={{background:'white',border:'1px solid #ced4da'}}
                 data="<p>Some initial data</p>" 
                 config={{removePlugins:'imgur',height:'10'}}
@@ -38,13 +38,13 @@ class RightExamPanel extends Component {
                   window.hook(event.editor.document.$.body);
                   
                 }}
-                 />
-                {/* <Form.Control
+                 /> */}
+                <Form.Control
                   value={this.props.testnameHindi}
                   onChange={this.props.handleHindiTestNameChange}
                   placeholder="Test name in Hindi"
                   style={{ borderRadius: "0", float: "right" }}
-                /> */}
+                />
               </Col>
             </Row>
           </Container>
@@ -100,7 +100,7 @@ class RightExamPanel extends Component {
                 style={{ display: "none" }}
               >
                 <option value="Phonetic">Phonetic</option>
-                <option value="Typewrit">TypeWrit</option>
+                <option value="Ramington">Ramington</option>
               </select>
               <CKEditor
                 onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
@@ -125,7 +125,7 @@ class RightExamPanel extends Component {
                   a.selectedIndex = 1;
                   window.setLang();
                   var b = document.getElementById("txtKeyboard");
-                  b.selectedIndex = 0;
+                  b.selectedIndex = 1;
                   window.changeKB();
                 }}
               />

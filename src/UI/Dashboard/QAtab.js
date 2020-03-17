@@ -985,7 +985,7 @@ class QAtab extends Component {
                             <React.Fragment key={optionindex}>
                               <Col
                                 lg="6"
-                                style={{ margin: "0.5em 0", display: "flex" }}
+                                style={{ margin: "0.5em 0", }}
                               >
                                 {" "}
                                 {optionindex + 1}
@@ -996,14 +996,14 @@ class QAtab extends Component {
                                 />
                                 <sub
                                   style={{
-                                    display: "inline-block",
-                                    position: "absolute",
-                                    bottom: "0",
-                                    left: "0",
-                                    margin: "0em 2em"
+                                    // display: "inline-block",
+                                    // position: "absolute",
+                                    // bottom: "0",
+                                    // left: "0",
+                                    // margin: "0em 0.5em"
                                   }}
                                 >
-                                  <b> W: {optionitem.weightage} </b>
+                                  <b>( {optionitem.weightage} )</b>
                                 </sub>
                               </Col>
                             </React.Fragment>
@@ -1129,7 +1129,7 @@ class QAtab extends Component {
             />
           </center>
         ) : (
-          <Row style={{ height: "90vh" }}>
+          <Row style={{ height: "90vh" }} >
             <Col
               lg="3"
               style={{

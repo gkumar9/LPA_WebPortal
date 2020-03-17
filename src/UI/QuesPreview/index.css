@@ -5,7 +5,7 @@
   .backbuttonprint {
     visibility: hidden;
   }
-  #clearpreview{
+  #clearpreview {
     visibility: hidden;
   }
   .backbuttonprint.btn.btn-link {
@@ -62,7 +62,7 @@
   src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans-Oblique.ttf")
     format("truetype");
 }
-#cardpreview img{
+#cardpreview img {
   max-width: 200px;
   max-height: 200px;
 }

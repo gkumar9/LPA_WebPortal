@@ -1,13 +1,8 @@
 import React, { Component } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
-// import TagsInput from "react-tagsinput";
 import Difficulty from "./difficulty.js";
-// import CKEditor from "@ckeditor/ckeditor5-react";
-// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import CKEditor from "ckeditor4-react";
-// import { Pramukhime } from "./../../Assets/pramukhime/plugin";
-import axios from "axios";
-// import "react-tagsinput/react-tagsinput.css"; // If using WebPack and style-loader.
+import axios from "axios"; // If using WebPack and style-loader.
 import "./index.css";
 import URL from "../../Assets/url";
 import ReactTags from "react-tag-autocomplete";
@@ -22,6 +17,18 @@ class EditComponent extends Component {
       listOfOptions: [],
       letterchartcode: 65
     };
+    this.myRefQuestionHindi = React.createRef();
+    this.myRefQuestionHindiNew = React.createRef();
+    this.myRefQuestionEnglish = React.createRef();
+    this.myRefQuestionEnglishNew = React.createRef();
+    this.myRefExplanationHindi = React.createRef();
+    this.myRefExplanationHindiNew = React.createRef();
+    this.myRefExplanationEnglish = React.createRef();
+    this.myRefExplanationEnglishNew = React.createRef();
+    this.refsArrayHindi = [];
+    this.refsArrayHindiNew = [];
+    this.refsArrayEnglish = [];
+    this.refsArrayEnglishNew = [];
     window.EditComponent = this;
   }
   addoptionfn = () => {
@@ -91,6 +98,10 @@ class EditComponent extends Component {
           )[0].options.length + 65,
         tags: converttags
       });
+      if (this.props.lang === "ENGLISH") {
+        // this.myRefQuestionEnglish.current=<CKEditor />;
+        // console.log(this.myRefQuestionEnglish)
+      }
     } else {
       this.setState({
         difficulty: difficultyvalue,
@@ -105,37 +116,47 @@ class EditComponent extends Component {
       });
     }
   }
-  handleQuestionEditor = data => {
-    this.setState({ questionData: data });
-  };
-  handleExplanationEditor = data => {
-    // console.log(data);
-    this.setState({ explanationData: data });
-  };
-  handleOptioncontentchange = (index, data) => {
-    // e.preventDefault();
-    // console.log('in fn')
-    // let currentCharCode = this.state.letterchartcode;
-    // let name = "Option " + String.fromCharCode(currentCharCode);
-    // console.log(this.state.listOfOptions[index], data);
-    let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption[index].content = data;
-    this.setState({
-      listOfOptions: currentArrayOfOption
-    });
-  };
+  // handleOptioncontentchange = (index, data) => {
+  //   let currentArrayOfOption = this.state.listOfOptions;
+  //   currentArrayOfOption[index].content = data;
+  //   this.setState({
+  //     listOfOptions: currentArrayOfOption
+  //   });
+  // };
   handleOptionWeightageChange = (index, e) => {
-    // e.preventDefault();
-    // console.log(index,e);
     let currentArrayOfOption = this.state.listOfOptions;
     currentArrayOfOption[index].weightage = e.target.value
-    ? parseInt(e.target.value)
-    : "";
+      ? parseInt(e.target.value)
+      : "";
     this.setState({
       listOfOptions: currentArrayOfOption
     });
   };
   savedata = () => {
+    const questionEnglish = this.myRefQuestionEnglish.current;
+    const solutionEnglish = this.myRefExplanationEnglish.current;
+    let tempoptionEnglish =
+      this.refsArrayEnglish.length > 0 &&
+      this.state.listOfOptions.map((item, index) => {
+        return {
+          optionId: item.optionId,
+          name: item.name,
+          content: this.refsArrayEnglish[index].editor.getData(),
+          weightage: item.weightage
+        };
+      });
+    const questionHindi = this.myRefQuestionHindi.current;
+    const solutionHindi = this.myRefExplanationHindi.current;
+    let tempoptionHindi =
+      this.refsArrayHindi.length > 0 &&
+      this.state.listOfOptions.map((item, index) => {
+        return {
+          optionId: item.optionId,
+          name: item.name,
+          content: this.refsArrayHindi[index].editor.getData(),
+          weightage: item.weightage
+        };
+      });
     let difficultyvalue;
     switch (this.props.difficulty) {
       case "+":
@@ -153,14 +174,13 @@ class EditComponent extends Component {
     let converttags = this.props.tags.map(item => {
       return { tagId: item.id, tag: item.name };
     });
-    // console.log(this.state.listOfOptions);
     axios({
       method: "POST",
       url: URL.updateExistingQuestionVersion,
       data: {
         authToken: "string",
         difficulty: difficultyvalue,
-        questionId: this.props.questionId,
+        questionId: parseInt(this.props.questionId),
         sectionId: this.props.selectedChapterID,
         subjectId: this.props.selectedSubjectID,
         subtopicId: this.props.selectedSubTopicID,
@@ -168,15 +188,32 @@ class EditComponent extends Component {
         topicId: this.props.selectedTopicID,
         type: "SINGLE_CHOICE",
         version: {
-          content: this.state.questionData,
+          content:
+            this.props.fetchedData.questionVersions.filter(
+              item => item.language === this.props.lang
+            )[0].language === "ENGLISH"
+              ? questionEnglish.editor.getData()
+              : questionHindi.editor.getData(),
           language: this.props.fetchedData.questionVersions.filter(
             item => item.language === this.props.lang
           )[0].language,
-          options: this.state.listOfOptions,
-          questionVersionId: this.props.fetchedData.questionVersions.filter(
-            item => item.language === this.props.lang
-          )[0].questionVersionId,
-          solution: this.state.explanationData
+          options:
+            this.props.fetchedData.questionVersions.filter(
+              item => item.language === this.props.lang
+            )[0].language === "ENGLISH"
+              ? tempoptionEnglish
+              : tempoptionHindi,
+          questionVersionId: parseInt(
+            this.props.fetchedData.questionVersions.filter(
+              item => item.language === this.props.lang
+            )[0].questionVersionId
+          ),
+          solution:
+            this.props.fetchedData.questionVersions.filter(
+              item => item.language === this.props.lang
+            )[0].language === "ENGLISH"
+              ? solutionEnglish.editor.getData()
+              : solutionHindi.editor.getData()
         }
       },
       headers: {
@@ -186,14 +223,7 @@ class EditComponent extends Component {
       .then(res => {
         if (res.status === 200) {
           console.log(res.data.data);
-          // alert("success", res.data.data);
           swal("Success", `Data updated`, "success");
-          // let data = JSON.parse(localStorage.getItem("Previewdata"));
-          // let finditem = data.filter(
-          //   item => item.questionId === this.props.questionId
-          // );
-          // if (finditem.length > 0) {
-          // }
           localStorage.setItem("editquesdata", null);
         }
       })
@@ -203,6 +233,31 @@ class EditComponent extends Component {
       });
   };
   savedatanewversion = () => {
+    // console.log(this.refsArrayEnglishNew);
+    const questionEnglish = this.myRefQuestionEnglishNew.current;
+    const solutionEnglish = this.myRefExplanationEnglishNew.current;
+    let tempoptionEnglish =
+      this.refsArrayEnglishNew.length > 0 &&
+      this.state.listOfOptions.map((item, index) => {
+        return {
+          // optionId: item.optionId,
+          name: item.name,
+          content: this.refsArrayEnglishNew[index].editor.getData(),
+          weightage: item.weightage
+        };
+      });
+    const questionHindi = this.myRefQuestionHindiNew.current;
+    const solutionHindi = this.myRefExplanationHindiNew.current;
+    let tempoptionHindi =
+      this.refsArrayHindiNew.length > 0 &&
+      this.state.listOfOptions.map((item, index) => {
+        return {
+          // optionId: item.optionId,
+          name: item.name,
+          content: this.refsArrayHindiNew[index].editor.getData(),
+          weightage: item.weightage
+        };
+      });
     let difficultyvalue;
     switch (this.props.difficulty) {
       case "+":
@@ -220,7 +275,6 @@ class EditComponent extends Component {
     let converttags = this.props.tags.map(item => {
       return { tagId: item.id, tag: item.name };
     });
-    // console.log(this.props.selectedTopicID);
     axios({
       method: "POST",
       url: URL.createQuestionNewVersion,
@@ -235,13 +289,17 @@ class EditComponent extends Component {
         topicId: this.props.selectedTopicID,
         type: "SINGLE_CHOICE",
         version: {
-          content: this.state.questionData,
+          content:
+            this.props.lang === "ENGISH"
+              ? questionEnglish.editor.getData()
+              : questionHindi.editor.getData(),
           language: this.props.lang,
-          options: this.state.listOfOptions,
-          // questionVersionId: this.props.fetchedData.questionVersions.filter(
-          //   item => item.language === this.props.lang
-          // )[0].questionVersionId,
-          solution: this.state.explanationData
+          options:
+            this.props.lang === "ENGLISH" ? tempoptionEnglish : tempoptionHindi,
+          solution:
+            this.props.lang === "ENGLISH"
+              ? solutionEnglish.editor.getData()
+              : solutionHindi.editor.getData()
         }
       },
       headers: {
@@ -311,13 +369,19 @@ class EditComponent extends Component {
             <Col style={{ background: "#EEEEEE", padding: "0em 4em" }}>
               <div style={{ margin: "2.5em 0em" }}>
                 <Rightpanel
-                  handleQuestionEditor={this.handleQuestionEditor}
+                  myRefQuestionHindi={this.myRefQuestionHindi}
+                  myRefQuestionEnglish={this.myRefQuestionEnglish}
+                  myRefExplanationHindi={this.myRefExplanationHindi}
+                  myRefExplanationEnglish={this.myRefExplanationEnglish}
+                  refsArrayHindi={this.refsArrayHindi}
+                  refsArrayEnglish={this.refsArrayEnglish}
+                  // handleQuestionEditor={this.handleQuestionEditor}
                   questionData={this.state.questionData}
-                  handleExplanationEditor={this.handleExplanationEditor}
+                  // handleExplanationEditor={this.handleExplanationEditor}
                   explanationData={this.state.explanationData}
                   listOfOptions={this.state.listOfOptions}
                   letterchartcode={this.state.letterchartcode}
-                  handleOptioncontentchange={this.handleOptioncontentchange}
+                  // handleOptioncontentchange={this.handleOptioncontentchange}
                   handleOptionWeightageChange={this.handleOptionWeightageChange}
                   addoptionfn={this.addoptionfn}
                   deleteOption={this.deleteOption}
@@ -370,13 +434,19 @@ class EditComponent extends Component {
             <Col style={{ background: "#EEEEEE", padding: "0em 4em" }}>
               <div style={{ margin: "2.5em 0em" }}>
                 <RightpanelNewVersion
-                  handleQuestionEditor={this.handleQuestionEditor}
+                  myRefQuestionHindiNew={this.myRefQuestionHindiNew}
+                  myRefQuestionEnglishNew={this.myRefQuestionEnglishNew}
+                  myRefExplanationHindiNew={this.myRefExplanationHindiNew}
+                  myRefExplanationEnglishNew={this.myRefExplanationEnglishNew}
+                  refsArrayHindiNew={this.refsArrayHindiNew}
+                  refsArrayEnglishNew={this.refsArrayEnglishNew}
+                  // handleQuestionEditor={this.handleQuestionEditor}
                   questionData={this.state.questionData}
-                  handleExplanationEditor={this.handleExplanationEditor}
+                  // handleExplanationEditor={this.handleExplanationEditor}
                   explanationData={this.state.explanationData}
                   listOfOptions={this.state.listOfOptions}
                   letterchartcode={this.state.letterchartcode}
-                  handleOptioncontentchange={this.handleOptioncontentchange}
+                  // handleOptioncontentchange={this.handleOptioncontentchange}
                   handleOptionWeightageChange={this.handleOptionWeightageChange}
                   addoptionfn={this.addoptionfn}
                   deleteOption={this.deleteOption}
@@ -557,17 +627,16 @@ class LeftPanel extends Component {
 }
 class Rightpanel extends Component {
   render() {
-    // console.log(this.props.questionData);
     return (
       <Form>
-        {/* {this.props.questionData && ( */}
         <QuestionComp
-          // ClassicEditor={ClassicEditor}
           lang={this.props.lang}
-          handleQuestionEditor={this.props.handleQuestionEditor}
+          myRefQuestionHindi={this.props.myRefQuestionHindi}
+          myRefQuestionEnglish={this.props.myRefQuestionEnglish}
+          // handleQuestionEditor={this.props.handleQuestionEditor}
           questionData={this.props.questionData}
         />
-        {/* )} */}
+
         {this.props.listOfOptions &&
           this.props.listOfOptions.map((item, index) => {
             return (
@@ -607,60 +676,72 @@ class Rightpanel extends Component {
                       onBeforeLoad={CKEDITOR =>
                         (CKEDITOR.disableAutoInline = true)
                       }
+                      ref={ref => {
+                        // Callback refs are preferable when
+                        // dealing with dynamic refs
+                        this.props.refsArrayHindi[index] = ref;
+                      }}
                       onFocus={event => {
                         window.hook(event.editor.document.$.body);
                         // let data = event.editor.getData();
                         // console.log('focus')
-                        event.editor.insertHtml(" ");
-                        this.props.handleOptioncontentchange(
-                          index,
-                          event.editor.getData()
-                        );
-                        installKeyupOption(index, event.editor);
+                        // event.editor.insertHtml(" ");
+                        // this.props.handleOptioncontentchange(
+                        //   index,
+                        //   event.editor.getData()
+                        // );
+                        // installKeyupOption(index, event.editor);
                       }}
                       config={{
-                        height: 80
+                        height: 100
 
                         // placeholder: "Test description and instruction in English"
                       }}
                       data={item.content}
-                      onChange={event => {
-                        // let data = editor.getData();
-                        // console.log('change')
-                        this.props.handleOptioncontentchange(
-                          index,
-                          event.editor.getData()
-                        );
-                      }}
+                      // onChange={event => {
+                      //   // let data = editor.getData();
+                      //   // console.log('change')
+                      //   this.props.handleOptioncontentchange(
+                      //     index,
+                      //     event.editor.getData()
+                      //   );
+                      // }}
                     />
                   ) : (
                     <CKEditor
                       onBeforeLoad={CKEDITOR =>
                         (CKEDITOR.disableAutoInline = true)
                       }
-                      onFocus={event => {
-                        // let data = event.editor.getData();
-                        // console.log('focus')
-                        event.editor.insertHtml(" ");
-                        this.props.handleOptioncontentchange(
-                          index,
-                          event.editor.getData()
-                        );
+                      ref={ref => {
+                        // Callback refs are preferable when
+                        // dealing with dynamic refs
+
+                        this.props.refsArrayEnglish[index] = ref;
+                        return true;
                       }}
+                      // onFocus={event => {
+                      //   // let data = event.editor.getData();
+                      //   // console.log('focus')
+                      //   event.editor.insertHtml(" ");
+                      //   this.props.handleOptioncontentchange(
+                      //     index,
+                      //     event.editor.getData()
+                      //   );
+                      // }}
                       config={{
-                        height: 80
+                        height: 100
 
                         // placeholder: "Test description and instruction in English"
                       }}
                       data={item.content}
-                      onChange={event => {
-                        // let data = editor.getData();
-                        // console.log('change')
-                        this.props.handleOptioncontentchange(
-                          index,
-                          event.editor.getData()
-                        );
-                      }}
+                      // onChange={event => {
+                      //   // let data = editor.getData();
+                      //   // console.log('change')
+                      //   this.props.handleOptioncontentchange(
+                      //     index,
+                      //     event.editor.getData()
+                      //   );
+                      // }}
                     />
                   )}
                 </div>
@@ -669,32 +750,16 @@ class Rightpanel extends Component {
           })}
         <Row>
           <Col lg="10"></Col>
-          <Col>
-            {/* <Button
-              onClick={this.props.addoptionfn}
-              varirant="info"
-              style={{
-                fontSize: "0.8em",
-                fontWeight: "700",
-                background: "#FF8976",
-                borderColor: "#FF8976",
-                borderRadius: "0",
-                float: "right"
-              }}
-            >
-              {" "}
-              + Add Option
-            </Button> */}
-          </Col>
+          <Col></Col>
         </Row>
         <div style={{ margin: "2em 0" }}>
-          {/* {this.props.explanationData && ( */}
           <ExplanationComp
             lang={this.props.lang}
-            handleExplanationEditor={this.props.handleExplanationEditor}
+            // handleExplanationEditor={this.props.handleExplanationEditor}
             explanationData={this.props.explanationData}
+            myRefExplanationHindi={this.props.myRefExplanationHindi}
+            myRefExplanationEnglish={this.props.myRefExplanationEnglish}
           />
-          {/* )} */}
         </div>
 
         <div style={{ margin: "1em 0", textAlign: "center" }}>
@@ -717,8 +782,16 @@ class Rightpanel extends Component {
   }
 }
 
-function QuestionComp({ lang, questionData, handleQuestionEditor }) {
-  // console.log(props);
+function QuestionComp({
+  lang,
+  myRefQuestionHindi,
+  myRefQuestionEnglish,
+  questionData
+}) {
+  // console.log(this.props.fetchedData.questionVersions.filter(
+  //   item => item.language === this.props.lang
+  // )[0].content)
+  // console.log(questionData);
   return (
     <Form.Group>
       <Form.Label
@@ -752,102 +825,77 @@ function QuestionComp({ lang, questionData, handleQuestionEditor }) {
               style={{ display: "none" }}
             >
               <option value="Phonetic">Phonetic</option>
-              <option value="Typewrit">TypeWrit</option>
+              <option value="Ramington">Ramington</option>
             </select>
             <CKEditor
               onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
               config={{
-                height: 80
+                height: 100
               }}
+              ref={myRefQuestionHindi}
               onFocus={event => {
                 window.hook(event.editor.document.$.body);
-                event.editor.insertHtml(" ");
-                let data = event.editor.getData();
-                // console.log('focus',data)
-                handleQuestionEditor(data);
-                installKeyupQuestion(event.editor);
+                // event.editor.insertHtml(" ");
+                // let data = event.editor.getData();
+                // // console.log('focus',data)
+                // handleQuestionEditor(data);
+                // installKeyupQuestion(event.editor);
               }}
               oninstanceReady={event => {
                 var a = document.getElementById("txtLanguage");
                 a.selectedIndex = 1;
                 window.setLang();
                 var b = document.getElementById("txtKeyboard");
-                b.selectedIndex = 0;
+                b.selectedIndex = 1;
                 window.changeKB();
               }}
               data={questionData}
-              onChange={event => {
-                let data = event.editor.getData();
+              // onChange={event => {
+              //   let data = event.editor.getData();
 
-                handleQuestionEditor(data);
-              }}
+              //   handleQuestionEditor(data);
+              // }}
             />
           </div>
         ) : (
           <CKEditor
             onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
             config={{
-              height: 80
-              // font_defaultLabel: "lato",
-              // fontSize_sizes: "16/16px;24/24px;48/48px;",
-              // font_style: {
-              //   element: "p",
-              //   styles: { "font-size": "18px" },
-              //   overrides: [{ element: "font", attributes: { face: null } }]
-              // }
-              // placeholder: "Test description and instruction in English"
+              height: 100
             }}
-            onFocus={event => {
-              event.editor.insertHtml(" ");
-              let data = event.editor.getData();
-              // console.log('focus',data)
-              handleQuestionEditor(data);
-            }}
-            data={questionData}
-            //   config={{
-            //     plugins: [Pramukhime]
-            //   }}
-            onChange={event => {
-              let data = event.editor.getData();
+            ref={myRefQuestionEnglish}
+            // onFocus={event => {
+            //   event.editor.insertHtml(" ");
 
-              handleQuestionEditor(data);
-            }}
+            //   // let data = event.editor.getData();
+            //   // console.log(data);
+            //   // event.editor.setData(data + " ");
+            //   // let datanew = event.editor.getData();
+            //   // console.log(datanew);
+            //   // event.editor.setData(" " + data);
+            //   // event.editor.insertHtml(data + " ");
+
+            //   // console.log('focus',data)
+            //   // handleQuestionEditor(data);
+            // }}
+            data={questionData}
+            // onChange={event => {
+            //   let data = event.editor.getData();
+            //   console.log("onChange:", data);
+            //   handleQuestionEditor(data);
+            // }}
           />
         )}
-        {/* <CKEditor
-          onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
-          config={{
-            height: 80
-            // font_defaultLabel: "lato",
-            // fontSize_sizes: "16/16px;24/24px;48/48px;",
-            // font_style: {
-            //   element: "p",
-            //   styles: { "font-size": "18px" },
-            //   overrides: [{ element: "font", attributes: { face: null } }]
-            // }
-            // placeholder: "Test description and instruction in English"
-          }}
-          onFocus={event => {
-            event.editor.insertHtml(" ");
-            let data = event.editor.getData();
-            // console.log('focus',data)
-            handleQuestionEditor(data);
-          }}
-          data={questionData}
-          //   config={{
-          //     plugins: [Pramukhime]
-          //   }}
-          onChange={event => {
-            let data = event.editor.getData();
-
-            handleQuestionEditor(data);
-          }}
-        /> */}
       </div>
     </Form.Group>
   );
 }
-function ExplanationComp({ lang, explanationData, handleExplanationEditor }) {
+function ExplanationComp({
+  lang,
+  myRefExplanationHindi,
+  myRefExplanationEnglish,
+  explanationData
+}) {
   //   console.log(explanationData);
   return (
     <Form.Group>
@@ -867,87 +915,65 @@ function ExplanationComp({ lang, explanationData, handleExplanationEditor }) {
           <CKEditor
             onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
             config={{
-              height: 80
+              height: 100
               // placeholder: "Test description and instruction in English"
             }}
+            ref={myRefExplanationHindi}
             // onBlur={event=>{
             //   console.log('blur',event)
             // }}
             onFocus={event => {
               window.hook(event.editor.document.$.body);
-              event.editor.insertHtml(" ");
-              let data = event.editor.getData();
+              // event.editor.insertHtml(" ");
+              // let data = event.editor.getData();
 
-              handleExplanationEditor(data);
-              installKeyupSolution(event.editor);
+              // handleExplanationEditor(data);
+              // installKeyupSolution(event.editor);
             }}
             data={explanationData}
-            onChange={event => {
-              let data = event.editor.getData();
-              handleExplanationEditor(data);
-            }}
+            // onChange={event => {
+            //   let data = event.editor.getData();
+            //   handleExplanationEditor(data);
+            // }}
           />
         ) : (
           <CKEditor
             onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
             config={{
-              height: 80
+              height: 100
               // placeholder: "Test description and instruction in English"
             }}
+            ref={myRefExplanationEnglish}
             // onBlur={event=>{
             //   console.log('blur',event)
             // }}
-            onFocus={event => {
-              event.editor.insertHtml(" ");
-              let data = event.editor.getData();
+            // onFocus={event => {
+            //   event.editor.insertHtml(" ");
+            //   let data = event.editor.getData();
 
-              handleExplanationEditor(data);
-            }}
+            //   handleExplanationEditor(data);
+            // }}
             data={explanationData}
-            onChange={event => {
-              let data = event.editor.getData();
-              handleExplanationEditor(data);
-            }}
+            // onChange={event => {
+            //   let data = event.editor.getData();
+            //   handleExplanationEditor(data);
+            // }}
           />
         )}
-        {/* <CKEditor
-          onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
-          config={{
-            height: 80
-            // placeholder: "Test description and instruction in English"
-          }}
-          // onBlur={event=>{
-          //   console.log('blur',event)
-          // }}
-          onFocus={event => {
-            event.editor.insertHtml(" ");
-            let data = event.editor.getData();
-
-            handleExplanationEditor(data);
-          }}
-          data={explanationData}
-          onChange={event => {
-            let data = event.editor.getData();
-            handleExplanationEditor(data);
-          }}
-        /> */}
       </div>
     </Form.Group>
   );
 }
 class RightpanelNewVersion extends Component {
   render() {
-    // console.log(this.props.questionData);
     return (
       <Form>
-        {/* {this.props.questionData && ( */}
         <QuestionComp
-          // ClassicEditor={ClassicEditor}
           lang={this.props.lang}
-          handleQuestionEditor={this.props.handleQuestionEditor}
+          myRefQuestionHindi={this.props.myRefQuestionHindiNew}
+          myRefQuestionEnglish={this.props.myRefQuestionEnglishNew}
           questionData={this.props.questionData}
         />
-        {/* )} */}
         {this.props.listOfOptions &&
           this.props.listOfOptions.map((item, index) => {
             return (
@@ -958,10 +984,9 @@ class RightpanelNewVersion extends Component {
                   </Form.Label>
                   <Col sm="2">
                     <Form.Control
-                      // disabled
                       style={{ borderRadius: "0", background: "#f9f9f9" }}
                       type="number"
-                      value={item.weightage || 0}
+                      value={item.weightage}
                       onChange={this.props.handleOptionWeightageChange.bind(
                         this,
                         index
@@ -969,7 +994,6 @@ class RightpanelNewVersion extends Component {
                       placeholder="weightage"
                     />
                   </Col>
-                  {/* {this.props.listOfOptions.length === index + 1 && ( */}
                   <Col>
                     <Button
                       style={{ float: "right", color: "grey" }}
@@ -979,96 +1003,81 @@ class RightpanelNewVersion extends Component {
                       X Delete
                     </Button>
                   </Col>
-                  {/* )} */}
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
-                  {/* <CKEditor
-                    onBeforeLoad={CKEDITOR =>
-                      (CKEDITOR.disableAutoInline = true)
-                    }
-                    config={{
-                      height: 80
-
-                      // placeholder: "Test description and instruction in English"
-                    }}
-                    onFocus={event => {
-                      // let data = event.editor.getData();
-                      // console.log('focus')
-                      event.editor.insertHtml(" ");
-                      this.props.handleOptioncontentchange(
-                        index,
-                        event.editor.getData()
-                      );
-                    }}
-                    data={item.content}
-                    onChange={event => {
-                      // let data = editor.getData();
-                      // console.log('change')
-                      this.props.handleOptioncontentchange(
-                        index,
-                        event.editor.getData()
-                      );
-                    }}
-                  /> */}
                   {this.props.lang === "HINDI" ? (
                     <CKEditor
                       onBeforeLoad={CKEDITOR =>
                         (CKEDITOR.disableAutoInline = true)
                       }
+                      ref={ref => {
+                        // Callback refs are preferable when
+                        // dealing with dynamic refs
+
+                        this.props.refsArrayHindiNew[index] = ref;
+                        return true;
+                      }}
                       onFocus={event => {
                         window.hook(event.editor.document.$.body);
                         // let data = event.editor.getData();
                         // console.log('focus')
-                        event.editor.insertHtml(" ");
-                        this.props.handleOptioncontentchange(
-                          index,
-                          event.editor.getData()
-                        );
-                        installKeyupOption(index, event.editor);
+                        // event.editor.insertHtml(" ");
+                        // this.props.handleOptioncontentchange(
+                        //   index,
+                        //   event.editor.getData()
+                        // );
+                        // installKeyupOption(index, event.editor);
                       }}
                       config={{
-                        height: 80
+                        height: 100
 
                         // placeholder: "Test description and instruction in English"
                       }}
                       data={item.content}
-                      onChange={event => {
-                        // let data = editor.getData();
-                        // console.log('change')
-                        this.props.handleOptioncontentchange(
-                          index,
-                          event.editor.getData()
-                        );
-                      }}
+                      // onChange={event => {
+                      //   // let data = editor.getData();
+                      //   // console.log('change')
+                      //   this.props.handleOptioncontentchange(
+                      //     index,
+                      //     event.editor.getData()
+                      //   );
+                      // }}
                     />
                   ) : (
                     <CKEditor
                       onBeforeLoad={CKEDITOR =>
                         (CKEDITOR.disableAutoInline = true)
                       }
-                      onFocus={event => {
-                        // let data = event.editor.getData();
-                        // console.log('focus')
-                        event.editor.insertHtml(" ");
-                        this.props.handleOptioncontentchange(
-                          index,
-                          event.editor.getData()
-                        );
+                      ref={ref => {
+                        // Callback refs are preferable when
+                        // dealing with dynamic refs
+
+                        this.props.refsArrayEnglishNew[index] = ref;
+                        return true;
                       }}
+                      // onFocus={event => {
+                      //   // let data = event.editor.getData();
+                      //   // console.log('focus')
+                      //   event.editor.insertHtml(" ");
+                      //   this.props.handleOptioncontentchange(
+                      //     index,
+                      //     event.editor.getData()
+                      //   );
+                      // }}
                       config={{
-                        height: 80
+                        height: 100
 
                         // placeholder: "Test description and instruction in English"
                       }}
                       data={item.content}
-                      onChange={event => {
-                        // let data = editor.getData();
-                        // console.log('change')
-                        this.props.handleOptioncontentchange(
-                          index,
-                          event.editor.getData()
-                        );
-                      }}
+                      // onChange={event => {
+                      //   // let data = editor.getData();
+                      //   // console.log('change')
+                      //   this.props.handleOptioncontentchange(
+                      //     index,
+                      //     event.editor.getData()
+                      //   );
+                      // }}
                     />
                   )}
                 </div>
@@ -1096,13 +1105,12 @@ class RightpanelNewVersion extends Component {
           </Col>
         </Row>
         <div style={{ margin: "2em 0" }}>
-          {/* {this.props.explanationData && ( */}
           <ExplanationComp
             lang={this.props.lang}
-            handleExplanationEditor={this.props.handleExplanationEditor}
+            myRefExplanationHindi={this.props.myRefExplanationHindiNew}
+            myRefExplanationEnglish={this.props.myRefExplanationEnglishNew}
             explanationData={this.props.explanationData}
           />
-          {/* )} */}
         </div>
 
         <div style={{ margin: "1em 0", textAlign: "center" }}>
@@ -1124,25 +1132,25 @@ class RightpanelNewVersion extends Component {
     );
   }
 }
-function installKeyupSolution(editor) {
-  editor.document.on("keyup", function(event) {
-    const data = editor.getData();
+// function installKeyupSolution(editor) {
+//   editor.document.on("keyup", function(event) {
+//     const data = editor.getData();
 
-    window.EditComponent.handleExplanationEditor(data);
-  });
-}
-function installKeyupQuestion(editor) {
-  editor.document.on("keyup", function(event) {
-    const data = editor.getData();
+//     window.EditComponent.handleExplanationEditor(data);
+//   });
+// }
+// function installKeyupQuestion(editor) {
+//   editor.document.on("keyup", function(event) {
+//     const data = editor.getData();
 
-    window.EditComponent.handleQuestionEditor(data);
-  });
-}
-function installKeyupOption(index, editor) {
-  editor.document.on("keyup", function(event) {
-    const data = editor.getData();
+//     window.EditComponent.handleQuestionEditor(data);
+//   });
+// }
+// function installKeyupOption(index, editor) {
+//   editor.document.on("keyup", function(event) {
+//     const data = editor.getData();
 
-    window.EditComponent.handleOptioncontentchange(index, data);
-  });
-}
+//     window.EditComponent.handleOptioncontentchange(index, data);
+//   });
+// }
 export default EditComponent;

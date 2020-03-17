@@ -123,13 +123,13 @@ class ShowData extends Component {
             {this.state.editabledata &&
               this.state.editabledata.map((item, index) => {
                 return (
-                  <div>
+                  <div  key={index}>
                     {item.questionVersions.filter(
                       obbj => obbj.language === this.state.selectedLanguage
                     ).length > 0 ? (
                       <Row
                         noGutters={true}
-                        key={item.questionId}
+                        key={index}
                         style={{
                           margin: "0.5em 0em",
                           borderBottom: "1px #cecccc solid"
@@ -269,8 +269,8 @@ class ShowData extends Component {
                                         <Col
                                           lg="6"
                                           style={{
-                                            margin: "0.5em 0",
-                                            display: "flex"
+                                            margin: "0.5em 0"
+                                            // display: "flex"
                                           }}
                                         >
                                           {" "}
@@ -281,15 +281,17 @@ class ShowData extends Component {
                                             math={optionitem.content}
                                           />
                                           <sub
-                                            style={{
-                                              display: "inline-block",
-                                              position: "absolute",
-                                              bottom: "0",
-                                              left: "0",
-                                              margin: " 0em 2em"
-                                            }}
+                                            style={
+                                              {
+                                                // display: "inline-block",
+                                                // position: "absolute",
+                                                // bottom: "0",
+                                                // left: "0",
+                                                // margin: " 0em 2em"
+                                              }
+                                            }
                                           >
-                                            <b>W: {optionitem.weightage} </b>
+                                            <b>( {optionitem.weightage} )</b>
                                           </sub>
                                         </Col>
                                       </React.Fragment>
@@ -328,7 +330,7 @@ class ShowData extends Component {
                         </Col>
                       </Row>
                     ) : (
-                      <div></div>
+                      <div key={index}></div>
                     )}
                   </div>
                 );

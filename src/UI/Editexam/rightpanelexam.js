@@ -91,7 +91,7 @@ class RightExamPanel extends Component {
                 style={{ display: "none" }}
               >
                 <option value="Phonetic">Phonetic</option>
-                <option value="Typewrit">TypeWrit</option>
+                <option value="Ramington">Ramington</option>
               </select>
               <CKEditor
                 onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
@@ -120,7 +120,7 @@ class RightExamPanel extends Component {
                   a.selectedIndex = 1;
                   window.setLang();
                   var b = document.getElementById("txtKeyboard");
-                  b.selectedIndex = 0;
+                  b.selectedIndex = 1;
                   window.changeKB();
                 }}
               />

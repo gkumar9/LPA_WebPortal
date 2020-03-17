@@ -592,11 +592,11 @@ class Editques extends Component {
             } else {
               this.setState(
                 {
-                  listOfTopicEnglish: res.data.data.list,
-                  selectedTopicID:
-                    res.data.data.list.length > 0
-                      ? res.data.data.list[0].subjectTopic.topicId
-                      : ""
+                  listOfTopicEnglish: res.data.data.list
+                  // selectedTopicID:
+                  //   res.data.data.list.length > 0
+                  //     ? res.data.data.list[0].subjectTopic.topicId
+                  //     : ""
                 },
                 () => {
                   this.callApiForTopicHindi();

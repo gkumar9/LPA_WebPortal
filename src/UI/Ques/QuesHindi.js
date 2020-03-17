@@ -12,8 +12,6 @@ class QuesHindi extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      questionData: "",
-      explanationData: "",
       listOfOptions: [
         { name: "Option A", content: "", weightage: 0 },
         { name: "Option B", content: "", weightage: 0 },
@@ -22,9 +20,9 @@ class QuesHindi extends Component {
       ],
       letterchartcode: 69
     };
-    this.myRefQuestion = React.createRef();
-    this.myRefExplanation = React.createRef();
-    this.refsArray = [];
+    this.myRefQuestionHindi = React.createRef();
+    this.myRefExplanationHindi = React.createRef();
+    this.refsArrayHindi = [];
     window.QuesHindi = this;
   }
 
@@ -38,14 +36,14 @@ class QuesHindi extends Component {
       letterchartcode: currentCharCode + 1
     });
   };
-  deleteOption = index => {
+  deleteOption = (index, e) => {
+    console.log(index);
     let currentArrayOfOption = this.state.listOfOptions;
-
     let letterchartcode = 65;
-    console.log(this.refsArray);
+    // this.refsArrayHindi = [];
+    // console.log(this.refsArrayHindi);
     currentArrayOfOption.splice(index, 1);
-    // this.refsArray.splice(index,1);
-    console.log(currentArrayOfOption);
+    // console.log(currentArrayOfOption);
     currentArrayOfOption = currentArrayOfOption.map(item => {
       let name = "Option " + String.fromCharCode(letterchartcode);
       letterchartcode++;
@@ -57,28 +55,7 @@ class QuesHindi extends Component {
       letterchartcode: letterchartcode
     });
   };
-
-  handleQuestionEditor = data => {
-    
-    this.setState({ questionData: data });
-  };
-  handleExplanationEditor = data => {
-    
-    this.setState({ explanationData: data });
-  };
-  handleOptioncontentchange = (index, data) => {
-    // let currentCharCode = this.state.letterchartcode;
-    // let name = "Option " + String.fromCharCode(currentCharCode);
-    // console.log(index, data);
-    let currentArrayOfOption = this.state.listOfOptions;
-    currentArrayOfOption[index].content = data;
-    this.setState({
-      listOfOptions: currentArrayOfOption
-    });
-  };
   handleOptionWeightageChange = (index, e) => {
-    // e.preventDefault();
-    // console.log(typeof parseInt(e.target.value));
     let currentArrayOfOption = this.state.listOfOptions;
     currentArrayOfOption[index].weightage = e.target.value
       ? parseInt(e.target.value)
@@ -88,12 +65,15 @@ class QuesHindi extends Component {
     });
   };
   saveHindidata = () => {
-    // const nodequestion = this.myRefQuestion.current;
-    // // console.log(nodequestion.editor.getData());
-    // const nodeexplanation = this.myRefExplanation.current;
-    // // console.log(nodeexplanation.editor.getData());
-    // this.refsArray.map(item => console.log(item.editor.getData()));
-    // console.log("questionId:", this.props.questionId);
+    let question = this.myRefQuestionHindi.current;
+    let solution = this.myRefExplanationHindi.current;
+    let tempoption = this.state.listOfOptions.map((item, index) => {
+      return {
+        name: item.name,
+        content: this.refsArrayHindi[index].editor.getData(),
+        weightage: item.weightage
+      };
+    });
     let difficultyvalue;
     switch (this.props.difficulty) {
       case "+":
@@ -128,19 +108,10 @@ class QuesHindi extends Component {
         topicId: this.props.selectedTopicID,
         type: "SINGLE_CHOICE",
         version: {
-          content: this.state.questionData,
+          content: question.editor.getData(),
           language: "HINDI",
-          options: this.state.listOfOptions,
-          // .map((item, index) => {
-          //   item.content = this.refsArray[index].editor.getData();
-          //   return {
-          //     name: item.name,
-          //     content: item.content,
-          //     weightage: item.weightage
-          //   };
-          // }),
-          // questionVersionId: 0,
-          solution: this.state.explanationData
+          options: tempoption,
+          solution: solution.editor.getData()
         }
       },
       headers: {
@@ -148,7 +119,6 @@ class QuesHindi extends Component {
       }
     })
       .then(res => {
-        // console.log(res.data.data);
         if (res.status === 200) {
           if (this.props.questionId === 0) {
             swal(
@@ -163,21 +133,22 @@ class QuesHindi extends Component {
               "success"
             );
           }
-          // swal("Success", `QuestionId:${res.data.data.questionId}`, "success");
           this.props.handleChange(res.data.data.questionId);
           this.props.handleSelect();
-          this.setState({
-            questionData: "",
-            explanationData: "",
-            listOfOptions: [
-              { name: "Option A", content: "", weightage: 0 },
-              { name: "Option B", content: "", weightage: 0 },
-              { name: "Option C", content: "", weightage: 0 },
-              { name: "Option D", content: "", weightage: 0 }
-            ],
-            letterchartcode: 69
-          });
-          // }
+          this.setState(
+            {
+              listOfOptions: [
+                { name: "Option A", content: "", weightage: 0 },
+                { name: "Option B", content: "", weightage: 0 },
+                { name: "Option C", content: "", weightage: 0 },
+                { name: "Option D", content: "", weightage: 0 }
+              ],
+              letterchartcode: 69
+            },
+            () => {
+              this.refsArrayHindi = [];
+            }
+          );
         } else {
           swal(`Status Code:${res.status}`, "error");
         }
@@ -206,7 +177,6 @@ class QuesHindi extends Component {
               style={{
                 width: "auto",
                 margin: "2.5em 0em"
-                // height: "0.5em"
               }}
             ></div>
             <LeftPanel
@@ -235,22 +205,16 @@ class QuesHindi extends Component {
           <Col
             style={{
               background: "#EEEEEE",
-              // height: "90vh",
               padding: "0em 4em"
             }}
           >
             <div style={{ margin: "2.5em 0em" }}>
               <RightpanelHindi
-                myRefQuestion={this.myRefQuestion}
-                myRefExplanation={this.myRefExplanation}
-                refsArray={this.refsArray}
-                handleQuestionEditor={this.handleQuestionEditor}
-                questionData={this.state.questionData}
-                handleExplanationEditor={this.handleExplanationEditor}
-                explanationData={this.state.explanationData}
+                myRefQuestionHindi={this.myRefQuestionHindi}
+                myRefExplanationHindi={this.myRefExplanationHindi}
+                refsArrayHindi={this.refsArrayHindi}
                 listOfOptions={this.state.listOfOptions}
                 letterchartcode={this.state.letterchartcode}
-                handleOptioncontentchange={this.handleOptioncontentchange}
                 handleOptionWeightageChange={this.handleOptionWeightageChange}
                 addoptionfn={this.addoptionfn}
                 deleteOption={this.deleteOption}
@@ -267,11 +231,7 @@ class RightpanelHindi extends Component {
   render() {
     return (
       <Form>
-        <QuestionComp
-          // myRefQuestion={this.props.myRefQuestion}
-          handleQuestionEditor={this.props.handleQuestionEditor}
-          questionData={this.props.questionData}
-        />
+        <QuestionComp myRefQuestionHindi={this.props.myRefQuestionHindi} />
         {this.props.listOfOptions &&
           this.props.listOfOptions.map((item, index) => {
             return (
@@ -292,7 +252,6 @@ class RightpanelHindi extends Component {
                       placeholder="weightage"
                     />
                   </Col>
-                  {/* {this.props.listOfOptions.length === index + 1 && ( */}
                   <Col>
                     <Button
                       style={{ float: "right", color: "grey" }}
@@ -302,33 +261,22 @@ class RightpanelHindi extends Component {
                       X Delete
                     </Button>
                   </Col>
-                  {/* )} */}
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
-                    // ref={ref => {
-                    //   // Callback refs are preferable when
-                    //   // dealing with dynamic refs
-                    //   this.props.refsArray[index] = ref;
-                    // }}
+                    ref={ref => {
+                      // Callback refs are preferable when
+                      // dealing with dynamic refs
+                      this.props.refsArrayHindi[index] = ref;
+                    }}
                     onBeforeLoad={CKEDITOR =>
                       (CKEDITOR.disableAutoInline = true)
                     }
                     config={{
-                      height: 80
-                      // placeholder: "Test description and instruction in English"
+                      height: 100
                     }}
                     onFocus={event => {
                       window.hook(event.editor.document.$.body);
-                      event.editor.insertHtml(" ");
-                      const data = event.editor.getData();
-                      this.props.handleOptioncontentchange(index, data);
-                      installKeyupOption(index, event.editor);
-                    }}
-                    data={item.content}
-                    onChange={event => {
-                      const data = event.editor.getData();
-                      this.props.handleOptioncontentchange(index, data);
                     }}
                   />
                 </div>
@@ -357,9 +305,7 @@ class RightpanelHindi extends Component {
         </Row>
         <div style={{ margin: "2em 0" }}>
           <ExplanationComp
-            // myRefExplanation={this.props.myRefExplanation}
-            handleExplanationEditor={this.props.handleExplanationEditor}
-            explanationData={this.props.explanationData}
+            myRefExplanationHindi={this.props.myRefExplanationHindi}
           />
         </div>
 
@@ -549,7 +495,7 @@ class LeftPanel extends Component {
   }
 }
 
-function QuestionComp({ questionData, handleQuestionEditor }) {
+function QuestionComp({ myRefQuestionHindi }) {
   return (
     <Form.Group controlId="exampleForm.EControlInput33">
       <Form.Label
@@ -581,51 +527,32 @@ function QuestionComp({ questionData, handleQuestionEditor }) {
           style={{ display: "none" }}
         >
           <option value="Phonetic">Phonetic</option>
-          <option value="Typewrit">TypeWrit</option>
+          <option value="Ramington">Ramington</option>
         </select>
         <CKEditor
-          // ref={myRefQuestion}
+          ref={myRefQuestionHindi}
           onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
           config={{
-            height: 80
+            height: 100
           }}
-          data={questionData}
           onFocus={event => {
             window.hook(event.editor.document.$.body);
-            event.editor.insertHtml("");
-            const data = event.editor.getData();
-            handleQuestionEditor(data);
-            installKeyupQuestion(event.editor);
           }}
           oninstanceReady={event => {
             var a = document.getElementById("txtLanguage");
             a.selectedIndex = 1;
             window.setLang();
             var b = document.getElementById("txtKeyboard");
-            b.selectedIndex = 0;
+            b.selectedIndex = 1;
             window.changeKB();
-          }}
-          onChange={event => {
-            const data = event.editor.getData();
-            // console.log(data);
-            handleQuestionEditor(data);
           }}
         />
       </div>
     </Form.Group>
   );
 }
-// function displayData() {
-//   console.log("Keyup Event");
-//   // event.editor.insertHtml("");
-//   // window.QuesHindi.handleQuestionEditor(this.innerHTML);
-// }
 
-function ExplanationComp({
-  explanationData,
-  handleExplanationEditor
-  // myRefExplanation
-}) {
+function ExplanationComp({ myRefExplanationHindi }) {
   return (
     <Form.Group controlId="exampleForm.EControlInput11">
       <Form.Label
@@ -641,48 +568,18 @@ function ExplanationComp({
         }}
       >
         <CKEditor
-          // ref={myRefExplanation}
+          ref={myRefExplanationHindi}
           onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
           config={{
-            height: 80
+            height: 100
           }}
-          data={explanationData}
           onFocus={event => {
             window.hook(event.editor.document.$.body);
-            event.editor.insertHtml(" ");
-            const data = event.editor.getData();
-            handleExplanationEditor(data);
-            installKeyupSolution(event.editor);
-          }}
-          onChange={(event, editor) => {
-            const data = event.editor.getData();
-            // console.log(data)
-            handleExplanationEditor(data);
           }}
         />
       </div>
     </Form.Group>
   );
 }
-function installKeyupSolution(editor) {
-  editor.document.on("keyup", function(event) {
-    const data = editor.getData();
 
-    window.QuesHindi.handleExplanationEditor(data);
-  });
-}
-function installKeyupQuestion(editor) {
-  editor.document.on("keyup", function(event) {
-    const data = editor.getData();
-
-    window.QuesHindi.handleQuestionEditor(data);
-  });
-}
-function installKeyupOption(index, editor) {
-  editor.document.on("keyup", function(event) {
-    const data = editor.getData();
-
-    window.QuesHindi.handleOptioncontentchange(index, data);
-  });
-}
 export default QuesHindi;
