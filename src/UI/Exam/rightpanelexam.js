@@ -433,12 +433,12 @@ class RightExamPanel extends Component {
 //     window.Exam.handleHindiInstructionChange(data);
 //   });
 // }
-function installKeyupSection(index, hindi, editor) {
-  editor.document.on("keyup", function(event) {
-    const data = editor.getData();
+// function installKeyupSection(index, hindi, editor) {
+//   editor.document.on("keyup", function(event) {
+//     const data = editor.getData();
 
-    window.Exam.handleSectionDescriptionChange(index, hindi, data);
-  });
-}
+//     window.Exam.handleSectionDescriptionChange(index, hindi, data);
+//   });
+// }
 
 export default RightExamPanel;

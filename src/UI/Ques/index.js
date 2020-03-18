@@ -53,18 +53,16 @@ class Ques extends Component {
     }
   };
   handleChange = data => {
-    // console.log("Id from english response", data,this.state.questionId);
-    if(data&&this.state.questionId===0){
-
+    if (data && this.state.questionId === 0) {
       this.setState({ questionId: data });
-    }else if(data){
+    } else if (data) {
       this.setState({ questionId: 0 });
     }
   };
-  handlereset=()=>{
+  handlereset = () => {
     this.setState({ questionId: 0 });
     this.handleSelect();
-  }
+  };
   onDelete = i => {
     // e.preventDefault()
     const tags = this.state.tags.slice(0);
@@ -146,15 +144,15 @@ class Ques extends Component {
       }
     })
       .then(res => {
-        // console.log(res.data.data);
         if (res.status === 200) {
           this.setState(
             {
               listOfSubjectEnglish: res.data.data.list,
-              selectedSubjectID:
-                res.data.data.list.length > 0
-                  ? res.data.data.list[0].subject.subjectId
-                  : 0
+              selectedSubjectID: localStorage.getItem("addquesSubjectID")
+                ? parseInt(localStorage.getItem("addquesSubjectID"))
+                : res.data.data.list.length > 0
+                ? res.data.data.list[0].subject.subjectId
+                : 0
             },
             () => {
               this.callApiForChapter();
@@ -215,10 +213,11 @@ class Ques extends Component {
             this.setState(
               {
                 listOfChapterEnglish: res.data.data.list,
-                selectedChapterID:
-                  res.data.data.list.length > 0
-                    ? res.data.data.list[0].subjectSection.sectionId
-                    : 0
+                selectedChapterID: localStorage.getItem("addquesChapterID")
+                  ? parseInt(localStorage.getItem("addquesChapterID"))
+                  : res.data.data.list.length > 0
+                  ? res.data.data.list[0].subjectSection.sectionId
+                  : 0
               },
               () => {
                 this.callApiForChapterHindi();
@@ -312,10 +311,11 @@ class Ques extends Component {
             this.setState(
               {
                 listOfTopicEnglish: res.data.data.list,
-                selectedTopicID:
-                  res.data.data.list.length > 0
-                    ? res.data.data.list[0].subjectTopic.topicId
-                    : 0
+                selectedTopicID: localStorage.getItem("addquesTopicID")
+                  ? parseInt(localStorage.getItem("addquesTopicID"))
+                  : res.data.data.list.length > 0
+                  ? res.data.data.list[0].subjectTopic.topicId
+                  : 0
               },
               () => {
                 this.callApiForTopicHindi();
@@ -405,10 +405,11 @@ class Ques extends Component {
             this.setState(
               {
                 listOfSubTopicEnglish: res.data.data.list,
-                selectedSubTopicID:
-                  res.data.data.list.length > 0
-                    ? res.data.data.list[0].subjectSubtopic.subtopicId
-                    : 0
+                selectedSubTopicID: localStorage.getItem("addquesSubTopicID")
+                  ? parseInt(localStorage.getItem("addquesSubTopicID"))
+                  : res.data.data.list.length > 0
+                  ? res.data.data.list[0].subjectSubtopic.subtopicId
+                  : 0
               },
               () => {
                 this.callApiForSubTopicHindi();
@@ -463,7 +464,6 @@ class Ques extends Component {
     }
   };
   handleSubjectChange = e => {
-    e.preventDefault();
     if (
       e.target.value.split("").filter(function(char) {
         var charCode = char.charCodeAt();
@@ -480,6 +480,11 @@ class Ques extends Component {
           this.callApiForChapter();
         }
       );
+      localStorage.setItem(
+        "addquesSubjectID",
+        this.state.listOfSubjectHindi[e.target.options.selectedIndex].subject
+          .subjectId
+      );
     } else {
       this.setState(
         {
@@ -490,6 +495,11 @@ class Ques extends Component {
         () => {
           this.callApiForChapter();
         }
+      );
+      localStorage.setItem(
+        "addquesSubjectID",
+        this.state.listOfSubjectEnglish[e.target.options.selectedIndex].subject
+          .subjectId
       );
     }
   };
@@ -513,6 +523,11 @@ class Ques extends Component {
           this.callApiForTopic();
         }
       );
+      localStorage.setItem(
+        "addquesChapterID",
+        this.state.listOfChapterHindi[e.target.options.selectedIndex]
+          .subjectSection.sectionId
+      );
     } else {
       // console.log('english')
       this.setState(
@@ -524,6 +539,11 @@ class Ques extends Component {
         () => {
           this.callApiForTopic();
         }
+      );
+      localStorage.setItem(
+        "addquesChapterID",
+        this.state.listOfChapterEnglish[e.target.options.selectedIndex]
+          .subjectSection.sectionId
       );
     }
   };
@@ -545,6 +565,11 @@ class Ques extends Component {
           this.callApiForSubTopic();
         }
       );
+      localStorage.setItem(
+        "addquesTopicID",
+        this.state.listOfTopicHindi[e.target.options.selectedIndex].subjectTopic
+          .topicId
+      );
     } else {
       this.setState(
         {
@@ -556,6 +581,11 @@ class Ques extends Component {
           this.callApiForSubTopic();
         }
       );
+      localStorage.setItem(
+        "addquesTopicID",
+        this.state.listOfTopicEnglish[e.target.options.selectedIndex]
+          .subjectTopic.topicId
+      );
     }
   };
   handleSubTopicChange = e => {
@@ -566,17 +596,33 @@ class Ques extends Component {
         return charCode >= 2309 && charCode <= 2361;
       }).length > 0
     ) {
-      this.setState({
-        selectedSubTopicID: this.state.listOfSubTopicHindi[
-          e.target.options.selectedIndex
-        ].subjectSubtopic.subtopicId
-      });
+      this.setState(
+        {
+          selectedSubTopicID: this.state.listOfSubTopicHindi[
+            e.target.options.selectedIndex
+          ].subjectSubtopic.subtopicId
+        },
+        () => {}
+      );
+      localStorage.setItem(
+        "addquesSubTopicID",
+        this.state.listOfSubTopicHindi[e.target.options.selectedIndex]
+          .subjectSubtopic.subtopicId
+      );
     } else {
-      this.setState({
-        selectedSubTopicID: this.state.listOfSubTopicEnglish[
-          e.target.options.selectedIndex
-        ].subjectSubtopic.subtopicId
-      });
+      this.setState(
+        {
+          selectedSubTopicID: this.state.listOfSubTopicEnglish[
+            e.target.options.selectedIndex
+          ].subjectSubtopic.subtopicId
+        },
+        () => {}
+      );
+      localStorage.setItem(
+        "addquesSubTopicID",
+        this.state.listOfSubTopicEnglish[e.target.options.selectedIndex]
+          .subjectSubtopic.subtopicId
+      );
     }
   };
   render() {
@@ -644,7 +690,7 @@ class Ques extends Component {
               <Col>
                 {this.state.questionId !== 0 && this.state.questionId && (
                   <Button
-                  onClick={this.handlereset}
+                    onClick={this.handlereset}
                     style={{
                       float: "right",
                       fontSize: "1em",

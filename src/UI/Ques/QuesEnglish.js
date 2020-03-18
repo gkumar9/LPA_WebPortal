@@ -24,9 +24,6 @@ class QuesEnglish extends Component {
     this.myRefExplanationEnglish = React.createRef();
     this.refsArrayEnglish = [];
   }
-  // componentDidUpdate() {
-  //   this.refsArrayEnglish = [];
-  // }
   addoptionfn = () => {
     let currentCharCode = this.state.letterchartcode;
     let name = "Option " + String.fromCharCode(currentCharCode);
