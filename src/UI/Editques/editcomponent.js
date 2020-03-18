@@ -241,7 +241,7 @@ class EditComponent extends Component {
     })
       .then(res => {
         if (res.status === 200) {
-          console.log(res.data.data);
+          // console.log(res.data.data);
           swal("Success", `Data updated`, "success");
           localStorage.setItem("editquesdata", null);
         }

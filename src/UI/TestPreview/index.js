@@ -9,7 +9,7 @@ import URL from "../../Assets/url";
 import Doc from "./../QuesPreview/doc";
 // import ReactHtmlParser from "react-html-parser";
 import MathJax from "react-mathjax-preview";
-import '../QuesPreview/index.css'
+import "../QuesPreview/index.css";
 class Previewtest extends Component {
   constructor(props) {
     super(props);
@@ -37,13 +37,11 @@ class Previewtest extends Component {
               ) {
                 this.setState({ data: testdataresponse, isData: true });
               }
+            } else {
             }
           })
           .catch(e => {
             alert(e);
-            // this.props.history.push({
-            //   pathname: "/"
-            // });
           });
       });
     } else {
@@ -181,7 +179,7 @@ class Previewtest extends Component {
             </Container>
           </div>
         ) : (
-          <Error404 />
+          <center></center>
         )}
       </React.Fragment>
     );
@@ -199,7 +197,7 @@ class QuestionShowData extends Component {
   }
   componentDidMount() {
     // eslint-disable-next-line array-callback-return
-    this.state.editabledata.map((item)=> {
+    this.state.editabledata.map(item => {
       axios({
         method: "POST",
         url: URL.geteditques + item.questionId,

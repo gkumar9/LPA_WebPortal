@@ -46,7 +46,8 @@ function Header({ props }) {
               .auth()
               .signOut()
               .then(res => {
-                console.log("signout called");
+                console.log(res);
+                localStorage.clear();
               });
           }}
         >

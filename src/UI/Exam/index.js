@@ -495,7 +495,7 @@ class Exam extends Component {
       })
       .catch(e => {
         console.log(e);
-        swal(e, "error");
+        swal("error");
       });
   };
   render() {
