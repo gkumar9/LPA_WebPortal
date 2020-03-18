@@ -7,7 +7,6 @@ import Difficulty from "./difficulty.js";
 import "./index.css";
 import ReactTags from "react-tag-autocomplete";
 import swal from "sweetalert";
-
 class QuesEnglish extends Component {
   constructor(props) {
     super(props);
