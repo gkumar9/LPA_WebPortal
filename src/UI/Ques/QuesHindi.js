@@ -165,10 +165,10 @@ class QuesHindi extends Component {
           this.setState(
             {
               listOfOptions: [
-                { name: "Option A", content: "", weightage: 0 },
-                { name: "Option B", content: "", weightage: 0 },
-                { name: "Option C", content: "", weightage: 0 },
-                { name: "Option D", content: "", weightage: 0 }
+                { name: "Option A", content: " ", weightage: 0 },
+                { name: "Option B", content: " ", weightage: 0 },
+                { name: "Option C", content: " ", weightage: 0 },
+                { name: "Option D", content: " ", weightage: 0 }
               ],
               letterchartcode: 69,
               questiondata: "",
@@ -178,6 +178,10 @@ class QuesHindi extends Component {
               this.refsArrayHindi = [];
               this.myRefQuestionHindi.current.editor.setData("");
               this.myRefExplanationHindi.current.editor.setData("");
+              this.refsArrayHindi.map((item)=>{
+                item.editor.setData("");
+              })
+
             }
           );
         } else {
