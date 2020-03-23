@@ -44,12 +44,17 @@ class LeftPanelExam extends Component {
             Exam
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            // style={{ borderRadius: "0" }}
             size="sm"
             as="select"
             // defaultValue=""
             onChange={this.props.handleExamChange}
             value={currentvalueexam}
+            style={
+              currentvalueexam !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
           >
             {this.props.listOfExam &&
               this.props.listOfExam.map((item, index) => {
@@ -59,6 +64,9 @@ class LeftPanelExam extends Component {
                   </option>
                 );
               })}
+            <option key="" value="">
+              Select
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect111">
@@ -70,7 +78,12 @@ class LeftPanelExam extends Component {
             Subject
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            style={
+              currentvaluesubject !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+            // style={{ borderRadius: "0" }}
             size="sm"
             as="select"
             // defaultValue=""
@@ -85,6 +98,9 @@ class LeftPanelExam extends Component {
                   </option>
                 );
               })}
+            <option key="" value="">
+              Select
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect222">
@@ -96,7 +112,12 @@ class LeftPanelExam extends Component {
             Chapter
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            // style={{ borderRadius: "0" }}
+            style={
+              currentvaluechapter !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
             size="sm"
             as="select"
             value={currentvaluechapter}
@@ -110,6 +131,9 @@ class LeftPanelExam extends Component {
                   </option>
                 );
               })}
+            <option key="" value="">
+              Select
+            </option>
           </Form.Control>
         </Form.Group>
 
@@ -184,7 +208,7 @@ class LeftPanelExam extends Component {
             dateFormat="dd/MM/yyyy"
           />
         </Form.Group>
-        <Form.Group >
+        <Form.Group>
           <Form.Label
             style={{
               fontWeight: "600"
@@ -195,7 +219,7 @@ class LeftPanelExam extends Component {
           <Row noGutters={true}>
             <Col sm="5">
               <Form.Control
-              type="number"
+                type="number"
                 placeholder="Hours"
                 value={this.props.hour}
                 onChange={this.props.onHourChange.bind(this)}
@@ -215,7 +239,7 @@ class LeftPanelExam extends Component {
             </Col>
             <Col sm="5">
               <Form.Control
-              type="number"
+                type="number"
                 placeholder="Minutes"
                 value={this.props.minute}
                 onChange={this.props.onMinuteChange.bind(this)}

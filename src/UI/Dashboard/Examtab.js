@@ -273,7 +273,7 @@ class Examtab extends Component {
       });
   }
   callApiForSubject = () => {
-    console.log(this.state.selectedExamID);
+    // console.log(this.state.selectedExamID);
     if (this.state.selectedExamID !== "") {
       axios({
         method: "POST",

@@ -18,14 +18,23 @@ class QuesHindi extends Component {
         { name: "Option C", content: "", weightage: 0 },
         { name: "Option D", content: "", weightage: 0 }
       ],
-      letterchartcode: 69
+      letterchartcode: 69,
+      questiondata: "",
+      explanationdata: ""
     };
     this.myRefQuestionHindi = React.createRef();
     this.myRefExplanationHindi = React.createRef();
     this.refsArrayHindi = [];
     window.QuesHindi = this;
   }
-
+  handlequestioncontentchange = data => {
+    this.setState({
+      questiondata: data
+    });
+  };
+  handleexplanationcontentchange = data => {
+    this.setState({ explanationdata: data });
+  };
   addoptionfn = () => {
     let currentCharCode = this.state.letterchartcode;
     let name = "Option " + String.fromCharCode(currentCharCode);
@@ -161,10 +170,14 @@ class QuesHindi extends Component {
                 { name: "Option C", content: "", weightage: 0 },
                 { name: "Option D", content: "", weightage: 0 }
               ],
-              letterchartcode: 69
+              letterchartcode: 69,
+              questiondata: "",
+              explanationdata: ""
             },
             () => {
               this.refsArrayHindi = [];
+              this.myRefQuestionHindi.current.editor.setData("");
+              this.myRefExplanationHindi.current.editor.setData("");
             }
           );
         } else {
@@ -238,6 +251,12 @@ class QuesHindi extends Component {
                 deleteOption={this.deleteOption}
                 saveHindidata={this.saveHindidata}
                 handleOptioncontentchange={this.handleOptioncontentchange}
+                explanationdata={this.state.explanationdata}
+                questiondata={this.state.questiondata}
+                handlequestioncontentchange={this.handlequestioncontentchange}
+                handleexplanationcontentchange={
+                  this.handleexplanationcontentchange
+                }
               />
             </div>
           </Col>
@@ -250,7 +269,11 @@ class RightpanelHindi extends Component {
   render() {
     return (
       <Form>
-        <QuestionComp myRefQuestionHindi={this.props.myRefQuestionHindi} />
+        <QuestionComp
+          myRefQuestionHindi={this.props.myRefQuestionHindi}
+          questiondata={this.props.questiondata}
+          handlequestioncontentchange={this.props.handlequestioncontentchange}
+        />
         {this.props.listOfOptions &&
           this.props.listOfOptions.map((item, index) => {
             return (
@@ -337,6 +360,10 @@ class RightpanelHindi extends Component {
         <div style={{ margin: "2em 0" }}>
           <ExplanationComp
             myRefExplanationHindi={this.props.myRefExplanationHindi}
+            explanationdata={this.props.explanationdata}
+            handleexplanationcontentchange={
+              this.props.handleexplanationcontentchange
+            }
           />
         </div>
 
@@ -526,7 +553,11 @@ class LeftPanel extends Component {
   }
 }
 
-function QuestionComp({ myRefQuestionHindi }) {
+function QuestionComp({
+  myRefQuestionHindi,
+  questiondata,
+  handlequestioncontentchange
+}) {
   return (
     <Form.Group controlId="exampleForm.EControlInput33">
       <Form.Label
@@ -577,13 +608,21 @@ function QuestionComp({ myRefQuestionHindi }) {
             b.selectedIndex = 1;
             window.changeKB();
           }}
+          data={questiondata}
+          onChange={event => {
+            handlequestioncontentchange(event.editor.getData());
+          }}
         />
       </div>
     </Form.Group>
   );
 }
 
-function ExplanationComp({ myRefExplanationHindi }) {
+function ExplanationComp({
+  myRefExplanationHindi,
+  explanationdata,
+  handleexplanationcontentchange
+}) {
   return (
     <Form.Group controlId="exampleForm.EControlInput11">
       <Form.Label
@@ -606,6 +645,10 @@ function ExplanationComp({ myRefExplanationHindi }) {
           }}
           onFocus={event => {
             window.hook(event.editor.document.$.body);
+          }}
+          data={explanationdata}
+          onChange={event => {
+            handleexplanationcontentchange(event.editor.getData());
           }}
         />
       </div>

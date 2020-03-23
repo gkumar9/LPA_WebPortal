@@ -17,12 +17,22 @@ class QuesEnglish extends Component {
         { name: "Option C", content: "", weightage: 0 },
         { name: "Option D", content: "", weightage: 0 }
       ],
-      letterchartcode: 69
+      letterchartcode: 69,
+      questiondata: "",
+      explanationdata: ""
     };
     this.myRefQuestionEnglish = React.createRef();
     this.myRefExplanationEnglish = React.createRef();
     this.refsArrayEnglish = [];
   }
+  handlequestioncontentchange = data => {
+    this.setState({
+      questiondata: data
+    });
+  };
+  handleexplanationcontentchange = data => {
+    this.setState({ explanationdata: data });
+  };
   addoptionfn = () => {
     let currentCharCode = this.state.letterchartcode;
     let name = "Option " + String.fromCharCode(currentCharCode);
@@ -45,7 +55,7 @@ class QuesEnglish extends Component {
     let letterchartcode = 65;
     this.refsArrayEnglish.splice(index, 1);
     currentArrayOfOption.splice(index, 1);
-    currentArrayOfOption = currentArrayOfOption.map((item,index) => {
+    currentArrayOfOption = currentArrayOfOption.map((item, index) => {
       let name = "Option " + String.fromCharCode(letterchartcode);
       letterchartcode++;
       return { name: name, content: item.content, weightage: item.weightage };
@@ -156,7 +166,9 @@ class QuesEnglish extends Component {
                 { name: "Option C", content: "", weightage: 0 },
                 { name: "Option D", content: "", weightage: 0 }
               ],
-              letterchartcode: 69
+              letterchartcode: 69,
+              questiondata: "",
+              explanationdata: ""
             },
             () => {
               this.refsArrayEnglish = [];
@@ -232,6 +244,12 @@ class QuesEnglish extends Component {
                 deleteOption={this.deleteOption}
                 saveEnglishdata={this.saveEnglishdata}
                 handleOptioncontentchange={this.handleOptioncontentchange}
+                explanationdata={this.state.explanationdata}
+                questiondata={this.state.questiondata}
+                handlequestioncontentchange={this.handlequestioncontentchange}
+                handleexplanationcontentchange={
+                  this.handleexplanationcontentchange
+                }
               />
             </div>
           </Col>
@@ -244,7 +262,11 @@ class RightpanelEnglish extends Component {
   render() {
     return (
       <Form>
-        <QuestionComp myRefQuestionEnglish={this.props.myRefQuestionEnglish} />
+        <QuestionComp
+          myRefQuestionEnglish={this.props.myRefQuestionEnglish}
+          questiondata={this.props.questiondata}
+          handlequestioncontentchange={this.props.handlequestioncontentchange}
+        />
         {this.props.listOfOptions &&
           this.props.listOfOptions.map((item, index) => {
             return (
@@ -329,6 +351,10 @@ class RightpanelEnglish extends Component {
         <div style={{ margin: "2em 0" }}>
           <ExplanationComp
             myRefExplanationEnglish={this.props.myRefExplanationEnglish}
+            explanationdata={this.props.explanationdata}
+            handleexplanationcontentchange={
+              this.props.handleexplanationcontentchange
+            }
           />
         </div>
 
@@ -517,7 +543,11 @@ class LeftPanel extends Component {
   }
 }
 
-function QuestionComp({ myRefQuestionEnglish }) {
+function QuestionComp({
+  myRefQuestionEnglish,
+  questiondata,
+  handlequestioncontentchange
+}) {
   return (
     <Form.Group>
       <Form.Label
@@ -538,13 +568,21 @@ function QuestionComp({ myRefQuestionEnglish }) {
           config={{
             height: 100
           }}
+          data={questiondata}
+          onChange={event => {
+            handlequestioncontentchange(event.editor.getData());
+          }}
         />
       </div>
     </Form.Group>
   );
 }
 
-function ExplanationComp({ myRefExplanationEnglish }) {
+function ExplanationComp({
+  myRefExplanationEnglish,
+  explanationdata,
+  handleexplanationcontentchange
+}) {
   return (
     <Form.Group controlId="exampleForm.EControlInput1">
       <Form.Label
@@ -565,6 +603,10 @@ function ExplanationComp({ myRefExplanationEnglish }) {
           config={{
             allowedContent: true,
             height: 100
+          }}
+          data={explanationdata}
+          onChange={event => {
+            handleexplanationcontentchange(event.editor.getData());
           }}
         />
       </div>

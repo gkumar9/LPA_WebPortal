@@ -983,10 +983,7 @@ class QAtab extends Component {
                         .options.map((optionitem, optionindex) => {
                           return (
                             <React.Fragment key={optionindex}>
-                              <Col
-                                lg="6"
-                                style={{ margin: "0.5em 0", }}
-                              >
+                              <Col lg="6" style={{ margin: "0.5em 0" }}>
                                 {" "}
                                 {optionindex + 1}
                                 {") "}{" "}
@@ -995,13 +992,15 @@ class QAtab extends Component {
                                   math={optionitem.content}
                                 />
                                 <sub
-                                  style={{
-                                    // display: "inline-block",
-                                    // position: "absolute",
-                                    // bottom: "0",
-                                    // left: "0",
-                                    // margin: "0em 0.5em"
-                                  }}
+                                  style={
+                                    {
+                                      // display: "inline-block",
+                                      // position: "absolute",
+                                      // bottom: "0",
+                                      // left: "0",
+                                      // margin: "0em 0.5em"
+                                    }
+                                  }
                                 >
                                   <b>( {optionitem.weightage} )</b>
                                 </sub>
@@ -1129,7 +1128,7 @@ class QAtab extends Component {
             />
           </center>
         ) : (
-          <Row style={{ height: "90vh" }} >
+          <Row style={{ height: "90vh" }}>
             <Col
               lg="3"
               style={{
@@ -1297,10 +1296,6 @@ class QAtab extends Component {
                 )}
                 <div
                   style={{
-                    // height: "45vh",
-                    // overflow: "scroll",
-                    // border: "1px solid lightgrey",
-                    // background: "white",
                     padding: "0.4em"
                   }}
                 >
@@ -1337,6 +1332,8 @@ class QAtab extends Component {
                                   }}
                                 >
                                   <Form.Check
+                                  size="lg"
+                                    // className="custom-control"
                                     inline
                                     disabled={
                                       this.state.listOfselectedPreview.filter(

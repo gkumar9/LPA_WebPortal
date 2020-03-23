@@ -12,11 +12,11 @@ class Exam extends Component {
     super(props);
     this.state = {
       listOfExam: [],
-      selectedExamID: "",
+      selectedExamID: 0,
       listOfSubject: [],
-      selectedSubjectID: "",
+      selectedSubjectID: 0,
       listOfChapter: [],
-      selectedChapterID: "",
+      selectedChapterID: 0,
       listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
       selectedType: "Free",
       selectedTypeYear: "",
@@ -200,11 +200,11 @@ class Exam extends Component {
         if (res.status === 200) {
           this.setState(
             {
-              listOfExam: res.data.data.list,
-              selectedExamID:
-                res.data.data.list.length > 0
-                  ? res.data.data.list[0].exam.examId
-                  : ""
+              listOfExam: res.data.data.list
+              // selectedExamID:
+              //   res.data.data.list.length > 0
+              //     ? res.data.data.list[0].exam.examId
+              //     : ""
             },
             () => {
               this.callApiForSubject();
@@ -220,7 +220,7 @@ class Exam extends Component {
       });
   }
   callApiForSubject = () => {
-    if (this.state.selectedExamID !== "") {
+    if (this.state.selectedExamID !== 0) {
       axios({
         method: "POST",
         url: URL.fetchSubjectForExam + this.state.selectedExamID,
@@ -255,10 +255,10 @@ class Exam extends Component {
                 this.setState(
                   {
                     listOfSubject: tempsubjectlist,
-                    selectedSubjectID:
-                      tempsubjectlist.length > 0
-                        ? tempsubjectlist[0].subject.subjectId
-                        : ""
+                    selectedSubjectID:0
+                      // tempsubjectlist.length > 0
+                      //   ? tempsubjectlist[0].subject.subjectId
+                        // : 0
                   },
                   () => {
                     this.callApiForChapter();
@@ -277,15 +277,15 @@ class Exam extends Component {
       console.log("(English)examid is blank. API not called. exam list");
       this.setState({
         listOfChapter: [],
-        selectedChapterID: "",
+        selectedChapterID: 0,
 
         listOfSubject: [],
-        selectedSubjectId: ""
+        selectedSubjectId: 0
       });
     }
   };
   callApiForChapter = () => {
-    if (this.state.selectedSubjectID !== "") {
+    if (this.state.selectedSubjectID !== 0) {
       axios({
         method: "POST",
         url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH",
@@ -299,10 +299,10 @@ class Exam extends Component {
             this.setState(
               {
                 listOfChapter: res.data.data.list,
-                selectedChapterID:
-                  res.data.data.list.length > 0
-                    ? res.data.data.list[0].subjectSection.sectionId
-                    : ""
+                selectedChapterID:0
+                //   res.data.data.list.length > 0
+                //     ? res.data.data.list[0].subjectSection.sectionId
+                //     : 0
               },
               () => {
                 // this.callApiForTopic();
@@ -321,47 +321,73 @@ class Exam extends Component {
       );
       this.setState({
         listOfChapter: [],
-        selectedChapterID: ""
+        selectedChapterID: 0
       });
     }
   };
   handleExamChange = e => {
     e.preventDefault();
-
-    this.setState(
-      {
-        selectedExamID: this.state.listOfExam[e.target.options.selectedIndex]
-          .exam.examId
-      },
-      () => {
-        this.callApiForSubject();
-      }
-    );
+    if (e.target.value === "") {
+      this.setState(
+        {
+          selectedExamID: 0
+        },
+        () => {
+          this.callApiForSubject();
+        }
+      );
+    } else {
+      this.setState(
+        {
+          selectedExamID: this.state.listOfExam[e.target.options.selectedIndex]
+            .exam.examId
+        },
+        () => {
+          this.callApiForSubject();
+        }
+      );
+    }
   };
   handleSubjectChange = e => {
     e.preventDefault();
-
-    this.setState(
-      {
-        selectedSubjectID: this.state.listOfSubject[
-          e.target.options.selectedIndex
-        ].subject.subjectId
-      },
-      () => {
-        this.callApiForChapter();
-      }
-    );
+    if (e.target.value === "") {
+      this.setState(
+        {
+          selectedSubjectID: 0
+        },
+        () => {
+          this.callApiForChapter();
+        }
+      );
+    } else {
+      this.setState(
+        {
+          selectedSubjectID: this.state.listOfSubject[
+            e.target.options.selectedIndex
+          ].subject.subjectId
+        },
+        () => {
+          this.callApiForChapter();
+        }
+      );
+    }
   };
   handleChapterChange = e => {
     e.preventDefault();
-    this.setState(
-      {
-        selectedChapterID: this.state.listOfChapter[
-          e.target.options.selectedIndex
-        ].subjectSection.sectionId
-      },
-      () => {}
-    );
+    if (e.target.value === "") {
+      this.setState({
+        selectedChapterID: 0
+      });
+    } else {
+      this.setState(
+        {
+          selectedChapterID: this.state.listOfChapter[
+            e.target.options.selectedIndex
+          ].subjectSection.sectionId
+        },
+        () => {}
+      );
+    }
   };
   handleTypeChange = e => {
     e.preventDefault();
@@ -370,133 +396,137 @@ class Exam extends Component {
     });
   };
   saveExamdata = () => {
-    let testdescEnglish = this.myReftestdescEnglish.current;
-    let testdescHindi = this.myReftestdescHindi.current;
-    let tempsections = this.state.listOfSection.map((item, index) => {
-      return {
-        marksPerQuestion: item.marksPerQuestion,
-        negativeMarksPerQuestion: item.negativeMarksPerQuestion,
-        questions: item.questions,
+    if (this.state.selectedExamID !== 0 && this.state.selectedExamID !== "") {
+      let testdescEnglish = this.myReftestdescEnglish.current;
+      let testdescHindi = this.myReftestdescHindi.current;
+      let tempsections = this.state.listOfSection.map((item, index) => {
+        return {
+          marksPerQuestion: item.marksPerQuestion,
+          negativeMarksPerQuestion: item.negativeMarksPerQuestion,
+          questions: item.questions,
 
-        versions: [
-          {
-            content: this.refsSectionEnglish[index].editor.getData(),
-            language: "ENGLISH",
-            name: item.versions[0].name,
-            sectionName: item.versions[0].sectionName
-          },
-          {
-            content: this.refsSectionHindi[index].editor.getData(),
-            language: "HINDI",
-            name: item.versions[1].name,
-            sectionName: item.versions[1].sectionName
-          }
-        ]
-      };
-    });
-    var startDatetemp = this.state.startDate;
+          versions: [
+            {
+              content: this.refsSectionEnglish[index].editor.getData(),
+              language: "ENGLISH",
+              name: item.versions[0].name,
+              sectionName: item.versions[0].sectionName
+            },
+            {
+              content: this.refsSectionHindi[index].editor.getData(),
+              language: "HINDI",
+              name: item.versions[1].name,
+              sectionName: item.versions[1].sectionName
+            }
+          ]
+        };
+      });
+      var startDatetemp = this.state.startDate;
 
-    var dd = startDatetemp.getDate();
-    var mm = startDatetemp.getMonth() + 1; //January is 0!
+      var dd = startDatetemp.getDate();
+      var mm = startDatetemp.getMonth() + 1; //January is 0!
 
-    var yyyy = startDatetemp.getFullYear();
-    if (dd < 10) {
-      dd = "0" + dd;
-    }
-    if (mm < 10) {
-      mm = "0" + mm;
-    }
-    var startDate = yyyy + "-" + mm + "-" + dd;
-    var endDatetemp = this.state.endDate;
-
-    var ddendDatetemp = endDatetemp.getDate();
-    var mmendDatetemp = endDatetemp.getMonth() + 1; //January is 0!
-
-    var yyyyendDatetemp = endDatetemp.getFullYear();
-    if (ddendDatetemp < 10) {
-      ddendDatetemp = "0" + ddendDatetemp;
-    }
-    if (mmendDatetemp < 10) {
-      mmendDatetemp = "0" + mmendDatetemp;
-    }
-    var endDate = yyyyendDatetemp + "-" + mmendDatetemp + "-" + ddendDatetemp;
-    axios({
-      method: "POST",
-      url: URL.addnewExam,
-      data: {
-        authToken: "string",
-        endDate: endDate,
-        examId: this.state.selectedExamID,
-        subjectId: this.state.selectedSubjectID,
-        sectionId: this.state.selectedChapterID,
-        sections: tempsections,
-        startDate: startDate,
-        testInstructions: [
-          {
-            instructions: testdescEnglish.editor.getData(),
-            language: "ENGLISH",
-            name: this.state.testnameEnglish
-          },
-          {
-            instructions: testdescHindi.editor.getData(),
-            language: "HINDI",
-            name: this.state.testnameHindi
-          }
-        ],
-        time:
-          parseFloat(this.state.hour) +
-          parseFloat(Number(parseInt(this.state.minute) / 60))
-            ? parseFloat(this.state.hour) +
-              parseFloat(Number(parseInt(this.state.minute) / 60))
-            : 0,
-        type: this.state.selectedType,
-        year: this.state.selectedTypeYear
-      },
-      headers: {
-        "Content-Type": "application/json"
+      var yyyy = startDatetemp.getFullYear();
+      if (dd < 10) {
+        dd = "0" + dd;
       }
-    })
-      .then(res => {
-        if (res.status === 200) {
-          swal(
-            "Success",
-            `Added newTest, Id:${res.data.data.testId}`,
-            "success"
-          );
-          this.setState({
-            testnameEnglish: "",
-            testnameHindi: "",
-            testInstructionEnglish: "",
-            testInstructionHindi: "",
-            listOfSection: [
-              {
-                marksPerQuestion: 0,
-                negativeMarksPerQuestion: 0,
-                questions: [],
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      var startDate = yyyy + "-" + mm + "-" + dd;
+      var endDatetemp = this.state.endDate;
 
-                versions: [
-                  {
-                    content: "",
-                    language: "ENGLISH",
-                    name: "",
-                    sectionName: ""
-                  },
-                  {
-                    content: "",
-                    language: "HINDI",
-                    name: "",
-                    sectionName: ""
-                  }
-                ]
-              }
-            ]
-          });
+      var ddendDatetemp = endDatetemp.getDate();
+      var mmendDatetemp = endDatetemp.getMonth() + 1; //January is 0!
+
+      var yyyyendDatetemp = endDatetemp.getFullYear();
+      if (ddendDatetemp < 10) {
+        ddendDatetemp = "0" + ddendDatetemp;
+      }
+      if (mmendDatetemp < 10) {
+        mmendDatetemp = "0" + mmendDatetemp;
+      }
+      var endDate = yyyyendDatetemp + "-" + mmendDatetemp + "-" + ddendDatetemp;
+      axios({
+        method: "POST",
+        url: URL.addnewExam,
+        data: {
+          authToken: "string",
+          endDate: endDate,
+          examId: this.state.selectedExamID,
+          subjectId: this.state.selectedSubjectID,
+          sectionId: this.state.selectedChapterID,
+          sections: tempsections,
+          startDate: startDate,
+          testInstructions: [
+            {
+              instructions: testdescEnglish.editor.getData(),
+              language: "ENGLISH",
+              name: this.state.testnameEnglish
+            },
+            {
+              instructions: testdescHindi.editor.getData(),
+              language: "HINDI",
+              name: this.state.testnameHindi
+            }
+          ],
+          time:
+            parseFloat(this.state.hour) +
+            parseFloat(Number(parseInt(this.state.minute) / 60))
+              ? parseFloat(this.state.hour) +
+                parseFloat(Number(parseInt(this.state.minute) / 60))
+              : 0,
+          type: this.state.selectedType,
+          year: this.state.selectedTypeYear
+        },
+        headers: {
+          "Content-Type": "application/json"
         }
       })
-      .catch(e => {
-        console.log(e);
-        swal("error");
-      });
+        .then(res => {
+          if (res.status === 200) {
+            swal(
+              "Success",
+              `Added newTest, Id:${res.data.data.testId}`,
+              "success"
+            );
+            this.setState({
+              testnameEnglish: "",
+              testnameHindi: "",
+              testInstructionEnglish: "",
+              testInstructionHindi: "",
+              listOfSection: [
+                {
+                  marksPerQuestion: 0,
+                  negativeMarksPerQuestion: 0,
+                  questions: [],
+
+                  versions: [
+                    {
+                      content: "",
+                      language: "ENGLISH",
+                      name: "",
+                      sectionName: ""
+                    },
+                    {
+                      content: "",
+                      language: "HINDI",
+                      name: "",
+                      sectionName: ""
+                    }
+                  ]
+                }
+              ]
+            });
+          }
+        })
+        .catch(e => {
+          console.log(e);
+          swal(e);
+        });
+    } else {
+      swal("Please select a exam for creating a new test");
+    }
   };
   render() {
     return (
