@@ -5,7 +5,6 @@ import Header from "../Header/index";
 import "./index.css";
 // import PdfContainer from "./pdf.js";
 import Doc from "./doc";
-// import ReactHtmlParser from "react-html-parser";
 import MathJax from "react-mathjax-preview";
 import swal from "@sweetalert/with-react";
 
@@ -14,6 +13,18 @@ class PreviewQues extends Component {
     super(props);
     this.state = { isData: false, data: [] };
   }
+  // compare = (a, b) => {
+  //   const bandA = a.questionId;
+  //   const bandB = b.questionId;
+
+  //   let comparison = 0;
+  //   if (bandA > bandB) {
+  //     comparison = 1;
+  //   } else if (bandA < bandB) {
+  //     comparison = -1;
+  //   }
+  //   return comparison * -1;
+  // };
   componentDidMount() {
     if (
       this.props.location.state !== undefined &&
@@ -25,6 +36,9 @@ class PreviewQues extends Component {
         localStorage.getItem("Previewdata") !== null &&
         JSON.parse(localStorage.getItem("Previewdata")).length > 0
       ) {
+        // let tempsorteddescdingorder = JSON.parse(localStorage.getItem("Previewdata")).sort(
+        //   this.compare
+        // );
         this.setState({
           isData: true,
           data: JSON.parse(localStorage.getItem("Previewdata"))
@@ -123,7 +137,7 @@ class ShowData extends Component {
             {this.state.editabledata &&
               this.state.editabledata.map((item, index) => {
                 return (
-                  <div  key={index}>
+                  <div key={index}>
                     {item.questionVersions.filter(
                       obbj => obbj.language === this.state.selectedLanguage
                     ).length > 0 ? (

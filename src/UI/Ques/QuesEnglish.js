@@ -288,7 +288,7 @@ class RightpanelEnglish extends Component {
                     />
                   </Col>
                   <Col>
-                    <Button
+                    <Button tabIndex="-1"
                       style={{ float: "right", color: "grey" }}
                       variant="link"
                       onClick={this.props.deleteOption.bind(this, index)}

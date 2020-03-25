@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Header from "../Header/index";
 import { Container, Card, Row, Col } from "react-bootstrap";
-import Error404 from "../QuesPreview/404.js";
+// import Error404 from "../QuesPreview/404.js";
 import "../QuesPreview/index.css";
 import axios from "axios";
 import URL from "../../Assets/url";

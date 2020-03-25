@@ -178,10 +178,7 @@ class QuesHindi extends Component {
               this.refsArrayHindi = [];
               this.myRefQuestionHindi.current.editor.setData("");
               this.myRefExplanationHindi.current.editor.setData("");
-              this.refsArrayHindi.map((item)=>{
-                item.editor.setData("");
-              })
-
+              this.refsArrayHindi.map(item => item.editor.setData(""));
             }
           );
         } else {
@@ -300,6 +297,7 @@ class RightpanelHindi extends Component {
                   </Col>
                   <Col>
                     <Button
+                      tabIndex="-1"
                       style={{ float: "right", color: "grey" }}
                       variant="link"
                       onClick={this.props.deleteOption.bind(this, index)}

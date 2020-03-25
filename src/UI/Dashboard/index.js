@@ -3,7 +3,6 @@ import { Container, Row, Col, Tab, Nav } from "react-bootstrap";
 import Header from "../Header/index";
 import QATab from "./QAtab.js";
 import ExamTab from "./Examtab.js";
-// import  firebase  from "./../../firebaseApp.js";
 const style = {
   textAlign: "center",
   background: "white",
@@ -44,16 +43,13 @@ class Dashboard extends Component {
             <Row
               style={{
                 padding: "1em 0em",
-                // borderBottom: "1px solid #cac2c2",
                 boxShadow: "-1px 3px 4px -4px rgba(0, 0, 0, 0.75)",
                 zIndex: "99",
                 position: "relative"
               }}
             >
-              {/* <Col lg="3"></Col> */}
               <Col
                 lg="1.5"
-                // className="customtabcolor"
                 style={{
                   margin: "0px 0em 0em 3em"
                 }}

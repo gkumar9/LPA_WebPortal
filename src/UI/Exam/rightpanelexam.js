@@ -122,6 +122,7 @@ class RightExamPanel extends Component {
           </div>
           {this.props.listOfSection.length > 0 && (
             <Form.Control
+            tabIndex="-1"
               style={{
                 fontWeight: "600",
                 margin: " 0 0.5em"
@@ -158,6 +159,7 @@ class RightExamPanel extends Component {
                     {/* {this.props.listOfSection.length === index + 1 && ( */}
                     <Col>
                       <Button
+                        tabIndex="-1"
                         style={{ float: "right", color: "grey" }}
                         variant="link"
                         onClick={this.props.deleteSection.bind(this, index)}
@@ -357,6 +359,7 @@ class RightExamPanel extends Component {
                           {/* {item.questions.length === indexquestion + 1 && ( */}
                           <Col>
                             <Button
+                            tabIndex="-1"
                               style={{ float: "left", color: "grey" }}
                               variant="link"
                               onClick={this.props.deleteSectionQuestion.bind(

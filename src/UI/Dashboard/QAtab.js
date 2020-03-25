@@ -22,7 +22,6 @@ import BucketIconOrange from "./../../Assets/image3.png";
 import BucketIconGrey from "./../../Assets/image4.png";
 import swal from "@sweetalert/with-react";
 import BottomScrollListener from "react-bottom-scroll-listener";
-// import ReactHtmlParser from "react-html-parser";
 import MathJax from "react-mathjax-preview";
 
 class QAtab extends Component {
@@ -73,7 +72,6 @@ class QAtab extends Component {
     localStorage.setItem("selectedTagsQA", JSON.stringify(tags));
     this.setState({ tags });
   };
-
   onAddition = tag => {
     // e.preventDefault()
     const tags = [].concat(this.state.tags, tag);
@@ -141,7 +139,7 @@ class QAtab extends Component {
       item => item.status === true
     );
     tempsearchlistselected.map(item => {
-      // console.log(item);
+      console.log(item.id);
 
       return this.onAddpreviewdata(item.id);
     });
@@ -151,7 +149,6 @@ class QAtab extends Component {
   };
   handleSelectAllCheck = e => {
     if (e.target.checked) {
-      // let temp=this.state.listOfselectedPreview
       let tempsearchlist = this.state.listOfsearchselected.map(item => {
         let temp = this.state.listOfselectedPreview.filter(
           obj => obj.questionId === item.id
@@ -160,7 +157,6 @@ class QAtab extends Component {
           temp.length > 0
             ? { id: item.id, status: false }
             : { id: item.id, status: true };
-        // item.status = true;
         return objj;
       });
       this.setState({
@@ -178,14 +174,24 @@ class QAtab extends Component {
       });
     }
   };
+  compare = (a, b) => {
+    const bandA = a.questionId;
+    const bandB = b.questionId;
 
+    let comparison = 0;
+    if (bandA > bandB) {
+      comparison = 1;
+    } else if (bandA < bandB) {
+      comparison = -1;
+    }
+    return comparison * -1;
+  };
   OnPreviewClick = () => {
-    localStorage.setItem(
-      "Previewdata",
-      JSON.stringify(this.state.listOfselectedPreview)
-    );
-    // console.log(this.state.selectedLanguage);
+    let temp = this.state.listOfselectedPreview.sort(this.compare);
+    console.log(temp);
+    localStorage.setItem("Previewdata", JSON.stringify(temp));
     localStorage.setItem("previewLanguage", this.state.selectedLanguage);
+
     this.props.history.push({
       pathname: "/quespreview",
       state: {
@@ -193,83 +199,81 @@ class QAtab extends Component {
       }
     });
   };
-
-  onAddpreviewdata = id => {
-    this.setState({ isLoading: false }, () => {
-      let filterchecktemp = this.state.listOfselectedPreview.filter(
-        item => item.questionId === id
+  onAddpreviewdata = async id => {
+    // this.setState({ isLoading: false }, () => {
+    let filterchecktemp = this.state.listOfselectedPreview.filter(
+      item => item.questionId === id
+    );
+    if (filterchecktemp.length > 0) {
+      let templist = this.state.listOfselectedPreview;
+      templist = templist.filter(obj => obj.questionId !== id);
+      let templistOfsearchselected = this.state.listOfsearchselected.map(
+        item => {
+          let obj =
+            item.id === id
+              ? { id: item.id, status: false }
+              : { id: item.id, status: item.status };
+          return obj;
+        }
       );
-      if (filterchecktemp.length > 0) {
-        let templist = this.state.listOfselectedPreview;
-        templist = templist.filter(obj => obj.questionId !== id);
-        let templistOfsearchselected = this.state.listOfsearchselected.map(
-          item => {
-            let obj =
-              item.id === id
-                ? { id: item.id, status: false }
-                : { id: item.id, status: item.status };
-            return obj;
-          }
-        );
-        this.setState(
-          {
-            listOfselectedPreview: templist,
-            listOfsearchselected: templistOfsearchselected,
-            isLoading: false
-          },
-          () => {
-            localStorage.setItem("Previewdata", JSON.stringify(templist));
-          }
-        );
-      } else {
-        // console.log('<')
-        axios({
-          method: "POST",
-          url: URL.geteditques + id,
-          data: { authToken: "string" },
-          headers: {
-            "Content-Type": "application/json"
+      this.setState(
+        {
+          listOfselectedPreview: templist,
+          listOfsearchselected: templistOfsearchselected,
+          isLoading: false
+        },
+        () => {
+          localStorage.setItem("Previewdata", JSON.stringify(templist));
+        }
+      );
+    } else {
+      await axios({
+        method: "POST",
+        url: URL.geteditques + id,
+        data: { authToken: "string" },
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => {
+          if (res.status === 200) {
+            let temppreviewlist = this.state.listOfselectedPreview;
+            temppreviewlist.push(res.data.data.question);
+            let templistOfsearchselected = this.state.listOfsearchselected.map(
+              item => {
+                let obj =
+                  item.id === id
+                    ? { id: item.id, status: false }
+                    : { id: item.id, status: item.status };
+                return obj;
+              }
+            );
+            this.setState(
+              {
+                listOfselectedPreview: temppreviewlist,
+                listOfsearchselected: templistOfsearchselected,
+                isLoading: false
+              },
+              () => {
+                localStorage.setItem(
+                  "Previewdata",
+                  JSON.stringify(temppreviewlist)
+                );
+              }
+            );
+          } else {
+            this.setState({ isLoading: false }, () => {
+              alert("Data not found");
+            });
           }
         })
-          .then(res => {
-            if (res.status === 200) {
-              let temppreviewlist = this.state.listOfselectedPreview;
-              temppreviewlist.push(res.data.data.question);
-              let templistOfsearchselected = this.state.listOfsearchselected.map(
-                item => {
-                  let obj =
-                    item.id === id
-                      ? { id: item.id, status: false }
-                      : { id: item.id, status: item.status };
-                  return obj;
-                }
-              );
-              this.setState(
-                {
-                  listOfselectedPreview: temppreviewlist,
-                  listOfsearchselected: templistOfsearchselected,
-                  isLoading: false
-                },
-                () => {
-                  localStorage.setItem(
-                    "Previewdata",
-                    JSON.stringify(temppreviewlist)
-                  );
-                }
-              );
-            } else {
-              this.setState({ isLoading: false }, () => {
-                alert("Data not found");
-              });
-            }
-          })
-          .catch(e => {
-            this.setState({ isLoading: false }, () => {
-              alert("Error found");
-            });
+        .catch(e => {
+          this.setState({ isLoading: false }, () => {
+            alert("Error found");
           });
-      }
-    });
+        });
+    }
+    // });
   };
   handleSearchboxChange = e => {
     e.preventDefault();
@@ -1119,13 +1123,7 @@ class QAtab extends Component {
       <React.Fragment>
         {this.state.isLoading ? (
           <center>
-            <Loader
-              type="TailSpin"
-              color="#00BFFF"
-              height={120}
-              width={250}
-              // timeout={3000} //3 secs
-            />
+            <Loader type="TailSpin" color="#00BFFF" height={120} width={250} />
           </center>
         ) : (
           <Row style={{ height: "90vh" }}>
@@ -1134,11 +1132,9 @@ class QAtab extends Component {
               style={{
                 padding: "2.5em 3em",
                 background: "#EEE",
-                // borderRight: "1px solid #cac2c2",
                 boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -3px",
                 zIndex: "88",
                 position: "relative"
-                // margin: "2em 0em"
               }}
             >
               <LeftPanelQuestion
@@ -1168,16 +1164,15 @@ class QAtab extends Component {
               />
             </Col>
             <Col
+             lg="9"
               style={{
                 background: "#EEEEEE",
-                // height: "90vh",
-                padding: "0em 4em"
+                padding: "0em 3em"
               }}
               onScroll={this.handleScroll}
             >
               <Row style={{ margin: "2em 0em" }}>
                 <Col lg="1.5">
-                  {/* <BrowserRouter> */}
                   <Link to="/addques" target="_self">
                     <Button
                       style={{
@@ -1192,7 +1187,6 @@ class QAtab extends Component {
                       + Add Question
                     </Button>
                   </Link>
-                  {/* </BrowserRouter> */}
                 </Col>
                 <Col style={{ padding: "0" }}>
                   <Button
@@ -1218,7 +1212,6 @@ class QAtab extends Component {
                     }
                   >
                     {" "}
-                    {/* <View className="svg_icons" /> rgb(238, 179, 170)*/}
                     <img
                       src={BucketIcon}
                       width="22"
@@ -1306,8 +1299,6 @@ class QAtab extends Component {
                           key={index}
                           style={{
                             margin: "1.2em 0em"
-                            // borderTop: "1px #c2c2c2 solid",
-                            // borderBottom: "1px #c2c2c2 solid"
                           }}
                         >
                           <Col
@@ -1332,8 +1323,7 @@ class QAtab extends Component {
                                   }}
                                 >
                                   <Form.Check
-                                  size="lg"
-                                    // className="custom-control"
+                                    size="lg"
                                     inline
                                     disabled={
                                       this.state.listOfselectedPreview.filter(
@@ -1365,12 +1355,7 @@ class QAtab extends Component {
                                       delay={{ show: 250, hide: 400 }}
                                       overlay={renderTooltip("Edit questions")}
                                     >
-                                      {/* <Link
-                                      to={`/editques/${this.state.selectedLanguage}/${item.questionId}`}
-                                      target="_self"
-                                    > */}
                                       <Button
-                                        // title="Edit"
                                         onClick={this.onEditClickques.bind(
                                           this,
                                           item.questionId
@@ -1378,19 +1363,15 @@ class QAtab extends Component {
                                         size="sm"
                                         style={{
                                           borderRadius: "0",
-
                                           padding: ".15rem .15rem",
                                           background: "transparent",
                                           color: "rgb(106, 163, 255) ",
                                           border: "none"
                                         }}
                                         variant="secondary"
-
-                                        // onClick={this.handleQAEdit.bind(this,item.questionId)}
                                       >
                                         {<Edit className="svg_icons" />}{" "}
                                       </Button>
-                                      {/* </Link> */}
                                     </OverlayTrigger>
                                     <OverlayTrigger
                                       placement="top"
@@ -1405,14 +1386,6 @@ class QAtab extends Component {
                                       )}
                                     >
                                       <Button
-                                        // title={
-                                        //   this.state.listOfselectedPreview.filter(
-                                        //     objj =>
-                                        //       objj.questionId === item.questionId
-                                        //   ).length > 0
-                                        //     ? "Added to bucket"
-                                        //     : "Add to bucket"
-                                        // }
                                         size="sm"
                                         style={{
                                           borderRadius: "0",
@@ -1455,7 +1428,6 @@ class QAtab extends Component {
                                   >
                                     <b>Tags: </b>
                                     <span style={{ color: "#1D4B7F" }}>
-                                      {/* Difficulty:{" "} */}
                                       {item.level === "EASY"
                                         ? item.level === "MILD"
                                           ? "++"
@@ -1477,70 +1449,26 @@ class QAtab extends Component {
                                   </span>
                                 </Card.Title>
 
-                                <Card.Text style={{ marginBottom: "0.5em" }}>
-                                  {""}
-                                  {/* {item.content.replace(/<\/?[^>]+(>|$)/g, "")} */}
-                                  <MathJax
-                                    style={{ display: "inline-flex" }}
-                                    math={item.content}
-                                  />
-                                </Card.Text>
-                                {/* <div style={{ float: "right" }}>
-                                <Button
-                                  title={
-                                    this.state.listOfselectedPreview.filter(
-                                      objj =>
-                                        objj.questionId === item.questionId
-                                    ).length > 0
-                                      ? "Added to bucket"
-                                      : "Add to bucket"
-                                  }
-                                  size="sm"
-                                  style={
-                                    this.state.listOfselectedPreview.filter(
-                                      objj =>
-                                        objj.questionId === item.questionId
-                                    ).length > 0
-                                      ? {
-                                          background: "green",
-                                          borderRadius: "0",
-                                          padding: ".15rem .15rem"
-                                        }
-                                      : {
-                                          borderRadius: "0",
-                                          padding: ".15rem .15rem"
-                                        }
-                                  }
-                                  onClick={this.onAddpreviewdata.bind(
-                                    this,
-                                    item.questionId
+                                <Card.Text
+                                  style={{
+                                    marginBottom: "0.5em",
+                                    // display: "block",
+                                    // width: "50%"
+                                  }}
+                                >
+                                  {item.content !== "" ? (
+                                    <MathJax
+                                      style={{ display: "inline-flex" }}
+                                      math={item.content}
+                                    />
+                                  ) : (
+                                    <MathJax
+                                      style={{ display: "inline-flex" }}
+                                      math={" "}
+                                    />
                                   )}
-                                  variant="primary"
-                                >
-                                  {<Bucket className="svg_icons" />}{" "}
-                                </Button>
-                                <Link
-                                  to={`/editques/${this.state.selectedLanguage}/${item.questionId}`}
-                                  target="_self"
-                                >
-                                  <Button
-                                    title="Edit"
-                                    size="sm"
-                                    style={{
-                                      borderRadius: "0",
-                                      marginLeft: "1em",
-                                      padding: ".15rem .15rem"
-                                    }}
-                                    variant="secondary"
-
-                                    // onClick={this.handleQAEdit.bind(this,item.questionId)}
-                                  >
-                                    {<Edit className="svg_icons" />}{" "}
-                                  </Button>
-                                </Link>
-                              </div> */}
+                                </Card.Text>
                               </Card.Body>
-                              {/* <hr /> */}
                             </Card>
                           </Col>
                         </Row>

@@ -30,12 +30,10 @@ class Editques extends Component {
       listOfSubTopicEnglish: [],
       listOfSubTopicHindi: [],
       selectedSubTopicID: 0,
-      // tags: [],
       difficulty: "+",
       tags: [],
       suggestions: [],
       apisugges: [],
-
       questionId: this.props.match.params.id,
       fetchedData: null,
       activetab: this.props.match.params.lang

@@ -561,11 +561,9 @@ class Examtab extends Component {
           style={{
             padding: "2.5em 3em",
             background: "#EEE",
-            // borderRight: "1px solid #cac2c2",
             boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -3px",
             zIndex: "88",
             position: "relative"
-            // margin: "2em 0em"
           }}
         >
           <LeftpanelExamtab
@@ -581,10 +579,6 @@ class Examtab extends Component {
             selectedSubjectID={this.state.selectedSubjectID}
             selectedChapterID={this.state.selectedChapterID}
             selectedExamID={this.state.selectedExamID}
-            // tags={this.state.tags}
-            // handleChangeTags={this.handleChangeTags}
-            // difficulty={this.state.difficulty}
-            // handleDifficultyRadio={this.handleDifficultyRadio}
             listOfLanguage={this.state.listOfLanguage}
             selectedLanguage={this.state.selectedLanguage}
             handleLanguageChange={this.handleLanguageChange}
@@ -597,13 +591,11 @@ class Examtab extends Component {
         <Col
           style={{
             background: "#EEEEEE",
-            // height: "90vh",
-            padding: "0em 4em"
+            padding: "0em 3em"
           }}
         >
           <Row style={{ margin: "2em 0em" }}>
             <Col lg="1.5">
-              {/* <BrowserRouter> */}
               <Link to="/addexam" target="_self">
                 <Button
                   style={{
@@ -618,25 +610,7 @@ class Examtab extends Component {
                   + Add Test
                 </Button>
               </Link>
-              {/* </BrowserRouter> */}
             </Col>
-            {/* <Col
-              style={{
-                padding: "0.2em 1.5em"
-              }}
-            >
-              <p
-                style={{
-                  lineHeight: "1em",
-                  color: "dimgrey",
-                  fontWeight: "400"
-                }}
-              >
-                Add new and review prevoius exam.
-                <br></br>
-                Please select the filter on left for accessing best results.
-              </p>
-            </Col> */}
           </Row>
 
           <Row style={{ margin: "0em 0em" }}>
@@ -658,9 +632,7 @@ class Examtab extends Component {
             </Col>
           </Row>
           <BottomScrollListener onBottom={this.callbackofendexam}>
-            {/* {scrollRef => ( */}
             <div
-              // ref={scrollRef}
               style={{
                 marginBottom: "2em",
                 padding: "0.4em"
@@ -673,7 +645,6 @@ class Examtab extends Component {
                       key={index}
                       style={{
                         margin: "1.5em 0em"
-                        // borderTop: "1px #c2c2c2 solid"
                       }}
                     >
                       <Col
@@ -695,8 +666,6 @@ class Examtab extends Component {
                                 marginBottom: "0.2em"
                               }}
                             >
-                              {/* <Form.Check inline type="checkbox" /> */}
-
                               <span>
                                 <b>Id#</b>{" "}
                                 <span style={{ color: "dimgrey" }}>
@@ -714,11 +683,9 @@ class Examtab extends Component {
                                     target="_self"
                                   >
                                     <Button
-                                      // title="Edit"
                                       size="sm"
                                       style={{
                                         borderRadius: "0",
-                                        // marginLeft: "0.8em",
                                         padding: ".15rem .15rem",
                                         background: "transparent",
                                         color: "rgb(106, 163, 255)",
@@ -737,7 +704,6 @@ class Examtab extends Component {
                                   overlay={renderTooltip("Preview test")}
                                 >
                                   <Button
-                                    // title="Preview test"
                                     size="sm"
                                     style={{
                                       borderRadius: "0",
@@ -768,7 +734,6 @@ class Examtab extends Component {
                                 <span
                                   style={{
                                     color: "darkgreen",
-                                    // fontSize:'0.5em',
                                     textTransform: "capitalize"
                                   }}
                                 >
@@ -777,7 +742,6 @@ class Examtab extends Component {
                                 {item.year && (
                                   <span>
                                     {", "}
-                                    {/* <b>Year: </b> */}
                                     {item.year}
                                   </span>
                                 )}
@@ -788,26 +752,7 @@ class Examtab extends Component {
                               {""}
                               {item.name}
                             </Card.Text>
-                            {/* <div style={{ float: "right" }}>
-                            <Link
-                              to={`/editexam/${item.testId}`}
-                              target="_self"
-                            >
-                              <Button
-                                title="Edit"
-                                size="sm"
-                                style={{
-                                  borderRadius: "0",
-                                  padding: ".15rem .15rem"
-                                }}
-                                variant="secondary"
-                              >
-                                {<Edit className="svg_icons" />}{" "}
-                              </Button>
-                            </Link>
-                          </div> */}
                           </Card.Body>
-                          {/* <hr /> */}
                         </Card>
                       </Col>
                     </Row>

@@ -12,8 +12,22 @@ class EditComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      questionData: " ",
-      explanationData: " ",
+      questionData:
+        this.props.fetchedData.questionVersions.filter(
+          item => item.language === this.props.lang
+        ).length > 0
+          ? this.props.fetchedData.questionVersions.filter(
+              item => item.language === this.props.lang
+            )[0].content
+          : "blank",
+      explanationData:
+        this.props.fetchedData.questionVersions.filter(
+          item => item.language === this.props.lang
+        ).length > 0
+          ? this.props.fetchedData.questionVersions.filter(
+              item => item.language === this.props.lang
+            )[0].solution
+          : "blank",
       listOfOptions: [],
       letterchartcode: 65
     };
@@ -120,15 +134,14 @@ class EditComponent extends Component {
           )[0].options.length + 65,
         tags: converttags
       });
-      
     } else {
       this.setState({
         difficulty: difficultyvalue,
         listOfOptions: [
-          { name: "Option A", content: "", weightage: 0 },
-          { name: "Option B", content: "", weightage: 0 },
-          { name: "Option C", content: "", weightage: 0 },
-          { name: "Option D", content: "", weightage: 0 }
+          { name: "Option A", content: " ", weightage: 0 },
+          { name: "Option B", content: " ", weightage: 0 },
+          { name: "Option C", content: " ", weightage: 0 },
+          { name: "Option D", content: " ", weightage: 0 }
         ],
         letterchartcode: 69,
         tags: converttags
@@ -391,13 +404,10 @@ class EditComponent extends Component {
                   myRefExplanationEnglish={this.myRefExplanationEnglish}
                   refsArrayHindi={this.refsArrayHindi}
                   refsArrayEnglish={this.refsArrayEnglish}
-                  // handleQuestionEditor={this.handleQuestionEditor}
                   questionData={this.state.questionData}
-                  // handleExplanationEditor={this.handleExplanationEditor}
                   explanationData={this.state.explanationData}
                   listOfOptions={this.state.listOfOptions}
                   letterchartcode={this.state.letterchartcode}
-                  // handleOptioncontentchange={this.handleOptioncontentchange}
                   handleOptionWeightageChange={this.handleOptionWeightageChange}
                   addoptionfn={this.addoptionfn}
                   deleteOption={this.deleteOption}
@@ -456,9 +466,7 @@ class EditComponent extends Component {
                   myRefExplanationEnglishNew={this.myRefExplanationEnglishNew}
                   refsArrayHindiNew={this.refsArrayHindiNew}
                   refsArrayEnglishNew={this.refsArrayEnglishNew}
-                  // handleQuestionEditor={this.handleQuestionEditor}
                   questionData={this.state.questionData}
-                  // handleExplanationEditor={this.handleExplanationEditor}
                   explanationData={this.state.explanationData}
                   listOfOptions={this.state.listOfOptions}
                   letterchartcode={this.state.letterchartcode}
@@ -804,9 +812,6 @@ function QuestionComp({
   myRefQuestionEnglish,
   questionData
 }) {
-  // console.log(this.props.fetchedData.questionVersions.filter(
-  //   item => item.language === this.props.lang
-  // )[0].content)
   // console.log(questionData);
   return (
     <Form.Group>
@@ -851,11 +856,6 @@ function QuestionComp({
               ref={myRefQuestionHindi}
               onFocus={event => {
                 window.hook(event.editor.document.$.body);
-                // event.editor.insertHtml(" ");
-                // let data = event.editor.getData();
-                // // console.log('focus',data)
-                // handleQuestionEditor(data);
-                // installKeyupQuestion(event.editor);
               }}
               oninstanceReady={event => {
                 var a = document.getElementById("txtLanguage");
@@ -866,11 +866,6 @@ function QuestionComp({
                 window.changeKB();
               }}
               data={questionData}
-              // onChange={event => {
-              //   let data = event.editor.getData();
-
-              //   handleQuestionEditor(data);
-              // }}
             />
           </div>
         ) : (
@@ -880,26 +875,7 @@ function QuestionComp({
               height: 100
             }}
             ref={myRefQuestionEnglish}
-            // onFocus={event => {
-            //   event.editor.insertHtml(" ");
-
-            //   // let data = event.editor.getData();
-            //   // console.log(data);
-            //   // event.editor.setData(data + " ");
-            //   // let datanew = event.editor.getData();
-            //   // console.log(datanew);
-            //   // event.editor.setData(" " + data);
-            //   // event.editor.insertHtml(data + " ");
-
-            //   // console.log('focus',data)
-            //   // handleQuestionEditor(data);
-            // }}
             data={questionData}
-            // onChange={event => {
-            //   let data = event.editor.getData();
-            //   console.log("onChange:", data);
-            //   handleQuestionEditor(data);
-            // }}
           />
         )}
       </div>
@@ -912,7 +888,6 @@ function ExplanationComp({
   myRefExplanationEnglish,
   explanationData
 }) {
-  //   console.log(explanationData);
   return (
     <Form.Group>
       <Form.Label
@@ -932,48 +907,21 @@ function ExplanationComp({
             onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
             config={{
               height: 100
-              // placeholder: "Test description and instruction in English"
             }}
             ref={myRefExplanationHindi}
-            // onBlur={event=>{
-            //   console.log('blur',event)
-            // }}
             onFocus={event => {
               window.hook(event.editor.document.$.body);
-              // event.editor.insertHtml(" ");
-              // let data = event.editor.getData();
-
-              // handleExplanationEditor(data);
-              // installKeyupSolution(event.editor);
             }}
             data={explanationData}
-            // onChange={event => {
-            //   let data = event.editor.getData();
-            //   handleExplanationEditor(data);
-            // }}
           />
         ) : (
           <CKEditor
             onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
             config={{
               height: 100
-              // placeholder: "Test description and instruction in English"
             }}
             ref={myRefExplanationEnglish}
-            // onBlur={event=>{
-            //   console.log('blur',event)
-            // }}
-            // onFocus={event => {
-            //   event.editor.insertHtml(" ");
-            //   let data = event.editor.getData();
-
-            //   handleExplanationEditor(data);
-            // }}
             data={explanationData}
-            // onChange={event => {
-            //   let data = event.editor.getData();
-            //   handleExplanationEditor(data);
-            // }}
           />
         )}
       </div>
@@ -1151,25 +1099,5 @@ class RightpanelNewVersion extends Component {
     );
   }
 }
-// function installKeyupSolution(editor) {
-//   editor.document.on("keyup", function(event) {
-//     const data = editor.getData();
 
-//     window.EditComponent.handleExplanationEditor(data);
-//   });
-// }
-// function installKeyupQuestion(editor) {
-//   editor.document.on("keyup", function(event) {
-//     const data = editor.getData();
-
-//     window.EditComponent.handleQuestionEditor(data);
-//   });
-// }
-// function installKeyupOption(index, editor) {
-//   editor.document.on("keyup", function(event) {
-//     const data = editor.getData();
-
-//     window.EditComponent.handleOptioncontentchange(index, data);
-//   });
-// }
 export default EditComponent;
