@@ -258,7 +258,13 @@ class ShowData extends Component {
                                         obbj =>
                                           obbj.language ===
                                           this.state.selectedLanguage
-                                      )[0].content
+                                      ).length > 0
+                                        ? item.questionVersions.filter(
+                                            obbj =>
+                                              obbj.language ===
+                                              this.state.selectedLanguage
+                                          )[0].content
+                                        : " "
                                     }
                                   />
                                 </span>
@@ -271,46 +277,51 @@ class ShowData extends Component {
                                   .content.replace(/<\/?[^>]+(>|$)/g, "")} */}
                               </Card.Text>
                               <Row>
-                                {item.questionVersions
-                                  .filter(
-                                    obbj =>
-                                      obbj.language ===
-                                      this.state.selectedLanguage
-                                  )[0]
-                                  .options.map((optionitem, optionindex) => {
-                                    return (
-                                      <React.Fragment key={optionindex}>
-                                        <Col
-                                          lg="6"
-                                          style={{
-                                            margin: "0.5em 0"
-                                            // display: "flex"
-                                          }}
-                                        >
-                                          {" "}
-                                          {optionindex + 1}
-                                          {") "}{" "}
-                                          <MathJax
-                                            style={{ display: "inline-flex" }}
-                                            math={optionitem.content}
-                                          />
-                                          <sub
-                                            style={
-                                              {
-                                                // display: "inline-block",
-                                                // position: "absolute",
-                                                // bottom: "0",
-                                                // left: "0",
-                                                // margin: " 0em 2em"
-                                              }
-                                            }
+                                {item.questionVersions.filter(
+                                  obbj =>
+                                    obbj.language ===
+                                    this.state.selectedLanguage
+                                ).length > 0 &&
+                                  item.questionVersions
+                                    .filter(
+                                      obbj =>
+                                        obbj.language ===
+                                        this.state.selectedLanguage
+                                    )[0]
+                                    .options.map((optionitem, optionindex) => {
+                                      return (
+                                        <React.Fragment key={optionindex}>
+                                          <Col
+                                            lg="6"
+                                            style={{
+                                              margin: "0.5em 0"
+                                              // display: "flex"
+                                            }}
                                           >
-                                            <b>( {optionitem.weightage} )</b>
-                                          </sub>
-                                        </Col>
-                                      </React.Fragment>
-                                    );
-                                  })}{" "}
+                                            {" "}
+                                            {optionindex + 1}
+                                            {") "}{" "}
+                                            <MathJax
+                                              style={{ display: "inline-flex" }}
+                                              math={optionitem.content}
+                                            />
+                                            <sub
+                                              style={
+                                                {
+                                                  // display: "inline-block",
+                                                  // position: "absolute",
+                                                  // bottom: "0",
+                                                  // left: "0",
+                                                  // margin: " 0em 2em"
+                                                }
+                                              }
+                                            >
+                                              <b>( {optionitem.weightage} )</b>
+                                            </sub>
+                                          </Col>
+                                        </React.Fragment>
+                                      );
+                                    })}{" "}
                               </Row>
                               <Row style={{ margin: "1em 0.1em" }}>
                                 <b> Sol. </b> &nbsp;
@@ -321,7 +332,11 @@ class ShowData extends Component {
                                       obbj =>
                                         obbj.language ===
                                         this.state.selectedLanguage
-                                    )[0].solution
+                                    ).length>0?item.questionVersions.filter(
+                                      obbj =>
+                                        obbj.language ===
+                                        this.state.selectedLanguage
+                                    )[0].solution:" "
                                   }
                                 />
                                 {/* {ReactHtmlParser(

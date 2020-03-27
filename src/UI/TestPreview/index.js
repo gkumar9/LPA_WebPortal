@@ -311,7 +311,13 @@ class QuestionShowData extends Component {
                               item.questionVersions.filter(
                                 obbj =>
                                   obbj.language === this.state.selectedLanguage
-                              )[0].content
+                              ).length > 0
+                                ? item.questionVersions.filter(
+                                    obbj =>
+                                      obbj.language ===
+                                      this.state.selectedLanguage
+                                  )[0].content
+                                : " "
                             }
                           />
                           {/* {ReactHtmlParser(
@@ -328,35 +334,39 @@ class QuestionShowData extends Component {
                             .content.replace(/<\/?[^>]+(>|$)/g, "")} */}
                         </Card.Text>
                         <Row>
-                          {item.questionVersions
-                            .filter(
-                              obbj =>
-                                obbj.language === this.state.selectedLanguage
-                            )[0]
-                            .options.map((optionitem, optionindex) => {
-                              return (
-                                <React.Fragment key={optionindex}>
-                                  <Col lg="6" style={{ margin: "0.5em 0" }}>
-                                    {optionindex + 1}
-                                    {") "}
-                                    <MathJax
-                                      style={{ display: "inline-flex" }}
-                                      math={optionitem.content}
-                                    />
-                                    {/* {ReactHtmlParser(optionitem.content)} */}
-                                    {/* {optionitem.content.replace(
+                          {item.questionVersions.filter(
+                            obbj =>
+                              obbj.language === this.state.selectedLanguage
+                          ).length > 0 &&
+                            item.questionVersions
+                              .filter(
+                                obbj =>
+                                  obbj.language === this.state.selectedLanguage
+                              )[0]
+                              .options.map((optionitem, optionindex) => {
+                                return (
+                                  <React.Fragment key={optionindex}>
+                                    <Col lg="6" style={{ margin: "0.5em 0" }}>
+                                      {optionindex + 1}
+                                      {") "}
+                                      <MathJax
+                                        style={{ display: "inline-flex" }}
+                                        math={optionitem.content}
+                                      />
+                                      {/* {ReactHtmlParser(optionitem.content)} */}
+                                      {/* {optionitem.content.replace(
                                       /<\/?[^>]+(>|$)/g,
                                       ""
                                     )}{" "} */}
-                                    <sub
-                                    // style={{border:' dimgrey solid',padding:'0.1em'}}
-                                    >
-                                      (<b> {optionitem.weightage} </b>)
-                                    </sub>
-                                  </Col>
-                                </React.Fragment>
-                              );
-                            })}{" "}
+                                      <sub
+                                      // style={{border:' dimgrey solid',padding:'0.1em'}}
+                                      >
+                                        (<b> {optionitem.weightage} </b>)
+                                      </sub>
+                                    </Col>
+                                  </React.Fragment>
+                                );
+                              })}{" "}
                         </Row>
                         <Row style={{ margin: "0.2em 0.1em" }}>
                           <b> Sol- </b>
@@ -366,7 +376,10 @@ class QuestionShowData extends Component {
                               item.questionVersions.filter(
                                 obbj =>
                                   obbj.language === this.state.selectedLanguage
-                              )[0].solution
+                              ).length>0?item.questionVersions.filter(
+                                obbj =>
+                                  obbj.language === this.state.selectedLanguage
+                              )[0].solution:" "
                             }
                           />
                           {/* {ReactHtmlParser(

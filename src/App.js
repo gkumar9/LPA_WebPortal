@@ -17,15 +17,62 @@ class App extends Component {
           .then(idToken => {
             // console.log(idToken)
             // localStorage.setItem("idToken", idToken);
-            axios.interceptors.request.use(config => {
-              if (config.data && config.data.authToken) {
-                config.data.authToken = idToken;
+            axios.interceptors.request.use(
+              config => {
+                if (config.data && config.data.authToken) {
+                  config.data.authToken = idToken;
+                }
+                return Promise.resolve(config);
+              },
+              function(error) {
+                // Do something with request error
+                return Promise.reject(error);
               }
-              return Promise.resolve(config);
-            });
+            );
+            axios.interceptors.response.use(
+              function(response) {
+                // Any status code that lie within the range of 2xx cause this function to trigger
+                // Do something with response data
+                if (response.data.error && response.data.error.errorCode === 10) {
+                  alert(
+                    "Problem:Login Token expired.\nToken refreshed. Please try last action again"
+                  );
+                  firebase
+                    .auth()
+                    .currentUser.getIdToken()
+                    .then(itdTokenrefreshed => {
+                      axios.interceptors.request.use(
+                        config => {
+                          if (config.data && config.data.authToken) {
+                            config.data.authToken = itdTokenrefreshed;
+                          }
+                          return Promise.resolve(config);
+                        },
+                        function(error) {
+                          // Do something with request error
+                          return Promise.reject(error);
+                        }
+                      );
+                    })
+                    .catch(e => {
+                      alert(e);
+                    });
+                }
+                return Promise.resolve(response);
+              },
+              function(error) {
+                // Any status codes that falls outside the range of 2xx cause this function to trigger
+                // Do something with response error
+                return Promise.reject(error);
+              }
+            );
+
             this.setState({
               authenticated: true
             });
+          })
+          .catch(e => {
+            alert(e);
           });
       } else {
         // console.log("authenticated", authenticated);

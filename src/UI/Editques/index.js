@@ -266,7 +266,7 @@ class Editques extends Component {
         }
       })
         .then(res => {
-          console.log(res.data.data.question);
+          // console.log(res.data.data.question);
           if (res.status === 200) {
             let difficultyvalue;
             switch (res.data.data.question.level) {

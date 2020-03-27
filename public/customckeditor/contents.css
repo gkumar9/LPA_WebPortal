@@ -2,11 +2,14 @@
 Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 */
-
+/* @font-face {
+  font-family: 'KrutiDev021';
+  src : url('kruti-dev-021.ttf');
+  } */
 body {
   /* Font */
   /* Emoji fonts are added to visualise them nicely in Internet Explorer. */
-  font-family: sans-serif, Arial, Verdana, "Trebuchet MS", "Apple Color Emoji",
+  font-family: "Lato",sans-serif, Arial, Verdana, "Trebuchet MS", "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 12px;
 
@@ -22,7 +25,7 @@ body {
 .cke_editable {
   font-size: 13px;
   line-height: 1.6;
-
+  /* font-family: KrutiDev021; */
   /* Fix for missing scrollbars with RTL texts. (#10488) */
   word-wrap: break-word;
 }

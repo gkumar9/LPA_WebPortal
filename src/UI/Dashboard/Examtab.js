@@ -273,7 +273,6 @@ class Examtab extends Component {
       });
   }
   callApiForSubject = () => {
-    // console.log(this.state.selectedExamID);
     if (this.state.selectedExamID !== "") {
       axios({
         method: "POST",
@@ -322,8 +321,9 @@ class Examtab extends Component {
                           ? parseInt(
                               localStorage.getItem("selectedSubjectIDTest")
                             )
-                          : tempsubjectlist[0].subject.subjectId
-                        : 0
+                          : 0
+                        : // : tempsubjectlist[0].subject.subjectId
+                          0
                     // tempsubjectlist.length > 0
                     //   ? tempsubjectlist[0].subject.subjectId
                     //   : 0
@@ -343,8 +343,9 @@ class Examtab extends Component {
                           ? parseInt(
                               localStorage.getItem("selectedSubjectIDTest")
                             ).toString()
-                          : tempsubjectlist[0].subject.subjectId.toString()
-                        : "0"
+                          : "0"
+                        : // : tempsubjectlist[0].subject.subjectId.toString()
+                          "0"
                     );
                     this.callApiForChapter();
                   }
@@ -401,8 +402,9 @@ class Examtab extends Component {
                           )
                       ).length > 0
                       ? parseInt(localStorage.getItem("selectedChapterIDTest"))
-                      : res.data.data.list[0].subjectSection.sectionId
-                    : 0
+                      : 0
+                    : // : res.data.data.list[0].subjectSection.sectionId
+                      0
               },
               () => {
                 localStorage.setItem(
@@ -419,8 +421,9 @@ class Examtab extends Component {
                       ? parseInt(
                           localStorage.getItem("selectedChapterIDTest")
                         ).toString()
-                      : res.data.data.list[0].subjectSection.sectionId.toString()
-                    : "0"
+                      : "0"
+                    : // : res.data.data.list[0].subjectSection.sectionId.toString()
+                      "0"
                 );
                 // this.callApiForTopic();
               }
@@ -476,39 +479,64 @@ class Examtab extends Component {
   };
   handleSubjectChange = e => {
     e.preventDefault();
-    localStorage.setItem(
-      "selectedSubjectIDTest",
-      this.state.listOfSubject[e.target.options.selectedIndex].subject.subjectId
-    );
-    this.setState(
-      {
-        selectedSubjectID: this.state.listOfSubject[
-          e.target.options.selectedIndex
-        ].subject.subjectId
-      },
-      () => {
-        this.callApiForChapter();
-      }
-    );
+    if (e.target.value === "") {
+      localStorage.setItem("selectedSubjectIDTest", "0");
+      this.setState(
+        {
+          selectedSubjectID: 0
+        },
+        () => {
+          this.callApiForChapter();
+        }
+      );
+    } else {
+      localStorage.setItem(
+        "selectedSubjectIDTest",
+        this.state.listOfSubject[e.target.options.selectedIndex].subject
+          .subjectId
+      );
+      this.setState(
+        {
+          selectedSubjectID: this.state.listOfSubject[
+            e.target.options.selectedIndex
+          ].subject.subjectId
+        },
+        () => {
+          this.callApiForChapter();
+        }
+      );
+    }
   };
   handleChapterChange = e => {
     e.preventDefault();
-    localStorage.setItem(
-      "selectedChapterIDTest",
-      this.state.listOfChapter[
-        e.target.options.selectedIndex
-      ].subjectSection.sectionId.toString()
-    );
-    this.setState(
-      {
-        selectedChapterID: this.state.listOfChapter[
+    if (e.target.value === "") {
+      localStorage.setItem("selectedChapterIDTest", "0");
+      this.setState(
+        {
+          selectedChapterID: 0
+        },
+        () => {
+          // this.callApiForChapter();
+        }
+      );
+    } else {
+      localStorage.setItem(
+        "selectedChapterIDTest",
+        this.state.listOfChapter[
           e.target.options.selectedIndex
-        ].subjectSection.sectionId
-      },
-      () => {
-        // this.callApiForTopic();
-      }
-    );
+        ].subjectSection.sectionId.toString()
+      );
+      this.setState(
+        {
+          selectedChapterID: this.state.listOfChapter[
+            e.target.options.selectedIndex
+          ].subjectSection.sectionId
+        },
+        () => {
+          // this.callApiForTopic();
+        }
+      );
+    }
   };
   handlePreviewTest = testid => {
     localStorage.setItem("TestPreviewId", JSON.stringify(testid));

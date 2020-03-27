@@ -1,7 +1,21 @@
 import React, { Component } from "react";
-import { Button, Row, Col, Form, Container } from "react-bootstrap";
+import {
+  Button,
+  Row,
+  Col,
+  Form,
+  Container
+  // InputGroup,
+  // FormControl
+} from "react-bootstrap";
 import CKEditor from "ckeditor4-react";
 class RightExamPanel extends Component {
+  handlepresskey = (index, e) => {
+    // console.log(e.key, index);
+    if (e.key === "Enter") {
+      this.props.addSectionQuestions(index);
+    }
+  };
   render() {
     return (
       <div>
@@ -122,7 +136,7 @@ class RightExamPanel extends Component {
           </div>
           {this.props.listOfSection.length > 0 && (
             <Form.Control
-            tabIndex="-1"
+              tabIndex="-1"
               style={{
                 fontWeight: "600",
                 margin: " 0 0.5em"
@@ -209,9 +223,11 @@ class RightExamPanel extends Component {
                   <Row noGutters={true} style={{ margin: "1em 0em" }}>
                     {/* <Col lg="2"></Col> */}
                     <Col lg="6" style={{ paddingRight: "0.5em" }}>
-                      <small>Marks/ ques</small>
+                      <small>Marks/ ques (upto 3 decimal only)</small>
                       <Form.Control
                         type="number"
+                        // min="0"
+                        // max="100"
                         value={item.marksPerQuestion}
                         onChange={this.props.handleMarksperQuesChange.bind(
                           this,
@@ -220,14 +236,24 @@ class RightExamPanel extends Component {
                         placeholder="Marks/ ques"
                         style={{ borderRadius: "0" }}
                       />
+                      {/* <InputGroup className="mb-3">
+                        <InputGroup.Prepend>
+                          <InputGroup.Text>First and last name</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl />
+                        <FormControl />
+                      </InputGroup> */}
                     </Col>
                     {/* <Col lg="2"></Col> */}
                     <Col lg="6" style={{ paddingLeft: "0.5em" }}>
-                      <small>Negative marks / ques</small>
+                      <small>Negative marks / ques (upto 3 decimal only)</small>
 
                       <Form.Control
                         type="number"
+                        min="0"
+                        max="100"
                         value={item.negativeMarksPerQuestion}
+                        // step="0.01"
                         onChange={this.props.handleNegativeMarksPerQuesChange.bind(
                           this,
                           index
@@ -332,6 +358,7 @@ class RightExamPanel extends Component {
                           {/* <Col lg="2"></Col> */}
                           <Col lg="1">
                             <Form.Control
+                              tabIndex="-1"
                               style={{
                                 fontWeight: "500",
                                 margin: " 0 0.5em",
@@ -340,26 +367,28 @@ class RightExamPanel extends Component {
                               }}
                               plaintext
                               readOnly
-                              defaultValue={`Q ${indexquestion + 1}`}
+                              defaultValue={`Q${indexquestion + 1}`}
                             />
                           </Col>
                           <Col lg="3" style={{}}>
                             <Form.Control
+                              autoFocus
                               type="number"
+                              onKeyPress={this.handlepresskey.bind(this, index)}
                               value={itemquestion}
                               onChange={this.props.handlSectionQuestionValueChange.bind(
                                 this,
                                 index,
                                 indexquestion
                               )}
-                              placeholder="Question ID#"
+                              placeholder="Valid Question ID#"
                               style={{ borderRadius: "0" }}
                             />
                           </Col>
                           {/* {item.questions.length === indexquestion + 1 && ( */}
                           <Col>
                             <Button
-                            tabIndex="-1"
+                              tabIndex="-1"
                               style={{ float: "left", color: "grey" }}
                               variant="link"
                               onClick={this.props.deleteSectionQuestion.bind(

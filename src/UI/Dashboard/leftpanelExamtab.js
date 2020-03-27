@@ -32,7 +32,7 @@ class LeftPanelExamtab extends Component {
     // currentvaluesubtopic = currentvaluesubtopic
     //   ? currentvaluesubtopic.title
     //   : "";
-    
+
     return (
       <Form>
         <Form.Group controlId="exampleForm.ControlSelect000">
@@ -90,7 +90,7 @@ class LeftPanelExamtab extends Component {
                 );
               })}
             <option key="" value="">
-              Select
+              Select all
             </option>
           </Form.Control>
         </Form.Group>
@@ -103,7 +103,11 @@ class LeftPanelExamtab extends Component {
             Subject
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            style={
+              currentvaluesubject !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
             size="sm"
             as="select"
             // defaultValue=""
@@ -118,6 +122,9 @@ class LeftPanelExamtab extends Component {
                   </option>
                 );
               })}
+            <option key="" value="">
+              Select all
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect222">
@@ -129,7 +136,11 @@ class LeftPanelExamtab extends Component {
             Chapter
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            style={
+              currentvaluechapter !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
             size="sm"
             as="select"
             value={currentvaluechapter}
@@ -143,6 +154,9 @@ class LeftPanelExamtab extends Component {
                   </option>
                 );
               })}
+            <option key="" value="">
+              Select all
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect2222">
@@ -173,7 +187,7 @@ class LeftPanelExamtab extends Component {
                   </option>
                 );
               })}
-              <option key="" value="">
+            <option key="" value="">
               Select
             </option>
           </Form.Control>

@@ -589,8 +589,9 @@ class QAtab extends Component {
                           parseInt(localStorage.getItem("selectedChapterIDQA"))
                       ).length > 0
                       ? parseInt(localStorage.getItem("selectedChapterIDQA"))
-                      : res.data.data.list[0].subjectSection.sectionId
-                    : 0
+                      : 0
+                    : // : res.data.data.list[0].subjectSection.sectionId
+                      0
               },
               () => {
                 localStorage.setItem(
@@ -605,8 +606,9 @@ class QAtab extends Component {
                       ? parseInt(
                           localStorage.getItem("selectedChapterIDQA")
                         ).toString()
-                      : res.data.data.list[0].subjectSection.sectionId.toString()
-                    : "0"
+                      : "0"
+                    : // : res.data.data.list[0].subjectSection.sectionId.toString()
+                      "0"
                 );
                 this.callApiForTopic();
               }
@@ -666,8 +668,9 @@ class QAtab extends Component {
                           parseInt(localStorage.getItem("selectedTopicIDQA"))
                       ).length > 0
                       ? parseInt(localStorage.getItem("selectedTopicIDQA"))
-                      : res.data.data.list[0].subjectTopic.topicId
-                    : 0
+                      : 0
+                    : // : res.data.data.list[0].subjectTopic.topicId
+                      0
               },
               () => {
                 localStorage.setItem(
@@ -682,8 +685,9 @@ class QAtab extends Component {
                       ? parseInt(
                           localStorage.getItem("selectedTopicIDQA")
                         ).toString()
-                      : res.data.data.list[0].subjectTopic.topicId.toString()
-                    : "0"
+                      : "0"
+                    : // : res.data.data.list[0].subjectTopic.topicId.toString()
+                      "0"
                 );
                 this.callApiForSubTopic();
               }
@@ -739,8 +743,9 @@ class QAtab extends Component {
                         parseInt(localStorage.getItem("selectedSubTopicID"))
                     ).length > 0
                     ? parseInt(localStorage.getItem("selectedSubTopicID"))
-                    : res.data.data.list[0].subjectSubtopic.subtopicId
-                  : 0
+                    : 0
+                  : // : res.data.data.list[0].subjectSubtopic.subtopicId
+                    0
             });
             localStorage.setItem(
               "selectedSubTopicID",
@@ -754,8 +759,9 @@ class QAtab extends Component {
                   ? parseInt(
                       localStorage.getItem("selectedSubTopicID")
                     ).toString()
-                  : res.data.data.list[0].subjectSubtopic.subtopicId.toString()
-                : "0"
+                  : "0"
+                : // : res.data.data.list[0].subjectSubtopic.subtopicId.toString()
+                  "0"
             );
           } else {
             alert("Unexpected code");
@@ -806,55 +812,86 @@ class QAtab extends Component {
   };
   handleChapterChange = e => {
     e.preventDefault();
-
-    localStorage.setItem(
-      "selectedChapterIDQA",
-      this.state.listOfChapter[
-        e.target.options.selectedIndex
-      ].subjectSection.sectionId.toString()
-    );
-    this.setState(
-      {
-        selectedChapterID: this.state.listOfChapter[
+    if (e.target.value === "") {
+      localStorage.setItem("selectedChapterIDQA", "0");
+      this.setState(
+        {
+          selectedChapterID: 0
+        },
+        () => {
+          this.callApiForTopic();
+        }
+      );
+    } else {
+      localStorage.setItem(
+        "selectedChapterIDQA",
+        this.state.listOfChapter[
           e.target.options.selectedIndex
-        ].subjectSection.sectionId
-      },
-      () => {
-        this.callApiForTopic();
-      }
-    );
+        ].subjectSection.sectionId.toString()
+      );
+      this.setState(
+        {
+          selectedChapterID: this.state.listOfChapter[
+            e.target.options.selectedIndex
+          ].subjectSection.sectionId
+        },
+        () => {
+          this.callApiForTopic();
+        }
+      );
+    }
   };
   handleTopicChange = e => {
     e.preventDefault();
-    localStorage.setItem(
-      "selectedTopicIDQA",
-      this.state.listOfTopic[
-        e.target.options.selectedIndex
-      ].subjectTopic.topicId.toString()
-    );
-    this.setState(
-      {
-        selectedTopicID: this.state.listOfTopic[e.target.options.selectedIndex]
-          .subjectTopic.topicId
-      },
-      () => {
-        this.callApiForSubTopic();
-      }
-    );
+    if (e.target.value === "") {
+      localStorage.setItem("selectedTopicIDQA", "0");
+      this.setState(
+        {
+          selectedTopicID: 0
+        },
+        () => {
+          this.callApiForSubTopic();
+        }
+      );
+    } else {
+      localStorage.setItem(
+        "selectedTopicIDQA",
+        this.state.listOfTopic[
+          e.target.options.selectedIndex
+        ].subjectTopic.topicId.toString()
+      );
+      this.setState(
+        {
+          selectedTopicID: this.state.listOfTopic[
+            e.target.options.selectedIndex
+          ].subjectTopic.topicId
+        },
+        () => {
+          this.callApiForSubTopic();
+        }
+      );
+    }
   };
   handleSubTopicChange = e => {
     e.preventDefault();
-    localStorage.setItem(
-      "selectedSubTopicID",
-      this.state.listOfSubTopic[
-        e.target.options.selectedIndex
-      ].subjectSubtopic.subtopicId.toString()
-    );
-    this.setState({
-      selectedSubTopicID: this.state.listOfSubTopic[
-        e.target.options.selectedIndex
-      ].subjectSubtopic.subtopicId
-    });
+    if (e.target.value === "") {
+      localStorage.setItem("selectedSubTopicID", "0");
+      this.setState({
+        selectedSubTopicID: 0
+      });
+    } else {
+      localStorage.setItem(
+        "selectedSubTopicID",
+        this.state.listOfSubTopic[
+          e.target.options.selectedIndex
+        ].subjectSubtopic.subtopicId.toString()
+      );
+      this.setState({
+        selectedSubTopicID: this.state.listOfSubTopic[
+          e.target.options.selectedIndex
+        ].subjectSubtopic.subtopicId
+      });
+    }
   };
   handleInputChangeCheckboxlistsearch = (index, e) => {
     let tempsearchlist = this.state.listOfsearchselected;
@@ -1164,7 +1201,7 @@ class QAtab extends Component {
               />
             </Col>
             <Col
-             lg="9"
+              lg="9"
               style={{
                 background: "#EEEEEE",
                 padding: "0em 3em"
@@ -1451,7 +1488,7 @@ class QAtab extends Component {
 
                                 <Card.Text
                                   style={{
-                                    marginBottom: "0.5em",
+                                    marginBottom: "0.5em"
                                     // display: "block",
                                     // width: "50%"
                                   }}

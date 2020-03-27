@@ -19,7 +19,7 @@ class EditComponent extends Component {
           ? this.props.fetchedData.questionVersions.filter(
               item => item.language === this.props.lang
             )[0].content
-          : "blank",
+          : " ",
       explanationData:
         this.props.fetchedData.questionVersions.filter(
           item => item.language === this.props.lang
@@ -27,7 +27,7 @@ class EditComponent extends Component {
           ? this.props.fetchedData.questionVersions.filter(
               item => item.language === this.props.lang
             )[0].solution
-          : "blank",
+          : " ",
       listOfOptions: [],
       letterchartcode: 65
     };
@@ -265,28 +265,36 @@ class EditComponent extends Component {
       });
   };
   savedatanewversion = () => {
-    const questionEnglish = this.myRefQuestionEnglishNew.current;
-    const solutionEnglish = this.myRefExplanationEnglishNew.current;
-    let tempoptionEnglish =
-      this.refsArrayEnglishNew.length > 0 &&
-      this.state.listOfOptions.map((item, index) => {
-        return {
-          name: item.name,
-          content: this.refsArrayEnglishNew[index].editor.getData(),
-          weightage: item.weightage
-        };
-      });
-    const questionHindi = this.myRefQuestionHindiNew.current;
-    const solutionHindi = this.myRefExplanationHindiNew.current;
-    let tempoptionHindi =
-      this.refsArrayHindiNew.length > 0 &&
-      this.state.listOfOptions.map((item, index) => {
-        return {
-          name: item.name,
-          content: this.refsArrayHindiNew[index].editor.getData(),
-          weightage: item.weightage
-        };
-      });
+    let question, solution, tempoption;
+    // questionHindi,
+    // solutionHindi,
+    // tempoptionHindi;
+    if (this.props.lang === "ENGLISH") {
+      question = this.myRefQuestionEnglishNew.current;
+      solution = this.myRefExplanationEnglishNew.current;
+      tempoption =
+        this.refsArrayEnglishNew.length > 0 &&
+        this.state.listOfOptions.map((item, index) => {
+          return {
+            name: item.name,
+            content: this.refsArrayEnglishNew[index].editor.getData(),
+            weightage: item.weightage
+          };
+        });
+    } else {
+      question = this.myRefQuestionHindiNew.current;
+      solution = this.myRefExplanationHindiNew.current;
+      tempoption =
+        this.refsArrayHindiNew.length > 0 &&
+        this.state.listOfOptions.map((item, index) => {
+          return {
+            name: item.name,
+            content: this.refsArrayHindiNew[index].editor.getData(),
+            weightage: item.weightage
+          };
+        });
+    }
+
     let difficultyvalue;
     switch (this.props.difficulty) {
       case "+":
@@ -318,17 +326,10 @@ class EditComponent extends Component {
         topicId: this.props.selectedTopicID,
         type: "SINGLE_CHOICE",
         version: {
-          content:
-            this.props.lang === "ENGISH"
-              ? questionEnglish.editor.getData()
-              : questionHindi.editor.getData(),
+          content: question.editor.getData(),
           language: this.props.lang,
-          options:
-            this.props.lang === "ENGLISH" ? tempoptionEnglish : tempoptionHindi,
-          solution:
-            this.props.lang === "ENGLISH"
-              ? solutionEnglish.editor.getData()
-              : solutionHindi.editor.getData()
+          options: tempoption,
+          solution: solution.editor.getData()
         }
       },
       headers: {

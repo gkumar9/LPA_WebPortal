@@ -83,19 +83,18 @@ class Exam extends Component {
   handleNegativeMarksPerQuesChange = (index, e) => {
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].negativeMarksPerQuestion = e.target.value
-      ? parseInt(e.target.value)
-      : 0;
+      ? parseFloat(e.target.value)
+      : "";
     this.setState({ listOfSection: tempsectionlist });
   };
   handleMarksperQuesChange = (index, e) => {
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].marksPerQuestion = e.target.value
-      ? parseInt(e.target.value)
-      : 0;
+      ? parseFloat(e.target.value)
+      : "";
     this.setState({ listOfSection: tempsectionlist });
   };
   addSection = () => {
-    // console.log('add section');
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist.push({
       marksPerQuestion: 0,
@@ -255,10 +254,10 @@ class Exam extends Component {
                 this.setState(
                   {
                     listOfSubject: tempsubjectlist,
-                    selectedSubjectID:0
-                      // tempsubjectlist.length > 0
-                      //   ? tempsubjectlist[0].subject.subjectId
-                        // : 0
+                    selectedSubjectID: 0
+                    // tempsubjectlist.length > 0
+                    //   ? tempsubjectlist[0].subject.subjectId
+                    // : 0
                   },
                   () => {
                     this.callApiForChapter();
@@ -299,7 +298,7 @@ class Exam extends Component {
             this.setState(
               {
                 listOfChapter: res.data.data.list,
-                selectedChapterID:0
+                selectedChapterID: 0
                 //   res.data.data.list.length > 0
                 //     ? res.data.data.list[0].subjectSection.sectionId
                 //     : 0
@@ -400,11 +399,15 @@ class Exam extends Component {
       let testdescEnglish = this.myReftestdescEnglish.current;
       let testdescHindi = this.myReftestdescHindi.current;
       let tempsections = this.state.listOfSection.map((item, index) => {
+        let questionlist = item.questions.filter(ques => ques && ques !== "");
         return {
-          marksPerQuestion: item.marksPerQuestion,
-          negativeMarksPerQuestion: item.negativeMarksPerQuestion,
-          questions: item.questions,
-
+          marksPerQuestion: item.marksPerQuestion
+            ? item.marksPerQuestion.toFixed(3)
+            : 0,
+          negativeMarksPerQuestion: item.negativeMarksPerQuestion
+            ? item.negativeMarksPerQuestion.toFixed(3)
+            : 0,
+          questions: questionlist,
           versions: [
             {
               content: this.refsSectionEnglish[index].editor.getData(),

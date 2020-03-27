@@ -60,7 +60,7 @@ class LeftPanelQAtab extends Component {
               })}
           </Form.Control>
         </Form.Group>
-        <Form.Group >
+        <Form.Group>
           <Form.Label
             style={{
               fontWeight: "600"
@@ -107,7 +107,7 @@ class LeftPanelQAtab extends Component {
                 );
               })}
             <option key="" value="">
-              Select
+              Select all
             </option>
           </Form.Control>
         </Form.Group>
@@ -120,7 +120,11 @@ class LeftPanelQAtab extends Component {
             Chapter
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            style={
+              currentvaluechapter !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
             size="sm"
             as="select"
             value={currentvaluechapter}
@@ -134,6 +138,9 @@ class LeftPanelQAtab extends Component {
                   </option>
                 );
               })}
+            <option key="" value="">
+              Select all
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect3">
@@ -145,7 +152,11 @@ class LeftPanelQAtab extends Component {
             Topic
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            style={
+              currentvaluetopic !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
             size="sm"
             as="select"
             value={currentvaluetopic}
@@ -159,6 +170,9 @@ class LeftPanelQAtab extends Component {
                   </option>
                 );
               })}
+            <option key="" value="">
+              Select all
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect4">
@@ -170,7 +184,11 @@ class LeftPanelQAtab extends Component {
             Sub-topic
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            style={
+              currentvaluesubtopic !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
             size="sm"
             as="select"
             value={currentvaluesubtopic}
@@ -184,9 +202,12 @@ class LeftPanelQAtab extends Component {
                   </option>
                 );
               })}
+            <option key="" value="">
+              Select all
+            </option>
           </Form.Control>
         </Form.Group>
-        
+
         {/* <Form.Group controlId="exampleForm.ControlInput1">
           <Form.Label
             style={{
