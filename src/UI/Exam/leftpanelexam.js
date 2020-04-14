@@ -22,7 +22,12 @@ class LeftPanelExam extends Component {
     currentvaluechapter = currentvaluechapter
       ? currentvaluechapter.sectionName
       : "";
-
+      let currentvalueauthor = this.props.authorList.filter(
+        (item) => item.authorId === this.props.authorId
+      )[0];
+      currentvalueauthor = currentvalueauthor
+        ? currentvalueauthor.authorName
+        : "";
     // let currentvaluetopic = this.props.listOfTopic.filter(
     //   item => item.subjectTopic.topicId === this.props.selectedTopicID
     // )[0];
@@ -69,6 +74,40 @@ class LeftPanelExam extends Component {
             </option>
           </Form.Control>
         </Form.Group>
+        <Form.Group controlId="exampleForm.ControlSelectauthor">
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Authors
+          </Form.Label>
+          <Form.Control
+            style={
+              currentvalueauthor !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+            size="sm"
+            as="select"
+            // defaultValue=""
+            onChange={this.props.handleAuthorChange}
+            value={currentvalueauthor}
+          >
+            {this.props.authorList &&
+              this.props.authorList.map((item, index) => {
+                return (
+                  <option key={index} value={item.authorName}>
+                    {item.authorName}
+                  </option>
+                );
+              })}
+            <option key="" value="">
+              Select all
+            </option>
+          </Form.Control>
+        </Form.Group>
+        
         <Form.Group controlId="exampleForm.ControlSelect111">
           <Form.Label
             style={{

@@ -68,7 +68,7 @@ class Previewtest extends Component {
                       item =>
                         item.language ===
                         localStorage.getItem("TestPreviewLanguage")
-                    )[0].name
+                    )[0].name +` (# ${this.state.data.testId})`
                   }
                 </h3>
               </center>

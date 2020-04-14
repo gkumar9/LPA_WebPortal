@@ -16,23 +16,23 @@ class QuesHindi extends Component {
         { name: "Option A", content: "", weightage: 0 },
         { name: "Option B", content: "", weightage: 0 },
         { name: "Option C", content: "", weightage: 0 },
-        { name: "Option D", content: "", weightage: 0 }
+        { name: "Option D", content: "", weightage: 0 },
       ],
       letterchartcode: 69,
       questiondata: "",
-      explanationdata: ""
+      explanationdata: "",
     };
     this.myRefQuestionHindi = React.createRef();
     this.myRefExplanationHindi = React.createRef();
     this.refsArrayHindi = [];
     window.QuesHindi = this;
   }
-  handlequestioncontentchange = data => {
+  handlequestioncontentchange = (data) => {
     this.setState({
-      questiondata: data
+      questiondata: data,
     });
   };
-  handleexplanationcontentchange = data => {
+  handleexplanationcontentchange = (data) => {
     this.setState({ explanationdata: data });
   };
   addoptionfn = () => {
@@ -42,7 +42,7 @@ class QuesHindi extends Component {
     currentArrayOfOption.push({ name: name, content: "", weightage: 0 });
     this.setState({
       listOfOptions: currentArrayOfOption,
-      letterchartcode: currentCharCode + 1
+      letterchartcode: currentCharCode + 1,
     });
   };
   deleteOption = (index, e) => {
@@ -50,7 +50,7 @@ class QuesHindi extends Component {
       return {
         name: item.name,
         content: this.refsArrayHindi[index].editor.getData(),
-        weightage: item.weightage
+        weightage: item.weightage,
       };
     });
     let currentArrayOfOption = tempoption;
@@ -63,13 +63,13 @@ class QuesHindi extends Component {
       return {
         name: name,
         content: item.content,
-        weightage: item.weightage
+        weightage: item.weightage,
       };
     });
 
     this.setState({
       listOfOptions: currentArrayOfOption,
-      letterchartcode: letterchartcode
+      letterchartcode: letterchartcode,
     });
   };
   handleOptioncontentchange = (index, data) => {
@@ -79,7 +79,7 @@ class QuesHindi extends Component {
     let currentArrayOfOption = this.state.listOfOptions;
     currentArrayOfOption[index].content = data;
     this.setState({
-      listOfOptions: currentArrayOfOption
+      listOfOptions: currentArrayOfOption,
     });
   };
   handleOptionWeightageChange = (index, e) => {
@@ -88,7 +88,7 @@ class QuesHindi extends Component {
       ? parseInt(e.target.value)
       : "";
     this.setState({
-      listOfOptions: currentArrayOfOption
+      listOfOptions: currentArrayOfOption,
     });
   };
   saveHindidata = () => {
@@ -98,7 +98,7 @@ class QuesHindi extends Component {
       return {
         name: item.name,
         content: this.refsArrayHindi[index].editor.getData(),
-        weightage: item.weightage
+        weightage: item.weightage,
       };
     });
     let difficultyvalue;
@@ -115,7 +115,7 @@ class QuesHindi extends Component {
       default:
         break;
     }
-    let converttags = this.props.tags.map(item => {
+    let converttags = this.props.tags.map((item) => {
       return { tagId: item.id ? item.id : 0, tag: item.name };
     });
     axios({
@@ -138,14 +138,14 @@ class QuesHindi extends Component {
           content: question.editor.getData(),
           language: "HINDI",
           options: tempoption,
-          solution: solution.editor.getData()
-        }
+          solution: solution.editor.getData(),
+        },
       },
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           if (this.props.questionId === 0) {
             swal(
@@ -168,24 +168,24 @@ class QuesHindi extends Component {
                 { name: "Option A", content: " ", weightage: 0 },
                 { name: "Option B", content: " ", weightage: 0 },
                 { name: "Option C", content: " ", weightage: 0 },
-                { name: "Option D", content: " ", weightage: 0 }
+                { name: "Option D", content: " ", weightage: 0 },
               ],
               letterchartcode: 69,
               questiondata: "",
-              explanationdata: ""
+              explanationdata: "",
             },
             () => {
               this.refsArrayHindi = [];
               this.myRefQuestionHindi.current.editor.setData("");
               this.myRefExplanationHindi.current.editor.setData("");
-              this.refsArrayHindi.map(item => item.editor.setData(""));
+              this.refsArrayHindi.map((item) => item.editor.setData(""));
             }
           );
         } else {
           swal(`Status Code:${res.status}`, "error");
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
         swal(e, "error");
       });
@@ -202,13 +202,13 @@ class QuesHindi extends Component {
               borderRight: "1px solid #cac2c2",
               boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -4px",
               zIndex: "88",
-              position: "relative"
+              position: "relative",
             }}
           >
             <div
               style={{
                 width: "auto",
-                margin: "2.5em 0em"
+                margin: "2.5em 0em",
               }}
             ></div>
             <LeftPanel
@@ -237,7 +237,7 @@ class QuesHindi extends Component {
           <Col
             style={{
               background: "#EEEEEE",
-              padding: "0em 4em"
+              padding: "0em 4em",
             }}
           >
             <div style={{ margin: "2.5em 0em" }}>
@@ -308,29 +308,29 @@ class RightpanelHindi extends Component {
                 </Form.Group>
                 <div style={{ margin: "0.5em 0" }}>
                   <CKEditor
-                    ref={ref => {
+                    ref={(ref) => {
                       // Callback refs are preferable when
                       // dealing with dynamic refs
                       this.props.refsArrayHindi[index] = ref;
                       return true;
                     }}
-                    onBeforeLoad={CKEDITOR =>
+                    onBeforeLoad={(CKEDITOR) =>
                       (CKEDITOR.disableAutoInline = true)
                     }
                     config={{
-                      height: 100
+                      height: 100,
                     }}
                     // onFocus={event => {
                     //   window.hook(event.editor.document.$.body);
                     // }}
-                    onFocus={event => {
+                    onFocus={(event) => {
                       window.hook(event.editor.document.$.body);
 
                       const data = event.editor.getData();
                       this.props.handleOptioncontentchange(index, data);
                     }}
                     data={item.content}
-                    onChange={event => {
+                    onChange={(event) => {
                       const data = event.editor.getData();
                       this.props.handleOptioncontentchange(index, data);
                     }}
@@ -351,7 +351,7 @@ class RightpanelHindi extends Component {
                 background: "#FF8976",
                 borderColor: "#FF8976",
                 borderRadius: "0",
-                float: "right"
+                float: "right",
               }}
             >
               {" "}
@@ -377,7 +377,7 @@ class RightpanelHindi extends Component {
               borderColor: "#3F5FBB",
               padding: "0.6em 2.5em",
               fontSize: "1.1em",
-              fontWeight: "600"
+              fontWeight: "600",
             }}
             onClick={this.props.saveHindidata}
           >
@@ -394,24 +394,25 @@ class RightpanelHindi extends Component {
 class LeftPanel extends Component {
   render() {
     let currentvaluesubject = this.props.listOfSubject.filter(
-      item => item.subject.subjectId === this.props.selectedSubjectID
+      (item) => item.subject.subjectId === this.props.selectedSubjectID
     )[0];
     currentvaluesubject = currentvaluesubject
       ? currentvaluesubject.subjectName
       : "";
     let currentvaluechapter = this.props.listOfChapter.filter(
-      item => item.subjectSection.sectionId === this.props.selectedChapterID
+      (item) => item.subjectSection.sectionId === this.props.selectedChapterID
     )[0];
     currentvaluechapter = currentvaluechapter
       ? currentvaluechapter.sectionName
       : "";
 
     let currentvaluetopic = this.props.listOfTopic.filter(
-      item => item.subjectTopic.topicId === this.props.selectedTopicID
+      (item) => item.subjectTopic.topicId === this.props.selectedTopicID
     )[0];
     currentvaluetopic = currentvaluetopic ? currentvaluetopic.title : "";
     let currentvaluesubtopic = this.props.listOfSubTopic.filter(
-      item => item.subjectSubtopic.subtopicId === this.props.selectedSubTopicID
+      (item) =>
+        item.subjectSubtopic.subtopicId === this.props.selectedSubTopicID
     )[0];
     currentvaluesubtopic = currentvaluesubtopic
       ? currentvaluesubtopic.title
@@ -421,13 +422,18 @@ class LeftPanel extends Component {
         <Form.Group controlId="exampleForm.ControlSelect11">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Subject
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            // style={{ borderRadius: "0" }}
+            style={
+              currentvaluesubject !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
             size="sm"
             as="select"
             // defaultValue=""
@@ -442,18 +448,26 @@ class LeftPanel extends Component {
                   </option>
                 );
               })}
+            <option key="" value="">
+              Select
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect22">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Chapter
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            // style={{ borderRadius: "0" }}
+            style={
+              currentvaluechapter !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
             size="sm"
             as="select"
             value={currentvaluechapter}
@@ -467,18 +481,26 @@ class LeftPanel extends Component {
                   </option>
                 );
               })}
+            <option key="" value="">
+              Select
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect33">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Topic
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            // style={{ borderRadius: "0" }}
+            style={
+              currentvaluetopic !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
             size="sm"
             as="select"
             value={currentvaluetopic}
@@ -492,18 +514,26 @@ class LeftPanel extends Component {
                   </option>
                 );
               })}
+            <option key="" value="">
+              Select
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect44">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Sub-topic
           </Form.Label>
           <Form.Control
-            style={{ borderRadius: "0" }}
+            // style={{ borderRadius: "0" }}
+            style={
+              currentvaluesubtopic !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
             size="sm"
             as="select"
             value={currentvaluesubtopic}
@@ -517,12 +547,15 @@ class LeftPanel extends Component {
                   </option>
                 );
               })}
+            <option key="" value="">
+              Select
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlInput11">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Tags
@@ -539,7 +572,7 @@ class LeftPanel extends Component {
         <Form.Group controlId="exampleForm.ControlTextarea11">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Difficulty
@@ -558,20 +591,20 @@ class LeftPanel extends Component {
 function QuestionComp({
   myRefQuestionHindi,
   questiondata,
-  handlequestioncontentchange
+  handlequestioncontentchange,
 }) {
   return (
     <Form.Group controlId="exampleForm.EControlInput33">
       <Form.Label
         style={{
-          fontWeight: "600"
+          fontWeight: "600",
         }}
       >
         Question
       </Form.Label>
       <div
         style={{
-          margin: "0.5em 0"
+          margin: "0.5em 0",
         }}
       >
         <select
@@ -595,14 +628,14 @@ function QuestionComp({
         </select>
         <CKEditor
           ref={myRefQuestionHindi}
-          onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+          onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
           config={{
-            height: 100
+            height: 100,
           }}
-          onFocus={event => {
+          onFocus={(event) => {
             window.hook(event.editor.document.$.body);
           }}
-          oninstanceReady={event => {
+          oninstanceReady={(event) => {
             var a = document.getElementById("txtLanguage");
             a.selectedIndex = 1;
             window.setLang();
@@ -611,7 +644,7 @@ function QuestionComp({
             window.changeKB();
           }}
           data={questiondata}
-          onChange={event => {
+          onChange={(event) => {
             handlequestioncontentchange(event.editor.getData());
           }}
         />
@@ -623,33 +656,33 @@ function QuestionComp({
 function ExplanationComp({
   myRefExplanationHindi,
   explanationdata,
-  handleexplanationcontentchange
+  handleexplanationcontentchange,
 }) {
   return (
     <Form.Group controlId="exampleForm.EControlInput11">
       <Form.Label
         style={{
-          fontWeight: "600"
+          fontWeight: "600",
         }}
       >
         Explanation
       </Form.Label>
       <div
         style={{
-          margin: "0.5em 0"
+          margin: "0.5em 0",
         }}
       >
         <CKEditor
           ref={myRefExplanationHindi}
-          onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+          onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
           config={{
-            height: 100
+            height: 100,
           }}
-          onFocus={event => {
+          onFocus={(event) => {
             window.hook(event.editor.document.$.body);
           }}
           data={explanationdata}
-          onChange={event => {
+          onChange={(event) => {
             handleexplanationcontentchange(event.editor.getData());
           }}
         />

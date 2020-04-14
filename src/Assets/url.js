@@ -1,5 +1,5 @@
-let Base_url = "../cd";
-// let Base_url="http://api.frogbit.co/cd"
+// let Base_url = "../cd";
+let Base_url = "http://api.frogbit.co/cd";
 let URL = {
   fetchSubject: Base_url + "/api/subjects/",
   fetchChapter: Base_url + "/api/subject/sections/",
@@ -17,6 +17,8 @@ let URL = {
     Base_url + "/api/update/existing/question/version",
   getexamcontent: Base_url + "/api/test/content/",
   updatetest: Base_url + "/api/update/test",
-  tagsearch: Base_url + "/api/tag/search/"
+  tagsearch: Base_url + "/api/tag/search/",
+  authorlist: Base_url + "/api/authors",
+  userlist:Base_url+'/api/users'
 };
 export default URL;

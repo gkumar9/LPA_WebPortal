@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <base href="%PUBLIC_URL%/" />
-    <meta charset="utf-8" />
+    <meta charset="utf-16" />
     <link rel="icon" href="%PUBLIC_URL%/m_logo_uQv_icon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
@@ -17,7 +17,10 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
-    <link href="https://fonts.googleapis.com/css?family=Hind&display=swap&subset=devanagari,latin-ext" rel="stylesheet">
+    <!-- <link
+      href="https://fonts.googleapis.com/css?family=Hind&display=swap&subset=devanagari,latin-ext"
+      rel="stylesheet"
+    /> -->
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
@@ -40,51 +43,12 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <script>
-      // CKEDITOR.config.removePlugins = "image";
-      // CKEDITOR.config.customConfig = "";
-
-      // CKEDITOR.config.toolbarGroups = [
-      //   // Here name has no effect but groups has
-      //   { name: "pramukhime", groups: ["pramukhime"] },
-      //   { name: "document", groups: ["mode", "document", "doctools"] },
-      //   { name: "clipboard", groups: ["clipboard", "undo"] },
-      //   {
-      //     name: "editing",
-      //     groups: ["find", "selection", "spellchecker", "editing"]
-      //   },
-      //   { name: "forms", groups: ["forms"] },
-      //   "/",
-      //   { name: "basicstyles", groups: ["basicstyles", "cleanup"] },
-      //   {
-      //     name: "paragraph",
-      //     groups: ["list", "indent", "blocks", "align", "bidi", "paragraph"]
-      //   },
-      //   { name: "links", groups: ["links"] },
-      //   { name: "insert", groups: ["insert"] },
-      //   "/",
-      //   { name: "styles", groups: ["styles"] },
-      //   { name: "colors", groups: ["colors"] },
-      //   { name: "tools", groups: ["tools"] },
-      //   { name: "others", groups: ["others"] },
-      //   { name: "about", groups: ["about"] }
-      // ];
-      CKEDITOR.config.extraPlugins = "imgur,indentlist,indentblock,pastefromgdocs,pastefromword";
-      // CKEDITOR.config.pramukhime_options = {
-      //   selected_value: "pramukhindic:sanskrit"
-      // };
+      CKEDITOR.config.extraPlugins =
+        "imgur,indentlist,indentblock,pastefromgdocs,pastefromword,basicstyles";
       CKEDITOR.config.imgurClientId = "6dd38a6bb34bf35";
       CKEDITOR.config.allowedContent = true;
     </script>
-    <script>
-      //Grab ckeditor onfocus event and hook websamhita
-
-      //Grab ckeditor onfocus event and hook websamhita
-
-      // editor.on("instanceReady", function() {
-      //   console.log("Ready1111");
-      // });
-      // document.addEventListener("DOMContentLoaded", function() {});
-    </script>
+    <script></script>
     <script
       src="//instant.page/1.2.2"
       type="module"

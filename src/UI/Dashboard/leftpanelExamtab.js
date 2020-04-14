@@ -1,26 +1,35 @@
 import React, { Component } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
-// import Difficulty from '../Ques/difficulty'
-// import TagsInput from "react-tagsinput";
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 class LeftPanelExamtab extends Component {
   render() {
     let currentvalueexam = this.props.listOfExam.filter(
-      item => item.exam.examId === this.props.selectedExamID
+      (item) => item.exam.examId === this.props.selectedExamID
     )[0];
     currentvalueexam = currentvalueexam ? currentvalueexam.name : "";
     let currentvaluesubject = this.props.listOfSubject.filter(
-      item => item.subject.subjectId === this.props.selectedSubjectID
+      (item) => item.subject.subjectId === this.props.selectedSubjectID
     )[0];
     currentvaluesubject = currentvaluesubject
       ? currentvaluesubject.subjectName
       : "";
     let currentvaluechapter = this.props.listOfChapter.filter(
-      item => item.subjectSection.sectionId === this.props.selectedChapterID
+      (item) => item.subjectSection.sectionId === this.props.selectedChapterID
     )[0];
     currentvaluechapter = currentvaluechapter
       ? currentvaluechapter.sectionName
       : "";
+    let currentvalueauthor = this.props.authorList.filter(
+      (item) => item.authorId === this.props.authorId
+    )[0];
+    currentvalueauthor = currentvalueauthor
+      ? currentvalueauthor.authorName
+      : "";
+    let currentvalueuser = this.props.userList.filter(
+      (item) => item.userId === this.props.userId
+    )[0];
+    currentvalueuser = currentvalueuser ? currentvalueuser.name : "";
 
     // let currentvaluetopic = this.props.listOfTopic.filter(
     //   item => item.subjectTopic.topicId === this.props.selectedTopicID
@@ -38,7 +47,7 @@ class LeftPanelExamtab extends Component {
         <Form.Group controlId="exampleForm.ControlSelect000">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Language
@@ -61,10 +70,91 @@ class LeftPanelExamtab extends Component {
               })}
           </Form.Control>
         </Form.Group>
+        <Form.Group controlId="exampleForm.ControlSelectauthor">
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Authors
+          </Form.Label>
+          <Form.Control
+            style={
+              currentvalueauthor !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+            size="sm"
+            as="select"
+            // defaultValue=""
+            onChange={this.props.handleAuthorChange}
+            value={currentvalueauthor}
+          >
+            {this.props.authorList &&
+              this.props.authorList.map((item, index) => {
+                return (
+                  <option key={index} value={item.authorName}>
+                    {item.authorName}
+                  </option>
+                );
+              })}
+            <option key="" value="">
+              Select all
+            </option>
+          </Form.Control>
+        </Form.Group>
+        <Form.Group controlId="exampleForm.ControlSelectauthor">
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Users
+          </Form.Label>
+          <Form.Control
+            style={
+              currentvalueuser !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+            size="sm"
+            as="select"
+            // defaultValue=""
+            onChange={this.props.handleUserChange}
+            value={currentvalueuser}
+          >
+            {this.props.userList &&
+              this.props.userList.map((item, index) => {
+                return (
+                  <option key={index} value={item.name}>
+                    {item.name}
+                  </option>
+                );
+              })}
+            <option key="" value="">
+              Select all
+            </option>
+          </Form.Control>
+        </Form.Group>
+        <Form.Group controlId="exampleForm.ControlSelect22221">
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Date
+          </Form.Label>
+          <DatePicker
+            selected={this.props.date}
+            onChange={this.props.handleDateChange}
+            dateFormat="dd/MM/yyyy"
+          />
+        </Form.Group>
+
         <Form.Group controlId="exampleForm.ControlSelect1111">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Exam
@@ -97,7 +187,7 @@ class LeftPanelExamtab extends Component {
         <Form.Group controlId="exampleForm.ControlSelect111">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Subject
@@ -130,7 +220,7 @@ class LeftPanelExamtab extends Component {
         <Form.Group controlId="exampleForm.ControlSelect222">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Chapter
@@ -162,7 +252,7 @@ class LeftPanelExamtab extends Component {
         <Form.Group controlId="exampleForm.ControlSelect2222">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Type
@@ -230,7 +320,7 @@ class LeftPanelExamtab extends Component {
                   color: "#615f5f",
                   borderRadius: "0",
                   background: "transparent",
-                  borderColor: "#b7b7b7"
+                  borderColor: "#b7b7b7",
                 }}
               >
                 Clear Search
@@ -245,7 +335,7 @@ class LeftPanelExamtab extends Component {
                   borderRadius: "0",
                   background: "rgb(106, 163, 255)",
                   borderColor: "transparent",
-                  float: "right"
+                  float: "right",
                   // marginRight: "0.5em"
                 }}
               >

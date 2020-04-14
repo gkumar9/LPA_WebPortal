@@ -12,7 +12,7 @@ const style = {
   borderRadius: "2em",
   color: "black",
   padding: " 0.3em 2em",
-  letterSpacing: "0.2em"
+  letterSpacing: "0.2em",
 };
 class Ques extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ class Ques extends Component {
       difficulty: "+",
       tags: [],
       suggestions: [],
-      apisugges: []
+      apisugges: [],
     };
   }
 
@@ -52,35 +52,37 @@ class Ques extends Component {
       this.setState({ activetab: "english" });
     }
   };
-  handleChange = data => {
+
+  handleChange = (data) => {
     if (data && this.state.questionId === 0) {
       this.setState({ questionId: data });
     } else if (data) {
       this.setState({ questionId: 0 });
     }
   };
+
   handlereset = () => {
     this.setState({ questionId: 0 });
     this.handleSelect();
   };
-  onDelete = i => {
+  onDelete = (i) => {
     // e.preventDefault()
     const tags = this.state.tags.slice(0);
     tags.splice(i, 1);
     this.setState({ tags });
   };
-  onAddition = tag => {
+  onAddition = (tag) => {
     // e.preventDefault()
     const tags = [].concat(this.state.tags, tag);
     let suggestions = this.state.apisugges;
     // let tempapisugges = this.state.apisugges;
     this.setState({ tags, suggestions });
   };
-  handleDifficultyRadio = e => {
+  handleDifficultyRadio = (e) => {
     e.preventDefault();
     this.setState({ difficulty: e.target.value });
   };
-  handleChangeTags = tags => {
+  handleChangeTags = (tags) => {
     // console.log(tags);
     let tempsugg = this.state.suggestions;
     let tempapisugges = this.state.apisugges;
@@ -94,18 +96,18 @@ class Ques extends Component {
           url: URL.tagsearch + tags,
           data: { authToken: "string" },
           headers: {
-            "Content-Type": "application/json"
-          }
-        }).then(res => {
+            "Content-Type": "application/json",
+          },
+        }).then((res) => {
           if (res.status === 200) {
             if (res.data.data.list.length > 0) {
-              let temp = res.data.data.list.map(item => {
+              let temp = res.data.data.list.map((item) => {
                 return { id: item.tagId, name: item.tag };
               });
               tempsugg = temp;
               tempsugg = tempsugg.concat(tempapisugges);
               // eslint-disable-next-line array-callback-return
-              tempsugg = tempsugg.filter(function(a) {
+              tempsugg = tempsugg.filter(function (a) {
                 var key = a.id + "|" + a.name;
                 if (!this[key]) {
                   this[key] = true;
@@ -114,7 +116,7 @@ class Ques extends Component {
               }, Object.create(null));
               tempapisugges = tempapisugges.concat(temp);
               // eslint-disable-next-line array-callback-return
-              let result = tempapisugges.filter(function(a) {
+              let result = tempapisugges.filter(function (a) {
                 var key = a.id + "|" + a.name;
                 if (!this[key]) {
                   this[key] = true;
@@ -140,21 +142,23 @@ class Ques extends Component {
       url: URL.fetchSubject + "ENGLISH",
       data: { authToken: "string" },
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           this.setState(
             {
               listOfSubjectEnglish: res.data.data.list,
               selectedSubjectID: localStorage.getItem("addquesSubjectID")
                 ? parseInt(localStorage.getItem("addquesSubjectID"))
-                : res.data.data.list.length > 0
-                ? res.data.data.list[0].subject.subjectId
-                : 0
+                : // : res.data.data.list.length > 0
+                  // ? res.data.data.list[0].subject.subjectId
+                  0,
             },
             () => {
+              // localStorage.setItem("addquesSubjectID", "0");
+
               this.callApiForChapter();
             }
           );
@@ -162,7 +166,7 @@ class Ques extends Component {
           alert("Unexpected code");
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
         // swal( e, "error");
       });
@@ -172,15 +176,15 @@ class Ques extends Component {
       url: URL.fetchSubject + "HINDI",
       data: { authToken: "string" },
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         // console.log(res.data.data);
         if (res.status === 200) {
           this.setState(
             {
-              listOfSubjectHindi: res.data.data.list
+              listOfSubjectHindi: res.data.data.list,
               // selectedSubjectID:
               //   res.data.data.list.length > 0
               //     ? res.data.data.list[0].subject.subjectId
@@ -194,30 +198,31 @@ class Ques extends Component {
           alert("Unexpected code");
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
       });
   }
   callApiForChapter = () => {
-    if (this.state.selectedSubjectID !== "") {
+    if (this.state.selectedSubjectID !== 0) {
       axios({
         method: "POST",
         url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH",
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             this.setState(
               {
                 listOfChapterEnglish: res.data.data.list,
+
                 selectedChapterID: localStorage.getItem("addquesChapterID")
                   ? parseInt(localStorage.getItem("addquesChapterID"))
-                  : res.data.data.list.length > 0
-                  ? res.data.data.list[0].subjectSection.sectionId
-                  : 0
+                  : // : res.data.data.list.length > 0
+                    // ? res.data.data.list[0].subjectSection.sectionId
+                    0,
               },
               () => {
                 this.callApiForChapterHindi();
@@ -228,13 +233,17 @@ class Ques extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     } else {
       // console.log(
       //   "(English)subjectid is blank. API not called. checksubject list"
       // );
+      // localStorage.setItem("addquesSubjectID", "0");
+      localStorage.setItem("addquesChapterID", "0");
+      localStorage.setItem("addquesTopicID", "0");
+      localStorage.setItem("addquesSubTopicID", "0");
       this.setState({
         listOfChapterEnglish: [],
         selectedChapterID: 0,
@@ -246,7 +255,7 @@ class Ques extends Component {
         // selectedChapterID: 0,
         listOfTopicHindi: [],
         // selectedTopicID: 0,
-        listOfSubTopicHindi: []
+        listOfSubTopicHindi: [],
       });
     }
   };
@@ -257,14 +266,14 @@ class Ques extends Component {
         url: URL.fetchChapter + this.state.selectedSubjectID + "/HINDI",
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             this.setState(
               {
-                listOfChapterHindi: res.data.data.list
+                listOfChapterHindi: res.data.data.list,
                 // selectedChapterID:
                 //   res.data.data.list.length > 0
                 //     ? res.data.data.list[0].subjectSection.sectionId
@@ -278,44 +287,48 @@ class Ques extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     } else {
       // console.log(
       //   "(Hindi)subjectid is blank. API not called. checksubject list"
       // );
+      localStorage.setItem("addquesChapterID", "0");
+      localStorage.setItem("addquesTopicID", "0");
+      localStorage.setItem("addquesSubTopicID", "0");
       this.setState({
         listOfChapterHindi: [],
         selectedChapterID: 0,
         listOfTopicHindi: [],
         selectedTopicID: 0,
         listOfSubTopicHindi: [],
-        selectedSubTopicID: 0
+        selectedSubTopicID: 0,
       });
     }
   };
   callApiForTopic = () => {
-    if (this.state.selectedChapterID !== "") {
+    if (this.state.selectedChapterID !== 0) {
       axios({
         method: "POST",
         url: URL.fetchTopic + this.state.selectedChapterID + "/ENGLISH",
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           // console.log(res.data.data);
           if (res.status === 200) {
             this.setState(
               {
                 listOfTopicEnglish: res.data.data.list,
+
                 selectedTopicID: localStorage.getItem("addquesTopicID")
                   ? parseInt(localStorage.getItem("addquesTopicID"))
-                  : res.data.data.list.length > 0
-                  ? res.data.data.list[0].subjectTopic.topicId
-                  : 0
+                  : // : res.data.data.list.length > 0
+                    // ? res.data.data.list[0].subjectTopic.topicId
+                    0,
               },
               () => {
                 this.callApiForTopicHindi();
@@ -326,13 +339,16 @@ class Ques extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     } else {
       // console.log(
       //   "(English)chapterid is blank.API not called. checkchapter list"
       // );
+      // localStorage.setItem("addquesChapterID", "0");
+      localStorage.setItem("addquesTopicID", "0");
+      localStorage.setItem("addquesSubTopicID", "0");
       this.setState({
         listOfTopicEnglish: [],
         selectedTopicID: 0,
@@ -340,7 +356,7 @@ class Ques extends Component {
         // selectedSubTopicID: 0,
         listOfTopicHindi: [],
         // selectedTopicID: 0,
-        listOfSubTopicHindi: []
+        listOfSubTopicHindi: [],
       });
     }
   };
@@ -351,15 +367,15 @@ class Ques extends Component {
         url: URL.fetchTopic + this.state.selectedChapterID + "/HINDI",
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           // console.log(res.data.data);
           if (res.status === 200) {
             this.setState(
               {
-                listOfTopicHindi: res.data.data.list
+                listOfTopicHindi: res.data.data.list,
                 // selectedTopicID:
                 //   res.data.data.list.length > 0
                 //     ? res.data.data.list[0].subjectTopic.topicId
@@ -373,18 +389,20 @@ class Ques extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     } else {
       // console.log(
       //   "(Hindi)chapterid is blank.API not called. checkchapter list"
       // );
+      localStorage.setItem("addquesTopicID", "0");
+      localStorage.setItem("addquesSubTopicID", "0");
       this.setState({
         listOfTopicHindi: [],
         selectedTopicID: 0,
         listOfSubTopicHindi: [],
-        selectedSubTopicID: 0
+        selectedSubTopicID: 0,
         // listOfSubTopicHindi: [],
       });
     }
@@ -396,20 +414,21 @@ class Ques extends Component {
         url: URL.fetchSubTopic + this.state.selectedTopicID + "/ENGLISH",
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           // console.log(res.data.data);
           if (res.status === 200) {
             this.setState(
               {
                 listOfSubTopicEnglish: res.data.data.list,
+
                 selectedSubTopicID: localStorage.getItem("addquesSubTopicID")
                   ? parseInt(localStorage.getItem("addquesSubTopicID"))
-                  : res.data.data.list.length > 0
-                  ? res.data.data.list[0].subjectSubtopic.subtopicId
-                  : 0
+                  : // : res.data.data.list.length > 0
+                    // ? res.data.data.list[0].subjectSubtopic.subtopicId
+                    0,
               },
               () => {
                 this.callApiForSubTopicHindi();
@@ -419,15 +438,17 @@ class Ques extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     } else {
       // console.log("(English)topicid is blank.API not called. checktopic list");
+      // localStorage.setItem("addquesTopicID", "0");
+      localStorage.setItem("addquesSubTopicID", "0");
       this.setState({
         listOfSubTopicEnglish: [],
         listOfSubTopicHindi: [],
-        selectedSubTopicID: 0
+        selectedSubTopicID: 0,
       });
     }
   };
@@ -438,14 +459,14 @@ class Ques extends Component {
         url: URL.fetchSubTopic + this.state.selectedTopicID + "/HINDI",
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           // console.log(res.data.data);
           if (res.status === 200) {
             this.setState({
-              listOfSubTopicHindi: res.data.data.list
+              listOfSubTopicHindi: res.data.data.list,
               // selectedSubTopicID:
               //   res.data.data.list.length > 0
               //     ? res.data.data.list[0].subjectSubtopic.subtopicId
@@ -455,7 +476,7 @@ class Ques extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     } else {
@@ -463,166 +484,211 @@ class Ques extends Component {
       this.setState({ listOfSubTopicHindi: [], selectedSubTopicID: 0 });
     }
   };
-  handleSubjectChange = e => {
-    if (
-      e.target.value.split("").filter(function(char) {
-        var charCode = char.charCodeAt();
-        return charCode >= 2309 && charCode <= 2361;
-      }).length > 0
-    ) {
+  handleSubjectChange = (e) => {
+    console.log(e.target.value);
+    if (e.target.value === "") {
+      localStorage.setItem("addquesSubjectID", "0");
       this.setState(
         {
-          selectedSubjectID: this.state.listOfSubjectHindi[
-            e.target.options.selectedIndex
-          ].subject.subjectId
+          selectedSubjectID: 0,
         },
         () => {
           this.callApiForChapter();
         }
-      );
-      localStorage.setItem(
-        "addquesSubjectID",
-        this.state.listOfSubjectHindi[e.target.options.selectedIndex].subject
-          .subjectId
       );
     } else {
-      this.setState(
-        {
-          selectedSubjectID: this.state.listOfSubjectEnglish[
-            e.target.options.selectedIndex
-          ].subject.subjectId
-        },
-        () => {
-          this.callApiForChapter();
-        }
-      );
-      localStorage.setItem(
-        "addquesSubjectID",
-        this.state.listOfSubjectEnglish[e.target.options.selectedIndex].subject
-          .subjectId
-      );
+      if (
+        e.target.value.split("").filter(function (char) {
+          var charCode = char.charCodeAt();
+          return charCode >= 2309 && charCode <= 2361;
+        }).length > 0
+      ) {
+        this.setState(
+          {
+            selectedSubjectID: this.state.listOfSubjectHindi[
+              e.target.options.selectedIndex
+            ].subject.subjectId,
+          },
+          () => {
+            this.callApiForChapter();
+          }
+        );
+        localStorage.setItem(
+          "addquesSubjectID",
+          this.state.listOfSubjectHindi[e.target.options.selectedIndex].subject
+            .subjectId
+        );
+      } else {
+        this.setState(
+          {
+            selectedSubjectID: this.state.listOfSubjectEnglish[
+              e.target.options.selectedIndex
+            ].subject.subjectId,
+          },
+          () => {
+            this.callApiForChapter();
+          }
+        );
+        localStorage.setItem(
+          "addquesSubjectID",
+          this.state.listOfSubjectEnglish[e.target.options.selectedIndex]
+            .subject.subjectId
+        );
+      }
     }
   };
-  handleChapterChange = e => {
-    e.preventDefault();
+  handleChapterChange = (e) => {
+    // e.preventDefault();
     // console.log( e.target.value)
-    if (
-      e.target.value.split("").filter(function(char) {
-        var charCode = char.charCodeAt();
-        return charCode >= 2309 && charCode <= 2361;
-      }).length > 0
-    ) {
-      // console.log('hindi')
+    if (e.target.value === "") {
+      localStorage.setItem("addquesChapterID", "0");
       this.setState(
         {
-          selectedChapterID: this.state.listOfChapterHindi[
-            e.target.options.selectedIndex
-          ].subjectSection.sectionId
+          selectedChapterID: 0,
         },
         () => {
           this.callApiForTopic();
         }
       );
-      localStorage.setItem(
-        "addquesChapterID",
-        this.state.listOfChapterHindi[e.target.options.selectedIndex]
-          .subjectSection.sectionId
-      );
     } else {
-      // console.log('english')
-      this.setState(
-        {
-          selectedChapterID: this.state.listOfChapterEnglish[
-            e.target.options.selectedIndex
-          ].subjectSection.sectionId
-        },
-        () => {
-          this.callApiForTopic();
-        }
-      );
-      localStorage.setItem(
-        "addquesChapterID",
-        this.state.listOfChapterEnglish[e.target.options.selectedIndex]
-          .subjectSection.sectionId
-      );
+      if (
+        e.target.value.split("").filter(function (char) {
+          var charCode = char.charCodeAt();
+          return charCode >= 2309 && charCode <= 2361;
+        }).length > 0
+      ) {
+        // console.log('hindi')
+        this.setState(
+          {
+            selectedChapterID: this.state.listOfChapterHindi[
+              e.target.options.selectedIndex
+            ].subjectSection.sectionId,
+          },
+          () => {
+            this.callApiForTopic();
+          }
+        );
+        localStorage.setItem(
+          "addquesChapterID",
+          this.state.listOfChapterHindi[e.target.options.selectedIndex]
+            .subjectSection.sectionId
+        );
+      } else {
+        // console.log('english')
+        this.setState(
+          {
+            selectedChapterID: this.state.listOfChapterEnglish[
+              e.target.options.selectedIndex
+            ].subjectSection.sectionId,
+          },
+          () => {
+            this.callApiForTopic();
+          }
+        );
+        localStorage.setItem(
+          "addquesChapterID",
+          this.state.listOfChapterEnglish[e.target.options.selectedIndex]
+            .subjectSection.sectionId
+        );
+      }
     }
   };
-  handleTopicChange = e => {
-    e.preventDefault();
-    if (
-      e.target.value.split("").filter(function(char) {
-        var charCode = char.charCodeAt();
-        return charCode >= 2309 && charCode <= 2361;
-      }).length > 0
-    ) {
+  handleTopicChange = (e) => {
+    // e.preventDefault();
+
+    if (e.target.value === "") {
+      localStorage.setItem("addquesTopicID", "0");
       this.setState(
         {
-          selectedTopicID: this.state.listOfTopicHindi[
-            e.target.options.selectedIndex
-          ].subjectTopic.topicId
+          selectedTopicID: 0,
         },
         () => {
           this.callApiForSubTopic();
         }
       );
-      localStorage.setItem(
-        "addquesTopicID",
-        this.state.listOfTopicHindi[e.target.options.selectedIndex].subjectTopic
-          .topicId
-      );
     } else {
-      this.setState(
-        {
-          selectedTopicID: this.state.listOfTopicEnglish[
-            e.target.options.selectedIndex
-          ].subjectTopic.topicId
-        },
-        () => {
-          this.callApiForSubTopic();
-        }
-      );
-      localStorage.setItem(
-        "addquesTopicID",
-        this.state.listOfTopicEnglish[e.target.options.selectedIndex]
-          .subjectTopic.topicId
-      );
+      if (
+        e.target.value.split("").filter(function (char) {
+          var charCode = char.charCodeAt();
+          return charCode >= 2309 && charCode <= 2361;
+        }).length > 0
+      ) {
+        this.setState(
+          {
+            selectedTopicID: this.state.listOfTopicHindi[
+              e.target.options.selectedIndex
+            ].subjectTopic.topicId,
+          },
+          () => {
+            this.callApiForSubTopic();
+          }
+        );
+        localStorage.setItem(
+          "addquesTopicID",
+          this.state.listOfTopicHindi[e.target.options.selectedIndex]
+            .subjectTopic.topicId
+        );
+      } else {
+        this.setState(
+          {
+            selectedTopicID: this.state.listOfTopicEnglish[
+              e.target.options.selectedIndex
+            ].subjectTopic.topicId,
+          },
+          () => {
+            this.callApiForSubTopic();
+          }
+        );
+        localStorage.setItem(
+          "addquesTopicID",
+          this.state.listOfTopicEnglish[e.target.options.selectedIndex]
+            .subjectTopic.topicId
+        );
+      }
     }
   };
-  handleSubTopicChange = e => {
-    e.preventDefault();
-    if (
-      e.target.value.split("").filter(function(char) {
-        var charCode = char.charCodeAt();
-        return charCode >= 2309 && charCode <= 2361;
-      }).length > 0
-    ) {
-      this.setState(
-        {
-          selectedSubTopicID: this.state.listOfSubTopicHindi[
-            e.target.options.selectedIndex
-          ].subjectSubtopic.subtopicId
-        },
-        () => {}
-      );
-      localStorage.setItem(
-        "addquesSubTopicID",
-        this.state.listOfSubTopicHindi[e.target.options.selectedIndex]
-          .subjectSubtopic.subtopicId
-      );
+  handleSubTopicChange = (e) => {
+    // e.preventDefault();
+    if (e.target.value === "") {
+      localStorage.setItem("addquesSubTopicID", "0");
+      this.setState({
+        selectedSubTopicID: 0,
+      });
     } else {
-      this.setState(
-        {
-          selectedSubTopicID: this.state.listOfSubTopicEnglish[
-            e.target.options.selectedIndex
-          ].subjectSubtopic.subtopicId
-        },
-        () => {}
-      );
-      localStorage.setItem(
-        "addquesSubTopicID",
-        this.state.listOfSubTopicEnglish[e.target.options.selectedIndex]
-          .subjectSubtopic.subtopicId
-      );
+      if (
+        e.target.value.split("").filter(function (char) {
+          var charCode = char.charCodeAt();
+          return charCode >= 2309 && charCode <= 2361;
+        }).length > 0
+      ) {
+        this.setState(
+          {
+            selectedSubTopicID: this.state.listOfSubTopicHindi[
+              e.target.options.selectedIndex
+            ].subjectSubtopic.subtopicId,
+          },
+          () => {}
+        );
+        localStorage.setItem(
+          "addquesSubTopicID",
+          this.state.listOfSubTopicHindi[e.target.options.selectedIndex]
+            .subjectSubtopic.subtopicId
+        );
+      } else {
+        this.setState(
+          {
+            selectedSubTopicID: this.state.listOfSubTopicEnglish[
+              e.target.options.selectedIndex
+            ].subjectSubtopic.subtopicId,
+          },
+          () => {}
+        );
+        localStorage.setItem(
+          "addquesSubTopicID",
+          this.state.listOfSubTopicEnglish[e.target.options.selectedIndex]
+            .subjectSubtopic.subtopicId
+        );
+      }
     }
   };
   render() {
@@ -632,7 +698,7 @@ class Ques extends Component {
         <Container fluid style={{ width: "auto", background: "#EEEEEE" }}>
           <Tab.Container
             activeKey={this.state.activetab}
-            onSelect={key => this.handleSelect(key)}
+            onSelect={(key) => this.handleSelect(key)}
           >
             <Row
               style={{
@@ -640,7 +706,7 @@ class Ques extends Component {
                 borderBottom: "1px solid #cac2c2",
                 boxShadow: "-1px 3px 4px -5px rgba(0, 0, 0, 0.75)",
                 zIndex: "99",
-                position: "relative"
+                position: "relative",
               }}
             >
               {/* <Col lg="3"></Col> */}
@@ -648,7 +714,7 @@ class Ques extends Component {
                 lg="1.5"
                 // className="customtabcolor"
                 style={{
-                  margin: "0px 0em 0em 3em"
+                  margin: "0px 0em 0em 3em",
                 }}
               >
                 <Nav.Link
@@ -659,7 +725,7 @@ class Ques extends Component {
                       : {
                           color: "dimgrey",
                           letterSpacing: "0.2em",
-                          padding: " 0.3em 2em"
+                          padding: " 0.3em 2em",
                         }
                   }
                 >
@@ -669,7 +735,7 @@ class Ques extends Component {
               <Col
                 lg="1.5"
                 style={{
-                  padding: "0 "
+                  padding: "0 ",
                 }}
               >
                 <Nav.Link
@@ -680,7 +746,7 @@ class Ques extends Component {
                       : {
                           color: "dimgrey",
                           letterSpacing: "0.2em",
-                          padding: " 0.3em 2em"
+                          padding: " 0.3em 2em",
                         }
                   }
                 >
@@ -699,7 +765,7 @@ class Ques extends Component {
                       borderColor: "#dad8d8",
                       borderRadius: "0",
                       marginRight: "3em",
-                      color: " #676767"
+                      color: " #676767",
                     }}
                   >
                     {" "}

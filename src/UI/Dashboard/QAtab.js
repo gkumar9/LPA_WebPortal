@@ -6,7 +6,7 @@ import {
   Form,
   Card,
   OverlayTrigger,
-  Tooltip
+  Tooltip,
 } from "react-bootstrap";
 import Edit from "@material-ui/icons/Edit";
 import { Link } from "react-router-dom";
@@ -51,6 +51,12 @@ class QAtab extends Component {
       searchbox: localStorage.getItem("selectedsearchboxQA")
         ? parseInt(localStorage.getItem("selectedsearchboxQA"))
         : "",
+      authorId: localStorage.getItem("selectedAuthorIDQA")
+        ? parseInt(localStorage.getItem("selectedAuthorIDQA"))
+        : 0,
+      userId: localStorage.getItem("selectedUserIDQA")
+        ? localStorage.getItem("selectedUserIDQA")
+        : null,
       searchResultList: [],
       listOfselectedPreview: [],
       isLoading: false,
@@ -62,17 +68,30 @@ class QAtab extends Component {
         ? JSON.parse(localStorage.getItem("selectedTagsQA"))
         : [],
       apisugges: [],
-      suggestions: []
+      suggestions: [],
+      date: localStorage.getItem("selectedDateQA")
+        ? new Date(localStorage.getItem("selectedDateQA"))
+        : null,
     };
   }
-  onDelete = i => {
+  handleDateChange = (date) => {
+    this.setState(
+      {
+        date: date,
+      },
+      () => {
+        localStorage.setItem("selectedDateQA", date);
+      }
+    );
+  };
+  onDelete = (i) => {
     // e.preventDefault()
     const tags = this.state.tags.slice(0);
     tags.splice(i, 1);
     localStorage.setItem("selectedTagsQA", JSON.stringify(tags));
     this.setState({ tags });
   };
-  onAddition = tag => {
+  onAddition = (tag) => {
     // e.preventDefault()
     const tags = [].concat(this.state.tags, tag);
     let suggestions = this.state.apisugges;
@@ -80,7 +99,7 @@ class QAtab extends Component {
     localStorage.setItem("selectedTagsQA", JSON.stringify(tags));
     this.setState({ tags, suggestions });
   };
-  handleChangeTags = tags => {
+  handleChangeTags = (tags) => {
     // console.log(tags);
     let tempsugg = this.state.suggestions;
     let tempapisugges = this.state.apisugges;
@@ -94,18 +113,18 @@ class QAtab extends Component {
         url: URL.tagsearch + tags,
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(res => {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => {
         if (res.status === 200) {
           if (res.data.data.list.length > 0) {
-            let temp = res.data.data.list.map(item => {
+            let temp = res.data.data.list.map((item) => {
               return { id: item.tagId, name: item.tag };
             });
             tempsugg = temp;
             tempsugg = tempsugg.concat(tempapisugges);
             // eslint-disable-next-line array-callback-return
-            tempsugg = tempsugg.filter(function(a) {
+            tempsugg = tempsugg.filter(function (a) {
               var key = a.id + "|" + a.name;
               if (!this[key]) {
                 this[key] = true;
@@ -114,7 +133,7 @@ class QAtab extends Component {
             }, Object.create(null));
             tempapisugges = tempapisugges.concat(temp);
             // eslint-disable-next-line array-callback-return
-            let result = tempapisugges.filter(function(a) {
+            let result = tempapisugges.filter(function (a) {
               var key = a.id + "|" + a.name;
               if (!this[key]) {
                 this[key] = true;
@@ -136,22 +155,22 @@ class QAtab extends Component {
   };
   handleAddToBucket = () => {
     let tempsearchlistselected = this.state.listOfsearchselected.filter(
-      item => item.status === true
+      (item) => item.status === true
     );
-    tempsearchlistselected.map(item => {
+    tempsearchlistselected.map((item) => {
       console.log(item.id);
 
       return this.onAddpreviewdata(item.id);
     });
     this.setState({
-      searchSelectAll: false
+      searchSelectAll: false,
     });
   };
-  handleSelectAllCheck = e => {
+  handleSelectAllCheck = (e) => {
     if (e.target.checked) {
-      let tempsearchlist = this.state.listOfsearchselected.map(item => {
+      let tempsearchlist = this.state.listOfsearchselected.map((item) => {
         let temp = this.state.listOfselectedPreview.filter(
-          obj => obj.questionId === item.id
+          (obj) => obj.questionId === item.id
         );
         let objj =
           temp.length > 0
@@ -161,16 +180,16 @@ class QAtab extends Component {
       });
       this.setState({
         searchSelectAll: e.target.checked,
-        listOfsearchselected: tempsearchlist
+        listOfsearchselected: tempsearchlist,
       });
     } else {
-      let tempsearchlist = this.state.listOfsearchselected.map(item => {
+      let tempsearchlist = this.state.listOfsearchselected.map((item) => {
         item.status = false;
         return item;
       });
       this.setState({
         searchSelectAll: e.target.checked,
-        listOfsearchselected: tempsearchlist
+        listOfsearchselected: tempsearchlist,
       });
     }
   };
@@ -184,31 +203,31 @@ class QAtab extends Component {
     } else if (bandA < bandB) {
       comparison = -1;
     }
-    return comparison * -1;
+    return comparison;
   };
   OnPreviewClick = () => {
     let temp = this.state.listOfselectedPreview.sort(this.compare);
-    console.log(temp);
+    // console.log(temp);
     localStorage.setItem("Previewdata", JSON.stringify(temp));
     localStorage.setItem("previewLanguage", this.state.selectedLanguage);
 
     this.props.history.push({
       pathname: "/quespreview",
       state: {
-        data: this.state.listOfselectedPreview
-      }
+        data: this.state.listOfselectedPreview,
+      },
     });
   };
-  onAddpreviewdata = async id => {
+  onAddpreviewdata = async (id) => {
     // this.setState({ isLoading: false }, () => {
     let filterchecktemp = this.state.listOfselectedPreview.filter(
-      item => item.questionId === id
+      (item) => item.questionId === id
     );
     if (filterchecktemp.length > 0) {
       let templist = this.state.listOfselectedPreview;
-      templist = templist.filter(obj => obj.questionId !== id);
+      templist = templist.filter((obj) => obj.questionId !== id);
       let templistOfsearchselected = this.state.listOfsearchselected.map(
-        item => {
+        (item) => {
           let obj =
             item.id === id
               ? { id: item.id, status: false }
@@ -220,7 +239,7 @@ class QAtab extends Component {
         {
           listOfselectedPreview: templist,
           listOfsearchselected: templistOfsearchselected,
-          isLoading: false
+          isLoading: false,
         },
         () => {
           localStorage.setItem("Previewdata", JSON.stringify(templist));
@@ -232,15 +251,15 @@ class QAtab extends Component {
         url: URL.geteditques + id,
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             let temppreviewlist = this.state.listOfselectedPreview;
             temppreviewlist.push(res.data.data.question);
             let templistOfsearchselected = this.state.listOfsearchselected.map(
-              item => {
+              (item) => {
                 let obj =
                   item.id === id
                     ? { id: item.id, status: false }
@@ -252,7 +271,7 @@ class QAtab extends Component {
               {
                 listOfselectedPreview: temppreviewlist,
                 listOfsearchselected: templistOfsearchselected,
-                isLoading: false
+                isLoading: false,
               },
               () => {
                 localStorage.setItem(
@@ -267,7 +286,7 @@ class QAtab extends Component {
             });
           }
         })
-        .catch(e => {
+        .catch((e) => {
           this.setState({ isLoading: false }, () => {
             alert("Error found");
           });
@@ -275,9 +294,8 @@ class QAtab extends Component {
     }
     // });
   };
-  handleSearchboxChange = e => {
+  handleSearchboxChange = (e) => {
     e.preventDefault();
-    // console.log(e.target.value);
     this.setState({ searchbox: e.target.value, pageNo: 1 });
     localStorage.setItem("selectedsearchboxQA", e.target.value);
     if (e.target.value && e.target.value !== "") {
@@ -288,26 +306,26 @@ class QAtab extends Component {
           authToken: "string",
           language: this.state.selectedLanguage,
           questionId: e.target.value ? parseInt(e.target.value) : 0,
-          sectionId: this.state.selectedChapterID
-            ? this.state.selectedChapterID
-            : 0,
-          subjectId: this.state.selectedSubjectID
-            ? this.state.selectedSubjectID
-            : 0,
-          subtopicId: this.state.selectedSubTopicID
-            ? this.state.selectedSubTopicID
-            : 0,
-          topicId: this.state.selectedTopicID ? this.state.selectedTopicID : 0
+          // sectionId: this.state.selectedChapterID
+          //   ? this.state.selectedChapterID
+          //   : 0,
+          // subjectId: this.state.selectedSubjectID
+          //   ? this.state.selectedSubjectID
+          //   : 0,
+          // subtopicId: this.state.selectedSubTopicID
+          //   ? this.state.selectedSubTopicID
+          //   : 0,
+          // topicId: this.state.selectedTopicID ? this.state.selectedTopicID : 0,
         },
         headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(res => {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => {
         // console.log(res.data.data.list);
         if (res.status === 200) {
-          let templist = res.data.data.list.map(item => {
+          let templist = res.data.data.list.map((item) => {
             let filtertemplist = this.state.listOfselectedPreview.filter(
-              obj => obj.questionId === item.questionId
+              (obj) => obj.questionId === item.questionId
             );
             if (filtertemplist.length > 0) {
               return { id: item.questionId, status: true };
@@ -320,40 +338,58 @@ class QAtab extends Component {
             searchResultList: res.data.data.list,
             listOfsearchselected: templist,
             pageNo: this.state.pageNo + 1,
-            hasMore: res.data.data.hasMore
+            hasMore: res.data.data.hasMore,
           });
         }
       });
     } else {
       this.setState({ searchResultList: [], listOfsearchselected: [] });
-      // this.handlesearchWithFilter();
     }
   };
   handlesearchWithFilter = () => {
+    var Date = null;
+    if (this.state.date !== null) {
+      var Datetemp = this.state.date;
+
+      var dd = Datetemp.getDate();
+      var mm = Datetemp.getMonth() + 1; //January is 0!
+
+      var yyyy = Datetemp.getFullYear();
+      if (dd < 10) {
+        dd = "0" + dd;
+      }
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      Date = yyyy + "-" + mm + "-" + dd;
+    }
     axios({
       method: "POST",
       url: URL.searchquestion + "1",
       data: {
         authToken: "string",
+        authorId: this.state.authorId,
+        userId: this.state.userId,
         language: this.state.selectedLanguage,
+        date: Date,
         questionId: this.state.searchbox ? parseInt(this.state.searchbox) : 0,
         sectionId: this.state.selectedChapterID,
         subjectId: this.state.selectedSubjectID,
         subtopicId: this.state.selectedSubTopicID,
         topicId: this.state.selectedTopicID,
-        tags: this.state.tags.map(item => {
+        tags: this.state.tags.map((item) => {
           return item.id;
-        })
+        }),
       },
       headers: {
-        "Content-Type": "application/json"
-      }
-    }).then(res => {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
       // console.log(res.data.data.list);
       if (res.status === 200) {
-        let templist = res.data.data.list.map(item => {
+        let templist = res.data.data.list.map((item) => {
           let filtertemplist = this.state.listOfselectedPreview.filter(
-            obj => obj.questionId === item.questionId
+            (obj) => obj.questionId === item.questionId
           );
           if (filtertemplist.length > 0) {
             return { id: item.questionId, status: true };
@@ -366,22 +402,29 @@ class QAtab extends Component {
           searchResultList: res.data.data.list,
           listOfsearchselected: templist,
           pageNo: 2,
-          hasMore: res.data.data.hasMore
+          hasMore: res.data.data.hasMore,
         });
       }
     });
   };
   clearSearchFromFilters = () => {
     localStorage.setItem("selectedSubjectIDQA", "0");
+    localStorage.setItem("selectedAuthorIDQA", "0");
+    localStorage.setItem("selectedUserIDQA", null);
+    localStorage.setItem("selectedDateQA", "");
     localStorage.setItem("selectedChapterIDQA", "0");
     localStorage.setItem("selectedTopicIDQA", "0");
     localStorage.setItem("selectedSubTopicID", "0");
     localStorage.setItem("selectedsearchboxQA", "");
     localStorage.setItem("selectedTagsQA", JSON.stringify([]));
+
     this.setState(
       {
         // searchResultList: [],
         // listOfsearchselected: [],
+        authorId: 0,
+        userId: null,
+        date: null,
         searchbox: "",
         listOfChapter: [],
         selectedChapterID: 0,
@@ -393,14 +436,14 @@ class QAtab extends Component {
         selectedSubTopicID: 0,
         pageNo: 1,
         hasMore: true,
-        tags: []
+        tags: [],
       },
       () => {
         this.handlesearchWithFilter();
       }
     );
   };
-  handleLanguageChange = e => {
+  handleLanguageChange = (e) => {
     e.preventDefault();
     localStorage.setItem("selectedlanguageQA", e.target.value);
     this.setState(
@@ -425,11 +468,10 @@ class QAtab extends Component {
           url: URL.fetchSubject + this.state.selectedLanguage,
           data: { authToken: "string" },
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-          .then(res => {
-            // console.log(res.data.data);
+          .then((res) => {
             if (res.status === 200) {
               this.setState(
                 {
@@ -437,13 +479,13 @@ class QAtab extends Component {
                   selectedSubjectID:
                     localStorage.getItem("selectedSubjectIDQA") &&
                     res.data.data.list.filter(
-                      itm =>
+                      (itm) =>
                         itm.subject.subjectId ===
                         parseInt(localStorage.getItem("selectedSubjectIDQA"))
                     ).length > 0
                       ? parseInt(localStorage.getItem("selectedSubjectIDQA"))
                       : 0,
-                  isLoading: false
+                  isLoading: false,
                 },
                 () => {
                   if (
@@ -454,7 +496,7 @@ class QAtab extends Component {
                       "selectedSubjectIDQA",
                       localStorage.getItem("selectedSubjectIDQA") &&
                         res.data.data.list.filter(
-                          itm =>
+                          (itm) =>
                             itm.subject.subjectId ===
                             parseInt(
                               localStorage.getItem("selectedSubjectIDQA")
@@ -467,13 +509,36 @@ class QAtab extends Component {
                     );
                     this.callApiForChapter();
                   }
+                  var Date = null;
+                  if (this.state.date !== null) {
+                    var Datetemp = this.state.date;
+
+                    var dd = Datetemp.getDate();
+                    var mm = Datetemp.getMonth() + 1; //January is 0!
+
+                    var yyyy = Datetemp.getFullYear();
+                    if (dd < 10) {
+                      dd = "0" + dd;
+                    }
+                    if (mm < 10) {
+                      mm = "0" + mm;
+                    }
+                    Date = yyyy + "-" + mm + "-" + dd;
+                  }
+
                   axios({
                     method: "POST",
                     url: URL.searchquestion + this.state.pageNo,
                     data: {
                       authToken: "string",
+                      authorId: this.state.authorId,
+                      userId: this.state.userId,
                       language: this.state.selectedLanguage,
-                      questionId: this.state.searchbox,
+                      date: Date,
+                      questionId:
+                        this.state.searchbox !== ""
+                          ? parseInt(this.state.searchbox)
+                          : 0,
                       sectionId:
                         localStorage.getItem("selectedChapterIDQA") &&
                         parseInt(localStorage.getItem("selectedChapterIDQA"))
@@ -502,42 +567,29 @@ class QAtab extends Component {
                           0
                           ? parseInt(localStorage.getItem("selectedTopicIDQA"))
                           : 0,
-                      tags: this.state.tags.map(item => {
+                      tags: this.state.tags.map((item) => {
                         return item.id;
-                      })
+                      }),
                     },
                     headers: {
-                      "Content-Type": "application/json"
-                    }
+                      "Content-Type": "application/json",
+                    },
                   })
-                    .then(res => {
-                      // console.log(res.data.data.list);
+                    .then((res) => {
                       if (res.status === 200) {
-                        let templist = res.data.data.list.map(item => {
-                          // let filtertemplist = this.state.listOfselectedPreview.filter(
-                          //   obj => obj.questionId === item.questionId
-                          // );
-                          // if (filtertemplist.length > 0) {
-                          //   return { id: item.questionId, status: true };
-                          // } else {
+                        let templist = res.data.data.list.map((item) => {
                           return { id: item.questionId, status: false };
-                          // }
                         });
-                        // console.log(templist);
                         this.setState({
                           searchResultList: res.data.data.list,
                           listOfsearchselected: templist,
                           pageNo: this.state.pageNo + 1,
-                          hasMore: res.data.data.hasMore
+                          hasMore: res.data.data.hasMore,
                         });
                       }
                     })
-                    .catch(e => {
-                      // swal('Error', "No data found","error");
+                    .catch((e) => {
                       alert(e);
-                      // this.props.history.push({
-                      //   pathname: "/"
-                      // });
                     });
                 }
               );
@@ -546,14 +598,9 @@ class QAtab extends Component {
               this.setState({ isLoading: false });
             }
           })
-          .catch(e => {
+          .catch((e) => {
             console.log(e);
-            // alert(e);
             alert(e);
-            // swal('Error', "No data found","error");
-            // this.props.history.push({
-            //   pathname: "/"
-            // });
             this.setState({ isLoading: false });
           });
       }
@@ -572,10 +619,10 @@ class QAtab extends Component {
           this.state.selectedLanguage,
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             this.setState(
               {
@@ -584,14 +631,14 @@ class QAtab extends Component {
                   res.data.data.list.length > 0
                     ? localStorage.getItem("selectedChapterIDQA") &&
                       res.data.data.list.filter(
-                        itm =>
+                        (itm) =>
                           itm.subjectSection.sectionId ===
                           parseInt(localStorage.getItem("selectedChapterIDQA"))
                       ).length > 0
                       ? parseInt(localStorage.getItem("selectedChapterIDQA"))
                       : 0
                     : // : res.data.data.list[0].subjectSection.sectionId
-                      0
+                      0,
               },
               () => {
                 localStorage.setItem(
@@ -599,7 +646,7 @@ class QAtab extends Component {
                   res.data.data.list.length > 0
                     ? localStorage.getItem("selectedChapterIDQA") &&
                       res.data.data.list.filter(
-                        itm =>
+                        (itm) =>
                           itm.subjectSection.sectionId ===
                           parseInt(localStorage.getItem("selectedChapterIDQA"))
                       ).length > 0
@@ -617,7 +664,7 @@ class QAtab extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
           alert(e);
           this.setState({ isLoading: false });
@@ -636,7 +683,7 @@ class QAtab extends Component {
         selectedTopicID: 0,
         listOfSubTopic: [],
         selectedSubTopicID: 0,
-        isLoading: false
+        isLoading: false,
       });
     }
   };
@@ -651,10 +698,10 @@ class QAtab extends Component {
           this.state.selectedLanguage,
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             this.setState(
               {
@@ -663,14 +710,14 @@ class QAtab extends Component {
                   res.data.data.list.length > 0
                     ? localStorage.getItem("selectedTopicIDQA") &&
                       res.data.data.list.filter(
-                        itm =>
+                        (itm) =>
                           itm.subjectTopic.topicId ===
                           parseInt(localStorage.getItem("selectedTopicIDQA"))
                       ).length > 0
                       ? parseInt(localStorage.getItem("selectedTopicIDQA"))
                       : 0
                     : // : res.data.data.list[0].subjectTopic.topicId
-                      0
+                      0,
               },
               () => {
                 localStorage.setItem(
@@ -678,7 +725,7 @@ class QAtab extends Component {
                   res.data.data.list.length > 0
                     ? localStorage.getItem("selectedTopicIDQA") &&
                       res.data.data.list.filter(
-                        itm =>
+                        (itm) =>
                           itm.subjectTopic.topicId ===
                           parseInt(localStorage.getItem("selectedTopicIDQA"))
                       ).length > 0
@@ -696,7 +743,7 @@ class QAtab extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
           alert(e);
           this.setState({ isLoading: false });
@@ -711,7 +758,7 @@ class QAtab extends Component {
         listOfTopic: [],
         selectedTopicID: 0,
         listOfSubTopic: [],
-        selectedSubTopicID: 0
+        selectedSubTopicID: 0,
       });
     }
   };
@@ -726,10 +773,10 @@ class QAtab extends Component {
           this.state.selectedLanguage,
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           // console.log(res.data.data);
           if (res.status === 200) {
             this.setState({
@@ -738,21 +785,21 @@ class QAtab extends Component {
                 res.data.data.list.length > 0
                   ? localStorage.getItem("selectedSubTopicID") &&
                     res.data.data.list.filter(
-                      itm =>
+                      (itm) =>
                         itm.subjectSubtopic.subtopicId ===
                         parseInt(localStorage.getItem("selectedSubTopicID"))
                     ).length > 0
                     ? parseInt(localStorage.getItem("selectedSubTopicID"))
                     : 0
                   : // : res.data.data.list[0].subjectSubtopic.subtopicId
-                    0
+                    0,
             });
             localStorage.setItem(
               "selectedSubTopicID",
               res.data.data.list.length > 0
                 ? localStorage.getItem("selectedSubTopicID") &&
                   res.data.data.list.filter(
-                    itm =>
+                    (itm) =>
                       itm.subjectSubtopic.subtopicId ===
                       parseInt(localStorage.getItem("selectedSubTopicID"))
                   ).length > 0
@@ -767,7 +814,7 @@ class QAtab extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
           alert(e);
           this.setState({ isLoading: false });
@@ -778,14 +825,14 @@ class QAtab extends Component {
       this.setState({ listOfSubTopic: [], selectedSubTopicID: 0 });
     }
   };
-  handleSubjectChange = e => {
-    e.preventDefault();
+  handleSubjectChange = (e) => {
+    // e.preventDefault();
     // console.log(e.target.value)
     if (e.target.value === "") {
       localStorage.setItem("selectedSubjectIDQA", "0");
       this.setState(
         {
-          selectedSubjectID: 0
+          selectedSubjectID: 0,
         },
         () => {
           this.callApiForChapter();
@@ -802,7 +849,7 @@ class QAtab extends Component {
         {
           selectedSubjectID: this.state.listOfSubject[
             e.target.options.selectedIndex
-          ].subject.subjectId
+          ].subject.subjectId,
         },
         () => {
           this.callApiForChapter();
@@ -810,13 +857,13 @@ class QAtab extends Component {
       );
     }
   };
-  handleChapterChange = e => {
-    e.preventDefault();
+  handleChapterChange = (e) => {
+    // e.preventDefault();
     if (e.target.value === "") {
       localStorage.setItem("selectedChapterIDQA", "0");
       this.setState(
         {
-          selectedChapterID: 0
+          selectedChapterID: 0,
         },
         () => {
           this.callApiForTopic();
@@ -833,7 +880,7 @@ class QAtab extends Component {
         {
           selectedChapterID: this.state.listOfChapter[
             e.target.options.selectedIndex
-          ].subjectSection.sectionId
+          ].subjectSection.sectionId,
         },
         () => {
           this.callApiForTopic();
@@ -841,13 +888,13 @@ class QAtab extends Component {
       );
     }
   };
-  handleTopicChange = e => {
-    e.preventDefault();
+  handleTopicChange = (e) => {
+    // e.preventDefault();
     if (e.target.value === "") {
       localStorage.setItem("selectedTopicIDQA", "0");
       this.setState(
         {
-          selectedTopicID: 0
+          selectedTopicID: 0,
         },
         () => {
           this.callApiForSubTopic();
@@ -864,7 +911,7 @@ class QAtab extends Component {
         {
           selectedTopicID: this.state.listOfTopic[
             e.target.options.selectedIndex
-          ].subjectTopic.topicId
+          ].subjectTopic.topicId,
         },
         () => {
           this.callApiForSubTopic();
@@ -872,12 +919,12 @@ class QAtab extends Component {
       );
     }
   };
-  handleSubTopicChange = e => {
-    e.preventDefault();
+  handleSubTopicChange = (e) => {
+    // e.preventDefault();
     if (e.target.value === "") {
       localStorage.setItem("selectedSubTopicID", "0");
       this.setState({
-        selectedSubTopicID: 0
+        selectedSubTopicID: 0,
       });
     } else {
       localStorage.setItem(
@@ -889,7 +936,7 @@ class QAtab extends Component {
       this.setState({
         selectedSubTopicID: this.state.listOfSubTopic[
           e.target.options.selectedIndex
-        ].subjectSubtopic.subtopicId
+        ].subjectSubtopic.subtopicId,
       });
     }
   };
@@ -898,24 +945,24 @@ class QAtab extends Component {
     tempsearchlist[index].status = e.target.checked;
     this.setState({ listOfsearchselected: tempsearchlist });
   };
-  handleeditafterpreview = data => {
+  handleeditafterpreview = (data) => {
     // console.log(data);
     localStorage.setItem("editquesdata", JSON.stringify(data));
     this.props.history.push({
       pathname:
-        "/editques/" + this.state.selectedLanguage + "/" + data.questionId
+        "/editques/" + this.state.selectedLanguage + "/" + data.questionId,
     });
     swal.close();
   };
-  onEditClickques = id => {
+  onEditClickques = (id) => {
     axios({
       method: "POST",
       url: URL.geteditques + id,
       data: { authToken: "string" },
       headers: {
-        "Content-Type": "application/json"
-      }
-    }).then(res => {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
       // console.log(res);
       swal({
         buttons: false,
@@ -926,21 +973,21 @@ class QAtab extends Component {
               // key={res.data.data.question.questionId}
               style={{
                 margin: "0.5em 0em",
-                textAlign: "left"
+                textAlign: "left",
                 // borderBottom: "1px #c2c2c2 solid"
               }}
             >
               <Col
                 style={{
                   paddingLeft: "0em",
-                  paddingRight: "0em"
+                  paddingRight: "0em",
                 }}
               >
                 <Card
                   id="previewcard"
                   style={{
                     background: "transparent",
-                    borderColor: "transparent"
+                    borderColor: "transparent",
                   }}
                 >
                   <Card.Body style={{ padding: "0", margin: "0.5em 0" }}>
@@ -962,7 +1009,7 @@ class QAtab extends Component {
                             style={{
                               float: "right",
                               fontSize: "15px",
-                              fontWeight: "600"
+                              fontWeight: "600",
                             }}
                           >
                             <b>Tags: </b>
@@ -980,7 +1027,7 @@ class QAtab extends Component {
                             <span
                               style={{
                                 color: "darkgreen",
-                                textTransform: "lowercase"
+                                textTransform: "lowercase",
                               }}
                             >
                               {" "}
@@ -989,11 +1036,11 @@ class QAtab extends Component {
                             <span
                               style={{
                                 color: "darkgoldenrod",
-                                textTransform: "lowercase"
+                                textTransform: "lowercase",
                               }}
                             >
                               {res.data.data.question.tags.length > 0 &&
-                                res.data.data.question.tags.map(itm => {
+                                res.data.data.question.tags.map((itm) => {
                                   return `, ${itm.tag}`;
                                 })}
                             </span>
@@ -1010,7 +1057,7 @@ class QAtab extends Component {
                         style={{ display: "inline-flex" }}
                         math={
                           res.data.data.question.questionVersions.filter(
-                            obbj =>
+                            (obbj) =>
                               obbj.language === this.state.selectedLanguage
                           )[0].content
                         }
@@ -1019,7 +1066,8 @@ class QAtab extends Component {
                     <Row>
                       {res.data.data.question.questionVersions
                         .filter(
-                          obbj => obbj.language === this.state.selectedLanguage
+                          (obbj) =>
+                            obbj.language === this.state.selectedLanguage
                         )[0]
                         .options.map((optionitem, optionindex) => {
                           return (
@@ -1056,7 +1104,7 @@ class QAtab extends Component {
                         style={{ display: "inline-flex" }}
                         math={
                           res.data.data.question.questionVersions.filter(
-                            obbj =>
+                            (obbj) =>
                               obbj.language === this.state.selectedLanguage
                           )[0].solution
                         }
@@ -1088,7 +1136,7 @@ class QAtab extends Component {
                 background: "#6AA3FF",
                 borderColor: "#6AA3FF",
                 borderRadius: "0",
-                paddingRight: "1.1em"
+                paddingRight: "1.1em",
               }}
               // variant="secondary"
 
@@ -1099,7 +1147,7 @@ class QAtab extends Component {
             </Button>
             {/* </Link> */}
           </div>
-        )
+        ),
       });
     });
   };
@@ -1124,18 +1172,18 @@ class QAtab extends Component {
             ? this.state.selectedSubTopicID
             : 0,
           topicId: this.state.selectedTopicID ? this.state.selectedTopicID : 0,
-          tags: this.state.tags.map(item => {
+          tags: this.state.tags.map((item) => {
             return item.id;
-          })
+          }),
         },
         headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(res => {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => {
         if (res.status === 200) {
-          let templist = res.data.data.list.map(item => {
+          let templist = res.data.data.list.map((item) => {
             let filtertemplist = this.state.listOfselectedPreview.filter(
-              obj => obj.questionId === item.questionId
+              (obj) => obj.questionId === item.questionId
             );
             if (filtertemplist.length > 0) {
               return { id: item.questionId, status: true };
@@ -1149,9 +1197,44 @@ class QAtab extends Component {
             searchResultList: currsearchResultList.concat(res.data.data.list),
             listOfsearchselected: currlistOfsearchselected.concat(templist),
             pageNo: this.state.pageNo + 1,
-            hasMore: res.data.data.hasMore
+            hasMore: res.data.data.hasMore,
           });
         }
+      });
+    }
+  };
+  handleUserChange = (e) => {
+    if (e.target.value === "") {
+      localStorage.setItem("selectedUserIDQA", null);
+      this.setState({
+        userId: null,
+      });
+    } else {
+      localStorage.setItem(
+        "selectedUserIDQA",
+        this.props.userList[e.target.options.selectedIndex].userId.toString()
+      );
+      this.setState({
+        userId: this.props.userList[e.target.options.selectedIndex].userId,
+      });
+    }
+  };
+  handleAuthorChange = (e) => {
+    if (e.target.value === "") {
+      localStorage.setItem("selectedAuthorIDQA", "0");
+      this.setState({
+        authorId: 0,
+      });
+    } else {
+      localStorage.setItem(
+        "selectedAuthorIDQA",
+        this.props.authorList[
+          e.target.options.selectedIndex
+        ].authorId.toString()
+      );
+      this.setState({
+        authorId: this.props.authorList[e.target.options.selectedIndex]
+          .authorId,
       });
     }
   };
@@ -1167,11 +1250,11 @@ class QAtab extends Component {
             <Col
               lg="3"
               style={{
-                padding: "2.5em 3em",
+                padding: "2.5em 2.5em",
                 background: "#EEE",
                 boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -3px",
                 zIndex: "88",
-                position: "relative"
+                position: "relative",
               }}
             >
               <LeftPanelQuestion
@@ -1198,26 +1281,40 @@ class QAtab extends Component {
                 onAddition={this.onAddition}
                 onDelete={this.onDelete}
                 handleChangeTags={this.handleChangeTags}
+                authorList={this.props.authorList}
+                userList={this.props.userList}
+                userId={this.state.userId}
+                authorId={this.state.authorId}
+                handleAuthorChange={this.handleAuthorChange}
+                handleUserChange={this.handleUserChange}
+                date={this.state.date}
+                handleDateChange={this.handleDateChange}
               />
             </Col>
             <Col
               lg="9"
               style={{
                 background: "#EEEEEE",
-                padding: "0em 3em"
+                padding: "0em 2.5em",
               }}
               onScroll={this.handleScroll}
             >
               <Row style={{ margin: "2em 0em" }}>
                 <Col lg="1.5">
-                  <Link to="/addques" target="_self">
+                  <Link
+                    to={{
+                      pathname: "/addaddquesexam",
+                      state: { authorList: this.props.authorList },
+                    }}
+                    target="_self"
+                  >
                     <Button
                       style={{
                         fontSize: "1em",
                         fontWeight: "700",
                         background: "#6AA3FF",
                         borderColor: "#6AA3FF",
-                        borderRadius: "0"
+                        borderRadius: "0",
                       }}
                     >
                       {" "}
@@ -1236,7 +1333,7 @@ class QAtab extends Component {
                             background: "rgba(254, 134, 53, 0.86)",
                             borderColor: "rgba(254, 134, 53, 0.86)",
                             borderRadius: "0",
-                            float: "right"
+                            float: "right",
                           }
                         : {
                             fontSize: "1em",
@@ -1244,7 +1341,7 @@ class QAtab extends Component {
                             background: "#adb5bd",
                             borderColor: "#adb5bd",
                             borderRadius: "0",
-                            float: "right"
+                            float: "right",
                           }
                     }
                   >
@@ -1271,7 +1368,7 @@ class QAtab extends Component {
                         placeholder="&#128269;  Search a question with id number"
                         style={{
                           padding: "1.5em 2em",
-                          borderRadius: "0"
+                          borderRadius: "0",
                         }}
                       />
                     </Form.Group>
@@ -1300,13 +1397,13 @@ class QAtab extends Component {
                         size="sm"
                         style={{
                           color: "black",
-                          borderColor: "transparent"
+                          borderColor: "transparent",
                         }}
                       >
                         <img
                           src={
                             this.state.listOfsearchselected.filter(
-                              item => item.status === true
+                              (item) => item.status === true
                             ).length > 0
                               ? BucketIconOrange
                               : BucketIconGrey
@@ -1315,7 +1412,7 @@ class QAtab extends Component {
                           alt="bucket"
                           style={{
                             paddingBottom: "0.2em",
-                            marginRight: "0.3em"
+                            marginRight: "0.3em",
                           }}
                         />{" "}
                         Add to bucket
@@ -1326,7 +1423,7 @@ class QAtab extends Component {
                 )}
                 <div
                   style={{
-                    padding: "0.4em"
+                    padding: "0.4em",
                   }}
                 >
                   {this.state.searchResultList.length > 0 ? (
@@ -1335,19 +1432,19 @@ class QAtab extends Component {
                         <Row
                           key={index}
                           style={{
-                            margin: "1.2em 0em"
+                            margin: "1.2em 0em",
                           }}
                         >
                           <Col
                             style={{
                               paddingLeft: "0em",
-                              paddingRight: "0em"
+                              paddingRight: "0em",
                             }}
                           >
                             <Card
                               style={{
                                 background: "transparent",
-                                borderColor: "transparent"
+                                borderColor: "transparent",
                               }}
                             >
                               <Card.Body
@@ -1356,7 +1453,7 @@ class QAtab extends Component {
                                 <Card.Title
                                   style={{
                                     fontSize: "medium",
-                                    marginBottom: ".2rem"
+                                    marginBottom: ".2rem",
                                   }}
                                 >
                                   <Form.Check
@@ -1364,7 +1461,8 @@ class QAtab extends Component {
                                     inline
                                     disabled={
                                       this.state.listOfselectedPreview.filter(
-                                        ob => ob.questionId === item.questionId
+                                        (ob) =>
+                                          ob.questionId === item.questionId
                                       ).length > 0
                                         ? true
                                         : false
@@ -1403,7 +1501,7 @@ class QAtab extends Component {
                                           padding: ".15rem .15rem",
                                           background: "transparent",
                                           color: "rgb(106, 163, 255) ",
-                                          border: "none"
+                                          border: "none",
                                         }}
                                         variant="secondary"
                                       >
@@ -1415,7 +1513,7 @@ class QAtab extends Component {
                                       delay={{ show: 250, hide: 400 }}
                                       overlay={renderTooltip(
                                         this.state.listOfselectedPreview.filter(
-                                          objj =>
+                                          (objj) =>
                                             objj.questionId === item.questionId
                                         ).length > 0
                                           ? "Remove from bucket"
@@ -1429,7 +1527,7 @@ class QAtab extends Component {
                                           marginLeft: "1em",
                                           padding: ".15rem .15rem",
                                           background: "transparent",
-                                          border: "none"
+                                          border: "none",
                                         }}
                                         onClick={this.onAddpreviewdata.bind(
                                           this,
@@ -1438,7 +1536,7 @@ class QAtab extends Component {
                                         variant="primary"
                                       >
                                         {this.state.listOfselectedPreview.filter(
-                                          objj =>
+                                          (objj) =>
                                             objj.questionId === item.questionId
                                         ).length > 0 ? (
                                           <img
@@ -1460,7 +1558,7 @@ class QAtab extends Component {
                                     style={{
                                       float: "right",
                                       fontSize: "15px",
-                                      fontWeight: "600"
+                                      fontWeight: "600",
                                     }}
                                   >
                                     <b>Tags: </b>
@@ -1477,7 +1575,7 @@ class QAtab extends Component {
                                     <span
                                       style={{
                                         color: "darkgreen",
-                                        textTransform: "lowercase"
+                                        textTransform: "lowercase",
                                       }}
                                     >
                                       {" "}
@@ -1488,7 +1586,7 @@ class QAtab extends Component {
 
                                 <Card.Text
                                   style={{
-                                    marginBottom: "0.5em"
+                                    marginBottom: "0.5em",
                                     // display: "block",
                                     // width: "50%"
                                   }}

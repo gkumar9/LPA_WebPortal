@@ -6,7 +6,7 @@ import {
   Form,
   Card,
   OverlayTrigger,
-  Tooltip
+  Tooltip,
 } from "react-bootstrap";
 import Edit from "@material-ui/icons/Edit";
 import View from "@material-ui/icons/Visibility";
@@ -46,16 +46,89 @@ class Examtab extends Component {
         ? localStorage.getItem("selectedTypeTest")
         : "",
       hasMore: null,
-      pageNo: 1
+      pageNo: 1,
+      date: localStorage.getItem("selectedDateTest")
+        ? new Date(localStorage.getItem("selectedDateTest"))
+        : null,
+      authorId: localStorage.getItem("selectedAuthorIDTest")
+        ? parseInt(localStorage.getItem("selectedAuthorIDTest"))
+        : 0,
+      userId: localStorage.getItem("selectedUserIDTest")
+        ? (localStorage.getItem("selectedUserIDTest"))
+        : null,
     };
   }
+  handleDateChange = (date) => {
+    this.setState(
+      {
+        date: date,
+      },
+      () => {
+        localStorage.setItem("selectedDateTest", date);
+      }
+    );
+  };
+  handleUserChange = (e) => {
+    if (e.target.value === "") {
+      localStorage.setItem("selectedUserIDTest", null);
+      this.setState({
+        userId: null,
+      });
+    } else {
+      localStorage.setItem(
+        "selectedUserIDTest",
+        this.props.userList[e.target.options.selectedIndex].userId.toString()
+      );
+      this.setState({
+        userId: this.props.userList[e.target.options.selectedIndex].userId,
+      });
+    }
+  };
+  handleAuthorChange = (e) => {
+    if (e.target.value === "") {
+      localStorage.setItem("selectedAuthorIDTest", "0");
+      this.setState({
+        authorId: 0,
+      });
+    } else {
+      localStorage.setItem(
+        "selectedAuthorIDTest",
+        this.props.authorList[
+          e.target.options.selectedIndex
+        ].authorId.toString()
+      );
+      this.setState({
+        authorId: this.props.authorList[e.target.options.selectedIndex]
+          .authorId,
+      });
+    }
+  };
   handlesearchWithFilter = () => {
+    var Date = null;
+    if (this.state.date !== null) {
+      var Datetemp = this.state.date;
+
+      var dd = Datetemp.getDate();
+      var mm = Datetemp.getMonth() + 1; //January is 0!
+
+      var yyyy = Datetemp.getFullYear();
+      if (dd < 10) {
+        dd = "0" + dd;
+      }
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      Date = yyyy + "-" + mm + "-" + dd;
+    }
     axios({
       method: "POST",
       url: URL.searchexam + "1",
       data: {
         authToken: "string",
+        authorId: this.state.authorId,
+        userId: this.state.userId,
         language: this.state.selectedLanguage,
+        date: Date,
         examId: this.state.selectedExamID ? this.state.selectedExamID : 0,
         testId: this.state.searchbox ? parseInt(this.state.searchbox) : 0,
         sectionId: this.state.selectedChapterID
@@ -64,18 +137,18 @@ class Examtab extends Component {
         subjectId: this.state.selectedSubjectID
           ? this.state.selectedSubjectID
           : 0,
-        type: this.state.selectedType ? this.state.selectedType : null
+        type: this.state.selectedType ? this.state.selectedType : null,
       },
       headers: {
-        "Content-Type": "application/json"
-      }
-    }).then(res => {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
       // console.log(res.data.data.list);
       if (res.status === 200) {
         this.setState({
           searchResultList: res.data.data.list,
           pageNo: 2,
-          hasMore: res.data.data.hasMore
+          hasMore: res.data.data.hasMore,
         });
       }
     });
@@ -86,12 +159,15 @@ class Examtab extends Component {
     localStorage.setItem("selectedChapterIDTest", "0");
     localStorage.setItem("selectedsearchboxTest", "");
     localStorage.setItem("selectedTypeTest", "");
+    localStorage.setItem("selectedAuthorIDTest", "0");
+    localStorage.setItem("selectedUserIDTest", null);
+    localStorage.setItem("selectedDateTest",null);
     this.setState(
       {
-        // searchResultList: [],
-        // listOfsearchselected: [],
         searchbox: "",
-        // listOfExam: [],
+        authorId: 0,
+        userId: null,
+        date: null,
         selectedExamID: 0,
         listOfSubject: [],
         selectedSubjectID: 0,
@@ -99,21 +175,21 @@ class Examtab extends Component {
         selectedChapterID: 0,
         selectedType: "",
         pageNo: 1,
-        hasMore: true
+        hasMore: true,
       },
       () => {
         this.handlesearchWithFilter();
       }
     );
   };
-  handleTypeChange = e => {
+  handleTypeChange = (e) => {
     e.preventDefault();
     localStorage.setItem("selectedTypeTest", e.target.value);
     this.setState({ selectedType: e.target.value }, () => {
       // this.componentDidMount();
     });
   };
-  handleSearchboxChange = e => {
+  handleSearchboxChange = (e) => {
     e.preventDefault();
 
     this.setState({ searchbox: e.target.value, pageNo: 1 });
@@ -125,26 +201,26 @@ class Examtab extends Component {
         data: {
           authToken: "string",
           language: this.state.selectedLanguage,
-          examId: this.state.selectedExamID ? this.state.selectedExamID : 0,
+          // examId: this.state.selectedExamID ? this.state.selectedExamID : 0,
           testId: e.target.value ? parseInt(e.target.value) : 0,
-          sectionId: this.state.selectedChapterID
-            ? this.state.selectedChapterID
-            : 0,
-          subjectId: this.state.selectedSubjectID
-            ? this.state.selectedSubjectID
-            : 0,
-          type: this.state.selectedType ? this.state.selectedType : null
+          // sectionId: this.state.selectedChapterID
+          //   ? this.state.selectedChapterID
+          //   : 0,
+          // subjectId: this.state.selectedSubjectID
+          //   ? this.state.selectedSubjectID
+          //   : 0,
+          // type: this.state.selectedType ? this.state.selectedType : null,
         },
         headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(res => {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => {
         // console.log(res.data.data.list);
         if (res.status === 200) {
           this.setState({
             searchResultList: res.data.data.list,
             pageNo: this.state.pageNo + 1,
-            hasMore: res.data.data.hasMore
+            hasMore: res.data.data.hasMore,
           });
         }
       });
@@ -152,7 +228,7 @@ class Examtab extends Component {
       this.setState({ searchResultList: [] });
     }
   };
-  handleLanguageChange = e => {
+  handleLanguageChange = (e) => {
     e.preventDefault();
     localStorage.setItem("selectedLanguageTest", e.target.value);
     this.setState(
@@ -168,10 +244,10 @@ class Examtab extends Component {
       url: URL.fetchExam + this.state.selectedLanguage,
       data: { authToken: "string" },
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         // console.log(res.data.data);
         if (res.status === 200) {
           this.setState(
@@ -180,12 +256,12 @@ class Examtab extends Component {
               selectedExamID:
                 localStorage.getItem("selectedExamIDTest") &&
                 res.data.data.list.filter(
-                  itm =>
+                  (itm) =>
                     itm.exam.examId ===
                     parseInt(localStorage.getItem("selectedExamIDTest"))
                 ).length > 0
                   ? parseInt(localStorage.getItem("selectedExamIDTest"))
-                  : 0
+                  : 0,
               // selectedExamID:
               //   res.data.data.list.length > 0
               //     ? res.data.data.list[0].exam.examId
@@ -200,7 +276,7 @@ class Examtab extends Component {
                   "selectedExamIDTest",
                   localStorage.getItem("selectedExamIDTest") &&
                     res.data.data.list.filter(
-                      itm =>
+                      (itm) =>
                         itm.exam.examId ===
                         parseInt(localStorage.getItem("selectedExamIDTest"))
                     ).length > 0
@@ -211,12 +287,32 @@ class Examtab extends Component {
                 );
                 this.callApiForSubject();
               }
+              var Date = null;
+              if (this.state.date !==null) {
+                var Datetemp = this.state.date;
+
+                var dd = Datetemp.getDate();
+                var mm = Datetemp.getMonth() + 1; //January is 0!
+
+                var yyyy = Datetemp.getFullYear();
+                if (dd < 10) {
+                  dd = "0" + dd;
+                }
+                if (mm < 10) {
+                  mm = "0" + mm;
+                }
+                Date = yyyy + "-" + mm + "-" + dd;
+              }
               axios({
                 method: "POST",
                 url: URL.searchexam + this.state.pageNo,
                 data: {
                   authToken: "string",
+
+                  authorId: this.state.authorId,
+                  userId: this.state.userId,
                   language: this.state.selectedLanguage,
+                  date: Date,
                   examId:
                     localStorage.getItem("selectedExamIDTest") &&
                     parseInt(localStorage.getItem("selectedExamIDTest")) !== 0
@@ -238,23 +334,23 @@ class Examtab extends Component {
                       : 0,
                   type: localStorage.getItem("selectedTypeTest")
                     ? localStorage.getItem("selectedTypeTest")
-                    : null
+                    : null,
                 },
                 headers: {
-                  "Content-Type": "application/json"
-                }
+                  "Content-Type": "application/json",
+                },
               })
-                .then(res => {
+                .then((res) => {
                   // console.log(res.data.data.list);
                   if (res.status === 200) {
                     this.setState({
                       searchResultList: res.data.data.list,
                       pageNo: this.state.pageNo + 1,
-                      hasMore: res.data.data.hasMore
+                      hasMore: res.data.data.hasMore,
                     });
                   }
                 })
-                .catch(e => {
+                .catch((e) => {
                   alert(e);
                   // swal('Error', "No data found","error");
                 });
@@ -266,7 +362,7 @@ class Examtab extends Component {
           alert("Error");
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
         alert(e);
         // swal('Error', "No data found","error");
@@ -279,19 +375,19 @@ class Examtab extends Component {
         url: URL.fetchSubjectForExam + this.state.selectedExamID,
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             axios({
               method: "POST",
               url: URL.fetchSubject + this.state.selectedLanguage,
               data: { authToken: "string" },
               headers: {
-                "Content-Type": "application/json"
-              }
-            }).then(response => {
+                "Content-Type": "application/json",
+              },
+            }).then((response) => {
               if (response.status === 200) {
                 let tempsubjectlist = [];
                 for (let i = 0; i < res.data.data.list.length; i++) {
@@ -312,7 +408,7 @@ class Examtab extends Component {
                       tempsubjectlist.length > 0
                         ? localStorage.getItem("selectedSubjectIDTest") &&
                           tempsubjectlist.filter(
-                            itm =>
+                            (itm) =>
                               itm.subject.subjectId ===
                               parseInt(
                                 localStorage.getItem("selectedSubjectIDTest")
@@ -323,7 +419,7 @@ class Examtab extends Component {
                             )
                           : 0
                         : // : tempsubjectlist[0].subject.subjectId
-                          0
+                          0,
                     // tempsubjectlist.length > 0
                     //   ? tempsubjectlist[0].subject.subjectId
                     //   : 0
@@ -334,7 +430,7 @@ class Examtab extends Component {
                       tempsubjectlist.length > 0
                         ? localStorage.getItem("selectedSubjectIDTest") &&
                           tempsubjectlist.filter(
-                            itm =>
+                            (itm) =>
                               itm.subject.subjectId ===
                               parseInt(
                                 localStorage.getItem("selectedSubjectIDTest")
@@ -356,7 +452,7 @@ class Examtab extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     } else {
@@ -368,7 +464,7 @@ class Examtab extends Component {
         selectedChapterID: 0,
 
         listOfSubject: [],
-        selectedSubjectID: 0
+        selectedSubjectID: 0,
       });
     }
   };
@@ -383,10 +479,10 @@ class Examtab extends Component {
           this.state.selectedLanguage,
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             this.setState(
               {
@@ -395,7 +491,7 @@ class Examtab extends Component {
                   res.data.data.list.length > 0
                     ? localStorage.getItem("selectedChapterIDTest") &&
                       res.data.data.list.filter(
-                        itm =>
+                        (itm) =>
                           itm.subjectSection.sectionId ===
                           parseInt(
                             localStorage.getItem("selectedChapterIDTest")
@@ -404,7 +500,7 @@ class Examtab extends Component {
                       ? parseInt(localStorage.getItem("selectedChapterIDTest"))
                       : 0
                     : // : res.data.data.list[0].subjectSection.sectionId
-                      0
+                      0,
               },
               () => {
                 localStorage.setItem(
@@ -412,7 +508,7 @@ class Examtab extends Component {
                   res.data.data.list.length > 0
                     ? localStorage.getItem("selectedChapterIDTest") &&
                       res.data.data.list.filter(
-                        itm =>
+                        (itm) =>
                           itm.subjectSection.sectionId ===
                           parseInt(
                             localStorage.getItem("selectedChapterIDTest")
@@ -432,7 +528,7 @@ class Examtab extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     } else {
@@ -442,18 +538,18 @@ class Examtab extends Component {
       localStorage.setItem("selectedChapterIDTest", "0");
       this.setState({
         listOfChapter: [],
-        selectedChapterID: 0
+        selectedChapterID: 0,
       });
     }
   };
-  handleExamChange = e => {
+  handleExamChange = (e) => {
     e.preventDefault();
 
     if (e.target.value === "") {
       localStorage.setItem("selectedExamIDTest", "0");
       this.setState(
         {
-          selectedExamID: 0
+          selectedExamID: 0,
         },
         () => {
           this.callApiForSubject();
@@ -469,7 +565,7 @@ class Examtab extends Component {
       this.setState(
         {
           selectedExamID: this.state.listOfExam[e.target.options.selectedIndex]
-            .exam.examId
+            .exam.examId,
         },
         () => {
           this.callApiForSubject();
@@ -477,13 +573,13 @@ class Examtab extends Component {
       );
     }
   };
-  handleSubjectChange = e => {
+  handleSubjectChange = (e) => {
     e.preventDefault();
     if (e.target.value === "") {
       localStorage.setItem("selectedSubjectIDTest", "0");
       this.setState(
         {
-          selectedSubjectID: 0
+          selectedSubjectID: 0,
         },
         () => {
           this.callApiForChapter();
@@ -499,7 +595,7 @@ class Examtab extends Component {
         {
           selectedSubjectID: this.state.listOfSubject[
             e.target.options.selectedIndex
-          ].subject.subjectId
+          ].subject.subjectId,
         },
         () => {
           this.callApiForChapter();
@@ -507,13 +603,13 @@ class Examtab extends Component {
       );
     }
   };
-  handleChapterChange = e => {
+  handleChapterChange = (e) => {
     e.preventDefault();
     if (e.target.value === "") {
       localStorage.setItem("selectedChapterIDTest", "0");
       this.setState(
         {
-          selectedChapterID: 0
+          selectedChapterID: 0,
         },
         () => {
           // this.callApiForChapter();
@@ -530,7 +626,7 @@ class Examtab extends Component {
         {
           selectedChapterID: this.state.listOfChapter[
             e.target.options.selectedIndex
-          ].subjectSection.sectionId
+          ].subjectSection.sectionId,
         },
         () => {
           // this.callApiForTopic();
@@ -538,11 +634,11 @@ class Examtab extends Component {
       );
     }
   };
-  handlePreviewTest = testid => {
+  handlePreviewTest = (testid) => {
     localStorage.setItem("TestPreviewId", JSON.stringify(testid));
     localStorage.setItem("TestPreviewLanguage", this.state.selectedLanguage);
     this.props.history.push({
-      pathname: "/testpreview"
+      pathname: "/testpreview",
     });
   };
   callbackofendexam = () => {
@@ -558,24 +654,24 @@ class Examtab extends Component {
           testId: 0,
           sectionId: 0,
           subjectId: 0,
-          type: null
+          type: null,
         },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           // console.log(res.data.data.list);
           let currsearchResultList = this.state.searchResultList;
           if (res.status === 200) {
             this.setState({
               searchResultList: currsearchResultList.concat(res.data.data.list),
               pageNo: this.state.pageNo + 1,
-              hasMore: res.data.data.hasMore
+              hasMore: res.data.data.hasMore,
             });
           }
         })
-        .catch(e => {
+        .catch((e) => {
           alert(e);
           // swal('Error', "No data found","error");
         });
@@ -587,11 +683,11 @@ class Examtab extends Component {
         <Col
           lg="3"
           style={{
-            padding: "2.5em 3em",
+            padding: "2.5em 2.5em",
             background: "#EEE",
             boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -3px",
             zIndex: "88",
-            position: "relative"
+            position: "relative",
           }}
         >
           <LeftpanelExamtab
@@ -613,25 +709,39 @@ class Examtab extends Component {
             listOfType={this.state.listOfType}
             selectedType={this.state.selectedType}
             handleTypeChange={this.handleTypeChange}
+            authorList={this.props.authorList}
+            userList={this.props.userList}
+            userId={this.state.userId}
+            authorId={this.state.authorId}
+            handleAuthorChange={this.handleAuthorChange}
+            handleUserChange={this.handleUserChange}
+            date={this.state.date}
+            handleDateChange={this.handleDateChange}
           />
         </Col>
 
         <Col
           style={{
             background: "#EEEEEE",
-            padding: "0em 3em"
+            padding: "0em 2.5em",
           }}
         >
           <Row style={{ margin: "2em 0em" }}>
             <Col lg="1.5">
-              <Link to="/addexam" target="_self">
+              <Link
+                target="_self"
+                to={{
+                  pathname: "/addexam",
+                  state: { authorList: this.props.authorList },
+                }}
+              >
                 <Button
                   style={{
                     fontSize: "1em",
                     fontWeight: "700",
                     background: "#6AA3FF",
                     borderColor: "#6AA3FF",
-                    borderRadius: "0"
+                    borderRadius: "0",
                   }}
                 >
                   {" "}
@@ -652,7 +762,7 @@ class Examtab extends Component {
                     placeholder="&#128269;  Search a question with id number"
                     style={{
                       padding: "1.5em 2em",
-                      borderRadius: "0"
+                      borderRadius: "0",
                     }}
                   />
                 </Form.Group>
@@ -663,7 +773,7 @@ class Examtab extends Component {
             <div
               style={{
                 marginBottom: "2em",
-                padding: "0.4em"
+                padding: "0.4em",
               }}
             >
               {this.state.searchResultList.length > 0 ? (
@@ -672,26 +782,26 @@ class Examtab extends Component {
                     <Row
                       key={index}
                       style={{
-                        margin: "1.5em 0em"
+                        margin: "1.5em 0em",
                       }}
                     >
                       <Col
                         style={{
                           paddingLeft: "0em",
-                          paddingRight: "0em"
+                          paddingRight: "0em",
                         }}
                       >
                         <Card
                           style={{
                             background: "transparent",
-                            borderColor: "transparent"
+                            borderColor: "transparent",
                           }}
                         >
                           <Card.Body style={{ padding: "0em" }}>
                             <Card.Title
                               style={{
                                 fontSize: "medium",
-                                marginBottom: "0.2em"
+                                marginBottom: "0.2em",
                               }}
                             >
                               <span>
@@ -717,7 +827,7 @@ class Examtab extends Component {
                                         padding: ".15rem .15rem",
                                         background: "transparent",
                                         color: "rgb(106, 163, 255)",
-                                        border: "none"
+                                        border: "none",
                                       }}
                                       variant="secondary"
                                     >
@@ -739,7 +849,7 @@ class Examtab extends Component {
                                       padding: ".15rem .15rem",
                                       background: "transparent",
                                       color: "rgb(255, 137, 118)",
-                                      border: "none"
+                                      border: "none",
                                     }}
                                     variant="secondary"
                                     onClick={this.handlePreviewTest.bind(
@@ -755,14 +865,14 @@ class Examtab extends Component {
                                 style={{
                                   float: "right",
                                   fontSize: "15px",
-                                  fontWeight: "600"
+                                  fontWeight: "600",
                                 }}
                               >
                                 <b>Tags: </b>
                                 <span
                                   style={{
                                     color: "darkgreen",
-                                    textTransform: "capitalize"
+                                    textTransform: "capitalize",
                                   }}
                                 >
                                   {item.type.toLowerCase()}

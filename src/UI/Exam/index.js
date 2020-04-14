@@ -11,6 +11,7 @@ class Exam extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      authorId:0,
       listOfExam: [],
       selectedExamID: 0,
       listOfSubject: [],
@@ -186,6 +187,7 @@ class Exam extends Component {
     this.setState({ selectedTypeYear: e.target.value });
   };
   componentDidMount() {
+    console.log(this)
     axios({
       method: "POST",
       url: URL.fetchExam + "ENGLISH",
@@ -394,6 +396,25 @@ class Exam extends Component {
       // this.componentDidMount();
     });
   };
+  handleAuthorChange = (e) => {
+    if (e.target.value === "") {
+      // localStorage.setItem("selectedAuthorIDQA", "0");
+      this.setState({
+        authorId: 0,
+      });
+    } else {
+      // localStorage.setItem(
+      //   "selectedAuthorIDQA",
+      //   this.props.authorList[
+      //     e.target.options.selectedIndex
+      //   ].authorId.toString()
+      // );
+      this.setState({
+        authorId: this.props.location.state.authorList[e.target.options.selectedIndex]
+          .authorId,
+      });
+    }
+  };
   saveExamdata = () => {
     if (this.state.selectedExamID !== 0 && this.state.selectedExamID !== "") {
       let testdescEnglish = this.myReftestdescEnglish.current;
@@ -455,6 +476,7 @@ class Exam extends Component {
         url: URL.addnewExam,
         data: {
           authToken: "string",
+          authorId: this.state.authorId,
           endDate: endDate,
           examId: this.state.selectedExamID,
           subjectId: this.state.selectedSubjectID,
@@ -579,6 +601,9 @@ class Exam extends Component {
                     handleTypeChange={this.handleTypeChange}
                     handleTypeYearChange={this.handleTypeYearChange}
                     selectedTypeYear={this.state.selectedTypeYear}
+                    authorId={this.state.authorId}
+                    authorList={this.props.location.state?this.props.location.state.authorList:[]}
+                    handleAuthorChange={this.handleAuthorChange}
                   />
                 </div>
               </Col>
