@@ -732,7 +732,7 @@ class Examtab extends Component {
                 target="_self"
                 to={{
                   pathname: "/addexam",
-                  state: { authorList: this.props.authorList },
+                  // state: { authorList: this.props.authorList },
                 }}
               >
                 <Button

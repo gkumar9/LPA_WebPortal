@@ -128,6 +128,15 @@ class QuesHindi extends Component {
         authToken: "string",
         difficulty: difficultyvalue ? difficultyvalue : "EASY",
         questionId: this.props.questionId,
+        authorId: this.props.selectedAuthorId,
+        authorName:
+          this.props.authorList.filter(
+            (item) => item.authorId === this.props.selectedAuthorId
+          ).length > 0
+            ? this.props.authorList.filter(
+                (item) => item.authorId === this.props.selectedAuthorId
+              )[0].authorName
+            : null,
         sectionId: this.props.selectedChapterID,
         subjectId: this.props.selectedSubjectID,
         subtopicId: this.props.selectedSubTopicID,
@@ -231,6 +240,9 @@ class QuesHindi extends Component {
               handleChangeTags={this.props.handleChangeTags}
               difficulty={this.props.difficulty}
               handleDifficultyRadio={this.props.handleDifficultyRadio}
+              selectedAuthorId={this.props.selectedAuthorId}
+              authorList={this.props.authorList}
+              handleAuthorChange={this.props.handleAuthorChange}
             />
           </Col>
 
@@ -417,8 +429,47 @@ class LeftPanel extends Component {
     currentvaluesubtopic = currentvaluesubtopic
       ? currentvaluesubtopic.title
       : "";
+    let currentvalueauthor = this.props.authorList.filter(
+      (item) => item.authorId === this.props.selectedAuthorId
+    )[0];
+    currentvalueauthor = currentvalueauthor
+      ? currentvalueauthor.authorName
+      : "";
     return (
       <Form>
+        <Form.Group controlId="exampleForm.ControlSelectauthor">
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Authors
+          </Form.Label>
+          <Form.Control
+            style={
+              currentvalueauthor !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+            size="sm"
+            as="select"
+            // defaultValue=""
+            onChange={this.props.handleAuthorChange}
+            value={currentvalueauthor}
+          >
+            {this.props.authorList &&
+              this.props.authorList.map((item, index) => {
+                return (
+                  <option key={index} value={item.authorName}>
+                    {item.authorName}
+                  </option>
+                );
+              })}
+            <option key="" value="">
+              Select
+            </option>
+          </Form.Control>
+        </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect11">
           <Form.Label
             style={{

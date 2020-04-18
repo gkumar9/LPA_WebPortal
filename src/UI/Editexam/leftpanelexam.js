@@ -7,17 +7,17 @@ import "react-datepicker/dist/react-datepicker.css";
 class LeftPanelExam extends Component {
   render() {
     let currentvalueexam = this.props.listOfExam.filter(
-      item => item.exam.examId === this.props.selectedExamID
+      (item) => item.exam.examId === this.props.selectedExamID
     )[0];
     currentvalueexam = currentvalueexam ? currentvalueexam.name : "";
     let currentvaluesubject = this.props.listOfSubject.filter(
-      item => item.subject.subjectId === this.props.selectedSubjectID
+      (item) => item.subject.subjectId === this.props.selectedSubjectID
     )[0];
     currentvaluesubject = currentvaluesubject
       ? currentvaluesubject.subjectName
       : "";
     let currentvaluechapter = this.props.listOfChapter.filter(
-      item => item.subjectSection.sectionId === this.props.selectedChapterID
+      (item) => item.subjectSection.sectionId === this.props.selectedChapterID
     )[0];
     currentvaluechapter = currentvaluechapter
       ? currentvaluechapter.sectionName
@@ -33,12 +33,18 @@ class LeftPanelExam extends Component {
     // currentvaluesubtopic = currentvaluesubtopic
     //   ? currentvaluesubtopic.title
     //   : "";
+    let currentvalueauthor = this.props.authorList.filter(
+      (item) => item.authorId === this.props.authorId
+    )[0];
+    currentvalueauthor = currentvalueauthor
+      ? currentvalueauthor.authorName
+      : "";
     return (
       <Form>
-      <Form.Group>
-      <Form.Label
+        <Form.Group>
+          <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Test id
@@ -55,12 +61,45 @@ class LeftPanelExam extends Component {
             // readOnly
             defaultValue={this.props.testID}
           />
-      </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelect1111">
-         
+        </Form.Group>
+        <Form.Group controlId="exampleForm.ControlSelectauthor">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
+            }}
+          >
+            Authors
+          </Form.Label>
+          <Form.Control
+            style={
+              currentvalueauthor !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+            size="sm"
+            as="select"
+            // defaultValue=""
+            onChange={this.props.handleAuthorChange}
+            value={currentvalueauthor}
+          >
+            {this.props.authorList &&
+              this.props.authorList.map((item, index) => {
+                return (
+                  <option key={index} value={item.authorName}>
+                    {item.authorName}
+                  </option>
+                );
+              })}
+            <option key="" value="">
+              Select all
+            </option>
+          </Form.Control>
+        </Form.Group>
+
+        <Form.Group controlId="exampleForm.ControlSelect1111">
+          <Form.Label
+            style={{
+              fontWeight: "600",
             }}
           >
             Exam
@@ -81,12 +120,15 @@ class LeftPanelExam extends Component {
                   </option>
                 );
               })}
+              <option key="" value="">
+              Select all
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect111">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Subject
@@ -107,12 +149,15 @@ class LeftPanelExam extends Component {
                   </option>
                 );
               })}
+              <option key="" value="">
+              Select all
+            </option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect222">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Chapter
@@ -132,13 +177,16 @@ class LeftPanelExam extends Component {
                   </option>
                 );
               })}
+              <option key="" value="">
+              Select all
+            </option>
           </Form.Control>
         </Form.Group>
 
         <Form.Group controlId="exampleForm.ControlSelect2222">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Type
@@ -164,7 +212,7 @@ class LeftPanelExam extends Component {
           <Form.Group controlId="exampleForm.ControlSelect22222">
             <Form.Label
               style={{
-                fontWeight: "600"
+                fontWeight: "600",
               }}
             >
               Year
@@ -181,7 +229,7 @@ class LeftPanelExam extends Component {
         <Form.Group controlId="exampleForm.ControlSelect22221">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Stating date of test
@@ -195,7 +243,7 @@ class LeftPanelExam extends Component {
         <Form.Group controlId="exampleForm.ControlSelect222222">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Ending date of test
@@ -209,7 +257,7 @@ class LeftPanelExam extends Component {
         <Form.Group>
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Total time for test (Hr : Min)
@@ -228,7 +276,7 @@ class LeftPanelExam extends Component {
                 style={{
                   textAlign: "center",
                   fontWeight: "600",
-                  fontSize: "1em"
+                  fontSize: "1em",
                 }}
                 plaintext
                 readOnly

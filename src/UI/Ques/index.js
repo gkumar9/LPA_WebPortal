@@ -41,6 +41,8 @@ class Ques extends Component {
       tags: [],
       suggestions: [],
       apisugges: [],
+      authorList: [],
+      selectedAuthorId: 0,
     };
   }
 
@@ -137,6 +139,25 @@ class Ques extends Component {
     // console.log(tempsugg)
   };
   componentDidMount() {
+    axios({
+      method: "POST",
+      url: URL.authorlist,
+      data: { authToken: "string" },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        this.setState({
+          authorList: res.data.data.list,
+          selectedAuthorId: localStorage.getItem("addquesAuthorID")
+            ? parseInt(localStorage.getItem("addquesAuthorID"))
+            : 0,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
     axios({
       method: "POST",
       url: URL.fetchSubject + "ENGLISH",
@@ -691,6 +712,30 @@ class Ques extends Component {
       }
     }
   };
+  handleAuthorChange = (e) => {
+    // e.preventDefault();
+    if (e.target.value === "") {
+      localStorage.setItem("addquesAuthorID", "0");
+      this.setState({
+        selectedAuthorId: 0,
+      });
+    } else {
+      this.setState(
+        {
+          selectedAuthorId: this.state.authorList[
+            e.target.options.selectedIndex
+          ].authorId,
+        },
+        () => {}
+      );
+      localStorage.setItem(
+        "addquesAuthorID",
+        this.state.authorList[
+          e.target.options.selectedIndex
+        ].authorId.toString()
+      );
+    }
+  };
   render() {
     return (
       <React.Fragment>
@@ -799,6 +844,9 @@ class Ques extends Component {
                   tags={this.state.tags}
                   suggestions={this.state.suggestions}
                   difficulty={this.state.difficulty}
+                  selectedAuthorId={this.state.selectedAuthorId}
+                  authorList={this.state.authorList}
+                  handleAuthorChange={this.handleAuthorChange}
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="hindi">
@@ -825,6 +873,9 @@ class Ques extends Component {
                   tags={this.state.tags}
                   suggestions={this.state.suggestions}
                   difficulty={this.state.difficulty}
+                  selectedAuthorId={this.state.selectedAuthorId}
+                  authorList={this.state.authorList}
+                  handleAuthorChange={this.handleAuthorChange}
                 />
               </Tab.Pane>
             </Tab.Content>

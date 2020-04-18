@@ -7,27 +7,27 @@ import "react-datepicker/dist/react-datepicker.css";
 class LeftPanelExam extends Component {
   render() {
     let currentvalueexam = this.props.listOfExam.filter(
-      item => item.exam.examId === this.props.selectedExamID
+      (item) => item.exam.examId === this.props.selectedExamID
     )[0];
     currentvalueexam = currentvalueexam ? currentvalueexam.name : "";
     let currentvaluesubject = this.props.listOfSubject.filter(
-      item => item.subject.subjectId === this.props.selectedSubjectID
+      (item) => item.subject.subjectId === this.props.selectedSubjectID
     )[0];
     currentvaluesubject = currentvaluesubject
       ? currentvaluesubject.subjectName
       : "";
     let currentvaluechapter = this.props.listOfChapter.filter(
-      item => item.subjectSection.sectionId === this.props.selectedChapterID
+      (item) => item.subjectSection.sectionId === this.props.selectedChapterID
     )[0];
     currentvaluechapter = currentvaluechapter
       ? currentvaluechapter.sectionName
       : "";
-      let currentvalueauthor = this.props.authorList.filter(
-        (item) => item.authorId === this.props.authorId
-      )[0];
-      currentvalueauthor = currentvalueauthor
-        ? currentvalueauthor.authorName
-        : "";
+    let currentvalueauthor = this.props.authorList.filter(
+      (item) => item.authorId === this.props.authorId
+    )[0];
+    currentvalueauthor = currentvalueauthor
+      ? currentvalueauthor.authorName
+      : "";
     // let currentvaluetopic = this.props.listOfTopic.filter(
     //   item => item.subjectTopic.topicId === this.props.selectedTopicID
     // )[0];
@@ -40,41 +40,7 @@ class LeftPanelExam extends Component {
     //   : "";
     return (
       <Form>
-        <Form.Group controlId="exampleForm.ControlSelect1111">
-          <Form.Label
-            style={{
-              fontWeight: "600"
-            }}
-          >
-            Exam
-          </Form.Label>
-          <Form.Control
-            // style={{ borderRadius: "0" }}
-            size="sm"
-            as="select"
-            // defaultValue=""
-            onChange={this.props.handleExamChange}
-            value={currentvalueexam}
-            style={
-              currentvalueexam !== ""
-                ? { borderRadius: "0" }
-                : { borderRadius: "0", color: "#a3a2a2" }
-            }
-          >
-            {this.props.listOfExam &&
-              this.props.listOfExam.map((item, index) => {
-                return (
-                  <option key={index} value={item.name}>
-                    {item.name}
-                  </option>
-                );
-              })}
-            <option key="" value="">
-              Select
-            </option>
-          </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelectauthor">
+       <Form.Group controlId="exampleForm.ControlSelectauthor">
           <Form.Label
             style={{
               fontWeight: "600",
@@ -107,11 +73,46 @@ class LeftPanelExam extends Component {
             </option>
           </Form.Control>
         </Form.Group>
-        
+
+       
+        <Form.Group controlId="exampleForm.ControlSelect1111">
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Exam
+          </Form.Label>
+          <Form.Control
+            // style={{ borderRadius: "0" }}
+            size="sm"
+            as="select"
+            // defaultValue=""
+            onChange={this.props.handleExamChange}
+            value={currentvalueexam}
+            style={
+              currentvalueexam !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+          >
+            {this.props.listOfExam &&
+              this.props.listOfExam.map((item, index) => {
+                return (
+                  <option key={index} value={item.name}>
+                    {item.name}
+                  </option>
+                );
+              })}
+            <option key="" value="">
+              Select
+            </option>
+          </Form.Control>
+        </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect111">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Subject
@@ -145,7 +146,7 @@ class LeftPanelExam extends Component {
         <Form.Group controlId="exampleForm.ControlSelect222">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Chapter
@@ -179,7 +180,7 @@ class LeftPanelExam extends Component {
         <Form.Group controlId="exampleForm.ControlSelect2222">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Type
@@ -205,7 +206,7 @@ class LeftPanelExam extends Component {
           <Form.Group controlId="exampleForm.ControlSelect22222">
             <Form.Label
               style={{
-                fontWeight: "600"
+                fontWeight: "600",
               }}
             >
               Year
@@ -222,7 +223,7 @@ class LeftPanelExam extends Component {
         <Form.Group controlId="exampleForm.ControlSelect22221">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Stating date of test
@@ -236,7 +237,7 @@ class LeftPanelExam extends Component {
         <Form.Group controlId="exampleForm.ControlSelect222222">
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Ending date of test
@@ -250,7 +251,7 @@ class LeftPanelExam extends Component {
         <Form.Group>
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Total time for test (Hr : Min)
@@ -269,7 +270,7 @@ class LeftPanelExam extends Component {
                 style={{
                   textAlign: "center",
                   fontWeight: "600",
-                  fontSize: "1em"
+                  fontSize: "1em",
                 }}
                 plaintext
                 readOnly

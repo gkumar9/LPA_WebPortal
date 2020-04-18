@@ -11,7 +11,8 @@ class Exam extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      authorId:0,
+      authorId: 0,
+      authorList: [],
       listOfExam: [],
       selectedExamID: 0,
       listOfSubject: [],
@@ -40,17 +41,17 @@ class Exam extends Component {
               content: "",
               language: "ENGLISH",
               name: "",
-              sectionName: ""
+              sectionName: "",
             },
             {
               content: "",
               language: "HINDI",
               name: "",
-              sectionName: ""
-            }
-          ]
-        }
-      ]
+              sectionName: "",
+            },
+          ],
+        },
+      ],
     };
     this.myReftestdescEnglish = React.createRef();
     this.myReftestdescHindi = React.createRef();
@@ -58,7 +59,7 @@ class Exam extends Component {
     this.refsSectionHindi = [];
     window.Exam = this;
   }
-  addSectionQuestions = index => {
+  addSectionQuestions = (index) => {
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].questions.push("");
     this.setState({ listOfSection: tempsectionlist });
@@ -76,7 +77,7 @@ class Exam extends Component {
   handleSectionDescriptionChange = (index, language, data) => {
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].versions.filter(
-      item => item.language === language
+      (item) => item.language === language
     )[0].content = data;
 
     this.setState({ listOfSection: tempsectionlist });
@@ -107,19 +108,19 @@ class Exam extends Component {
           content: "",
           language: "ENGLISH",
           name: "",
-          sectionName: ""
+          sectionName: "",
         },
         {
           content: "",
           language: "HINDI",
           name: "",
-          sectionName: ""
-        }
-      ]
+          sectionName: "",
+        },
+      ],
     });
     this.setState({ listOfSection: tempsectionlist });
   };
-  deleteSection = index => {
+  deleteSection = (index) => {
     let tempsections = this.state.listOfSection.map((item, index) => {
       return {
         marksPerQuestion: item.marksPerQuestion,
@@ -130,15 +131,15 @@ class Exam extends Component {
             content: this.refsSectionEnglish[index].editor.getData(),
             language: "ENGLISH",
             name: item.versions[0].name,
-            sectionName: item.versions[0].sectionName
+            sectionName: item.versions[0].sectionName,
           },
           {
             content: this.refsSectionHindi[index].editor.getData(),
             language: "HINDI",
             name: item.versions[1].name,
-            sectionName: item.versions[1].sectionName
-          }
-        ]
+            sectionName: item.versions[1].sectionName,
+          },
+        ],
       };
     });
     let tempsectionlist = tempsections;
@@ -150,58 +151,77 @@ class Exam extends Component {
   handleSectionnameChange = (index, language, e) => {
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].versions.filter(
-      item => item.language === language
+      (item) => item.language === language
     )[0].name = e.target.value;
     this.setState({ listOfSection: tempsectionlist });
   };
-  handleEnglishTestNameChange = e => {
+  handleEnglishTestNameChange = (e) => {
     this.setState({ testnameEnglish: e.target.value });
   };
-  handleHindiTestNameChange = e => {
+  handleHindiTestNameChange = (e) => {
     this.setState({ testnameHindi: e.target.value });
   };
-  handleEnglishInstructionChange = data => {
+  handleEnglishInstructionChange = (data) => {
     this.setState({ testInstructionEnglish: data });
   };
-  handleHindiInstructionChange = data => {
+  handleHindiInstructionChange = (data) => {
     this.setState({ testInstructionHindi: data });
   };
-  onHourChange = e => {
+  onHourChange = (e) => {
     this.setState({ hour: e.target.value });
   };
 
-  onMinuteChange = e => {
+  onMinuteChange = (e) => {
     this.setState({ minute: e.target.value });
   };
-  handleStartDateChange = date => {
+  handleStartDateChange = (date) => {
     this.setState({
-      startDate: date
+      startDate: date,
     });
   };
-  handleEndDateChange = date => {
+  handleEndDateChange = (date) => {
     this.setState({
-      endDate: date
+      endDate: date,
     });
   };
-  handleTypeYearChange = e => {
+  handleTypeYearChange = (e) => {
     this.setState({ selectedTypeYear: e.target.value });
   };
   componentDidMount() {
-    console.log(this)
+    // console.log(this)
+    axios({
+      method: "POST",
+      url: URL.authorlist,
+      data: { authToken: "string" },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        this.setState({
+          authorList: res.data.data.list,
+          // selectedAuthorId: localStorage.getItem("addquesAuthorID")
+          //   ? parseInt(localStorage.getItem("addquesAuthorID"))
+          //   : 0,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
     axios({
       method: "POST",
       url: URL.fetchExam + "ENGLISH",
       data: { authToken: "string" },
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         // console.log(res.data.data);
         if (res.status === 200) {
           this.setState(
             {
-              listOfExam: res.data.data.list
+              listOfExam: res.data.data.list,
               // selectedExamID:
               //   res.data.data.list.length > 0
               //     ? res.data.data.list[0].exam.examId
@@ -215,7 +235,7 @@ class Exam extends Component {
           alert("Unexpected code");
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
         swal(e, "error");
       });
@@ -227,19 +247,19 @@ class Exam extends Component {
         url: URL.fetchSubjectForExam + this.state.selectedExamID,
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             axios({
               method: "POST",
               url: URL.fetchSubject + "ENGLISH",
               data: { authToken: "string" },
               headers: {
-                "Content-Type": "application/json"
-              }
-            }).then(response => {
+                "Content-Type": "application/json",
+              },
+            }).then((response) => {
               if (response.status === 200) {
                 let tempsubjectlist = [];
                 for (let i = 0; i < res.data.data.list.length; i++) {
@@ -256,7 +276,7 @@ class Exam extends Component {
                 this.setState(
                   {
                     listOfSubject: tempsubjectlist,
-                    selectedSubjectID: 0
+                    selectedSubjectID: 0,
                     // tempsubjectlist.length > 0
                     //   ? tempsubjectlist[0].subject.subjectId
                     // : 0
@@ -271,7 +291,7 @@ class Exam extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     } else {
@@ -281,7 +301,7 @@ class Exam extends Component {
         selectedChapterID: 0,
 
         listOfSubject: [],
-        selectedSubjectId: 0
+        selectedSubjectId: 0,
       });
     }
   };
@@ -292,15 +312,15 @@ class Exam extends Component {
         url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH",
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             this.setState(
               {
                 listOfChapter: res.data.data.list,
-                selectedChapterID: 0
+                selectedChapterID: 0,
                 //   res.data.data.list.length > 0
                 //     ? res.data.data.list[0].subjectSection.sectionId
                 //     : 0
@@ -313,7 +333,7 @@ class Exam extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     } else {
@@ -322,16 +342,16 @@ class Exam extends Component {
       );
       this.setState({
         listOfChapter: [],
-        selectedChapterID: 0
+        selectedChapterID: 0,
       });
     }
   };
-  handleExamChange = e => {
+  handleExamChange = (e) => {
     e.preventDefault();
     if (e.target.value === "") {
       this.setState(
         {
-          selectedExamID: 0
+          selectedExamID: 0,
         },
         () => {
           this.callApiForSubject();
@@ -341,7 +361,7 @@ class Exam extends Component {
       this.setState(
         {
           selectedExamID: this.state.listOfExam[e.target.options.selectedIndex]
-            .exam.examId
+            .exam.examId,
         },
         () => {
           this.callApiForSubject();
@@ -349,12 +369,12 @@ class Exam extends Component {
       );
     }
   };
-  handleSubjectChange = e => {
+  handleSubjectChange = (e) => {
     e.preventDefault();
     if (e.target.value === "") {
       this.setState(
         {
-          selectedSubjectID: 0
+          selectedSubjectID: 0,
         },
         () => {
           this.callApiForChapter();
@@ -365,7 +385,7 @@ class Exam extends Component {
         {
           selectedSubjectID: this.state.listOfSubject[
             e.target.options.selectedIndex
-          ].subject.subjectId
+          ].subject.subjectId,
         },
         () => {
           this.callApiForChapter();
@@ -373,24 +393,24 @@ class Exam extends Component {
       );
     }
   };
-  handleChapterChange = e => {
+  handleChapterChange = (e) => {
     e.preventDefault();
     if (e.target.value === "") {
       this.setState({
-        selectedChapterID: 0
+        selectedChapterID: 0,
       });
     } else {
       this.setState(
         {
           selectedChapterID: this.state.listOfChapter[
             e.target.options.selectedIndex
-          ].subjectSection.sectionId
+          ].subjectSection.sectionId,
         },
         () => {}
       );
     }
   };
-  handleTypeChange = e => {
+  handleTypeChange = (e) => {
     e.preventDefault();
     this.setState({ selectedType: e.target.value }, () => {
       // this.componentDidMount();
@@ -410,7 +430,7 @@ class Exam extends Component {
       //   ].authorId.toString()
       // );
       this.setState({
-        authorId: this.props.location.state.authorList[e.target.options.selectedIndex]
+        authorId: this.state.authorList[e.target.options.selectedIndex]
           .authorId,
       });
     }
@@ -420,7 +440,7 @@ class Exam extends Component {
       let testdescEnglish = this.myReftestdescEnglish.current;
       let testdescHindi = this.myReftestdescHindi.current;
       let tempsections = this.state.listOfSection.map((item, index) => {
-        let questionlist = item.questions.filter(ques => ques && ques !== "");
+        let questionlist = item.questions.filter((ques) => ques && ques !== "");
         return {
           marksPerQuestion: item.marksPerQuestion
             ? item.marksPerQuestion.toFixed(3)
@@ -434,15 +454,15 @@ class Exam extends Component {
               content: this.refsSectionEnglish[index].editor.getData(),
               language: "ENGLISH",
               name: item.versions[0].name,
-              sectionName: item.versions[0].sectionName
+              sectionName: item.versions[0].sectionName,
             },
             {
               content: this.refsSectionHindi[index].editor.getData(),
               language: "HINDI",
               name: item.versions[1].name,
-              sectionName: item.versions[1].sectionName
-            }
-          ]
+              sectionName: item.versions[1].sectionName,
+            },
+          ],
         };
       });
       var startDatetemp = this.state.startDate;
@@ -471,12 +491,21 @@ class Exam extends Component {
         mmendDatetemp = "0" + mmendDatetemp;
       }
       var endDate = yyyyendDatetemp + "-" + mmendDatetemp + "-" + ddendDatetemp;
+     
       axios({
         method: "POST",
         url: URL.addnewExam,
         data: {
           authToken: "string",
           authorId: this.state.authorId,
+          authorName:
+            this.state.authorList.filter(
+              (item) => item.authorId === this.state.authorId
+            ).length > 0
+              ? this.state.authorList.filter(
+                  (item) => item.authorId === this.state.authorId
+                )[0].authorName
+              : null,
           endDate: endDate,
           examId: this.state.selectedExamID,
           subjectId: this.state.selectedSubjectID,
@@ -487,13 +516,13 @@ class Exam extends Component {
             {
               instructions: testdescEnglish.editor.getData(),
               language: "ENGLISH",
-              name: this.state.testnameEnglish
+              name: this.state.testnameEnglish,
             },
             {
               instructions: testdescHindi.editor.getData(),
               language: "HINDI",
-              name: this.state.testnameHindi
-            }
+              name: this.state.testnameHindi,
+            },
           ],
           time:
             parseFloat(this.state.hour) +
@@ -502,13 +531,13 @@ class Exam extends Component {
                 parseFloat(Number(parseInt(this.state.minute) / 60))
               : 0,
           type: this.state.selectedType,
-          year: this.state.selectedTypeYear
+          year: this.state.selectedTypeYear,
         },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             swal(
               "Success",
@@ -531,21 +560,21 @@ class Exam extends Component {
                       content: "",
                       language: "ENGLISH",
                       name: "",
-                      sectionName: ""
+                      sectionName: "",
                     },
                     {
                       content: "",
                       language: "HINDI",
                       name: "",
-                      sectionName: ""
-                    }
-                  ]
-                }
-              ]
+                      sectionName: "",
+                    },
+                  ],
+                },
+              ],
             });
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
           swal(e);
         });
@@ -562,7 +591,7 @@ class Exam extends Component {
           style={{
             width: "auto",
             background: "#EEEEEE",
-            padding: "0"
+            padding: "0",
           }}
         >
           <div>
@@ -574,7 +603,7 @@ class Exam extends Component {
                   background: "#EEE",
                   boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -4px",
                   zIndex: "88",
-                  position: "relative"
+                  position: "relative",
                 }}
               >
                 <div>
@@ -602,7 +631,7 @@ class Exam extends Component {
                     handleTypeYearChange={this.handleTypeYearChange}
                     selectedTypeYear={this.state.selectedTypeYear}
                     authorId={this.state.authorId}
-                    authorList={this.props.location.state?this.props.location.state.authorList:[]}
+                    authorList={this.state.authorList}
                     handleAuthorChange={this.handleAuthorChange}
                   />
                 </div>
@@ -654,7 +683,7 @@ class Exam extends Component {
                         borderColor: "#3F5FBB",
                         padding: "0.6em 2.5em",
                         fontSize: "1.1em",
-                        fontWeight: "600"
+                        fontWeight: "600",
                       }}
                       onClick={this.saveExamdata}
                     >

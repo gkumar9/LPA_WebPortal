@@ -14,22 +14,22 @@ class EditComponent extends Component {
     this.state = {
       questionData:
         this.props.fetchedData.questionVersions.filter(
-          item => item.language === this.props.lang
+          (item) => item.language === this.props.lang
         ).length > 0
           ? this.props.fetchedData.questionVersions.filter(
-              item => item.language === this.props.lang
+              (item) => item.language === this.props.lang
             )[0].content
           : " ",
       explanationData:
         this.props.fetchedData.questionVersions.filter(
-          item => item.language === this.props.lang
+          (item) => item.language === this.props.lang
         ).length > 0
           ? this.props.fetchedData.questionVersions.filter(
-              item => item.language === this.props.lang
+              (item) => item.language === this.props.lang
             )[0].solution
           : " ",
       listOfOptions: [],
-      letterchartcode: 65
+      letterchartcode: 65,
     };
     this.myRefQuestionHindi = React.createRef();
     this.myRefQuestionHindiNew = React.createRef();
@@ -52,7 +52,7 @@ class EditComponent extends Component {
     currentArrayOfOption.push({ name: name, content: "", weightage: 0 });
     this.setState({
       listOfOptions: currentArrayOfOption,
-      letterchartcode: currentCharCode + 1
+      letterchartcode: currentCharCode + 1,
     });
   };
   deleteOption = (index, lang) => {
@@ -62,7 +62,7 @@ class EditComponent extends Component {
         return {
           name: item.name,
           content: this.refsArrayEnglishNew[index].editor.getData(),
-          weightage: item.weightage
+          weightage: item.weightage,
         };
       });
       currentArrayOfOption = tempoption;
@@ -72,7 +72,7 @@ class EditComponent extends Component {
         return {
           name: item.name,
           content: this.refsArrayHindiNew[index].editor.getData(),
-          weightage: item.weightage
+          weightage: item.weightage,
         };
       });
       currentArrayOfOption = tempoption;
@@ -82,7 +82,7 @@ class EditComponent extends Component {
     let letterchartcode = 65;
 
     currentArrayOfOption.splice(index, 1);
-    currentArrayOfOption = currentArrayOfOption.map(item => {
+    currentArrayOfOption = currentArrayOfOption.map((item) => {
       let name = "Option " + String.fromCharCode(letterchartcode);
       letterchartcode++;
       return { name: name, content: item.content, weightage: item.weightage };
@@ -90,7 +90,7 @@ class EditComponent extends Component {
 
     this.setState({
       listOfOptions: currentArrayOfOption,
-      letterchartcode: letterchartcode
+      letterchartcode: letterchartcode,
     });
   };
 
@@ -109,30 +109,33 @@ class EditComponent extends Component {
       default:
         break;
     }
-    let converttags = this.props.fetchedData.tags.map(item => {
+    let converttags = this.props.fetchedData.tags.map((item) => {
       return { id: item.tagId, name: item.tag };
     });
     if (
       this.props.fetchedData.questionVersions.filter(
-        item => item.language === this.props.lang
+        (item) => item.language === this.props.lang
       ).length > 0
     ) {
       this.setState({
         difficulty: difficultyvalue,
+        // authorId:this.props.fetchedData.questionVersions.filter(
+        //   (item) => item.language === this.props.lang
+        // )[0].authorId,
         questionData: this.props.fetchedData.questionVersions.filter(
-          item => item.language === this.props.lang
+          (item) => item.language === this.props.lang
         )[0].content,
         explanationData: this.props.fetchedData.questionVersions.filter(
-          item => item.language === this.props.lang
+          (item) => item.language === this.props.lang
         )[0].solution,
         listOfOptions: this.props.fetchedData.questionVersions.filter(
-          item => item.language === this.props.lang
+          (item) => item.language === this.props.lang
         )[0].options,
         letterchartcode:
           this.props.fetchedData.questionVersions.filter(
-            item => item.language === this.props.lang
+            (item) => item.language === this.props.lang
           )[0].options.length + 65,
-        tags: converttags
+        tags: converttags,
       });
     } else {
       this.setState({
@@ -141,10 +144,10 @@ class EditComponent extends Component {
           { name: "Option A", content: " ", weightage: 0 },
           { name: "Option B", content: " ", weightage: 0 },
           { name: "Option C", content: " ", weightage: 0 },
-          { name: "Option D", content: " ", weightage: 0 }
+          { name: "Option D", content: " ", weightage: 0 },
         ],
         letterchartcode: 69,
-        tags: converttags
+        tags: converttags,
       });
     }
   }
@@ -152,7 +155,7 @@ class EditComponent extends Component {
     let currentArrayOfOption = this.state.listOfOptions;
     currentArrayOfOption[index].content = data;
     this.setState({
-      listOfOptions: currentArrayOfOption
+      listOfOptions: currentArrayOfOption,
     });
   };
   handleOptionWeightageChange = (index, e) => {
@@ -161,7 +164,7 @@ class EditComponent extends Component {
       ? parseInt(e.target.value)
       : "";
     this.setState({
-      listOfOptions: currentArrayOfOption
+      listOfOptions: currentArrayOfOption,
     });
   };
   savedata = () => {
@@ -174,7 +177,7 @@ class EditComponent extends Component {
           optionId: item.optionId,
           name: item.name,
           content: this.refsArrayEnglish[index].editor.getData(),
-          weightage: item.weightage
+          weightage: item.weightage,
         };
       });
     const questionHindi = this.myRefQuestionHindi.current;
@@ -186,7 +189,7 @@ class EditComponent extends Component {
           optionId: item.optionId,
           name: item.name,
           content: this.refsArrayHindi[index].editor.getData(),
-          weightage: item.weightage
+          weightage: item.weightage,
         };
       });
     let difficultyvalue;
@@ -203,7 +206,7 @@ class EditComponent extends Component {
       default:
         break;
     }
-    let converttags = this.props.tags.map(item => {
+    let converttags = this.props.tags.map((item) => {
       return { tagId: item.id, tag: item.name };
     });
     axios({
@@ -212,6 +215,15 @@ class EditComponent extends Component {
       data: {
         authToken: "string",
         difficulty: difficultyvalue,
+        authorId: this.props.selectedAuthorId,
+        authorName:
+          this.props.authorList.filter(
+            (item) => item.authorId === this.props.selectedAuthorId
+          ).length > 0
+            ? this.props.authorList.filter(
+                (item) => item.authorId === this.props.selectedAuthorId
+              )[0].authorName
+            : null,
         questionId: parseInt(this.props.questionId),
         sectionId: this.props.selectedChapterID,
         subjectId: this.props.selectedSubjectID,
@@ -222,44 +234,44 @@ class EditComponent extends Component {
         version: {
           content:
             this.props.fetchedData.questionVersions.filter(
-              item => item.language === this.props.lang
+              (item) => item.language === this.props.lang
             )[0].language === "ENGLISH"
               ? questionEnglish.editor.getData()
               : questionHindi.editor.getData(),
           language: this.props.fetchedData.questionVersions.filter(
-            item => item.language === this.props.lang
+            (item) => item.language === this.props.lang
           )[0].language,
           options:
             this.props.fetchedData.questionVersions.filter(
-              item => item.language === this.props.lang
+              (item) => item.language === this.props.lang
             )[0].language === "ENGLISH"
               ? tempoptionEnglish
               : tempoptionHindi,
           questionVersionId: parseInt(
             this.props.fetchedData.questionVersions.filter(
-              item => item.language === this.props.lang
+              (item) => item.language === this.props.lang
             )[0].questionVersionId
           ),
           solution:
             this.props.fetchedData.questionVersions.filter(
-              item => item.language === this.props.lang
+              (item) => item.language === this.props.lang
             )[0].language === "ENGLISH"
               ? solutionEnglish.editor.getData()
-              : solutionHindi.editor.getData()
-        }
+              : solutionHindi.editor.getData(),
+        },
       },
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           // console.log(res.data.data);
           swal("Success", `Data updated`, "success");
           localStorage.setItem("editquesdata", null);
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
         alert(e);
       });
@@ -278,7 +290,7 @@ class EditComponent extends Component {
           return {
             name: item.name,
             content: this.refsArrayEnglishNew[index].editor.getData(),
-            weightage: item.weightage
+            weightage: item.weightage,
           };
         });
     } else {
@@ -290,7 +302,7 @@ class EditComponent extends Component {
           return {
             name: item.name,
             content: this.refsArrayHindiNew[index].editor.getData(),
-            weightage: item.weightage
+            weightage: item.weightage,
           };
         });
     }
@@ -309,7 +321,7 @@ class EditComponent extends Component {
       default:
         break;
     }
-    let converttags = this.props.tags.map(item => {
+    let converttags = this.props.tags.map((item) => {
       return { tagId: item.id, tag: item.name };
     });
     axios({
@@ -318,6 +330,15 @@ class EditComponent extends Component {
       data: {
         authToken: "string",
         difficulty: difficultyvalue,
+        authorId: this.props.selectedAuthorId,
+        authorName:
+          this.props.authorList.filter(
+            (item) => item.authorId === this.props.selectedAuthorId
+          ).length > 0
+            ? this.props.authorList.filter(
+                (item) => item.authorId === this.props.selectedAuthorId
+              )[0].authorName
+            : null,
         questionId: this.props.questionId,
         sectionId: this.props.selectedChapterID,
         subjectId: this.props.selectedSubjectID,
@@ -329,14 +350,14 @@ class EditComponent extends Component {
           content: question.editor.getData(),
           language: this.props.lang,
           options: tempoption,
-          solution: solution.editor.getData()
-        }
+          solution: solution.editor.getData(),
+        },
       },
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           console.log(res.data.data);
           // alert("success", res.data.data);
@@ -346,7 +367,7 @@ class EditComponent extends Component {
           localStorage.setItem("editquesdata", null);
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
         alert(e);
       });
@@ -355,7 +376,7 @@ class EditComponent extends Component {
     return (
       <div>
         {this.props.fetchedData.questionVersions.filter(
-          item => item.language === this.props.lang
+          (item) => item.language === this.props.lang
         ).length > 0 ? (
           <Row noGutters={true}>
             <Col
@@ -365,12 +386,12 @@ class EditComponent extends Component {
                 background: "#EEE",
                 boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -4px",
                 zIndex: "88",
-                position: "relative"
+                position: "relative",
               }}
             >
               <div
                 style={{
-                  width: "auto"
+                  width: "auto",
                 }}
               >
                 <LeftPanel
@@ -393,6 +414,9 @@ class EditComponent extends Component {
                   handleChangeTags={this.props.handleChangeTags}
                   difficulty={this.props.difficulty}
                   handleDifficultyRadio={this.props.handleDifficultyRadio}
+                  selectedAuthorId={this.props.selectedAuthorId}
+                  authorList={this.props.authorList}
+                  handleAuthorChange={this.props.handleAuthorChange}
                 />
               </div>
             </Col>
@@ -427,12 +451,12 @@ class EditComponent extends Component {
                 background: "#EEE",
                 boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -4px",
                 zIndex: "88",
-                position: "relative"
+                position: "relative",
               }}
             >
               <div
                 style={{
-                  width: "auto"
+                  width: "auto",
                 }}
               >
                 <LeftPanel
@@ -455,6 +479,9 @@ class EditComponent extends Component {
                   handleChangeTags={this.props.handleChangeTags}
                   difficulty={this.props.difficulty}
                   handleDifficultyRadio={this.props.handleDifficultyRadio}
+                  selectedAuthorId={this.props.selectedAuthorId}
+                  authorList={this.props.authorList}
+                  handleAuthorChange={this.props.handleAuthorChange}
                 />
               </div>
             </Col>
@@ -490,34 +517,75 @@ class EditComponent extends Component {
 class LeftPanel extends Component {
   render() {
     let currentvaluesubject = this.props.listOfSubject.filter(
-      item => item.subject.subjectId === this.props.selectedSubjectID
+      (item) => item.subject.subjectId === this.props.selectedSubjectID
     )[0];
     currentvaluesubject = currentvaluesubject
       ? currentvaluesubject.subjectName
       : "";
     let currentvaluechapter = this.props.listOfChapter.filter(
-      item => item.subjectSection.sectionId === this.props.selectedChapterID
+      (item) => item.subjectSection.sectionId === this.props.selectedChapterID
     )[0];
     currentvaluechapter = currentvaluechapter
       ? currentvaluechapter.sectionName
       : "";
     // console.log(currentvaluechapter,this.props.listOfChapter)
     let currentvaluetopic = this.props.listOfTopic.filter(
-      item => item.subjectTopic.topicId === this.props.selectedTopicID
+      (item) => item.subjectTopic.topicId === this.props.selectedTopicID
     )[0];
     currentvaluetopic = currentvaluetopic ? currentvaluetopic.title : "";
     let currentvaluesubtopic = this.props.listOfSubTopic.filter(
-      item => item.subjectSubtopic.subtopicId === this.props.selectedSubTopicID
+      (item) =>
+        item.subjectSubtopic.subtopicId === this.props.selectedSubTopicID
     )[0];
     currentvaluesubtopic = currentvaluesubtopic
       ? currentvaluesubtopic.title
       : "";
+    let currentvalueauthor = this.props.authorList.filter(
+      (item) => item.authorId === this.props.selectedAuthorId
+    )[0];
+    currentvalueauthor = currentvalueauthor
+      ? currentvalueauthor.authorName
+      : "";
     return (
       <Form>
+        <Form.Group controlId="exampleForm.ControlSelectauthor">
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Authors
+          </Form.Label>
+          <Form.Control
+            style={
+              currentvalueauthor !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+            size="sm"
+            as="select"
+            // defaultValue=""
+            onChange={this.props.handleAuthorChange}
+            value={currentvalueauthor}
+          >
+            {this.props.authorList &&
+              this.props.authorList.map((item, index) => {
+                return (
+                  <option key={index} value={item.authorName}>
+                    {item.authorName}
+                  </option>
+                );
+              })}
+            <option key="" value="">
+              Select
+            </option>
+          </Form.Control>
+        </Form.Group>
+
         <Form.Group>
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Subject
@@ -543,7 +611,7 @@ class LeftPanel extends Component {
         <Form.Group>
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Chapter
@@ -568,7 +636,7 @@ class LeftPanel extends Component {
         <Form.Group>
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Topic
@@ -593,7 +661,7 @@ class LeftPanel extends Component {
         <Form.Group>
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Sub-topic
@@ -618,7 +686,7 @@ class LeftPanel extends Component {
         <Form.Group>
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Tags
@@ -635,7 +703,7 @@ class LeftPanel extends Component {
         <Form.Group>
           <Form.Label
             style={{
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Difficulty
@@ -698,15 +766,15 @@ class Rightpanel extends Component {
                 <div style={{ margin: "0.5em 0" }}>
                   {this.props.lang === "HINDI" ? (
                     <CKEditor
-                      onBeforeLoad={CKEDITOR =>
+                      onBeforeLoad={(CKEDITOR) =>
                         (CKEDITOR.disableAutoInline = true)
                       }
-                      ref={ref => {
+                      ref={(ref) => {
                         // Callback refs are preferable when
                         // dealing with dynamic refs
                         this.props.refsArrayHindi[index] = ref;
                       }}
-                      onFocus={event => {
+                      onFocus={(event) => {
                         window.hook(event.editor.document.$.body);
                         // let data = event.editor.getData();
                         // console.log('focus')
@@ -718,7 +786,7 @@ class Rightpanel extends Component {
                         // installKeyupOption(index, event.editor);
                       }}
                       config={{
-                        height: 100
+                        height: 100,
 
                         // placeholder: "Test description and instruction in English"
                       }}
@@ -734,10 +802,10 @@ class Rightpanel extends Component {
                     />
                   ) : (
                     <CKEditor
-                      onBeforeLoad={CKEDITOR =>
+                      onBeforeLoad={(CKEDITOR) =>
                         (CKEDITOR.disableAutoInline = true)
                       }
-                      ref={ref => {
+                      ref={(ref) => {
                         // Callback refs are preferable when
                         // dealing with dynamic refs
 
@@ -754,7 +822,7 @@ class Rightpanel extends Component {
                       //   );
                       // }}
                       config={{
-                        height: 100
+                        height: 100,
 
                         // placeholder: "Test description and instruction in English"
                       }}
@@ -795,7 +863,7 @@ class Rightpanel extends Component {
               borderColor: "#3F5FBB",
               padding: "0.6em 2.5em",
               fontSize: "1.1em",
-              fontWeight: "600"
+              fontWeight: "600",
             }}
             onClick={this.props.savedata}
           >
@@ -811,21 +879,21 @@ function QuestionComp({
   lang,
   myRefQuestionHindi,
   myRefQuestionEnglish,
-  questionData
+  questionData,
 }) {
   // console.log(questionData);
   return (
     <Form.Group>
       <Form.Label
         style={{
-          fontWeight: "600"
+          fontWeight: "600",
         }}
       >
         Question
       </Form.Label>
       <div
         style={{
-          margin: "0.5em 0"
+          margin: "0.5em 0",
         }}
       >
         {lang === "HINDI" ? (
@@ -850,15 +918,15 @@ function QuestionComp({
               <option value="Ramington">Ramington</option>
             </select>
             <CKEditor
-              onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+              onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
               config={{
-                height: 100
+                height: 100,
               }}
               ref={myRefQuestionHindi}
-              onFocus={event => {
+              onFocus={(event) => {
                 window.hook(event.editor.document.$.body);
               }}
-              oninstanceReady={event => {
+              oninstanceReady={(event) => {
                 var a = document.getElementById("txtLanguage");
                 a.selectedIndex = 1;
                 window.setLang();
@@ -871,9 +939,9 @@ function QuestionComp({
           </div>
         ) : (
           <CKEditor
-            onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+            onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
             config={{
-              height: 100
+              height: 100,
             }}
             ref={myRefQuestionEnglish}
             data={questionData}
@@ -887,39 +955,39 @@ function ExplanationComp({
   lang,
   myRefExplanationHindi,
   myRefExplanationEnglish,
-  explanationData
+  explanationData,
 }) {
   return (
     <Form.Group>
       <Form.Label
         style={{
-          fontWeight: "600"
+          fontWeight: "600",
         }}
       >
         Explanation
       </Form.Label>
       <div
         style={{
-          margin: "0.5em 0"
+          margin: "0.5em 0",
         }}
       >
         {lang === "HINDI" ? (
           <CKEditor
-            onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+            onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
             config={{
-              height: 100
+              height: 100,
             }}
             ref={myRefExplanationHindi}
-            onFocus={event => {
+            onFocus={(event) => {
               window.hook(event.editor.document.$.body);
             }}
             data={explanationData}
           />
         ) : (
           <CKEditor
-            onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
+            onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
             config={{
-              height: 100
+              height: 100,
             }}
             ref={myRefExplanationEnglish}
             data={explanationData}
@@ -976,17 +1044,17 @@ class RightpanelNewVersion extends Component {
                 <div style={{ margin: "0.5em 0" }}>
                   {this.props.lang === "HINDI" ? (
                     <CKEditor
-                      onBeforeLoad={CKEDITOR =>
+                      onBeforeLoad={(CKEDITOR) =>
                         (CKEDITOR.disableAutoInline = true)
                       }
-                      ref={ref => {
+                      ref={(ref) => {
                         // Callback refs are preferable when
                         // dealing with dynamic refs
 
                         this.props.refsArrayHindiNew[index] = ref;
                         return true;
                       }}
-                      onFocus={event => {
+                      onFocus={(event) => {
                         window.hook(event.editor.document.$.body);
                         this.props.handleOptioncontentchange(
                           index,
@@ -1002,12 +1070,12 @@ class RightpanelNewVersion extends Component {
                         // installKeyupOption(index, event.editor);
                       }}
                       config={{
-                        height: 100
+                        height: 100,
 
                         // placeholder: "Test description and instruction in English"
                       }}
                       data={item.content}
-                      onChange={event => {
+                      onChange={(event) => {
                         // let data = editor.getData();
                         // console.log('change')
                         this.props.handleOptioncontentchange(
@@ -1018,17 +1086,17 @@ class RightpanelNewVersion extends Component {
                     />
                   ) : (
                     <CKEditor
-                      onBeforeLoad={CKEDITOR =>
+                      onBeforeLoad={(CKEDITOR) =>
                         (CKEDITOR.disableAutoInline = true)
                       }
-                      ref={ref => {
+                      ref={(ref) => {
                         // Callback refs are preferable when
                         // dealing with dynamic refs
 
                         this.props.refsArrayEnglishNew[index] = ref;
                         return true;
                       }}
-                      onFocus={event => {
+                      onFocus={(event) => {
                         // let data = event.editor.getData();
                         // console.log('focus')
                         this.props.handleOptioncontentchange(
@@ -1037,10 +1105,10 @@ class RightpanelNewVersion extends Component {
                         );
                       }}
                       config={{
-                        height: 100
+                        height: 100,
                       }}
                       data={item.content}
-                      onChange={event => {
+                      onChange={(event) => {
                         this.props.handleOptioncontentchange(
                           index,
                           event.editor.getData()
@@ -1064,7 +1132,7 @@ class RightpanelNewVersion extends Component {
                 background: "#FF8976",
                 borderColor: "#FF8976",
                 borderRadius: "0",
-                float: "right"
+                float: "right",
               }}
             >
               {" "}
@@ -1089,7 +1157,7 @@ class RightpanelNewVersion extends Component {
               borderColor: "#3F5FBB",
               padding: "0.6em 2.5em",
               fontSize: "1.1em",
-              fontWeight: "600"
+              fontWeight: "600",
             }}
             onClick={this.props.savedata}
           >

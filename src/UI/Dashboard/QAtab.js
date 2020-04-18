@@ -1303,8 +1303,8 @@ class QAtab extends Component {
                 <Col lg="1.5">
                   <Link
                     to={{
-                      pathname: "/addaddquesexam",
-                      state: { authorList: this.props.authorList },
+                      pathname: "/addques",
+                      // state: { authorList: this.props.authorList },
                     }}
                     target="_self"
                   >

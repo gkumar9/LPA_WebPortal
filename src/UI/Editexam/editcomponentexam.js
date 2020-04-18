@@ -13,12 +13,14 @@ class ExamEditComponent extends Component {
       Number("0." + this.props.fetchedData.time.toString().split(".")[1]) * 60;
     let hours = this.props.fetchedData.time.toString().split(".")[0];
     this.state = {
+      authorId: 0,
+      authorList: [],
       listOfExam: [],
-      selectedExamID: "",
+      selectedExamID: 0,
       listOfSubject: [],
-      selectedSubjectID: "",
+      selectedSubjectID: 0,
       listOfChapter: [],
-      selectedChapterID: "",
+      selectedChapterID: 0,
       listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
       startDate: this.props.fetchedData.startDate
         ? new Date(this.props.fetchedData.startDate)
@@ -27,16 +29,16 @@ class ExamEditComponent extends Component {
         ? new Date(this.props.fetchedData.endDate)
         : new Date(),
       testnameEnglish: this.props.fetchedData.testVersions.filter(
-        item => item.language === "ENGLISH"
+        (item) => item.language === "ENGLISH"
       )[0].name,
       testnameHindi: this.props.fetchedData.testVersions.filter(
-        item => item.language === "HINDI"
+        (item) => item.language === "HINDI"
       )[0].name,
       testInstructionEnglish: this.props.fetchedData.testVersions.filter(
-        item => item.language === "ENGLISH"
+        (item) => item.language === "ENGLISH"
       )[0].instructions,
       testInstructionHindi: this.props.fetchedData.testVersions.filter(
-        item => item.language === "HINDI"
+        (item) => item.language === "HINDI"
       )[0].instructions,
       hour: hours,
       minute: minutes,
@@ -46,11 +48,11 @@ class ExamEditComponent extends Component {
         : "",
       listOfSection: this.props.fetchedData.testSections,
       englishtestVersionId: this.props.fetchedData.testVersions.filter(
-        item => item.language === "ENGLISH"
+        (item) => item.language === "ENGLISH"
       )[0].testVersionId,
       hinditestVersionId: this.props.fetchedData.testVersions.filter(
-        item => item.language === "HINDI"
-      )[0].testVersionId
+        (item) => item.language === "HINDI"
+      )[0].testVersionId,
     };
     this.myReftestdescEnglish = React.createRef();
     this.myReftestdescHindi = React.createRef();
@@ -58,7 +60,7 @@ class ExamEditComponent extends Component {
     this.refsSectionHindi = [];
     window.ExamEditComponent = this;
   }
-  addSectionQuestions = index => {
+  addSectionQuestions = (index) => {
     let tempsectionlist = this.state.listOfSection;
     if (tempsectionlist[index].questions) {
       tempsectionlist[index].questions.push("");
@@ -67,7 +69,7 @@ class ExamEditComponent extends Component {
     }
     this.setState({ listOfSection: tempsectionlist });
   };
-  deleteSectionQuestion = index => {
+  deleteSectionQuestion = (index) => {
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].questions.pop();
     this.setState({ listOfSection: tempsectionlist });
@@ -80,7 +82,7 @@ class ExamEditComponent extends Component {
   handleSectionDescriptionChange = (index, language, data) => {
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].testSectionVersions.filter(
-      item => item.language === language
+      (item) => item.language === language
     )[0].content = data;
 
     this.setState({ listOfSection: tempsectionlist });
@@ -112,16 +114,16 @@ class ExamEditComponent extends Component {
         {
           content: "",
           language: "ENGLISH",
-          name: ""
+          name: "",
           // sectionName: ""
         },
         {
           content: "",
           language: "HINDI",
-          name: ""
+          name: "",
           // sectionName: ""
-        }
-      ]
+        },
+      ],
     });
     this.setState({ listOfSection: tempsectionlist });
   };
@@ -133,40 +135,40 @@ class ExamEditComponent extends Component {
   handleSectionnameChange = (index, language, e) => {
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].testSectionVersions.filter(
-      item => item.language === language
+      (item) => item.language === language
     )[0].name = e.target.value;
     this.setState({ listOfSection: tempsectionlist });
   };
-  handleEnglishTestNameChange = e => {
+  handleEnglishTestNameChange = (e) => {
     this.setState({ testnameEnglish: e.target.value });
   };
-  handleHindiTestNameChange = e => {
+  handleHindiTestNameChange = (e) => {
     this.setState({ testnameHindi: e.target.value });
   };
-  handleEnglishInstructionChange = data => {
+  handleEnglishInstructionChange = (data) => {
     this.setState({ testInstructionEnglish: data });
   };
-  handleHindiInstructionChange = data => {
+  handleHindiInstructionChange = (data) => {
     this.setState({ testInstructionHindi: data });
   };
-  onHourChange = e => {
+  onHourChange = (e) => {
     this.setState({ hour: e.target.value });
   };
 
-  onMinuteChange = e => {
+  onMinuteChange = (e) => {
     this.setState({ minute: e.target.value });
   };
-  handleStartDateChange = date => {
+  handleStartDateChange = (date) => {
     this.setState({
-      startDate: date
+      startDate: date,
     });
   };
-  handleEndDateChange = date => {
+  handleEndDateChange = (date) => {
     this.setState({
-      endDate: date
+      endDate: date,
     });
   };
-  handleTypeYearChange = e => {
+  handleTypeYearChange = (e) => {
     this.setState({ selectedTypeYear: e.target.value });
   };
   componentDidMount() {
@@ -196,17 +198,35 @@ class ExamEditComponent extends Component {
     // });
     axios({
       method: "POST",
+      url: URL.authorlist,
+      data: { authToken: "string" },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        this.setState({
+          authorList: res.data.data.list,
+          authorId:
+            res.data.data.list.length > 0 ? this.props.fetchedData.authorId : 0,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    axios({
+      method: "POST",
       url: URL.fetchExam + "ENGLISH",
       data: { authToken: "string" },
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         // console.log(res.data.data);
         if (res.status === 200) {
           let templist = res.data.data.list.filter(
-            item => item.exam.examId === this.props.fetchedData.examId
+            (item) => item.exam.examId === this.props.fetchedData.examId
           );
           if (templist.length > 0) {
             this.setState(
@@ -215,7 +235,7 @@ class ExamEditComponent extends Component {
                 selectedExamID:
                   res.data.data.list.length > 0
                     ? this.props.fetchedData.examId
-                    : ""
+                    : 0,
               },
               () => {
                 this.callApiForSubject();
@@ -225,10 +245,10 @@ class ExamEditComponent extends Component {
             this.setState(
               {
                 listOfExam: res.data.data.list,
-                selectedExamID:
-                  res.data.data.list.length > 0
-                    ? res.data.data.list[0].exam.examId
-                    : ""
+                selectedExamID:0
+                  // res.data.data.list.length > 0
+                  //   ? res.data.data.list[0].exam.examId
+                  //   : 0,
               },
               () => {
                 this.callApiForSubject();
@@ -239,30 +259,30 @@ class ExamEditComponent extends Component {
           alert("Unexpected code");
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
       });
   }
   callApiForSubject = () => {
-    if (this.state.selectedExamID !== "") {
+    if (this.state.selectedExamID !== 0) {
       axios({
         method: "POST",
         url: URL.fetchSubjectForExam + this.state.selectedExamID,
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             axios({
               method: "POST",
               url: URL.fetchSubject + "ENGLISH",
               data: { authToken: "string" },
               headers: {
-                "Content-Type": "application/json"
-              }
-            }).then(response => {
+                "Content-Type": "application/json",
+              },
+            }).then((response) => {
               if (response.status === 200) {
                 let tempsubjectlist = [];
                 for (let i = 0; i < res.data.data.list.length; i++) {
@@ -276,7 +296,7 @@ class ExamEditComponent extends Component {
                   }
                 }
                 let templist = tempsubjectlist.filter(
-                  item =>
+                  (item) =>
                     item.subject.subjectId === this.props.fetchedData.subjectId
                 );
                 if (templist.length > 0) {
@@ -286,7 +306,7 @@ class ExamEditComponent extends Component {
                       selectedSubjectID:
                         tempsubjectlist.length > 0
                           ? this.props.fetchedData.subjectId
-                          : ""
+                          : 0,
                     },
                     () => {
                       this.callApiForChapter();
@@ -296,10 +316,10 @@ class ExamEditComponent extends Component {
                   this.setState(
                     {
                       listOfSubject: tempsubjectlist,
-                      selectedSubjectID:
-                        tempsubjectlist.length > 0
-                          ? tempsubjectlist[0].subject.subjectId
-                          : ""
+                      selectedSubjectID:0
+                        // tempsubjectlist.length > 0
+                        //   ? tempsubjectlist[0].subject.subjectId
+                        //   : 0,
                     },
                     () => {
                       this.callApiForChapter();
@@ -312,34 +332,34 @@ class ExamEditComponent extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     } else {
       console.log("(English)examid is blank. API not called. exam list");
       this.setState({
         listOfChapter: [],
-        selectedChapterID: "",
+        selectedChapterID: 0,
 
         listOfSubject: [],
-        selectedSubjectId: ""
+        selectedSubjectId: 0,
       });
     }
   };
   callApiForChapter = () => {
-    if (this.state.selectedSubjectID !== "") {
+    if (this.state.selectedSubjectID !== 0) {
       axios({
         method: "POST",
         url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH",
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             let templist = res.data.data.list.filter(
-              item =>
+              (item) =>
                 item.subjectSection.sectionId ===
                 this.props.fetchedData.sectionId
             );
@@ -350,7 +370,7 @@ class ExamEditComponent extends Component {
                   selectedChapterID:
                     res.data.data.list.length > 0
                       ? this.props.fetchedData.sectionId
-                      : ""
+                      : 0,
                 },
                 () => {
                   // this.callApiForTopic();
@@ -360,10 +380,10 @@ class ExamEditComponent extends Component {
               this.setState(
                 {
                   listOfChapter: res.data.data.list,
-                  selectedChapterID:
-                    res.data.data.list.length > 0
-                      ? res.data.data.list[0].subjectSection.sectionId
-                      : ""
+                  selectedChapterID:0
+                    // res.data.data.list.length > 0
+                    //   ? res.data.data.list[0].subjectSection.sectionId
+                    //   : 0,
                 },
                 () => {
                   // this.callApiForTopic();
@@ -374,7 +394,7 @@ class ExamEditComponent extends Component {
             alert("Unexpected code");
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     } else {
@@ -383,53 +403,72 @@ class ExamEditComponent extends Component {
       );
       this.setState({
         listOfChapter: [],
-        selectedChapterID: ""
+        selectedChapterID: 0,
       });
     }
   };
-  handleExamChange = e => {
+  handleExamChange = (e) => {
     e.preventDefault();
 
     this.setState(
       {
         selectedExamID: this.state.listOfExam[e.target.options.selectedIndex]
-          .exam.examId
+          .exam.examId,
       },
       () => {
         this.callApiForSubject();
       }
     );
   };
-  handleSubjectChange = e => {
+  handleSubjectChange = (e) => {
     e.preventDefault();
 
     this.setState(
       {
         selectedSubjectID: this.state.listOfSubject[
           e.target.options.selectedIndex
-        ].subject.subjectId
+        ].subject.subjectId,
       },
       () => {
         this.callApiForChapter();
       }
     );
   };
-  handleChapterChange = e => {
+  handleChapterChange = (e) => {
     e.preventDefault();
     this.setState(
       {
         selectedChapterID: this.state.listOfChapter[
           e.target.options.selectedIndex
-        ].subjectSection.sectionId
+        ].subjectSection.sectionId,
       },
       () => {}
     );
   };
-  handleTypeChange = e => {
+  handleTypeChange = (e) => {
     e.preventDefault();
     this.setState({ selectedType: e.target.value }, () => {
       // this.componentDidMount();
     });
+  };
+  handleAuthorChange = (e) => {
+    if (e.target.value === "") {
+      // localStorage.setItem("selectedAuthorIDQA", "0");
+      this.setState({
+        authorId: 0,
+      });
+    } else {
+      // localStorage.setItem(
+      //   "selectedAuthorIDQA",
+      //   this.props.authorList[
+      //     e.target.options.selectedIndex
+      //   ].authorId.toString()
+      // );
+      this.setState({
+        authorId: this.state.authorList[e.target.options.selectedIndex]
+          .authorId,
+      });
+    }
   };
   saveExamdata = () => {
     let testdescEnglish = this.myReftestdescEnglish.current;
@@ -448,7 +487,7 @@ class ExamEditComponent extends Component {
             name: item.testSectionVersions[0].name,
             sectionName: item.testSectionVersions[0].sectionName,
             testSectionVersionId:
-              item.testSectionVersions[0].testSectionVersionId
+              item.testSectionVersions[0].testSectionVersionId,
           },
           {
             content: this.refsSectionHindi[index].editor.getData(),
@@ -456,9 +495,9 @@ class ExamEditComponent extends Component {
             name: item.testSectionVersions[1].name,
             sectionName: item.testSectionVersions[1].sectionName,
             testSectionVersionId:
-              item.testSectionVersions[1].testSectionVersionId
-          }
-        ]
+              item.testSectionVersions[1].testSectionVersionId,
+          },
+        ],
       };
     });
     var startDatetemp = this.state.startDate;
@@ -488,9 +527,10 @@ class ExamEditComponent extends Component {
     }
     var endDate = yyyyendDatetemp + "-" + mmendDatetemp + "-" + ddendDatetemp;
 
-    let templistofsection = tempsections.map(item => {
+    let templistofsection = tempsections.map((item) => {
       item["versions"] = item["testSectionVersions"];
       delete item.testSectionMapping;
+      delete item.testSectionVersions;
       return item;
     });
 
@@ -500,6 +540,15 @@ class ExamEditComponent extends Component {
       data: {
         authToken: "string",
         endDate: endDate,
+        authorId: this.state.authorId,
+        authorName:
+          this.state.authorList.filter(
+            (item) => item.authorId === this.state.authorId
+          ).length > 0
+            ? this.state.authorList.filter(
+                (item) => item.authorId === this.state.authorId
+              )[0].authorName
+            : null,
         examId: this.state.selectedExamID,
         sectionId: this.state.selectedChapterID,
         sections: templistofsection,
@@ -511,14 +560,14 @@ class ExamEditComponent extends Component {
             instructions: testdescEnglish.editor.getData(),
             language: "ENGLISH",
             name: this.state.testnameEnglish,
-            testVersionId: this.state.englishtestVersionId
+            testVersionId: this.state.englishtestVersionId,
           },
           {
             instructions: testdescHindi.editor.getData(),
             language: "HINDI",
             name: this.state.testnameHindi,
-            testVersionId: this.state.hinditestVersionId
-          }
+            testVersionId: this.state.hinditestVersionId,
+          },
         ],
         time:
           parseFloat(this.state.hour) +
@@ -527,19 +576,19 @@ class ExamEditComponent extends Component {
               parseFloat(Number(parseInt(this.state.minute) / 60))
             : 0,
         type: this.state.selectedType,
-        year: this.state.selectedTypeYear
+        year: this.state.selectedTypeYear,
       },
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           console.log(res.data.data);
           swal("Success", `Data updated`, "success");
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
         swal(e, "error");
       });
@@ -551,7 +600,7 @@ class ExamEditComponent extends Component {
         style={{
           width: "auto",
           background: "#EEEEEE",
-          padding: "0"
+          padding: "0",
         }}
       >
         <div>
@@ -563,7 +612,7 @@ class ExamEditComponent extends Component {
                 background: "#EEE",
                 boxShadow: "rgba(0, 0, 0, 0.75) 2px 0px 4px -4px",
                 zIndex: "88",
-                position: "relative"
+                position: "relative",
               }}
             >
               <div>
@@ -591,6 +640,9 @@ class ExamEditComponent extends Component {
                   handleTypeChange={this.handleTypeChange}
                   handleTypeYearChange={this.handleTypeYearChange}
                   selectedTypeYear={this.state.selectedTypeYear}
+                  authorId={this.state.authorId}
+                  authorList={this.state.authorList}
+                  handleAuthorChange={this.handleAuthorChange}
                 />
               </div>
             </Col>
@@ -598,7 +650,7 @@ class ExamEditComponent extends Component {
               style={{
                 background: "#EEEEEE",
                 padding: "0em 4em",
-                margin: "2.5em 0em"
+                margin: "2.5em 0em",
               }}
             >
               <RightExamPanel
@@ -641,7 +693,7 @@ class ExamEditComponent extends Component {
                     borderColor: "#3F5FBB",
                     padding: "0.6em 2.5em",
                     fontSize: "1.1em",
-                    fontWeight: "600"
+                    fontWeight: "600",
                   }}
                   onClick={this.saveExamdata}
                 >
