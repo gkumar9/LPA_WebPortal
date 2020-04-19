@@ -1050,7 +1050,13 @@ class QAtab extends Component {
                     </Card.Title>
 
                     <Card.Text
-                      style={{ marginBottom: "0.5em", display: "flex" }}
+                      style={{
+                        marginBottom: "0.5em",
+                        display: "flex",
+                        whiteSpace: " nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
                     >
                       <b>{"Q. "}</b>
                       <MathJax
@@ -1587,6 +1593,9 @@ class QAtab extends Component {
                                 <Card.Text
                                   style={{
                                     marginBottom: "0.5em",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
                                     // display: "block",
                                     // width: "50%"
                                   }}

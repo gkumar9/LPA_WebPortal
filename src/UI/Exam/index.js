@@ -491,7 +491,7 @@ class Exam extends Component {
         mmendDatetemp = "0" + mmendDatetemp;
       }
       var endDate = yyyyendDatetemp + "-" + mmendDatetemp + "-" + ddendDatetemp;
-     
+
       axios({
         method: "POST",
         url: URL.addnewExam,

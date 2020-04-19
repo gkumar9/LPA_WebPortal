@@ -19,6 +19,7 @@ let URL = {
   updatetest: Base_url + "/api/update/test",
   tagsearch: Base_url + "/api/tag/search/",
   authorlist: Base_url + "/api/authors",
-  userlist:Base_url+'/api/users'
+  userlist: Base_url + "/api/users",
+  reviewTest: Base_url + "/api/review/test/",
 };
 export default URL;

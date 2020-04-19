@@ -40,257 +40,289 @@ class LeftPanelExam extends Component {
       ? currentvalueauthor.authorName
       : "";
     return (
-      <Form>
-        <Form.Group>
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Test id
-          </Form.Label>
-          <Form.Control
-            style={
-              {
-                // fontWeight: "600",
-                // margin: " 0 0.5em"
-              }
-            }
-            disabled
-            // plaintext
-            // readOnly
-            defaultValue={this.props.testID}
-          />
-        </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelectauthor">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Authors
-          </Form.Label>
-          <Form.Control
-            style={
-              currentvalueauthor !== ""
-                ? { borderRadius: "0" }
-                : { borderRadius: "0", color: "#a3a2a2" }
-            }
-            size="sm"
-            as="select"
-            // defaultValue=""
-            onChange={this.props.handleAuthorChange}
-            value={currentvalueauthor}
-          >
-            {this.props.authorList &&
-              this.props.authorList.map((item, index) => {
-                return (
-                  <option key={index} value={item.authorName}>
-                    {item.authorName}
-                  </option>
-                );
-              })}
-            <option key="" value="">
-              Select all
-            </option>
-          </Form.Control>
-        </Form.Group>
-
-        <Form.Group controlId="exampleForm.ControlSelect1111">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Exam
-          </Form.Label>
-          <Form.Control
-            style={{ borderRadius: "0" }}
-            size="sm"
-            as="select"
-            // defaultValue=""
-            onChange={this.props.handleExamChange}
-            value={currentvalueexam}
-          >
-            {this.props.listOfExam &&
-              this.props.listOfExam.map((item, index) => {
-                return (
-                  <option key={index} value={item.name}>
-                    {item.name}
-                  </option>
-                );
-              })}
-              <option key="" value="">
-              Select all
-            </option>
-          </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelect111">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Subject
-          </Form.Label>
-          <Form.Control
-            style={{ borderRadius: "0" }}
-            size="sm"
-            as="select"
-            // defaultValue=""
-            onChange={this.props.handleSubjectChange}
-            value={currentvaluesubject}
-          >
-            {this.props.listOfSubject &&
-              this.props.listOfSubject.map((item, index) => {
-                return (
-                  <option key={index} value={item.subjectName}>
-                    {item.subjectName}
-                  </option>
-                );
-              })}
-              <option key="" value="">
-              Select all
-            </option>
-          </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelect222">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Chapter
-          </Form.Label>
-          <Form.Control
-            style={{ borderRadius: "0" }}
-            size="sm"
-            as="select"
-            value={currentvaluechapter}
-            onChange={this.props.handleChapterChange}
-          >
-            {this.props.listOfChapter &&
-              this.props.listOfChapter.map((item, index) => {
-                return (
-                  <option key={index} value={item.sectionName}>
-                    {item.sectionName}
-                  </option>
-                );
-              })}
-              <option key="" value="">
-              Select all
-            </option>
-          </Form.Control>
-        </Form.Group>
-
-        <Form.Group controlId="exampleForm.ControlSelect2222">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Type
-          </Form.Label>
-          <Form.Control
-            style={{ borderRadius: "0" }}
-            size="sm"
-            as="select"
-            value={this.props.selectedType}
-            onChange={this.props.handleTypeChange}
-          >
-            {this.props.listOfType &&
-              this.props.listOfType.map((item, index) => {
-                return (
-                  <option key={index} value={item}>
-                    {item}
-                  </option>
-                );
-              })}
-          </Form.Control>
-        </Form.Group>
-        {this.props.selectedType === "Previous year paper" && (
-          <Form.Group controlId="exampleForm.ControlSelect22222">
-            <Form.Label
-              style={{
-                fontWeight: "600",
-              }}
-            >
-              Year
-            </Form.Label>
-            <Form.Control
-              style={{ borderRadius: "0" }}
-              size="sm"
-              //   as="select"
-              value={this.props.selectedTypeYear}
-              onChange={this.props.handleTypeYearChange}
-            ></Form.Control>
-          </Form.Group>
-        )}
-        <Form.Group controlId="exampleForm.ControlSelect22221">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Stating date of test
-          </Form.Label>
-          <DatePicker
-            selected={this.props.startDate}
-            onChange={this.props.handleStartDateChange}
-            dateFormat="dd/MM/yyyy"
-          />
-        </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelect222222">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Ending date of test
-          </Form.Label>
-          <DatePicker
-            selected={this.props.endDate}
-            onChange={this.props.handleEndDateChange}
-            dateFormat="dd/MM/yyyy"
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Total time for test (Hr : Min)
-          </Form.Label>
-          <Row noGutters={true}>
-            <Col sm="5">
-              <Form.Control
-                type="number"
-                placeholder="Hours"
-                value={this.props.hour ? this.props.hour : 0}
-                onChange={this.props.onHourChange.bind(this)}
-              ></Form.Control>
-            </Col>
-            <Col sm="2">
+      <React.Fragment>
+        {this.props.fetchedData.active ? (
+          <Form>
+            <marquee>
+              <p style={{ marginBottom: "0.5em", color: "green" }}>
+                <b>
+                  *This test is marked as reviewed. Hence no further updating is
+                  possible.*
+                </b>
+              </p>
+            </marquee>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                  borderRadius: "0",
+                }}
+              >
+                Test id
+              </Form.Label>
               <Form.Control
                 style={{
-                  textAlign: "center",
-                  fontWeight: "600",
-                  fontSize: "1em",
+                  borderRadius: "0",
+                  // fontWeight: "600",
+                  // margin: " 0 0.5em"
                 }}
-                plaintext
-                readOnly
-                defaultValue=":"
+                disabled
+                // plaintext
+                // readOnly
+                defaultValue={this.props.testID}
               />
-            </Col>
-            <Col sm="5">
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelectauthor">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Authors
+              </Form.Label>
               <Form.Control
-                type="number"
-                placeholder="Minutes"
-                value={this.props.minute ? this.props.minute : 0}
-                onChange={this.props.onMinuteChange.bind(this)}
-              ></Form.Control>
-              {/* <TimePickerWrapper
+                disabled
+                style={
+                  currentvalueauthor !== ""
+                    ? { borderRadius: "0" }
+                    : { borderRadius: "0", color: "#a3a2a2" }
+                }
+                size="sm"
+                as="select"
+                // defaultValue=""
+                onChange={this.props.handleAuthorChange}
+                value={currentvalueauthor}
+              >
+                {this.props.authorList &&
+                  this.props.authorList.map((item, index) => {
+                    return (
+                      <option key={index} value={item.authorName}>
+                        {item.authorName}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select
+                </option>
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="exampleForm.ControlSelect1111">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Exam
+              </Form.Label>
+              <Form.Control
+                disabled
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                // defaultValue=""
+                onChange={this.props.handleExamChange}
+                value={currentvalueexam}
+              >
+                {this.props.listOfExam &&
+                  this.props.listOfExam.map((item, index) => {
+                    return (
+                      <option key={index} value={item.name}>
+                        {item.name}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select all
+                </option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect111">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Subject
+              </Form.Label>
+              <Form.Control
+                disabled
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                // defaultValue=""
+                onChange={this.props.handleSubjectChange}
+                value={currentvaluesubject}
+              >
+                {this.props.listOfSubject &&
+                  this.props.listOfSubject.map((item, index) => {
+                    return (
+                      <option key={index} value={item.subjectName}>
+                        {item.subjectName}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select all
+                </option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect222">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Chapter
+              </Form.Label>
+              <Form.Control
+                disabled
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                value={currentvaluechapter}
+                onChange={this.props.handleChapterChange}
+              >
+                {this.props.listOfChapter &&
+                  this.props.listOfChapter.map((item, index) => {
+                    return (
+                      <option key={index} value={item.sectionName}>
+                        {item.sectionName}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select all
+                </option>
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="exampleForm.ControlSelect2222">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Type
+              </Form.Label>
+              <Form.Control
+                disabled
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                value={this.props.selectedType}
+                onChange={this.props.handleTypeChange}
+              >
+                {this.props.listOfType &&
+                  this.props.listOfType.map((item, index) => {
+                    return (
+                      <option key={index} value={item}>
+                        {item}
+                      </option>
+                    );
+                  })}
+              </Form.Control>
+            </Form.Group>
+            {this.props.selectedType === "Previous year paper" && (
+              <Form.Group controlId="exampleForm.ControlSelect22222">
+                <Form.Label
+                  style={{
+                    fontWeight: "600",
+                  }}
+                >
+                  Year
+                </Form.Label>
+                <Form.Control
+                  disabled
+                  style={{ borderRadius: "0" }}
+                  size="sm"
+                  //   as="select"
+                  value={this.props.selectedTypeYear}
+                  onChange={this.props.handleTypeYearChange}
+                ></Form.Control>
+              </Form.Group>
+            )}
+            <Form.Group controlId="exampleForm.ControlSelect22221">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Stating date of test
+              </Form.Label>
+              <DatePicker
+                disabled
+                // style={{
+                //   background: " #e9ecef",
+                //   borderColor: "#ced4da",
+                //   borderWidth: "1px",
+                // }}
+                selected={this.props.startDate}
+                onChange={this.props.handleStartDateChange}
+                dateFormat="dd/MM/yyyy"
+              />
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect222222">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Ending date of test
+              </Form.Label>
+              <DatePicker
+                disabled
+                // style={{
+                //   background: " #e9ecef",
+                //   borderColor: "#ced4da",
+                //   borderWidth: "1px",
+                // }}
+                selected={this.props.endDate}
+                onChange={this.props.handleEndDateChange}
+                dateFormat="dd/MM/yyyy"
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Total time for test (Hr : Min)
+              </Form.Label>
+              <Row noGutters={true}>
+                <Col sm="5">
+                  <Form.Control
+                    disabled
+                    style={{ borderRadius: "0" }}
+                    type="number"
+                    placeholder="Hours"
+                    value={this.props.hour ? this.props.hour : 0}
+                    onChange={this.props.onHourChange.bind(this)}
+                  ></Form.Control>
+                </Col>
+                <Col sm="2">
+                  <Form.Control
+                    style={{
+                      textAlign: "center",
+                      fontWeight: "600",
+                      fontSize: "1em",
+                    }}
+                    plaintext
+                    readOnly
+                    defaultValue=":"
+                  />
+                </Col>
+                <Col sm="5">
+                  <Form.Control
+                    style={{ borderRadius: "0" }}
+                    disabled
+                    type="number"
+                    placeholder="Minutes"
+                    value={this.props.minute ? this.props.minute : 0}
+                    onChange={this.props.onMinuteChange.bind(this)}
+                  ></Form.Control>
+                  {/* <TimePickerWrapper
           
             timeFormat="HH:MM"
             // timeMode="12"
@@ -298,10 +330,274 @@ class LeftPanelExam extends Component {
             withoutIcon
             time={`${this.props.hour}:${this.props.minute}`}
           /> */}
-            </Col>
-          </Row>
-        </Form.Group>
-      </Form>
+                </Col>
+              </Row>
+            </Form.Group>
+          </Form>
+        ) : (
+          <Form>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Test id
+              </Form.Label>
+              <Form.Control
+                style={{
+                  borderRadius: "0",
+                  // fontWeight: "600",
+                  // margin: " 0 0.5em"
+                }}
+                disabled
+                // plaintext
+                // readOnly
+                defaultValue={this.props.testID}
+              />
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelectauthor">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Authors
+              </Form.Label>
+              <Form.Control
+                style={
+                  currentvalueauthor !== ""
+                    ? { borderRadius: "0" }
+                    : { borderRadius: "0", color: "#a3a2a2" }
+                }
+                size="sm"
+                as="select"
+                // defaultValue=""
+                onChange={this.props.handleAuthorChange}
+                value={currentvalueauthor}
+              >
+                {this.props.authorList &&
+                  this.props.authorList.map((item, index) => {
+                    return (
+                      <option key={index} value={item.authorName}>
+                        {item.authorName}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select all
+                </option>
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="exampleForm.ControlSelect1111">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Exam
+              </Form.Label>
+              <Form.Control
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                // defaultValue=""
+                onChange={this.props.handleExamChange}
+                value={currentvalueexam}
+              >
+                {this.props.listOfExam &&
+                  this.props.listOfExam.map((item, index) => {
+                    return (
+                      <option key={index} value={item.name}>
+                        {item.name}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select all
+                </option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect111">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Subject
+              </Form.Label>
+              <Form.Control
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                // defaultValue=""
+                onChange={this.props.handleSubjectChange}
+                value={currentvaluesubject}
+              >
+                {this.props.listOfSubject &&
+                  this.props.listOfSubject.map((item, index) => {
+                    return (
+                      <option key={index} value={item.subjectName}>
+                        {item.subjectName}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select all
+                </option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect222">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Chapter
+              </Form.Label>
+              <Form.Control
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                value={currentvaluechapter}
+                onChange={this.props.handleChapterChange}
+              >
+                {this.props.listOfChapter &&
+                  this.props.listOfChapter.map((item, index) => {
+                    return (
+                      <option key={index} value={item.sectionName}>
+                        {item.sectionName}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select all
+                </option>
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="exampleForm.ControlSelect2222">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Type
+              </Form.Label>
+              <Form.Control
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                value={this.props.selectedType}
+                onChange={this.props.handleTypeChange}
+              >
+                {this.props.listOfType &&
+                  this.props.listOfType.map((item, index) => {
+                    return (
+                      <option key={index} value={item}>
+                        {item}
+                      </option>
+                    );
+                  })}
+              </Form.Control>
+            </Form.Group>
+            {this.props.selectedType === "Previous year paper" && (
+              <Form.Group controlId="exampleForm.ControlSelect22222">
+                <Form.Label
+                  style={{
+                    fontWeight: "600",
+                  }}
+                >
+                  Year
+                </Form.Label>
+                <Form.Control
+                  style={{ borderRadius: "0" }}
+                  size="sm"
+                  //   as="select"
+                  value={this.props.selectedTypeYear}
+                  onChange={this.props.handleTypeYearChange}
+                ></Form.Control>
+              </Form.Group>
+            )}
+            <Form.Group controlId="exampleForm.ControlSelect22221">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Stating date of test
+              </Form.Label>
+              <DatePicker
+                selected={this.props.startDate}
+                onChange={this.props.handleStartDateChange}
+                dateFormat="dd/MM/yyyy"
+              />
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect222222">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Ending date of test
+              </Form.Label>
+              <DatePicker
+                selected={this.props.endDate}
+                onChange={this.props.handleEndDateChange}
+                dateFormat="dd/MM/yyyy"
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Total time for test (Hr : Min)
+              </Form.Label>
+              <Row noGutters={true}>
+                <Col sm="5">
+                  <Form.Control
+                    type="number"
+                    placeholder="Hours"
+                    value={this.props.hour ? this.props.hour : 0}
+                    onChange={this.props.onHourChange.bind(this)}
+                  ></Form.Control>
+                </Col>
+                <Col sm="2">
+                  <Form.Control
+                    style={{
+                      textAlign: "center",
+                      fontWeight: "600",
+                      fontSize: "1em",
+                    }}
+                    plaintext
+                    readOnly
+                    defaultValue=":"
+                  />
+                </Col>
+                <Col sm="5">
+                  <Form.Control
+                    type="number"
+                    placeholder="Minutes"
+                    value={this.props.minute ? this.props.minute : 0}
+                    onChange={this.props.onMinuteChange.bind(this)}
+                  ></Form.Control>
+                  {/* <TimePickerWrapper
+          
+            timeFormat="HH:MM"
+            // timeMode="12"
+            onTimeChange={this.props.onTimeChange}
+            withoutIcon
+            time={`${this.props.hour}:${this.props.minute}`}
+          /> */}
+                </Col>
+              </Row>
+            </Form.Group>
+          </Form>
+        )}
+      </React.Fragment>
     );
   }
 }

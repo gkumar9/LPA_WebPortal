@@ -62,21 +62,27 @@ class ExamEditComponent extends Component {
   }
   addSectionQuestions = (index) => {
     let tempsectionlist = this.state.listOfSection;
-    if (tempsectionlist[index].questions) {
-      tempsectionlist[index].questions.push("");
-    } else {
-      tempsectionlist[index].questions = [""];
-    }
+    tempsectionlist[index].testSectionMapping.push({ questionId: "" });
     this.setState({ listOfSection: tempsectionlist });
+    // console.log('add section',index);
+    // let tempsectionlist = this.state.listOfSection;
+    // if (tempsectionlist[index].questions) {
+    //   tempsectionlist[index].questions.push("");
+    // } else {
+    //   tempsectionlist[index].questions = [""];
+    // }
+    // this.setState({ listOfSection: tempsectionlist });
   };
   deleteSectionQuestion = (index) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].questions.pop();
+    tempsectionlist[index].testSectionMapping.splice(index, 1);
     this.setState({ listOfSection: tempsectionlist });
   };
   handlSectionQuestionValueChange = (index, indexquestion, e) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].questions[indexquestion] = parseInt(e.target.value);
+    tempsectionlist[index].testSectionMapping[
+      indexquestion
+    ].questionId = parseInt(e.target.value);
     this.setState({ listOfSection: tempsectionlist });
   };
   handleSectionDescriptionChange = (index, language, data) => {
@@ -108,32 +114,66 @@ class ExamEditComponent extends Component {
     tempsectionlist.push({
       marksPerQuestion: 0,
       negativeMarksPerQuestion: 0,
-      questions: [],
+      testSectionMapping: [],
 
-      versions: [
+      testSectionVersions: [
         {
           content: "",
           language: "ENGLISH",
           name: "",
-          // sectionName: ""
+          sectionName: "",
         },
         {
           content: "",
           language: "HINDI",
           name: "",
-          // sectionName: ""
+          sectionName: "",
         },
       ],
     });
     this.setState({ listOfSection: tempsectionlist });
   };
-  deleteSection = () => {
-    let tempsectionlist = this.state.listOfSection;
-    tempsectionlist.pop();
+  deleteSection = (index) => {
+    // let tempsectionlist = this.state.listOfSection;
+    // tempsectionlist.pop();
+    // this.setState({ listOfSection: tempsectionlist });
+    // console.log(this.state.listOfSection)
+    let tempsections = this.state.listOfSection.map((item, index) => {
+      return {
+        marksPerQuestion: item.marksPerQuestion,
+        negativeMarksPerQuestion: item.negativeMarksPerQuestion,
+        testSectionMapping: item.testSectionMapping,
+        testSectionVersions: [
+          {
+            content: this.refsSectionEnglish[index].editor.getData(),
+            language: "ENGLISH",
+            name: item.testSectionVersions[0].name,
+            sectionName: item.testSectionVersions[0].sectionName,
+            testSectionVersionId:
+              item.testSectionVersions[0].testSectionVersionId,
+          },
+          {
+            content: this.refsSectionHindi[index].editor.getData(),
+            language: "HINDI",
+            name: item.testSectionVersions[1].name,
+            sectionName: item.testSectionVersions[1].sectionName,
+            testSectionVersionId:
+              item.testSectionVersions[1].testSectionVersionId,
+          },
+        ],
+      };
+    });
+    let tempsectionlist = tempsections;
+    this.refsSectionEnglish.splice(index, 1);
+    this.refsSectionHindi.splice(index, 1);
+    tempsectionlist.splice(index, 1);
     this.setState({ listOfSection: tempsectionlist });
   };
   handleSectionnameChange = (index, language, e) => {
     let tempsectionlist = this.state.listOfSection;
+    tempsectionlist[index].testSectionVersions.filter(
+      (item) => item.language === language
+    )[0].sectionName = e.target.value;
     tempsectionlist[index].testSectionVersions.filter(
       (item) => item.language === language
     )[0].name = e.target.value;
@@ -245,10 +285,10 @@ class ExamEditComponent extends Component {
             this.setState(
               {
                 listOfExam: res.data.data.list,
-                selectedExamID:0
-                  // res.data.data.list.length > 0
-                  //   ? res.data.data.list[0].exam.examId
-                  //   : 0,
+                selectedExamID: 0,
+                // res.data.data.list.length > 0
+                //   ? res.data.data.list[0].exam.examId
+                //   : 0,
               },
               () => {
                 this.callApiForSubject();
@@ -316,10 +356,10 @@ class ExamEditComponent extends Component {
                   this.setState(
                     {
                       listOfSubject: tempsubjectlist,
-                      selectedSubjectID:0
-                        // tempsubjectlist.length > 0
-                        //   ? tempsubjectlist[0].subject.subjectId
-                        //   : 0,
+                      selectedSubjectID: 0,
+                      // tempsubjectlist.length > 0
+                      //   ? tempsubjectlist[0].subject.subjectId
+                      //   : 0,
                     },
                     () => {
                       this.callApiForChapter();
@@ -380,10 +420,10 @@ class ExamEditComponent extends Component {
               this.setState(
                 {
                   listOfChapter: res.data.data.list,
-                  selectedChapterID:0
-                    // res.data.data.list.length > 0
-                    //   ? res.data.data.list[0].subjectSection.sectionId
-                    //   : 0,
+                  selectedChapterID: 0,
+                  // res.data.data.list.length > 0
+                  //   ? res.data.data.list[0].subjectSection.sectionId
+                  //   : 0,
                 },
                 () => {
                   // this.callApiForTopic();
@@ -474,11 +514,17 @@ class ExamEditComponent extends Component {
     let testdescEnglish = this.myReftestdescEnglish.current;
     let testdescHindi = this.myReftestdescHindi.current;
     let tempsections = this.state.listOfSection.map((item, index) => {
+      let questionlist = item.testSectionMapping.filter(
+        (ques) => ques && ques.questionId !== ""
+      );
+      // questionlist = questionlist.map((ques) => {
+      //   return ques.questionId;
+      // });
       return {
         testSectionId: item.testSectionId,
         marksPerQuestion: item.marksPerQuestion,
         negativeMarksPerQuestion: item.negativeMarksPerQuestion,
-        questions: item.questions,
+        questions: questionlist,
         testSectionMapping: item.testSectionMapping,
         testSectionVersions: [
           {
@@ -593,6 +639,34 @@ class ExamEditComponent extends Component {
         swal(e, "error");
       });
   };
+  reviewExamdata = () => {
+    axios({
+      method: "POST",
+      url: URL.reviewTest + this.props.fetchedData.testId,
+      data: {
+        authToken: "string",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        swal({
+          title: "Success",
+          text: "This test is marked as reviewed.",
+          icon: "success",
+          buttons: true,
+        }).then((willpress) => {
+          if (willpress) {
+            window.location.reload();
+          }
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
   render() {
     return (
       <Container
@@ -617,6 +691,7 @@ class ExamEditComponent extends Component {
             >
               <div>
                 <LeftPanelexam
+                  fetchedData={this.props.fetchedData}
                   testID={this.props.fetchedData.testId}
                   startDate={this.state.startDate}
                   endDate={this.state.endDate}
@@ -654,6 +729,7 @@ class ExamEditComponent extends Component {
               }}
             >
               <RightExamPanel
+                fetchedData={this.props.fetchedData}
                 testnameEnglish={this.state.testnameEnglish}
                 testnameHindi={this.state.testnameHindi}
                 testInstructionEnglish={this.state.testInstructionEnglish}
@@ -686,22 +762,39 @@ class ExamEditComponent extends Component {
                 refsSectionHindi={this.refsSectionHindi}
               />
               <div style={{ margin: "1em 0", textAlign: "center" }}>
-                <Button
-                  style={{
-                    borderRadius: "0",
-                    background: "#3F5FBB",
-                    borderColor: "#3F5FBB",
-                    padding: "0.6em 2.5em",
-                    fontSize: "1.1em",
-                    fontWeight: "600",
-                  }}
-                  onClick={this.saveExamdata}
-                >
-                  Update data
-                </Button>
+                {!this.props.fetchedData.active && (
+                  <Button
+                    style={{
+                      borderRadius: "0",
+                      background: "#3F5FBB",
+                      borderColor: "#3F5FBB",
+                      padding: "0.6em 2.5em",
+                      fontSize: "1.1em",
+                      fontWeight: "600",
+                    }}
+                    onClick={this.saveExamdata}
+                  >
+                    Update data
+                  </Button>
+                )}
+                {!this.props.fetchedData.active && (
+                  <Button
+                    style={{
+                      borderRadius: "0",
+                      background: "rgb(45, 144, 71)",
+                      borderColor: "rgb(45, 144, 71)",
+                      padding: "0.6em 2.5em",
+                      fontSize: "1.1em",
+                      fontWeight: "600",
+                      marginLeft: "2em",
+                    }}
+                    onClick={this.reviewExamdata}
+                  >
+                    Mark as reviewed
+                  </Button>
+                )}
               </div>
             </Col>
-            {/* <Col lg="1"></Col> */}
           </Row>
         </div>
       </Container>
