@@ -427,7 +427,7 @@ class LeftPanel extends Component {
       : "";
     return (
       <Form>
-        <Form.Group controlId="exampleForm.ControlSelectauthor">
+        <Form.Group controlId="exampleForm.ControlSelectauthoraddques">
           <Form.Label
             style={{
               fontWeight: "600",

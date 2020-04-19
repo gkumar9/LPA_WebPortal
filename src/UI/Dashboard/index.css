@@ -47,3 +47,9 @@
 .react-datepicker-wrapper{
   width:100%
 }
+.flagiconactive .MuiSvgIcon-root{
+  fill:green;
+}
+.flagiconnotactive .MuiSvgIcon-root{
+  fill:red;
+}

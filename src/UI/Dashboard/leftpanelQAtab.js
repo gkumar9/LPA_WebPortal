@@ -90,7 +90,7 @@ class LeftPanelQAtab extends Component {
             onAddition={this.props.onAddition.bind(this)}
           />
         </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelectauthor">
+        <Form.Group controlId="exampleForm.ControlSelectauthorexam">
           <Form.Label
             style={{
               fontWeight: "600",

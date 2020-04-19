@@ -54,7 +54,7 @@ class QAtab extends Component {
       authorId: localStorage.getItem("selectedAuthorIDQA")
         ? parseInt(localStorage.getItem("selectedAuthorIDQA"))
         : 0,
-      userId: localStorage.getItem("selectedUserIDQA")
+      userId: localStorage.getItem("selectedUserIDQA")&&localStorage.getItem("selectedUserIDQA")!=='null'
         ? localStorage.getItem("selectedUserIDQA")
         : null,
       searchResultList: [],

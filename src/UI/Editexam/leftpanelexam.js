@@ -47,7 +47,7 @@ class LeftPanelExam extends Component {
               <p style={{ marginBottom: "0.5em", color: "green" }}>
                 <b>
                   *This test is marked as reviewed. Hence no further updating is
-                  possible.*
+                  permitted.*
                 </b>
               </p>
             </marquee>
@@ -72,7 +72,7 @@ class LeftPanelExam extends Component {
                 defaultValue={this.props.testID}
               />
             </Form.Group>
-            <Form.Group controlId="exampleForm.ControlSelectauthor">
+            <Form.Group controlId="exampleForm.ControlSelectauthoredittest">
               <Form.Label
                 style={{
                   fontWeight: "600",

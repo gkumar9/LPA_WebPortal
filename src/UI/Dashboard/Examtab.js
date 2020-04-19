@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap";
 import Edit from "@material-ui/icons/Edit";
 import View from "@material-ui/icons/Visibility";
+import FlagIcon from "@material-ui/icons/Flag";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./index.css";
@@ -54,7 +55,7 @@ class Examtab extends Component {
         ? parseInt(localStorage.getItem("selectedAuthorIDTest"))
         : 0,
       userId: localStorage.getItem("selectedUserIDTest")
-        ? (localStorage.getItem("selectedUserIDTest"))
+        ? localStorage.getItem("selectedUserIDTest")
         : null,
     };
   }
@@ -161,7 +162,7 @@ class Examtab extends Component {
     localStorage.setItem("selectedTypeTest", "");
     localStorage.setItem("selectedAuthorIDTest", "0");
     localStorage.setItem("selectedUserIDTest", null);
-    localStorage.setItem("selectedDateTest",null);
+    localStorage.setItem("selectedDateTest", null);
     this.setState(
       {
         searchbox: "",
@@ -288,7 +289,7 @@ class Examtab extends Component {
                 this.callApiForSubject();
               }
               var Date = null;
-              if (this.state.date !==null) {
+              if (this.state.date !== null) {
                 var Datetemp = this.state.date;
 
                 var dd = Datetemp.getDate();
@@ -868,6 +869,38 @@ class Examtab extends Component {
                                   fontWeight: "600",
                                 }}
                               >
+                                {item.active ? (
+                                  <OverlayTrigger
+                                    placement="top"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={renderTooltip(
+                                      "Test marked as Reviewed"
+                                    )}
+                                  >
+                                    <span
+                                      className="flagiconactive"
+                                      style={{ marginRight: "1em" }}
+                                    >
+                                      {" "}
+                                      <FlagIcon />
+                                    </span>
+                                  </OverlayTrigger>
+                                ) : (
+                                  <OverlayTrigger
+                                    placement="top"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={renderTooltip(
+                                      "Test marked as Not-Reviewed"
+                                    )}
+                                  >
+                                    <span
+                                      className="flagiconnotactive"
+                                      style={{ marginRight: "1em" }}
+                                    >
+                                      <FlagIcon />
+                                    </span>
+                                  </OverlayTrigger>
+                                )}
                                 <b>Tags: </b>
                                 <span
                                   style={{

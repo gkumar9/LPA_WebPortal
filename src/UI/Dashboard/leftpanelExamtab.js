@@ -70,7 +70,7 @@ class LeftPanelExamtab extends Component {
               })}
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelectauthor">
+        <Form.Group controlId="exampleForm.ControlSelectauthorqa">
           <Form.Label
             style={{
               fontWeight: "600",
@@ -103,7 +103,7 @@ class LeftPanelExamtab extends Component {
             </option>
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelectauthor">
+        <Form.Group controlId="exampleForm.ControlSelectuserqa">
           <Form.Label
             style={{
               fontWeight: "600",
