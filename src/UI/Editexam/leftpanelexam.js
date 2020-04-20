@@ -462,7 +462,7 @@ class LeftPanelExam extends Component {
                 ></Form.Control>
               </Form.Group>
             )}
-            {this.props.selectedType && this.props.selectedType !== "Free" && (
+            {this.props.selectedType && this.props.selectedType !== "FREE" && (
               <React.Fragment>
                 <Form.Group controlId="exampleForm.ControlSelect111">
                   <Form.Label

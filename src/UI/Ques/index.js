@@ -66,6 +66,8 @@ class Ques extends Component {
   handlereset = () => {
     this.setState({ questionId: 0 });
     this.handleSelect();
+    // this.forceUpdate();
+    window.location.reload();
   };
   onDelete = (i) => {
     // e.preventDefault()

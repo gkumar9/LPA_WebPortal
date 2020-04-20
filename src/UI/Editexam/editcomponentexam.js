@@ -21,7 +21,7 @@ class ExamEditComponent extends Component {
       selectedSubjectID: 0,
       listOfChapter: [],
       selectedChapterID: 0,
-      listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
+      listOfType: ["FREE", "WEEKLY TEST", "PRACTICE TEST", "PREVIOUS YEAR TEST"],
       startDate: this.props.fetchedData.startDate
         ? new Date(this.props.fetchedData.startDate)
         : new Date(),
@@ -656,7 +656,7 @@ class ExamEditComponent extends Component {
           title: "Success",
           text: "This test is marked as reviewed.",
           icon: "success",
-          buttons: true,
+          // buttons: true,
         }).then((willpress) => {
           if (willpress) {
             window.location.reload();

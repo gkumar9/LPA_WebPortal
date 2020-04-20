@@ -19,7 +19,7 @@ class Exam extends Component {
       selectedSubjectID: 0,
       listOfChapter: [],
       selectedChapterID: 0,
-      listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
+      listOfType: ["FREE", "WEEKLY TEST", "PRACTICE TEST", "PREVIOUS YEAR TEST"],
       selectedType: "Free",
       selectedTypeYear: "",
       hour: "",
@@ -539,11 +539,6 @@ class Exam extends Component {
       })
         .then((res) => {
           if (res.status === 200) {
-            swal(
-              "Success",
-              `Added newTest, Id:${res.data.data.testId}`,
-              "success"
-            );
             this.setState({
               testnameEnglish: "",
               testnameHindi: "",
@@ -571,6 +566,15 @@ class Exam extends Component {
                   ],
                 },
               ],
+            });
+            swal(
+              "Success",
+              `Added newTest, Id:${res.data.data.testId}`,
+              "success"
+            ).then((will) => {
+              if (will) {
+                window.location.reload();
+              }
             });
           }
         })

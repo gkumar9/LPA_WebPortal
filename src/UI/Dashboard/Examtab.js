@@ -42,7 +42,7 @@ class Examtab extends Component {
         ? parseInt(localStorage.getItem("selectedsearchboxTest"))
         : "",
       searchResultList: [],
-      listOfType: ["Free", "Weekly", "Practise test", "Previous year paper"],
+      listOfType: ["FREE", "WEEKLY TEST", "PRACTICE TEST", "PREVIOUS YEAR TEST"],
       selectedType: localStorage.getItem("selectedTypeTest")
         ? localStorage.getItem("selectedTypeTest")
         : "",
