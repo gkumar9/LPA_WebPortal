@@ -419,64 +419,6 @@ class LeftPanelExam extends Component {
                 </option>
               </Form.Control>
             </Form.Group>
-            <Form.Group controlId="exampleForm.ControlSelect111">
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Subject
-              </Form.Label>
-              <Form.Control
-                style={{ borderRadius: "0" }}
-                size="sm"
-                as="select"
-                // defaultValue=""
-                onChange={this.props.handleSubjectChange}
-                value={currentvaluesubject}
-              >
-                {this.props.listOfSubject &&
-                  this.props.listOfSubject.map((item, index) => {
-                    return (
-                      <option key={index} value={item.subjectName}>
-                        {item.subjectName}
-                      </option>
-                    );
-                  })}
-                <option key="" value="">
-                  Select all
-                </option>
-              </Form.Control>
-            </Form.Group>
-            <Form.Group controlId="exampleForm.ControlSelect222">
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Chapter
-              </Form.Label>
-              <Form.Control
-                style={{ borderRadius: "0" }}
-                size="sm"
-                as="select"
-                value={currentvaluechapter}
-                onChange={this.props.handleChapterChange}
-              >
-                {this.props.listOfChapter &&
-                  this.props.listOfChapter.map((item, index) => {
-                    return (
-                      <option key={index} value={item.sectionName}>
-                        {item.sectionName}
-                      </option>
-                    );
-                  })}
-                <option key="" value="">
-                  Select all
-                </option>
-              </Form.Control>
-            </Form.Group>
-
             <Form.Group controlId="exampleForm.ControlSelect2222">
               <Form.Label
                 style={{
@@ -520,20 +462,82 @@ class LeftPanelExam extends Component {
                 ></Form.Control>
               </Form.Group>
             )}
-            <Form.Group controlId="exampleForm.ControlSelect22221">
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Stating date of test
-              </Form.Label>
-              <DatePicker
-                selected={this.props.startDate}
-                onChange={this.props.handleStartDateChange}
-                dateFormat="dd/MM/yyyy"
-              />
-            </Form.Group>
+            {this.props.selectedType && this.props.selectedType !== "Free" && (
+              <React.Fragment>
+                <Form.Group controlId="exampleForm.ControlSelect111">
+                  <Form.Label
+                    style={{
+                      fontWeight: "600",
+                    }}
+                  >
+                    Subject
+                  </Form.Label>
+                  <Form.Control
+                    style={{ borderRadius: "0" }}
+                    size="sm"
+                    as="select"
+                    // defaultValue=""
+                    onChange={this.props.handleSubjectChange}
+                    value={currentvaluesubject}
+                  >
+                    {this.props.listOfSubject &&
+                      this.props.listOfSubject.map((item, index) => {
+                        return (
+                          <option key={index} value={item.subjectName}>
+                            {item.subjectName}
+                          </option>
+                        );
+                      })}
+                    <option key="" value="">
+                      Select all
+                    </option>
+                  </Form.Control>
+                </Form.Group>
+                <Form.Group controlId="exampleForm.ControlSelect222">
+                  <Form.Label
+                    style={{
+                      fontWeight: "600",
+                    }}
+                  >
+                    Chapter
+                  </Form.Label>
+                  <Form.Control
+                    style={{ borderRadius: "0" }}
+                    size="sm"
+                    as="select"
+                    value={currentvaluechapter}
+                    onChange={this.props.handleChapterChange}
+                  >
+                    {this.props.listOfChapter &&
+                      this.props.listOfChapter.map((item, index) => {
+                        return (
+                          <option key={index} value={item.sectionName}>
+                            {item.sectionName}
+                          </option>
+                        );
+                      })}
+                    <option key="" value="">
+                      Select all
+                    </option>
+                  </Form.Control>
+                </Form.Group>
+
+                <Form.Group controlId="exampleForm.ControlSelect22221">
+                  <Form.Label
+                    style={{
+                      fontWeight: "600",
+                    }}
+                  >
+                    Stating date of test
+                  </Form.Label>
+                  <DatePicker
+                    selected={this.props.startDate}
+                    onChange={this.props.handleStartDateChange}
+                    dateFormat="dd/MM/yyyy"
+                  />
+                </Form.Group>
+              </React.Fragment>
+            )}
             <Form.Group controlId="exampleForm.ControlSelect222222">
               <Form.Label
                 style={{
@@ -560,6 +564,7 @@ class LeftPanelExam extends Component {
                 <Col sm="5">
                   <Form.Control
                     type="number"
+                    style={{ borderRadius: "0" }}
                     placeholder="Hours"
                     value={this.props.hour ? this.props.hour : 0}
                     onChange={this.props.onHourChange.bind(this)}
@@ -580,6 +585,7 @@ class LeftPanelExam extends Component {
                 <Col sm="5">
                   <Form.Control
                     type="number"
+                    style={{ borderRadius: "0" }}
                     placeholder="Minutes"
                     value={this.props.minute ? this.props.minute : 0}
                     onChange={this.props.onMinuteChange.bind(this)}

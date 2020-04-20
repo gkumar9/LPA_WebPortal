@@ -48,13 +48,15 @@ class Examtab extends Component {
         : "",
       hasMore: null,
       pageNo: 1,
-      date: localStorage.getItem("selectedDateTest")
-        ? new Date(localStorage.getItem("selectedDateTest"))
-        : null,
+      date:
+        localStorage.getItem("selectedDateTest") &&
+        localStorage.getItem("selectedDateTest") !== "null"
+          ? new Date(localStorage.getItem("selectedDateTest"))
+          : null,
       authorId: localStorage.getItem("selectedAuthorIDTest")
         ? parseInt(localStorage.getItem("selectedAuthorIDTest"))
         : 0,
-      userId: localStorage.getItem("selectedUserIDTest")
+      userId: localStorage.getItem("selectedUserIDTest")&&localStorage.getItem("selectedUserIDTest")!=='null'
         ? localStorage.getItem("selectedUserIDTest")
         : null,
     };

@@ -184,71 +184,6 @@ class LeftPanelExamtab extends Component {
             </option>
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelect111">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Subject
-          </Form.Label>
-          <Form.Control
-            style={
-              currentvaluesubject !== ""
-                ? { borderRadius: "0" }
-                : { borderRadius: "0", color: "#a3a2a2" }
-            }
-            size="sm"
-            as="select"
-            // defaultValue=""
-            onChange={this.props.handleSubjectChange}
-            value={currentvaluesubject}
-          >
-            {this.props.listOfSubject &&
-              this.props.listOfSubject.map((item, index) => {
-                return (
-                  <option key={index} value={item.subjectName}>
-                    {item.subjectName}
-                  </option>
-                );
-              })}
-            <option key="" value="">
-              Select all
-            </option>
-          </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelect222">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Chapter
-          </Form.Label>
-          <Form.Control
-            style={
-              currentvaluechapter !== ""
-                ? { borderRadius: "0" }
-                : { borderRadius: "0", color: "#a3a2a2" }
-            }
-            size="sm"
-            as="select"
-            value={currentvaluechapter}
-            onChange={this.props.handleChapterChange}
-          >
-            {this.props.listOfChapter &&
-              this.props.listOfChapter.map((item, index) => {
-                return (
-                  <option key={index} value={item.sectionName}>
-                    {item.sectionName}
-                  </option>
-                );
-              })}
-            <option key="" value="">
-              Select all
-            </option>
-          </Form.Control>
-        </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect2222">
           <Form.Label
             style={{
@@ -282,6 +217,75 @@ class LeftPanelExamtab extends Component {
             </option>
           </Form.Control>
         </Form.Group>
+        {this.props.selectedType && this.props.selectedType !== "Free" && (
+          <React.Fragment>
+            <Form.Group controlId="exampleForm.ControlSelect111">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Subject
+              </Form.Label>
+              <Form.Control
+                style={
+                  currentvaluesubject !== ""
+                    ? { borderRadius: "0" }
+                    : { borderRadius: "0", color: "#a3a2a2" }
+                }
+                size="sm"
+                as="select"
+                // defaultValue=""
+                onChange={this.props.handleSubjectChange}
+                value={currentvaluesubject}
+              >
+                {this.props.listOfSubject &&
+                  this.props.listOfSubject.map((item, index) => {
+                    return (
+                      <option key={index} value={item.subjectName}>
+                        {item.subjectName}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select all
+                </option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect222">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Chapter
+              </Form.Label>
+              <Form.Control
+                style={
+                  currentvaluechapter !== ""
+                    ? { borderRadius: "0" }
+                    : { borderRadius: "0", color: "#a3a2a2" }
+                }
+                size="sm"
+                as="select"
+                value={currentvaluechapter}
+                onChange={this.props.handleChapterChange}
+              >
+                {this.props.listOfChapter &&
+                  this.props.listOfChapter.map((item, index) => {
+                    return (
+                      <option key={index} value={item.sectionName}>
+                        {item.sectionName}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select all
+                </option>
+              </Form.Control>
+            </Form.Group>
+          </React.Fragment>
+        )}
         <>
           {/* <Button
             size="sm"

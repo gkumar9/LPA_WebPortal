@@ -40,7 +40,7 @@ class LeftPanelExam extends Component {
     //   : "";
     return (
       <Form>
-       <Form.Group controlId="exampleForm.ControlSelectauthoraddtest">
+        <Form.Group controlId="exampleForm.ControlSelectauthoraddtest">
           <Form.Label
             style={{
               fontWeight: "600",
@@ -74,7 +74,6 @@ class LeftPanelExam extends Component {
           </Form.Control>
         </Form.Group>
 
-       
         <Form.Group controlId="exampleForm.ControlSelect1111">
           <Form.Label
             style={{
@@ -109,74 +108,6 @@ class LeftPanelExam extends Component {
             </option>
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelect111">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Subject
-          </Form.Label>
-          <Form.Control
-            style={
-              currentvaluesubject !== ""
-                ? { borderRadius: "0" }
-                : { borderRadius: "0", color: "#a3a2a2" }
-            }
-            // style={{ borderRadius: "0" }}
-            size="sm"
-            as="select"
-            // defaultValue=""
-            onChange={this.props.handleSubjectChange}
-            value={currentvaluesubject}
-          >
-            {this.props.listOfSubject &&
-              this.props.listOfSubject.map((item, index) => {
-                return (
-                  <option key={index} value={item.subjectName}>
-                    {item.subjectName}
-                  </option>
-                );
-              })}
-            <option key="" value="">
-              Select
-            </option>
-          </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelect222">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Chapter
-          </Form.Label>
-          <Form.Control
-            // style={{ borderRadius: "0" }}
-            style={
-              currentvaluechapter !== ""
-                ? { borderRadius: "0" }
-                : { borderRadius: "0", color: "#a3a2a2" }
-            }
-            size="sm"
-            as="select"
-            value={currentvaluechapter}
-            onChange={this.props.handleChapterChange}
-          >
-            {this.props.listOfChapter &&
-              this.props.listOfChapter.map((item, index) => {
-                return (
-                  <option key={index} value={item.sectionName}>
-                    {item.sectionName}
-                  </option>
-                );
-              })}
-            <option key="" value="">
-              Select
-            </option>
-          </Form.Control>
-        </Form.Group>
-
         <Form.Group controlId="exampleForm.ControlSelect2222">
           <Form.Label
             style={{
@@ -220,34 +151,106 @@ class LeftPanelExam extends Component {
             ></Form.Control>
           </Form.Group>
         )}
-        <Form.Group controlId="exampleForm.ControlSelect22221">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Stating date of test
-          </Form.Label>
-          <DatePicker
-            selected={this.props.startDate}
-            onChange={this.props.handleStartDateChange}
-            dateFormat="dd/MM/yyyy"
-          />
-        </Form.Group>
-        <Form.Group controlId="exampleForm.ControlSelect222222">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Ending date of test
-          </Form.Label>
-          <DatePicker
-            selected={this.props.endDate}
-            onChange={this.props.handleEndDateChange}
-            dateFormat="dd/MM/yyyy"
-          />
-        </Form.Group>
+        {this.props.selectedType && this.props.selectedType !== "Free" && (
+          <React.Fragment>
+            <Form.Group controlId="exampleForm.ControlSelect111">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Subject
+              </Form.Label>
+              <Form.Control
+                style={
+                  currentvaluesubject !== ""
+                    ? { borderRadius: "0" }
+                    : { borderRadius: "0", color: "#a3a2a2" }
+                }
+                // style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                // defaultValue=""
+                onChange={this.props.handleSubjectChange}
+                value={currentvaluesubject}
+              >
+                {this.props.listOfSubject &&
+                  this.props.listOfSubject.map((item, index) => {
+                    return (
+                      <option key={index} value={item.subjectName}>
+                        {item.subjectName}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select
+                </option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect222">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Chapter
+              </Form.Label>
+              <Form.Control
+                // style={{ borderRadius: "0" }}
+                style={
+                  currentvaluechapter !== ""
+                    ? { borderRadius: "0" }
+                    : { borderRadius: "0", color: "#a3a2a2" }
+                }
+                size="sm"
+                as="select"
+                value={currentvaluechapter}
+                onChange={this.props.handleChapterChange}
+              >
+                {this.props.listOfChapter &&
+                  this.props.listOfChapter.map((item, index) => {
+                    return (
+                      <option key={index} value={item.sectionName}>
+                        {item.sectionName}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select
+                </option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect22221">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Stating date of test
+              </Form.Label>
+              <DatePicker
+                selected={this.props.startDate}
+                onChange={this.props.handleStartDateChange}
+                dateFormat="dd/MM/yyyy"
+              />
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect222222">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Ending date of test
+              </Form.Label>
+              <DatePicker
+                selected={this.props.endDate}
+                onChange={this.props.handleEndDateChange}
+                dateFormat="dd/MM/yyyy"
+              />
+            </Form.Group>
+          </React.Fragment>
+        )}
+
         <Form.Group>
           <Form.Label
             style={{
@@ -259,6 +262,7 @@ class LeftPanelExam extends Component {
           <Row noGutters={true}>
             <Col sm="5">
               <Form.Control
+                style={{ borderRadius: "0" }}
                 type="number"
                 placeholder="Hours"
                 value={this.props.hour}
@@ -279,6 +283,7 @@ class LeftPanelExam extends Component {
             </Col>
             <Col sm="5">
               <Form.Control
+                style={{ borderRadius: "0" }}
                 type="number"
                 placeholder="Minutes"
                 value={this.props.minute}

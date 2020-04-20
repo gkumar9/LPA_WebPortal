@@ -69,7 +69,7 @@ class QAtab extends Component {
         : [],
       apisugges: [],
       suggestions: [],
-      date: localStorage.getItem("selectedDateQA")
+      date: localStorage.getItem("selectedDateQA")&&localStorage.getItem("selectedDateQA")!=="null"
         ? new Date(localStorage.getItem("selectedDateQA"))
         : null,
     };

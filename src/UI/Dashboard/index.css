@@ -41,15 +41,17 @@
 .swal-modal {
   width: 90vh !important;
 }
-.react-datepicker__input-container > input{
+.react-datepicker__input-container > input {
+  width: 100%;
+  background: #f9f9f9;
+  border: 1px solid #ced4da;
+}
+.react-datepicker-wrapper {
   width: 100%;
 }
-.react-datepicker-wrapper{
-  width:100%
+.flagiconactive .MuiSvgIcon-root {
+  fill: green;
 }
-.flagiconactive .MuiSvgIcon-root{
-  fill:green;
-}
-.flagiconnotactive .MuiSvgIcon-root{
-  fill:red;
+.flagiconnotactive .MuiSvgIcon-root {
+  fill: red;
 }
