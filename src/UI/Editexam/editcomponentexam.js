@@ -21,7 +21,12 @@ class ExamEditComponent extends Component {
       selectedSubjectID: 0,
       listOfChapter: [],
       selectedChapterID: 0,
-      listOfType: ["FREE", "WEEKLY TEST", "PRACTICE TEST", "PREVIOUS YEAR TEST"],
+      listOfType: [
+        "FREE",
+        "WEEKLY TEST",
+        "PRACTICE TEST",
+        "PREVIOUS YEAR TEST",
+      ],
       startDate: this.props.fetchedData.startDate
         ? new Date(this.props.fetchedData.startDate)
         : new Date(),
@@ -517,9 +522,9 @@ class ExamEditComponent extends Component {
       let questionlist = item.testSectionMapping.filter(
         (ques) => ques && ques.questionId !== ""
       );
-      // questionlist = questionlist.map((ques) => {
-      //   return ques.questionId;
-      // });
+      questionlist = questionlist.map((ques) => {
+        return ques.questionId;
+      });
       return {
         testSectionId: item.testSectionId,
         marksPerQuestion: item.marksPerQuestion,

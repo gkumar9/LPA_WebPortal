@@ -1,5 +1,5 @@
-// let Base_url = "../cd";
-let Base_url = "http://api.frogbit.co/cd";
+let Base_url = "../cd";
+// let Base_url = "http://api.frogbit.co/cd";
 let URL = {
   fetchSubject: Base_url + "/api/subjects/",
   fetchChapter: Base_url + "/api/subject/sections/",
