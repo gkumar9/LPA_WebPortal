@@ -375,7 +375,7 @@ class RightExamPanel extends Component {
                               autoFocus
                               type="number"
                               onKeyPress={this.handlepresskey.bind(this, index)}
-                              value={itemquestion}
+                              value={itemquestion.questionId}
                               onChange={this.props.handlSectionQuestionValueChange.bind(
                                 this,
                                 index,

@@ -646,7 +646,8 @@ class RightExamPanel extends Component {
                         <Button
                           onClick={this.props.addSectionQuestions.bind(
                             this,
-                            index
+                            index,
+                            item.testSectionId
                           )}
                           varirant="info"
                           style={{

@@ -395,6 +395,7 @@ class EditComponent extends Component {
                 }}
               >
                 <LeftPanel
+                  fetchedData={this.props.fetchedData}
                   listOfSubject={this.props.listOfSubject}
                   listOfChapter={this.props.listOfChapter}
                   listOfTopic={this.props.listOfTopic}
@@ -423,6 +424,7 @@ class EditComponent extends Component {
             <Col style={{ background: "#EEEEEE", padding: "0em 4em" }}>
               <div style={{ margin: "2.5em 0em" }}>
                 <Rightpanel
+                  fetchedData={this.props.fetchedData}
                   myRefQuestionHindi={this.myRefQuestionHindi}
                   myRefQuestionEnglish={this.myRefQuestionEnglish}
                   myRefExplanationHindi={this.myRefExplanationHindi}
@@ -460,6 +462,7 @@ class EditComponent extends Component {
                 }}
               >
                 <LeftPanel
+                  fetchedData={this.props.fetchedData}
                   listOfSubject={this.props.listOfSubject}
                   listOfChapter={this.props.listOfChapter}
                   listOfTopic={this.props.listOfTopic}
@@ -488,6 +491,7 @@ class EditComponent extends Component {
             <Col style={{ background: "#EEEEEE", padding: "0em 4em" }}>
               <div style={{ margin: "2.5em 0em" }}>
                 <RightpanelNewVersion
+                  fetchedData={this.props.fetchedData}
                   myRefQuestionHindiNew={this.myRefQuestionHindiNew}
                   myRefQuestionEnglishNew={this.myRefQuestionEnglishNew}
                   myRefExplanationHindiNew={this.myRefExplanationHindiNew}
@@ -547,211 +551,394 @@ class LeftPanel extends Component {
       ? currentvalueauthor.authorName
       : "";
     return (
-      <Form>
-        <Form.Group controlId="exampleForm.ControlSelectauthoreditques">
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Authors
-          </Form.Label>
-          <Form.Control
-            style={
-              currentvalueauthor !== ""
-                ? { borderRadius: "0" }
-                : { borderRadius: "0", color: "#a3a2a2" }
-            }
-            size="sm"
-            as="select"
-            // defaultValue=""
-            onChange={this.props.handleAuthorChange}
-            value={currentvalueauthor}
-          >
-            {this.props.authorList &&
-              this.props.authorList.map((item, index) => {
-                return (
-                  <option key={index} value={item.authorName}>
-                    {item.authorName}
-                  </option>
-                );
-              })}
-            <option key="" value="">
-              Select
-            </option>
-          </Form.Control>
-        </Form.Group>
+      <React.Fragment>
+        {this.props.fetchedData.verified ? (
+          <Form>
+            <Form.Group controlId="exampleForm.ControlSelectauthoreditques">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Authors
+              </Form.Label>
+              <Form.Control
+                disabled
+                style={
+                  currentvalueauthor !== ""
+                    ? { borderRadius: "0" }
+                    : { borderRadius: "0", color: "#a3a2a2" }
+                }
+                size="sm"
+                as="select"
+                // defaultValue=""
+                onChange={this.props.handleAuthorChange}
+                value={currentvalueauthor}
+              >
+                {this.props.authorList &&
+                  this.props.authorList.map((item, index) => {
+                    return (
+                      <option key={index} value={item.authorName}>
+                        {item.authorName}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select
+                </option>
+              </Form.Control>
+            </Form.Group>
 
-        <Form.Group>
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Subject
-          </Form.Label>
-          <Form.Control
-            style={{ borderRadius: "0" }}
-            size="sm"
-            as="select"
-            // defaultValue=""
-            onChange={this.props.handleSubjectChange}
-            value={currentvaluesubject}
-          >
-            {this.props.listOfSubject &&
-              this.props.listOfSubject.map((item, index) => {
-                return (
-                  <option key={index} value={item.subjectName}>
-                    {item.subjectName}
-                  </option>
-                );
-              })}
-          </Form.Control>
-        </Form.Group>
-        <Form.Group>
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Chapter
-          </Form.Label>
-          <Form.Control
-            style={{ borderRadius: "0" }}
-            size="sm"
-            as="select"
-            value={currentvaluechapter}
-            onChange={this.props.handleChapterChange}
-          >
-            {this.props.listOfChapter &&
-              this.props.listOfChapter.map((item, index) => {
-                return (
-                  <option key={index} value={item.sectionName}>
-                    {item.sectionName}
-                  </option>
-                );
-              })}
-          </Form.Control>
-        </Form.Group>
-        <Form.Group>
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Topic
-          </Form.Label>
-          <Form.Control
-            style={{ borderRadius: "0" }}
-            size="sm"
-            as="select"
-            value={currentvaluetopic}
-            onChange={this.props.handleTopicChange}
-          >
-            {this.props.listOfTopic &&
-              this.props.listOfTopic.map((item, index) => {
-                return (
-                  <option key={index} value={item.title}>
-                    {item.title}
-                  </option>
-                );
-              })}
-          </Form.Control>
-        </Form.Group>
-        <Form.Group>
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Sub-topic
-          </Form.Label>
-          <Form.Control
-            style={{ borderRadius: "0" }}
-            size="sm"
-            as="select"
-            value={currentvaluesubtopic}
-            onChange={this.props.handleSubTopicChange}
-          >
-            {this.props.listOfSubTopic &&
-              this.props.listOfSubTopic.map((item, index) => {
-                return (
-                  <option key={index} value={item.title}>
-                    {item.title}
-                  </option>
-                );
-              })}
-          </Form.Control>
-        </Form.Group>
-        <Form.Group>
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Tags
-          </Form.Label>
-          <ReactTags
-            // style={{width:'100%'}}
-            tags={this.props.tags}
-            onInput={this.props.handleChangeTags}
-            suggestions={this.props.suggestions}
-            onDelete={this.props.onDelete.bind(this)}
-            onAddition={this.props.onAddition.bind(this)}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Difficulty
-          </Form.Label>
-          <br />
-          <Difficulty
-            difficulty={this.props.difficulty}
-            handleDifficultyRadio={this.props.handleDifficultyRadio}
-          />
-        </Form.Group>
-      </Form>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Subject
+              </Form.Label>
+              <Form.Control
+                disabled
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                // defaultValue=""
+                onChange={this.props.handleSubjectChange}
+                value={currentvaluesubject}
+              >
+                {this.props.listOfSubject &&
+                  this.props.listOfSubject.map((item, index) => {
+                    return (
+                      <option key={index} value={item.subjectName}>
+                        {item.subjectName}
+                      </option>
+                    );
+                  })}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Chapter
+              </Form.Label>
+              <Form.Control
+                disabled
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                value={currentvaluechapter}
+                onChange={this.props.handleChapterChange}
+              >
+                {this.props.listOfChapter &&
+                  this.props.listOfChapter.map((item, index) => {
+                    return (
+                      <option key={index} value={item.sectionName}>
+                        {item.sectionName}
+                      </option>
+                    );
+                  })}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Topic
+              </Form.Label>
+              <Form.Control
+                disabled
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                value={currentvaluetopic}
+                onChange={this.props.handleTopicChange}
+              >
+                {this.props.listOfTopic &&
+                  this.props.listOfTopic.map((item, index) => {
+                    return (
+                      <option key={index} value={item.title}>
+                        {item.title}
+                      </option>
+                    );
+                  })}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Sub-topic
+              </Form.Label>
+              <Form.Control
+                disabled
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                value={currentvaluesubtopic}
+                onChange={this.props.handleSubTopicChange}
+              >
+                {this.props.listOfSubTopic &&
+                  this.props.listOfSubTopic.map((item, index) => {
+                    return (
+                      <option key={index} value={item.title}>
+                        {item.title}
+                      </option>
+                    );
+                  })}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Tags
+              </Form.Label>
+              <ReactTags
+                // disabled
+                // style={{width:'100%'}}
+                tags={this.props.tags}
+                onInput={this.props.handleChangeTags}
+                suggestions={this.props.suggestions}
+                onDelete={this.props.onDelete.bind(this)}
+                onAddition={this.props.onAddition.bind(this)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Difficulty
+              </Form.Label>
+              <br />
+              <Difficulty
+                verified={true}
+                difficulty={this.props.difficulty}
+                handleDifficultyRadio={this.props.handleDifficultyRadio}
+              />
+            </Form.Group>
+          </Form>
+        ) : (
+          <Form>
+            <Form.Group controlId="exampleForm.ControlSelectauthoreditques">
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Authors
+              </Form.Label>
+              <Form.Control
+                style={
+                  currentvalueauthor !== ""
+                    ? { borderRadius: "0" }
+                    : { borderRadius: "0", color: "#a3a2a2" }
+                }
+                size="sm"
+                as="select"
+                // defaultValue=""
+                onChange={this.props.handleAuthorChange}
+                value={currentvalueauthor}
+              >
+                {this.props.authorList &&
+                  this.props.authorList.map((item, index) => {
+                    return (
+                      <option key={index} value={item.authorName}>
+                        {item.authorName}
+                      </option>
+                    );
+                  })}
+                <option key="" value="">
+                  Select
+                </option>
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Subject
+              </Form.Label>
+              <Form.Control
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                // defaultValue=""
+                onChange={this.props.handleSubjectChange}
+                value={currentvaluesubject}
+              >
+                {this.props.listOfSubject &&
+                  this.props.listOfSubject.map((item, index) => {
+                    return (
+                      <option key={index} value={item.subjectName}>
+                        {item.subjectName}
+                      </option>
+                    );
+                  })}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Chapter
+              </Form.Label>
+              <Form.Control
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                value={currentvaluechapter}
+                onChange={this.props.handleChapterChange}
+              >
+                {this.props.listOfChapter &&
+                  this.props.listOfChapter.map((item, index) => {
+                    return (
+                      <option key={index} value={item.sectionName}>
+                        {item.sectionName}
+                      </option>
+                    );
+                  })}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Topic
+              </Form.Label>
+              <Form.Control
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                value={currentvaluetopic}
+                onChange={this.props.handleTopicChange}
+              >
+                {this.props.listOfTopic &&
+                  this.props.listOfTopic.map((item, index) => {
+                    return (
+                      <option key={index} value={item.title}>
+                        {item.title}
+                      </option>
+                    );
+                  })}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Sub-topic
+              </Form.Label>
+              <Form.Control
+                style={{ borderRadius: "0" }}
+                size="sm"
+                as="select"
+                value={currentvaluesubtopic}
+                onChange={this.props.handleSubTopicChange}
+              >
+                {this.props.listOfSubTopic &&
+                  this.props.listOfSubTopic.map((item, index) => {
+                    return (
+                      <option key={index} value={item.title}>
+                        {item.title}
+                      </option>
+                    );
+                  })}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Tags
+              </Form.Label>
+              <ReactTags
+                // style={{width:'100%'}}
+                tags={this.props.tags}
+                onInput={this.props.handleChangeTags}
+                suggestions={this.props.suggestions}
+                onDelete={this.props.onDelete.bind(this)}
+                onAddition={this.props.onAddition.bind(this)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                Difficulty
+              </Form.Label>
+              <br />
+              <Difficulty
+                difficulty={this.props.difficulty}
+                handleDifficultyRadio={this.props.handleDifficultyRadio}
+              />
+            </Form.Group>
+          </Form>
+        )}
+      </React.Fragment>
     );
   }
 }
 class Rightpanel extends Component {
   render() {
     return (
-      <Form>
-        <QuestionComp
-          lang={this.props.lang}
-          myRefQuestionHindi={this.props.myRefQuestionHindi}
-          myRefQuestionEnglish={this.props.myRefQuestionEnglish}
-          // handleQuestionEditor={this.props.handleQuestionEditor}
-          questionData={this.props.questionData}
-        />
+      <React.Fragment>
+        {this.props.fetchedData.verified ? (
+          <Form>
+            <QuestionComp
+              verified={true}
+              lang={this.props.lang}
+              myRefQuestionHindi={this.props.myRefQuestionHindi}
+              myRefQuestionEnglish={this.props.myRefQuestionEnglish}
+              // handleQuestionEditor={this.props.handleQuestionEditor}
+              questionData={this.props.questionData}
+            />
 
-        {this.props.listOfOptions &&
-          this.props.listOfOptions.map((item, index) => {
-            return (
-              <React.Fragment key={index}>
-                <Form.Group as={Row} style={{ marginTop: "2em" }}>
-                  <Form.Label column sm="2" style={{ fontWeight: "600" }}>
-                    {"Option " + String.fromCharCode(65 + index)}
-                  </Form.Label>
-                  <Col sm="2">
-                    <Form.Control
-                      // disabled
-                      style={{ borderRadius: "0", background: "#f9f9f9" }}
-                      type="number"
-                      value={item.weightage}
-                      onChange={this.props.handleOptionWeightageChange.bind(
-                        this,
-                        index
-                      )}
-                      placeholder="weightage"
-                    />
-                  </Col>
-                  {/* {this.props.listOfOptions.length === index + 1 && (
+            {this.props.listOfOptions &&
+              this.props.listOfOptions.map((item, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <Form.Group as={Row} style={{ marginTop: "2em" }}>
+                      <Form.Label column sm="2" style={{ fontWeight: "600" }}>
+                        {"Option " + String.fromCharCode(65 + index)}
+                      </Form.Label>
+                      <Col sm="2">
+                        <Form.Control
+                          disabled
+                          style={{ borderRadius: "0", background: "#f9f9f9" }}
+                          type="number"
+                          value={item.weightage}
+                          onChange={this.props.handleOptionWeightageChange.bind(
+                            this,
+                            index
+                          )}
+                          placeholder="weightage"
+                        />
+                      </Col>
+                      {/* {this.props.listOfOptions.length === index + 1 && (
                     <Col>
                       <Button
                         style={{ float: "right", color: "grey" }}
@@ -762,120 +949,277 @@ class Rightpanel extends Component {
                       </Button>
                     </Col>
                   )} */}
-                </Form.Group>
-                <div style={{ margin: "0.5em 0" }}>
-                  {this.props.lang === "HINDI" ? (
-                    <CKEditor
-                      onBeforeLoad={(CKEDITOR) =>
-                        (CKEDITOR.disableAutoInline = true)
-                      }
-                      ref={(ref) => {
-                        // Callback refs are preferable when
-                        // dealing with dynamic refs
-                        this.props.refsArrayHindi[index] = ref;
-                      }}
-                      onFocus={(event) => {
-                        window.hook(event.editor.document.$.body);
-                        // let data = event.editor.getData();
-                        // console.log('focus')
-                        // event.editor.insertHtml(" ");
-                        // this.props.handleOptioncontentchange(
-                        //   index,
-                        //   event.editor.getData()
-                        // );
-                        // installKeyupOption(index, event.editor);
-                      }}
-                      config={{
-                        height: 100,
+                    </Form.Group>
+                    <div style={{ margin: "0.5em 0" }}>
+                      {this.props.lang === "HINDI" ? (
+                        <CKEditor
+                          readOnly={true}
+                          onBeforeLoad={(CKEDITOR) =>
+                            (CKEDITOR.disableAutoInline = true)
+                          }
+                          ref={(ref) => {
+                            // Callback refs are preferable when
+                            // dealing with dynamic refs
+                            this.props.refsArrayHindi[index] = ref;
+                          }}
+                          onFocus={(event) => {
+                            window.hook(event.editor.document.$.body);
+                            // let data = event.editor.getData();
+                            // console.log('focus')
+                            // event.editor.insertHtml(" ");
+                            // this.props.handleOptioncontentchange(
+                            //   index,
+                            //   event.editor.getData()
+                            // );
+                            // installKeyupOption(index, event.editor);
+                          }}
+                          config={{
+                            height: 100,
 
-                        // placeholder: "Test description and instruction in English"
-                      }}
-                      data={item.content}
-                      // onChange={event => {
-                      //   // let data = editor.getData();
-                      //   // console.log('change')
-                      //   this.props.handleOptioncontentchange(
-                      //     index,
-                      //     event.editor.getData()
-                      //   );
-                      // }}
-                    />
-                  ) : (
-                    <CKEditor
-                      onBeforeLoad={(CKEDITOR) =>
-                        (CKEDITOR.disableAutoInline = true)
-                      }
-                      ref={(ref) => {
-                        // Callback refs are preferable when
-                        // dealing with dynamic refs
+                            // placeholder: "Test description and instruction in English"
+                          }}
+                          data={item.content}
+                          // onChange={event => {
+                          //   // let data = editor.getData();
+                          //   // console.log('change')
+                          //   this.props.handleOptioncontentchange(
+                          //     index,
+                          //     event.editor.getData()
+                          //   );
+                          // }}
+                        />
+                      ) : (
+                        <CKEditor
+                          readOnly={true}
+                          onBeforeLoad={(CKEDITOR) =>
+                            (CKEDITOR.disableAutoInline = true)
+                          }
+                          ref={(ref) => {
+                            // Callback refs are preferable when
+                            // dealing with dynamic refs
 
-                        this.props.refsArrayEnglish[index] = ref;
-                        return true;
-                      }}
-                      // onFocus={event => {
-                      //   // let data = event.editor.getData();
-                      //   // console.log('focus')
-                      //   event.editor.insertHtml(" ");
-                      //   this.props.handleOptioncontentchange(
-                      //     index,
-                      //     event.editor.getData()
-                      //   );
-                      // }}
-                      config={{
-                        height: 100,
+                            this.props.refsArrayEnglish[index] = ref;
+                            return true;
+                          }}
+                          // onFocus={event => {
+                          //   // let data = event.editor.getData();
+                          //   // console.log('focus')
+                          //   event.editor.insertHtml(" ");
+                          //   this.props.handleOptioncontentchange(
+                          //     index,
+                          //     event.editor.getData()
+                          //   );
+                          // }}
+                          config={{
+                            height: 100,
 
-                        // placeholder: "Test description and instruction in English"
-                      }}
-                      data={item.content}
-                      // onChange={event => {
-                      //   // let data = editor.getData();
-                      //   // console.log('change')
-                      //   this.props.handleOptioncontentchange(
-                      //     index,
-                      //     event.editor.getData()
-                      //   );
-                      // }}
-                    />
-                  )}
-                </div>
-              </React.Fragment>
-            );
-          })}
-        <Row>
-          <Col lg="10"></Col>
-          <Col></Col>
-        </Row>
-        <div style={{ margin: "2em 0" }}>
-          <ExplanationComp
-            lang={this.props.lang}
-            // handleExplanationEditor={this.props.handleExplanationEditor}
-            explanationData={this.props.explanationData}
-            myRefExplanationHindi={this.props.myRefExplanationHindi}
-            myRefExplanationEnglish={this.props.myRefExplanationEnglish}
-          />
-        </div>
+                            // placeholder: "Test description and instruction in English"
+                          }}
+                          data={item.content}
+                          // onChange={event => {
+                          //   // let data = editor.getData();
+                          //   // console.log('change')
+                          //   this.props.handleOptioncontentchange(
+                          //     index,
+                          //     event.editor.getData()
+                          //   );
+                          // }}
+                        />
+                      )}
+                    </div>
+                  </React.Fragment>
+                );
+              })}
+            <Row>
+              <Col lg="10"></Col>
+              <Col></Col>
+            </Row>
+            <div style={{ margin: "2em 0" }}>
+              <ExplanationComp
+                verified={true}
+                lang={this.props.lang}
+                // handleExplanationEditor={this.props.handleExplanationEditor}
+                explanationData={this.props.explanationData}
+                myRefExplanationHindi={this.props.myRefExplanationHindi}
+                myRefExplanationEnglish={this.props.myRefExplanationEnglish}
+              />
+            </div>
 
-        <div style={{ margin: "1em 0", textAlign: "center" }}>
-          <Button
-            style={{
-              borderRadius: "0",
-              background: "#3F5FBB",
-              borderColor: "#3F5FBB",
-              padding: "0.6em 2.5em",
-              fontSize: "1.1em",
-              fontWeight: "600",
-            }}
-            onClick={this.props.savedata}
-          >
-            Update data
-          </Button>
-        </div>
-      </Form>
+            <div style={{ margin: "1em 0", textAlign: "center" }}>
+              {/* <Button
+                style={{
+                  borderRadius: "0",
+                  background: "#3F5FBB",
+                  borderColor: "#3F5FBB",
+                  padding: "0.6em 2.5em",
+                  fontSize: "1.1em",
+                  fontWeight: "600",
+                }}
+                onClick={this.props.savedata}
+              >
+                Update data
+              </Button> */}
+            </div>
+          </Form>
+        ) : (
+          <Form>
+            <QuestionComp
+              lang={this.props.lang}
+              myRefQuestionHindi={this.props.myRefQuestionHindi}
+              myRefQuestionEnglish={this.props.myRefQuestionEnglish}
+              // handleQuestionEditor={this.props.handleQuestionEditor}
+              questionData={this.props.questionData}
+            />
+
+            {this.props.listOfOptions &&
+              this.props.listOfOptions.map((item, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <Form.Group as={Row} style={{ marginTop: "2em" }}>
+                      <Form.Label column sm="2" style={{ fontWeight: "600" }}>
+                        {"Option " + String.fromCharCode(65 + index)}
+                      </Form.Label>
+                      <Col sm="2">
+                        <Form.Control
+                          // disabled
+                          style={{ borderRadius: "0", background: "#f9f9f9" }}
+                          type="number"
+                          value={item.weightage}
+                          onChange={this.props.handleOptionWeightageChange.bind(
+                            this,
+                            index
+                          )}
+                          placeholder="weightage"
+                        />
+                      </Col>
+                      {/* {this.props.listOfOptions.length === index + 1 && (
+                  <Col>
+                    <Button
+                      style={{ float: "right", color: "grey" }}
+                      variant="link"
+                      onClick={this.props.deleteOption.bind(this, index)}
+                    >
+                      X Delete
+                    </Button>
+                  </Col>
+                )} */}
+                    </Form.Group>
+                    <div style={{ margin: "0.5em 0" }}>
+                      {this.props.lang === "HINDI" ? (
+                        <CKEditor
+                          onBeforeLoad={(CKEDITOR) =>
+                            (CKEDITOR.disableAutoInline = true)
+                          }
+                          ref={(ref) => {
+                            // Callback refs are preferable when
+                            // dealing with dynamic refs
+                            this.props.refsArrayHindi[index] = ref;
+                          }}
+                          onFocus={(event) => {
+                            window.hook(event.editor.document.$.body);
+                            // let data = event.editor.getData();
+                            // console.log('focus')
+                            // event.editor.insertHtml(" ");
+                            // this.props.handleOptioncontentchange(
+                            //   index,
+                            //   event.editor.getData()
+                            // );
+                            // installKeyupOption(index, event.editor);
+                          }}
+                          config={{
+                            height: 100,
+
+                            // placeholder: "Test description and instruction in English"
+                          }}
+                          data={item.content}
+                          // onChange={event => {
+                          //   // let data = editor.getData();
+                          //   // console.log('change')
+                          //   this.props.handleOptioncontentchange(
+                          //     index,
+                          //     event.editor.getData()
+                          //   );
+                          // }}
+                        />
+                      ) : (
+                        <CKEditor
+                          onBeforeLoad={(CKEDITOR) =>
+                            (CKEDITOR.disableAutoInline = true)
+                          }
+                          ref={(ref) => {
+                            // Callback refs are preferable when
+                            // dealing with dynamic refs
+
+                            this.props.refsArrayEnglish[index] = ref;
+                            return true;
+                          }}
+                          // onFocus={event => {
+                          //   // let data = event.editor.getData();
+                          //   // console.log('focus')
+                          //   event.editor.insertHtml(" ");
+                          //   this.props.handleOptioncontentchange(
+                          //     index,
+                          //     event.editor.getData()
+                          //   );
+                          // }}
+                          config={{
+                            height: 100,
+
+                            // placeholder: "Test description and instruction in English"
+                          }}
+                          data={item.content}
+                          // onChange={event => {
+                          //   // let data = editor.getData();
+                          //   // console.log('change')
+                          //   this.props.handleOptioncontentchange(
+                          //     index,
+                          //     event.editor.getData()
+                          //   );
+                          // }}
+                        />
+                      )}
+                    </div>
+                  </React.Fragment>
+                );
+              })}
+            <Row>
+              <Col lg="10"></Col>
+              <Col></Col>
+            </Row>
+            <div style={{ margin: "2em 0" }}>
+              <ExplanationComp
+                lang={this.props.lang}
+                // handleExplanationEditor={this.props.handleExplanationEditor}
+                explanationData={this.props.explanationData}
+                myRefExplanationHindi={this.props.myRefExplanationHindi}
+                myRefExplanationEnglish={this.props.myRefExplanationEnglish}
+              />
+            </div>
+
+            <div style={{ margin: "1em 0", textAlign: "center" }}>
+              <Button
+                style={{
+                  borderRadius: "0",
+                  background: "#3F5FBB",
+                  borderColor: "#3F5FBB",
+                  padding: "0.6em 2.5em",
+                  fontSize: "1.1em",
+                  fontWeight: "600",
+                }}
+                onClick={this.props.savedata}
+              >
+                Update data
+              </Button>
+            </div>
+          </Form>
+        )}
+      </React.Fragment>
     );
   }
 }
 
 function QuestionComp({
+  verified,
   lang,
   myRefQuestionHindi,
   myRefQuestionEnglish,
@@ -883,288 +1227,585 @@ function QuestionComp({
 }) {
   // console.log(questionData);
   return (
-    <Form.Group>
-      <Form.Label
-        style={{
-          fontWeight: "600",
-        }}
-      >
-        Question
-      </Form.Label>
-      <div
-        style={{
-          margin: "0.5em 0",
-        }}
-      >
-        {lang === "HINDI" ? (
-          <div>
-            <select
-              id="txtLanguage"
-              className="selectpicker"
-              onChange={window.setLang}
-              style={{ display: "none" }}
-            >
-              <option value="0">English</option>
-              <option value="1">Devnagari</option>
-            </select>
-
-            <select
-              id="txtKeyboard"
-              className="selectpicker"
-              onChange={window.changeKB}
-              style={{ display: "none" }}
-            >
-              <option value="Phonetic">Phonetic</option>
-              <option value="Ramington">Ramington</option>
-            </select>
-            <CKEditor
-              onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
-              config={{
-                height: 100,
-              }}
-              ref={myRefQuestionHindi}
-              onFocus={(event) => {
-                window.hook(event.editor.document.$.body);
-              }}
-              oninstanceReady={(event) => {
-                var a = document.getElementById("txtLanguage");
-                a.selectedIndex = 1;
-                window.setLang();
-                var b = document.getElementById("txtKeyboard");
-                b.selectedIndex = 1;
-                window.changeKB();
-              }}
-              data={questionData}
-            />
-          </div>
-        ) : (
-          <CKEditor
-            onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
-            config={{
-              height: 100,
+    <React.Fragment>
+      {verified ? (
+        <Form.Group>
+          <Form.Label
+            style={{
+              fontWeight: "600",
             }}
-            ref={myRefQuestionEnglish}
-            data={questionData}
-          />
-        )}
-      </div>
-    </Form.Group>
+          >
+            Question
+          </Form.Label>
+          <div
+            style={{
+              margin: "0.5em 0",
+            }}
+          >
+            {lang === "HINDI" ? (
+              <div>
+                <select
+                  id="txtLanguage"
+                  className="selectpicker"
+                  onChange={window.setLang}
+                  style={{ display: "none" }}
+                >
+                  <option value="0">English</option>
+                  <option value="1">Devnagari</option>
+                </select>
+
+                <select
+                  id="txtKeyboard"
+                  className="selectpicker"
+                  onChange={window.changeKB}
+                  style={{ display: "none" }}
+                >
+                  <option value="Phonetic">Phonetic</option>
+                  <option value="Ramington">Ramington</option>
+                </select>
+                <CKEditor
+                  readOnly={true}
+                  onBeforeLoad={(CKEDITOR) =>
+                    (CKEDITOR.disableAutoInline = true)
+                  }
+                  config={{
+                    height: 100,
+                  }}
+                  ref={myRefQuestionHindi}
+                  onFocus={(event) => {
+                    window.hook(event.editor.document.$.body);
+                  }}
+                  oninstanceReady={(event) => {
+                    var a = document.getElementById("txtLanguage");
+                    a.selectedIndex = 1;
+                    window.setLang();
+                    var b = document.getElementById("txtKeyboard");
+                    b.selectedIndex = 1;
+                    window.changeKB();
+                  }}
+                  data={questionData}
+                />
+              </div>
+            ) : (
+              <CKEditor
+                readOnly={true}
+                onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
+                config={{
+                  height: 100,
+                }}
+                ref={myRefQuestionEnglish}
+                data={questionData}
+              />
+            )}
+          </div>
+        </Form.Group>
+      ) : (
+        <Form.Group>
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Question
+          </Form.Label>
+          <div
+            style={{
+              margin: "0.5em 0",
+            }}
+          >
+            {lang === "HINDI" ? (
+              <div>
+                <select
+                  id="txtLanguage"
+                  className="selectpicker"
+                  onChange={window.setLang}
+                  style={{ display: "none" }}
+                >
+                  <option value="0">English</option>
+                  <option value="1">Devnagari</option>
+                </select>
+
+                <select
+                  id="txtKeyboard"
+                  className="selectpicker"
+                  onChange={window.changeKB}
+                  style={{ display: "none" }}
+                >
+                  <option value="Phonetic">Phonetic</option>
+                  <option value="Ramington">Ramington</option>
+                </select>
+                <CKEditor
+                  onBeforeLoad={(CKEDITOR) =>
+                    (CKEDITOR.disableAutoInline = true)
+                  }
+                  config={{
+                    height: 100,
+                  }}
+                  ref={myRefQuestionHindi}
+                  onFocus={(event) => {
+                    window.hook(event.editor.document.$.body);
+                  }}
+                  oninstanceReady={(event) => {
+                    var a = document.getElementById("txtLanguage");
+                    a.selectedIndex = 1;
+                    window.setLang();
+                    var b = document.getElementById("txtKeyboard");
+                    b.selectedIndex = 1;
+                    window.changeKB();
+                  }}
+                  data={questionData}
+                />
+              </div>
+            ) : (
+              <CKEditor
+                onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
+                config={{
+                  height: 100,
+                }}
+                ref={myRefQuestionEnglish}
+                data={questionData}
+              />
+            )}
+          </div>
+        </Form.Group>
+      )}
+    </React.Fragment>
   );
 }
 function ExplanationComp({
+  verified,
   lang,
   myRefExplanationHindi,
   myRefExplanationEnglish,
   explanationData,
 }) {
   return (
-    <Form.Group>
-      <Form.Label
-        style={{
-          fontWeight: "600",
-        }}
-      >
-        Explanation
-      </Form.Label>
-      <div
-        style={{
-          margin: "0.5em 0",
-        }}
-      >
-        {lang === "HINDI" ? (
-          <CKEditor
-            onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
-            config={{
-              height: 100,
+    <React.Fragment>
+      {verified ? (
+        <Form.Group>
+          <Form.Label
+            style={{
+              fontWeight: "600",
             }}
-            ref={myRefExplanationHindi}
-            onFocus={(event) => {
-              window.hook(event.editor.document.$.body);
+          >
+            Explanation
+          </Form.Label>
+          <div
+            style={{
+              margin: "0.5em 0",
             }}
-            data={explanationData}
-          />
-        ) : (
-          <CKEditor
-            onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
-            config={{
-              height: 100,
+          >
+            {lang === "HINDI" ? (
+              <CKEditor
+                readOnly={true}
+                onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
+                config={{
+                  height: 100,
+                }}
+                ref={myRefExplanationHindi}
+                onFocus={(event) => {
+                  window.hook(event.editor.document.$.body);
+                }}
+                data={explanationData}
+              />
+            ) : (
+              <CKEditor
+                readOnly={true}
+                onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
+                config={{
+                  height: 100,
+                }}
+                ref={myRefExplanationEnglish}
+                data={explanationData}
+              />
+            )}
+          </div>
+        </Form.Group>
+      ) : (
+        <Form.Group>
+          <Form.Label
+            style={{
+              fontWeight: "600",
             }}
-            ref={myRefExplanationEnglish}
-            data={explanationData}
-          />
-        )}
-      </div>
-    </Form.Group>
+          >
+            Explanation
+          </Form.Label>
+          <div
+            style={{
+              margin: "0.5em 0",
+            }}
+          >
+            {lang === "HINDI" ? (
+              <CKEditor
+                onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
+                config={{
+                  height: 100,
+                }}
+                ref={myRefExplanationHindi}
+                onFocus={(event) => {
+                  window.hook(event.editor.document.$.body);
+                }}
+                data={explanationData}
+              />
+            ) : (
+              <CKEditor
+                onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
+                config={{
+                  height: 100,
+                }}
+                ref={myRefExplanationEnglish}
+                data={explanationData}
+              />
+            )}
+          </div>
+        </Form.Group>
+      )}
+    </React.Fragment>
   );
 }
 class RightpanelNewVersion extends Component {
   render() {
     return (
-      <Form>
-        <QuestionComp
-          lang={this.props.lang}
-          myRefQuestionHindi={this.props.myRefQuestionHindiNew}
-          myRefQuestionEnglish={this.props.myRefQuestionEnglishNew}
-          questionData={this.props.questionData}
-        />
-        {this.props.listOfOptions &&
-          this.props.listOfOptions.map((item, index) => {
-            return (
-              <React.Fragment key={index}>
-                <Form.Group as={Row} style={{ marginTop: "2em" }}>
-                  <Form.Label column sm="2" style={{ fontWeight: "600" }}>
-                    {"Option " + String.fromCharCode(65 + index)}
-                  </Form.Label>
-                  <Col sm="2">
-                    <Form.Control
-                      style={{ borderRadius: "0", background: "#f9f9f9" }}
-                      type="number"
-                      value={item.weightage}
-                      onChange={this.props.handleOptionWeightageChange.bind(
-                        this,
-                        index
+      <React.Fragment>
+        {this.props.fetchedData.verified ? (
+          <Form>
+            <QuestionComp
+             verified={true}
+              lang={this.props.lang}
+              myRefQuestionHindi={this.props.myRefQuestionHindiNew}
+              myRefQuestionEnglish={this.props.myRefQuestionEnglishNew}
+              questionData={this.props.questionData}
+            />
+            {this.props.listOfOptions &&
+              this.props.listOfOptions.map((item, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <Form.Group as={Row} style={{ marginTop: "2em" }}>
+                      <Form.Label column sm="2" style={{ fontWeight: "600" }}>
+                        {"Option " + String.fromCharCode(65 + index)}
+                      </Form.Label>
+                      <Col sm="2">
+                        <Form.Control
+                          disabled
+                          style={{ borderRadius: "0", background: "#f9f9f9" }}
+                          type="number"
+                          value={item.weightage}
+                          onChange={this.props.handleOptionWeightageChange.bind(
+                            this,
+                            index
+                          )}
+                          placeholder="weightage"
+                        />
+                      </Col>
+                      <Col>
+                        {/* <Button
+                          style={{ float: "right", color: "grey" }}
+                          variant="link"
+                          onClick={this.props.deleteOption.bind(
+                            this,
+                            index,
+                            this.props.lang
+                          )}
+                        >
+                          X Delete
+                        </Button> */}
+                      </Col>
+                    </Form.Group>
+                    <div style={{ margin: "0.5em 0" }}>
+                      {this.props.lang === "HINDI" ? (
+                        <CKEditor
+                        readOnly={true}
+                          onBeforeLoad={(CKEDITOR) =>
+                            (CKEDITOR.disableAutoInline = true)
+                          }
+                          ref={(ref) => {
+                            // Callback refs are preferable when
+                            // dealing with dynamic refs
+
+                            this.props.refsArrayHindiNew[index] = ref;
+                            return true;
+                          }}
+                          onFocus={(event) => {
+                            window.hook(event.editor.document.$.body);
+                            this.props.handleOptioncontentchange(
+                              index,
+                              event.editor.getData()
+                            );
+                            // let data = event.editor.getData();
+                            // console.log('focus')
+                            // event.editor.insertHtml(" ");
+                            // this.props.handleOptioncontentchange(
+                            //   index,
+                            //   event.editor.getData()
+                            // );
+                            // installKeyupOption(index, event.editor);
+                          }}
+                          config={{
+                            height: 100,
+
+                            // placeholder: "Test description and instruction in English"
+                          }}
+                          data={item.content}
+                          onChange={(event) => {
+                            // let data = editor.getData();
+                            // console.log('change')
+                            this.props.handleOptioncontentchange(
+                              index,
+                              event.editor.getData()
+                            );
+                          }}
+                        />
+                      ) : (
+                        <CKEditor
+                        readOnly={true}
+                          onBeforeLoad={(CKEDITOR) =>
+                            (CKEDITOR.disableAutoInline = true)
+                          }
+                          ref={(ref) => {
+                            // Callback refs are preferable when
+                            // dealing with dynamic refs
+
+                            this.props.refsArrayEnglishNew[index] = ref;
+                            return true;
+                          }}
+                          onFocus={(event) => {
+                            // let data = event.editor.getData();
+                            // console.log('focus')
+                            this.props.handleOptioncontentchange(
+                              index,
+                              event.editor.getData()
+                            );
+                          }}
+                          config={{
+                            height: 100,
+                          }}
+                          data={item.content}
+                          onChange={(event) => {
+                            this.props.handleOptioncontentchange(
+                              index,
+                              event.editor.getData()
+                            );
+                          }}
+                        />
                       )}
-                      placeholder="weightage"
-                    />
-                  </Col>
-                  <Col>
-                    <Button
-                      style={{ float: "right", color: "grey" }}
-                      variant="link"
-                      onClick={this.props.deleteOption.bind(
-                        this,
-                        index,
-                        this.props.lang
+                    </div>
+                  </React.Fragment>
+                );
+              })}
+            <Row>
+              <Col lg="10"></Col>
+              <Col>
+                {/* <Button
+                  onClick={this.props.addoptionfn}
+                  varirant="info"
+                  style={{
+                    fontSize: "0.8em",
+                    fontWeight: "700",
+                    background: "#FF8976",
+                    borderColor: "#FF8976",
+                    borderRadius: "0",
+                    float: "right",
+                  }}
+                >
+                  {" "}
+                  + Add Option
+                </Button> */}
+              </Col>
+            </Row>
+            <div style={{ margin: "2em 0" }}>
+              <ExplanationComp
+               verified={true}
+                lang={this.props.lang}
+                myRefExplanationHindi={this.props.myRefExplanationHindiNew}
+                myRefExplanationEnglish={this.props.myRefExplanationEnglishNew}
+                explanationData={this.props.explanationData}
+              />
+            </div>
+
+            <div style={{ margin: "1em 0", textAlign: "center" }}>
+              {/* <Button
+                style={{
+                  borderRadius: "0",
+                  background: "#3F5FBB",
+                  borderColor: "#3F5FBB",
+                  padding: "0.6em 2.5em",
+                  fontSize: "1.1em",
+                  fontWeight: "600",
+                }}
+                onClick={this.props.savedata}
+              >
+                Update data
+              </Button> */}
+            </div>
+          </Form>
+        ) : (
+          <Form>
+            <QuestionComp
+              lang={this.props.lang}
+              myRefQuestionHindi={this.props.myRefQuestionHindiNew}
+              myRefQuestionEnglish={this.props.myRefQuestionEnglishNew}
+              questionData={this.props.questionData}
+            />
+            {this.props.listOfOptions &&
+              this.props.listOfOptions.map((item, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <Form.Group as={Row} style={{ marginTop: "2em" }}>
+                      <Form.Label column sm="2" style={{ fontWeight: "600" }}>
+                        {"Option " + String.fromCharCode(65 + index)}
+                      </Form.Label>
+                      <Col sm="2">
+                        <Form.Control
+                          style={{ borderRadius: "0", background: "#f9f9f9" }}
+                          type="number"
+                          value={item.weightage}
+                          onChange={this.props.handleOptionWeightageChange.bind(
+                            this,
+                            index
+                          )}
+                          placeholder="weightage"
+                        />
+                      </Col>
+                      <Col>
+                        <Button
+                          style={{ float: "right", color: "grey" }}
+                          variant="link"
+                          onClick={this.props.deleteOption.bind(
+                            this,
+                            index,
+                            this.props.lang
+                          )}
+                        >
+                          X Delete
+                        </Button>
+                      </Col>
+                    </Form.Group>
+                    <div style={{ margin: "0.5em 0" }}>
+                      {this.props.lang === "HINDI" ? (
+                        <CKEditor
+                          onBeforeLoad={(CKEDITOR) =>
+                            (CKEDITOR.disableAutoInline = true)
+                          }
+                          ref={(ref) => {
+                            // Callback refs are preferable when
+                            // dealing with dynamic refs
+
+                            this.props.refsArrayHindiNew[index] = ref;
+                            return true;
+                          }}
+                          onFocus={(event) => {
+                            window.hook(event.editor.document.$.body);
+                            this.props.handleOptioncontentchange(
+                              index,
+                              event.editor.getData()
+                            );
+                            // let data = event.editor.getData();
+                            // console.log('focus')
+                            // event.editor.insertHtml(" ");
+                            // this.props.handleOptioncontentchange(
+                            //   index,
+                            //   event.editor.getData()
+                            // );
+                            // installKeyupOption(index, event.editor);
+                          }}
+                          config={{
+                            height: 100,
+
+                            // placeholder: "Test description and instruction in English"
+                          }}
+                          data={item.content}
+                          onChange={(event) => {
+                            // let data = editor.getData();
+                            // console.log('change')
+                            this.props.handleOptioncontentchange(
+                              index,
+                              event.editor.getData()
+                            );
+                          }}
+                        />
+                      ) : (
+                        <CKEditor
+                          onBeforeLoad={(CKEDITOR) =>
+                            (CKEDITOR.disableAutoInline = true)
+                          }
+                          ref={(ref) => {
+                            // Callback refs are preferable when
+                            // dealing with dynamic refs
+
+                            this.props.refsArrayEnglishNew[index] = ref;
+                            return true;
+                          }}
+                          onFocus={(event) => {
+                            // let data = event.editor.getData();
+                            // console.log('focus')
+                            this.props.handleOptioncontentchange(
+                              index,
+                              event.editor.getData()
+                            );
+                          }}
+                          config={{
+                            height: 100,
+                          }}
+                          data={item.content}
+                          onChange={(event) => {
+                            this.props.handleOptioncontentchange(
+                              index,
+                              event.editor.getData()
+                            );
+                          }}
+                        />
                       )}
-                    >
-                      X Delete
-                    </Button>
-                  </Col>
-                </Form.Group>
-                <div style={{ margin: "0.5em 0" }}>
-                  {this.props.lang === "HINDI" ? (
-                    <CKEditor
-                      onBeforeLoad={(CKEDITOR) =>
-                        (CKEDITOR.disableAutoInline = true)
-                      }
-                      ref={(ref) => {
-                        // Callback refs are preferable when
-                        // dealing with dynamic refs
+                    </div>
+                  </React.Fragment>
+                );
+              })}
+            <Row>
+              <Col lg="10"></Col>
+              <Col>
+                <Button
+                  onClick={this.props.addoptionfn}
+                  varirant="info"
+                  style={{
+                    fontSize: "0.8em",
+                    fontWeight: "700",
+                    background: "#FF8976",
+                    borderColor: "#FF8976",
+                    borderRadius: "0",
+                    float: "right",
+                  }}
+                >
+                  {" "}
+                  + Add Option
+                </Button>
+              </Col>
+            </Row>
+            <div style={{ margin: "2em 0" }}>
+              <ExplanationComp
+                lang={this.props.lang}
+                myRefExplanationHindi={this.props.myRefExplanationHindiNew}
+                myRefExplanationEnglish={this.props.myRefExplanationEnglishNew}
+                explanationData={this.props.explanationData}
+              />
+            </div>
 
-                        this.props.refsArrayHindiNew[index] = ref;
-                        return true;
-                      }}
-                      onFocus={(event) => {
-                        window.hook(event.editor.document.$.body);
-                        this.props.handleOptioncontentchange(
-                          index,
-                          event.editor.getData()
-                        );
-                        // let data = event.editor.getData();
-                        // console.log('focus')
-                        // event.editor.insertHtml(" ");
-                        // this.props.handleOptioncontentchange(
-                        //   index,
-                        //   event.editor.getData()
-                        // );
-                        // installKeyupOption(index, event.editor);
-                      }}
-                      config={{
-                        height: 100,
-
-                        // placeholder: "Test description and instruction in English"
-                      }}
-                      data={item.content}
-                      onChange={(event) => {
-                        // let data = editor.getData();
-                        // console.log('change')
-                        this.props.handleOptioncontentchange(
-                          index,
-                          event.editor.getData()
-                        );
-                      }}
-                    />
-                  ) : (
-                    <CKEditor
-                      onBeforeLoad={(CKEDITOR) =>
-                        (CKEDITOR.disableAutoInline = true)
-                      }
-                      ref={(ref) => {
-                        // Callback refs are preferable when
-                        // dealing with dynamic refs
-
-                        this.props.refsArrayEnglishNew[index] = ref;
-                        return true;
-                      }}
-                      onFocus={(event) => {
-                        // let data = event.editor.getData();
-                        // console.log('focus')
-                        this.props.handleOptioncontentchange(
-                          index,
-                          event.editor.getData()
-                        );
-                      }}
-                      config={{
-                        height: 100,
-                      }}
-                      data={item.content}
-                      onChange={(event) => {
-                        this.props.handleOptioncontentchange(
-                          index,
-                          event.editor.getData()
-                        );
-                      }}
-                    />
-                  )}
-                </div>
-              </React.Fragment>
-            );
-          })}
-        <Row>
-          <Col lg="10"></Col>
-          <Col>
-            <Button
-              onClick={this.props.addoptionfn}
-              varirant="info"
-              style={{
-                fontSize: "0.8em",
-                fontWeight: "700",
-                background: "#FF8976",
-                borderColor: "#FF8976",
-                borderRadius: "0",
-                float: "right",
-              }}
-            >
-              {" "}
-              + Add Option
-            </Button>
-          </Col>
-        </Row>
-        <div style={{ margin: "2em 0" }}>
-          <ExplanationComp
-            lang={this.props.lang}
-            myRefExplanationHindi={this.props.myRefExplanationHindiNew}
-            myRefExplanationEnglish={this.props.myRefExplanationEnglishNew}
-            explanationData={this.props.explanationData}
-          />
-        </div>
-
-        <div style={{ margin: "1em 0", textAlign: "center" }}>
-          <Button
-            style={{
-              borderRadius: "0",
-              background: "#3F5FBB",
-              borderColor: "#3F5FBB",
-              padding: "0.6em 2.5em",
-              fontSize: "1.1em",
-              fontWeight: "600",
-            }}
-            onClick={this.props.savedata}
-          >
-            Update data
-          </Button>
-        </div>
-      </Form>
+            <div style={{ margin: "1em 0", textAlign: "center" }}>
+              <Button
+                style={{
+                  borderRadius: "0",
+                  background: "#3F5FBB",
+                  borderColor: "#3F5FBB",
+                  padding: "0.6em 2.5em",
+                  fontSize: "1.1em",
+                  fontWeight: "600",
+                }}
+                onClick={this.props.savedata}
+              >
+                Update data
+              </Button>
+            </div>
+          </Form>
+        )}
+      </React.Fragment>
     );
   }
 }

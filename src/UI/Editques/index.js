@@ -1043,6 +1043,7 @@ class Editques extends Component {
                   Editing question Id: #{this.state.questionId}
                   <br />
                   {this.state.fetchedData &&
+                    !this.state.fetchedData.verified &&
                     this.state.fetchedData.questionVersions.filter(
                       (item) => item.language === this.state.activetab
                     ).length === 0 && (

@@ -65,9 +65,13 @@ class ExamEditComponent extends Component {
     this.refsSectionHindi = [];
     window.ExamEditComponent = this;
   }
-  addSectionQuestions = (index) => {
+  addSectionQuestions = (index, testSectionId) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].testSectionMapping.push({ questionId: "" });
+    tempsectionlist[index].testSectionMapping.push({
+      testsectionId: testSectionId,
+      questionId: "",
+      id: 0,
+    });
     this.setState({ listOfSection: tempsectionlist });
     // console.log('add section',index);
     // let tempsectionlist = this.state.listOfSection;
@@ -523,7 +527,11 @@ class ExamEditComponent extends Component {
         (ques) => ques && ques.questionId !== ""
       );
       questionlist = questionlist.map((ques) => {
-        return ques.questionId;
+        return {
+          questionId: ques.questionId,
+          id: ques.id,
+          testSectionId: item.testSectionId,
+        };
       });
       return {
         testSectionId: item.testSectionId,

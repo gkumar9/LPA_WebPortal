@@ -4,7 +4,7 @@ export default class Radio extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      coffeeTypes: ["+", "++", "+++"]
+      coffeeTypes: ["+", "++", "+++"],
     };
   }
   render() {
@@ -21,6 +21,7 @@ export default class Radio extends React.Component {
               }
             >
               <input
+                disabled={this.props.verified ? true : false}
                 className="radioPad__radio"
                 type="radio"
                 name="coffeeTypes"

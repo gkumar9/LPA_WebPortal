@@ -23,7 +23,7 @@ import BucketIconGrey from "./../../Assets/image4.png";
 import swal from "@sweetalert/with-react";
 import BottomScrollListener from "react-bottom-scroll-listener";
 import MathJax from "react-mathjax-preview";
-
+import FlagIcon from "@material-ui/icons/Flag";
 class QAtab extends Component {
   constructor(props) {
     super(props);
@@ -54,9 +54,11 @@ class QAtab extends Component {
       authorId: localStorage.getItem("selectedAuthorIDQA")
         ? parseInt(localStorage.getItem("selectedAuthorIDQA"))
         : 0,
-      userId: localStorage.getItem("selectedUserIDQA")&&localStorage.getItem("selectedUserIDQA")!=='null'
-        ? localStorage.getItem("selectedUserIDQA")
-        : null,
+      userId:
+        localStorage.getItem("selectedUserIDQA") &&
+        localStorage.getItem("selectedUserIDQA") !== "null"
+          ? localStorage.getItem("selectedUserIDQA")
+          : null,
       searchResultList: [],
       listOfselectedPreview: [],
       isLoading: false,
@@ -69,9 +71,11 @@ class QAtab extends Component {
         : [],
       apisugges: [],
       suggestions: [],
-      date: localStorage.getItem("selectedDateQA")&&localStorage.getItem("selectedDateQA")!=="null"
-        ? new Date(localStorage.getItem("selectedDateQA"))
-        : null,
+      date:
+        localStorage.getItem("selectedDateQA") &&
+        localStorage.getItem("selectedDateQA") !== "null"
+          ? new Date(localStorage.getItem("selectedDateQA"))
+          : null,
     };
   }
   handleDateChange = (date) => {
@@ -1567,6 +1571,38 @@ class QAtab extends Component {
                                       fontWeight: "600",
                                     }}
                                   >
+                                    {item.verified ? (
+                                      <OverlayTrigger
+                                        placement="top"
+                                        delay={{ show: 250, hide: 400 }}
+                                        overlay={renderTooltip(
+                                          "Question marked as Reviewd"
+                                        )}
+                                      >
+                                        <span
+                                          className="flagiconactive"
+                                          style={{ marginRight: "1em" }}
+                                        >
+                                          {" "}
+                                          <FlagIcon />
+                                        </span>
+                                      </OverlayTrigger>
+                                    ) : (
+                                      <OverlayTrigger
+                                        placement="top"
+                                        delay={{ show: 250, hide: 400 }}
+                                        overlay={renderTooltip(
+                                          "Question marked as Not-Reviewed"
+                                        )}
+                                      >
+                                        <span
+                                          className="flagiconnotactive"
+                                          style={{ marginRight: "1em" }}
+                                        >
+                                          <FlagIcon />
+                                        </span>
+                                      </OverlayTrigger>
+                                    )}
                                     <b>Tags: </b>
                                     <span style={{ color: "#1D4B7F" }}>
                                       {item.level === "EASY"

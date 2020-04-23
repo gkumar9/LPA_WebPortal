@@ -61,7 +61,12 @@ class Exam extends Component {
   }
   addSectionQuestions = (index) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].questions.push("");
+    // tempsectionlist[index].questions.push("");
+    tempsectionlist[index].questions.push({
+      testsectionId: 0,
+      questionId: "",
+      id: 0,
+    });
     this.setState({ listOfSection: tempsectionlist });
   };
   deleteSectionQuestion = (index, indexquestion) => {
@@ -71,7 +76,7 @@ class Exam extends Component {
   };
   handlSectionQuestionValueChange = (index, indexquestion, e) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].questions[indexquestion] = parseInt(e.target.value);
+    tempsectionlist[index].questions[indexquestion].questionId = parseInt(e.target.value);
     this.setState({ listOfSection: tempsectionlist });
   };
   handleSectionDescriptionChange = (index, language, data) => {
