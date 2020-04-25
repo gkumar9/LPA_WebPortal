@@ -155,7 +155,7 @@ class RightExamPanel extends Component {
                           value={
                             item.testSectionVersions.filter(
                               (object) => object.language === "ENGLISH"
-                            )[0].name
+                            )[0].sectionName
                           }
                           onChange={this.props.handleSectionnameChange.bind(
                             this,
@@ -174,7 +174,7 @@ class RightExamPanel extends Component {
                           value={
                             item.testSectionVersions.filter(
                               (object) => object.language === "HINDI"
-                            )[0].name
+                            )[0].sectionName
                           }
                           onChange={this.props.handleSectionnameChange.bind(
                             this,

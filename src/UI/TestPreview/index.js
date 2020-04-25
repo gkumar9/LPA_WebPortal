@@ -25,22 +25,23 @@ class Previewtest extends Component {
           url: URL.getexamcontent + this.state.testId,
           data: { authToken: "string" },
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-          .then(res => {
+          .then((res) => {
             if (res.status === 200) {
               let testdataresponse = res.data.data.test;
-              if (
-                testdataresponse.testSections &&
-                testdataresponse.testSections.length > 0
-              ) {
-                this.setState({ data: testdataresponse, isData: true });
-              }
+              this.setState({ data: testdataresponse, isData: true });
+              // if (
+              //   testdataresponse.testSections &&
+              //   testdataresponse.testSections.length > 0
+              // ) {
+              //   this.setState({ data: testdataresponse, isData: true });
+              // }
             } else {
             }
           })
-          .catch(e => {
+          .catch((e) => {
             alert(e);
           });
       });
@@ -52,7 +53,7 @@ class Previewtest extends Component {
       );
     }
   }
-  createPdfexam = html => Doc.createPdf(html);
+  createPdfexam = (html) => Doc.createPdf(html);
   render() {
     // console.log(this.state.data, this.state.isData);
     return (
@@ -63,25 +64,23 @@ class Previewtest extends Component {
             <Container style={{ marginTop: "1em" }}>
               <center style={{ margin: "0 2em", textTransform: "capitalize" }}>
                 <h3>
-                  {
-                    this.state.data.testVersions.filter(
-                      item =>
-                        item.language ===
-                        localStorage.getItem("TestPreviewLanguage")
-                    )[0].name +` (# ${this.state.data.testId})`
-                  }
+                  {this.state.data.testVersions.filter(
+                    (item) =>
+                      item.language ===
+                      localStorage.getItem("TestPreviewLanguage")
+                  )[0].name + ` (# ${this.state.data.testId})`}
                 </h3>
               </center>
               <Row>
                 <Col lg="4">
                   {" "}
-                  Time allowed:
-                  {this.state.data.time ? this.state.data.time : " NA"}
+                  Time allowed:{" "}
+                  {this.state.data.time ? this.state.data.time + " Hrs" : " NA"}
                 </Col>
                 <Col />
                 <Col lg="4">
                   <span style={{ float: "right" }}>
-                    Maximum marks:
+                    Maximum marks:{" "}
                     {this.state.data.maximumMarks
                       ? this.state.data.maximumMarks
                       : " NA"}
@@ -104,7 +103,7 @@ class Previewtest extends Component {
                   style={{ display: "inline-flex" }}
                   math={
                     this.state.data.testVersions.filter(
-                      item =>
+                      (item) =>
                         item.language ===
                         localStorage.getItem("TestPreviewLanguage")
                     )[0].instructions
@@ -132,7 +131,7 @@ class Previewtest extends Component {
                       <h6>
                         {
                           item.testSectionVersions.filter(
-                            obj =>
+                            (obj) =>
                               obj.language ===
                               localStorage.getItem("TestPreviewLanguage")
                           )[0].sectionName
@@ -154,7 +153,7 @@ class Previewtest extends Component {
                         style={{ display: "inline-flex" }}
                         math={
                           item.testSectionVersions.filter(
-                            obj =>
+                            (obj) =>
                               obj.language ===
                               localStorage.getItem("TestPreviewLanguage")
                           )[0].content
@@ -179,7 +178,7 @@ class Previewtest extends Component {
             </Container>
           </div>
         ) : (
-          <center></center>
+          <center>ERROR</center>
         )}
       </React.Fragment>
     );
@@ -192,42 +191,60 @@ class QuestionShowData extends Component {
     this.state = {
       editabledata: this.props.data,
       finaldata: [],
-      selectedLanguage: localStorage.getItem("TestPreviewLanguage")
+      selectedLanguage: localStorage.getItem("TestPreviewLanguage"),
     };
   }
+  compare = (a, b) => {
+    const bandA = a.questionId;
+    const bandB = b.questionId;
+
+    let comparison = 0;
+    if (bandA > bandB) {
+      comparison = 1;
+    } else if (bandA < bandB) {
+      comparison = -1;
+    }
+    return comparison;
+  };
   componentDidMount() {
-    // eslint-disable-next-line array-callback-return
-    this.state.editabledata.map(item => {
+    // console.log(this.state.editabledata);
+    let temp = this.state.editabledata;
+    // console.log(temp);
+    temp.map((item) =>
       axios({
         method: "POST",
         url: URL.geteditques + item.questionId,
         data: { authToken: "string" },
         headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(res => {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => {
         let currentarray = this.state.finaldata;
         currentarray.push(res.data.data.question);
         this.setState({ finaldata: currentarray });
-      });
-    });
+      })
+    );
   }
   render() {
+    let temp = this.state.finaldata&&this.state.finaldata.length>0
+      ? this.state.finaldata.sort(this.compare)
+      : [];
     return (
       <Container>
         <div
           style={{
-            padding: "0"
+            padding: "0",
           }}
         >
-          {this.state.finaldata &&
-            this.state.finaldata.map((item, index) => {
+          {temp &&
+            temp.length > 0 &&
+            temp.map((item, index) => {
               return (
                 <Row
                   noGutters={true}
                   key={item.questionId}
                   style={{
-                    margin: "2em 0em"
+                    margin: "2em 0em",
                     // borderBottom: "1px #cecccc solid"
                     // borderBottom: "1px #c2c2c2 solid"
                   }}
@@ -235,13 +252,13 @@ class QuestionShowData extends Component {
                   <Col
                     style={{
                       paddingLeft: "0em",
-                      paddingRight: "0em"
+                      paddingRight: "0em",
                     }}
                   >
                     <Card
                       style={{
                         background: "transparent",
-                        borderColor: "transparent"
+                        borderColor: "transparent",
                       }}
                     >
                       <Card.Body style={{ padding: "0", margin: "0.5em 0" }}>
@@ -263,7 +280,7 @@ class QuestionShowData extends Component {
                                 style={{
                                   float: "right",
                                   fontSize: "15px",
-                                  fontWeight: "600"
+                                  fontWeight: "600",
                                 }}
                               >
                                 <b>Tags: </b>
@@ -281,7 +298,7 @@ class QuestionShowData extends Component {
                                 <span
                                   style={{
                                     color: "darkgreen",
-                                    textTransform: "lowercase"
+                                    textTransform: "lowercase",
                                   }}
                                 >
                                   {" "}
@@ -290,11 +307,11 @@ class QuestionShowData extends Component {
                                 <span
                                   style={{
                                     color: "darkgoldenrod",
-                                    textTransform: "lowercase"
+                                    textTransform: "lowercase",
                                   }}
                                 >
                                   {item.tags.length > 0 &&
-                                    item.tags.map(itm => {
+                                    item.tags.map((itm) => {
                                       return `, ${itm.tag}`;
                                     })}
                                 </span>
@@ -309,11 +326,11 @@ class QuestionShowData extends Component {
                             style={{ display: "inline-flex" }}
                             math={
                               item.questionVersions.filter(
-                                obbj =>
+                                (obbj) =>
                                   obbj.language === this.state.selectedLanguage
                               ).length > 0
                                 ? item.questionVersions.filter(
-                                    obbj =>
+                                    (obbj) =>
                                       obbj.language ===
                                       this.state.selectedLanguage
                                   )[0].content
@@ -335,12 +352,12 @@ class QuestionShowData extends Component {
                         </Card.Text>
                         <Row>
                           {item.questionVersions.filter(
-                            obbj =>
+                            (obbj) =>
                               obbj.language === this.state.selectedLanguage
                           ).length > 0 &&
                             item.questionVersions
                               .filter(
-                                obbj =>
+                                (obbj) =>
                                   obbj.language === this.state.selectedLanguage
                               )[0]
                               .options.map((optionitem, optionindex) => {
@@ -374,12 +391,15 @@ class QuestionShowData extends Component {
                             style={{ display: "inline-flex" }}
                             math={
                               item.questionVersions.filter(
-                                obbj =>
+                                (obbj) =>
                                   obbj.language === this.state.selectedLanguage
-                              ).length>0?item.questionVersions.filter(
-                                obbj =>
-                                  obbj.language === this.state.selectedLanguage
-                              )[0].solution:" "
+                              ).length > 0
+                                ? item.questionVersions.filter(
+                                    (obbj) =>
+                                      obbj.language ===
+                                      this.state.selectedLanguage
+                                  )[0].solution
+                                : " "
                             }
                           />
                           {/* {ReactHtmlParser(

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-distracting-elements */
 import React, { Component } from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import "./index.css";
@@ -297,7 +298,7 @@ class LeftPanelExam extends Component {
                     style={{ borderRadius: "0" }}
                     type="number"
                     placeholder="Hours"
-                    value={this.props.hour ? this.props.hour : 0}
+                    value={this.props.hour }
                     onChange={this.props.onHourChange.bind(this)}
                   ></Form.Control>
                 </Col>
@@ -319,7 +320,7 @@ class LeftPanelExam extends Component {
                     disabled
                     type="number"
                     placeholder="Minutes"
-                    value={this.props.minute ? this.props.minute : 0}
+                    value={this.props.minute }
                     onChange={this.props.onMinuteChange.bind(this)}
                   ></Form.Control>
                   {/* <TimePickerWrapper
@@ -566,7 +567,7 @@ class LeftPanelExam extends Component {
                     type="number"
                     style={{ borderRadius: "0" }}
                     placeholder="Hours"
-                    value={this.props.hour ? this.props.hour : 0}
+                    value={this.props.hour }
                     onChange={this.props.onHourChange.bind(this)}
                   ></Form.Control>
                 </Col>
@@ -587,7 +588,7 @@ class LeftPanelExam extends Component {
                     type="number"
                     style={{ borderRadius: "0" }}
                     placeholder="Minutes"
-                    value={this.props.minute ? this.props.minute : 0}
+                    value={this.props.minute }
                     onChange={this.props.onMinuteChange.bind(this)}
                   ></Form.Control>
                   {/* <TimePickerWrapper

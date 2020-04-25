@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-distracting-elements */
 import React, { Component } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
 import Difficulty from "./difficulty.js";
@@ -554,6 +555,14 @@ class LeftPanel extends Component {
       <React.Fragment>
         {this.props.fetchedData.verified ? (
           <Form>
+            <marquee>
+              <p style={{ marginBottom: "0.5em", color: "green" }}>
+                <b>
+                  *This question is marked as reviewed. Hence no further
+                  updating is permitted.*
+                </b>
+              </p>
+            </marquee>
             <Form.Group controlId="exampleForm.ControlSelectauthoreditques">
               <Form.Label
                 style={{
@@ -702,7 +711,15 @@ class LeftPanel extends Component {
               >
                 Tags
               </Form.Label>
-              <ReactTags
+              <br></br>
+              <span style={{ color: "grey" }}>
+                {this.props.tags.length > 0
+                  ? this.props.tags.map((item) => {
+                      return <li>{item.name} </li>;
+                    })
+                  : "NA"}
+              </span>
+              {/* <ReactTags
                 // disabled
                 // style={{width:'100%'}}
                 tags={this.props.tags}
@@ -710,7 +727,7 @@ class LeftPanel extends Component {
                 suggestions={this.props.suggestions}
                 onDelete={this.props.onDelete.bind(this)}
                 onAddition={this.props.onAddition.bind(this)}
-              />
+              /> */}
             </Form.Group>
             <Form.Group>
               <Form.Label
@@ -1470,7 +1487,7 @@ class RightpanelNewVersion extends Component {
         {this.props.fetchedData.verified ? (
           <Form>
             <QuestionComp
-             verified={true}
+              verified={true}
               lang={this.props.lang}
               myRefQuestionHindi={this.props.myRefQuestionHindiNew}
               myRefQuestionEnglish={this.props.myRefQuestionEnglishNew}
@@ -1514,7 +1531,7 @@ class RightpanelNewVersion extends Component {
                     <div style={{ margin: "0.5em 0" }}>
                       {this.props.lang === "HINDI" ? (
                         <CKEditor
-                        readOnly={true}
+                          readOnly={true}
                           onBeforeLoad={(CKEDITOR) =>
                             (CKEDITOR.disableAutoInline = true)
                           }
@@ -1557,7 +1574,7 @@ class RightpanelNewVersion extends Component {
                         />
                       ) : (
                         <CKEditor
-                        readOnly={true}
+                          readOnly={true}
                           onBeforeLoad={(CKEDITOR) =>
                             (CKEDITOR.disableAutoInline = true)
                           }
@@ -1614,7 +1631,7 @@ class RightpanelNewVersion extends Component {
             </Row>
             <div style={{ margin: "2em 0" }}>
               <ExplanationComp
-               verified={true}
+                verified={true}
                 lang={this.props.lang}
                 myRefExplanationHindi={this.props.myRefExplanationHindiNew}
                 myRefExplanationEnglish={this.props.myRefExplanationEnglishNew}

@@ -162,7 +162,7 @@ class QAtab extends Component {
       (item) => item.status === true
     );
     tempsearchlistselected.map((item) => {
-      console.log(item.id);
+      // console.log(item.id);
 
       return this.onAddpreviewdata(item.id);
     });

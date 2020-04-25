@@ -105,16 +105,16 @@ class ExamEditComponent extends Component {
   handleNegativeMarksPerQuesChange = (index, e) => {
     // console.log(index,e)
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].negativeMarksPerQuestion = e.target.value
-      ? parseInt(e.target.value)
-      : 0;
+    tempsectionlist[index].negativeMarksPerQuestion = e.target.value;
+    // ? parseInt(e.target.value)
+    // : 0;
     this.setState({ listOfSection: tempsectionlist });
   };
   handleMarksperQuesChange = (index, e) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].marksPerQuestion = e.target.value
-      ? parseInt(e.target.value)
-      : 0;
+    tempsectionlist[index].marksPerQuestion = e.target.value;
+    // ? parseInt(e.target.value)
+    // : 0;
     this.setState({ listOfSection: tempsectionlist });
   };
   addSection = () => {
@@ -183,9 +183,9 @@ class ExamEditComponent extends Component {
     tempsectionlist[index].testSectionVersions.filter(
       (item) => item.language === language
     )[0].sectionName = e.target.value;
-    tempsectionlist[index].testSectionVersions.filter(
-      (item) => item.language === language
-    )[0].name = e.target.value;
+    // tempsectionlist[index].testSectionVersions.filter(
+    //   (item) => item.language === language
+    // )[0].name = e.target.value;
     this.setState({ listOfSection: tempsectionlist });
   };
   handleEnglishTestNameChange = (e) => {
@@ -535,10 +535,16 @@ class ExamEditComponent extends Component {
       });
       return {
         testSectionId: item.testSectionId,
-        marksPerQuestion: item.marksPerQuestion,
-        negativeMarksPerQuestion: item.negativeMarksPerQuestion,
-        questions: questionlist,
-        testSectionMapping: item.testSectionMapping,
+        marksPerQuestion: isNaN(parseFloat(item.marksPerQuestion))
+          ? 0
+          : parseFloat(parseFloat(item.marksPerQuestion).toFixed(3)),
+        negativeMarksPerQuestion: isNaN(
+          parseFloat(item.negativeMarksPerQuestion)
+        )
+          ? 0
+          : parseFloat(parseFloat(item.negativeMarksPerQuestion).toFixed(3)),
+        // questions: questionlist,
+        testSectionMapping: questionlist,
         testSectionVersions: [
           {
             content: this.refsSectionEnglish[index].editor.getData(),
@@ -587,9 +593,9 @@ class ExamEditComponent extends Component {
     var endDate = yyyyendDatetemp + "-" + mmendDatetemp + "-" + ddendDatetemp;
 
     let templistofsection = tempsections.map((item) => {
-      item["versions"] = item["testSectionVersions"];
-      delete item.testSectionMapping;
-      delete item.testSectionVersions;
+      // item["versions"] = item["testSectionVersions"];
+      // delete item.testSectionMapping;
+      // delete item.testSectionVersions;
       return item;
     });
 
@@ -629,11 +635,13 @@ class ExamEditComponent extends Component {
           },
         ],
         time:
-          parseFloat(this.state.hour) +
-          parseFloat(Number(parseInt(this.state.minute) / 60))
-            ? parseFloat(this.state.hour) +
-              parseFloat(Number(parseInt(this.state.minute) / 60))
-            : 0,
+          (isNaN(parseFloat(this.state.hour))
+            ? 0
+            : parseFloat(this.state.hour)) +
+          (isNaN(parseInt(this.state.minute)) &&
+          isNaN(parseFloat(Number(parseInt(this.state.minute) / 60)))
+            ? 0
+            : parseFloat(Number(parseInt(this.state.minute) / 60))),
         type: this.state.selectedType,
         year: this.state.selectedTypeYear,
       },

@@ -19,7 +19,12 @@ class Exam extends Component {
       selectedSubjectID: 0,
       listOfChapter: [],
       selectedChapterID: 0,
-      listOfType: ["FREE", "WEEKLY TEST", "PRACTICE TEST", "PREVIOUS YEAR TEST"],
+      listOfType: [
+        "FREE",
+        "WEEKLY TEST",
+        "PRACTICE TEST",
+        "PREVIOUS YEAR TEST",
+      ],
       selectedType: "Free",
       selectedTypeYear: "",
       hour: "",
@@ -76,7 +81,9 @@ class Exam extends Component {
   };
   handlSectionQuestionValueChange = (index, indexquestion, e) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].questions[indexquestion].questionId = parseInt(e.target.value);
+    tempsectionlist[index].questions[indexquestion].questionId = parseInt(
+      e.target.value
+    );
     this.setState({ listOfSection: tempsectionlist });
   };
   handleSectionDescriptionChange = (index, language, data) => {
@@ -89,16 +96,16 @@ class Exam extends Component {
   };
   handleNegativeMarksPerQuesChange = (index, e) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].negativeMarksPerQuestion = e.target.value
-      ? parseFloat(e.target.value)
-      : "";
+    tempsectionlist[index].negativeMarksPerQuestion = e.target.value;
+    // ? parseFloat(e.target.value)
+    // : "";
     this.setState({ listOfSection: tempsectionlist });
   };
   handleMarksperQuesChange = (index, e) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].marksPerQuestion = e.target.value
-      ? parseFloat(e.target.value)
-      : "";
+    tempsectionlist[index].marksPerQuestion = e.target.value;
+    // ? parseFloat(e.target.value)
+    // : "";
     this.setState({ listOfSection: tempsectionlist });
   };
   addSection = () => {
@@ -157,7 +164,7 @@ class Exam extends Component {
     let tempsectionlist = this.state.listOfSection;
     tempsectionlist[index].versions.filter(
       (item) => item.language === language
-    )[0].name = e.target.value;
+    )[0].sectionName = e.target.value;
     this.setState({ listOfSection: tempsectionlist });
   };
   handleEnglishTestNameChange = (e) => {
@@ -447,14 +454,16 @@ class Exam extends Component {
       let tempsections = this.state.listOfSection.map((item, index) => {
         let questionlist = item.questions.filter((ques) => ques && ques !== "");
         return {
-          marksPerQuestion: item.marksPerQuestion
-            ? item.marksPerQuestion.toFixed(3)
-            : 0,
-          negativeMarksPerQuestion: item.negativeMarksPerQuestion
-            ? item.negativeMarksPerQuestion.toFixed(3)
-            : 0,
-          questions: questionlist,
-          versions: [
+          marksPerQuestion: isNaN(parseFloat(item.marksPerQuestion))
+            ? 0
+            : parseFloat(parseFloat(item.marksPerQuestion).toFixed(3)),
+          negativeMarksPerQuestion: isNaN(
+            parseFloat(item.negativeMarksPerQuestion)
+          )
+            ? 0
+            : parseFloat(parseFloat(item.negativeMarksPerQuestion).toFixed(3)),
+          testSectionMapping: questionlist,
+          testSectionVersions: [
             {
               content: this.refsSectionEnglish[index].editor.getData(),
               language: "ENGLISH",
@@ -496,7 +505,15 @@ class Exam extends Component {
         mmendDatetemp = "0" + mmendDatetemp;
       }
       var endDate = yyyyendDatetemp + "-" + mmendDatetemp + "-" + ddendDatetemp;
-
+      console.log(
+        isNaN(parseFloat(this.state.hour)) ? 0 : parseFloat(this.state.hour)
+      );
+      console.log(
+        isNaN(parseInt(this.state.minute)) &&
+          isNaN(parseFloat(Number(parseInt(this.state.minute) / 60)))
+          ? 0
+          : parseFloat(Number(parseInt(this.state.minute) / 60))
+      );
       axios({
         method: "POST",
         url: URL.addnewExam,
@@ -530,11 +547,14 @@ class Exam extends Component {
             },
           ],
           time:
-            parseFloat(this.state.hour) +
-            parseFloat(Number(parseInt(this.state.minute) / 60))
-              ? parseFloat(this.state.hour) +
-                parseFloat(Number(parseInt(this.state.minute) / 60))
-              : 0,
+            (isNaN(parseFloat(this.state.hour))
+              ? 0
+              : parseFloat(this.state.hour)) +
+            (isNaN(parseInt(this.state.minute)) &&
+            isNaN(parseFloat(Number(parseInt(this.state.minute) / 60)))
+              ? 0
+              : parseFloat(Number(parseInt(this.state.minute) / 60))),
+
           type: this.state.selectedType,
           year: this.state.selectedTypeYear,
         },
