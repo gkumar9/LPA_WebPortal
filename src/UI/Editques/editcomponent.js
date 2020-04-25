@@ -56,7 +56,7 @@ class EditComponent extends Component {
       letterchartcode: currentCharCode + 1,
     });
   };
-  deleteOption = (index, lang) => {
+  deleteOptionNew = (index, lang) => {
     let currentArrayOfOption;
     if (lang === "ENGLISH") {
       let tempoption = this.state.listOfOptions.map((item, index) => {
@@ -89,6 +89,44 @@ class EditComponent extends Component {
       return { name: name, content: item.content, weightage: item.weightage };
     });
 
+    this.setState({
+      listOfOptions: currentArrayOfOption,
+      letterchartcode: letterchartcode,
+    });
+  };
+  deleteOption = (index, lang) => {
+    let currentArrayOfOption;
+    if (lang === "ENGLISH") {
+      let tempoption = this.state.listOfOptions.map((item, index) => {
+        return {
+          name: item.name,
+          content: this.refsArrayEnglish[index].editor.getData(),
+          weightage: item.weightage,
+        };
+      });
+      currentArrayOfOption = tempoption;
+      this.refsArrayEnglish.splice(index, 1);
+    } else {
+      let tempoption = this.state.listOfOptions.map((item, index) => {
+        return {
+          name: item.name,
+          content: this.refsArrayHindi[index].editor.getData(),
+          weightage: item.weightage,
+        };
+      });
+      currentArrayOfOption = tempoption;
+      this.refsArrayHindi.splice(index, 1);
+    }
+
+    let letterchartcode = 65;
+
+    currentArrayOfOption.splice(index, 1);
+    currentArrayOfOption = currentArrayOfOption.map((item, index) => {
+      let name = "Option " + String.fromCharCode(letterchartcode);
+      letterchartcode++;
+      return { name: name, content: item.content, weightage: item.weightage };
+    });
+    // this.refsArrayEnglish = [];
     this.setState({
       listOfOptions: currentArrayOfOption,
       letterchartcode: letterchartcode,
@@ -441,6 +479,7 @@ class EditComponent extends Component {
                   deleteOption={this.deleteOption}
                   savedata={this.savedata}
                   lang={this.props.lang}
+                  deleteOptionNew={this.deleteOptionNew}
                 />
               </div>
             </Col>
@@ -509,6 +548,7 @@ class EditComponent extends Component {
                   deleteOption={this.deleteOption}
                   savedata={this.savedatanewversion}
                   lang={this.props.lang}
+                  deleteOptionNew={this.deleteOptionNew}
                 />
               </div>
             </Col>
@@ -533,7 +573,6 @@ class LeftPanel extends Component {
     currentvaluechapter = currentvaluechapter
       ? currentvaluechapter.sectionName
       : "";
-    // console.log(currentvaluechapter,this.props.listOfChapter)
     let currentvaluetopic = this.props.listOfTopic.filter(
       (item) => item.subjectTopic.topicId === this.props.selectedTopicID
     )[0];
@@ -552,370 +591,217 @@ class LeftPanel extends Component {
       ? currentvalueauthor.authorName
       : "";
     return (
-      <React.Fragment>
-        {this.props.fetchedData.verified ? (
-          <Form>
-            <marquee>
-              <p style={{ marginBottom: "0.5em", color: "green" }}>
-                <b>
-                  *This question is marked as reviewed. Hence no further
-                  updating is permitted.*
-                </b>
-              </p>
-            </marquee>
-            <Form.Group controlId="exampleForm.ControlSelectauthoreditques">
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Authors
-              </Form.Label>
-              <Form.Control
-                disabled
-                style={
-                  currentvalueauthor !== ""
-                    ? { borderRadius: "0" }
-                    : { borderRadius: "0", color: "#a3a2a2" }
-                }
-                size="sm"
-                as="select"
-                // defaultValue=""
-                onChange={this.props.handleAuthorChange}
-                value={currentvalueauthor}
-              >
-                {this.props.authorList &&
-                  this.props.authorList.map((item, index) => {
-                    return (
-                      <option key={index} value={item.authorName}>
-                        {item.authorName}
-                      </option>
-                    );
-                  })}
-                <option key="" value="">
-                  Select
-                </option>
-              </Form.Control>
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Subject
-              </Form.Label>
-              <Form.Control
-                disabled
-                style={{ borderRadius: "0" }}
-                size="sm"
-                as="select"
-                // defaultValue=""
-                onChange={this.props.handleSubjectChange}
-                value={currentvaluesubject}
-              >
-                {this.props.listOfSubject &&
-                  this.props.listOfSubject.map((item, index) => {
-                    return (
-                      <option key={index} value={item.subjectName}>
-                        {item.subjectName}
-                      </option>
-                    );
-                  })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Chapter
-              </Form.Label>
-              <Form.Control
-                disabled
-                style={{ borderRadius: "0" }}
-                size="sm"
-                as="select"
-                value={currentvaluechapter}
-                onChange={this.props.handleChapterChange}
-              >
-                {this.props.listOfChapter &&
-                  this.props.listOfChapter.map((item, index) => {
-                    return (
-                      <option key={index} value={item.sectionName}>
-                        {item.sectionName}
-                      </option>
-                    );
-                  })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Topic
-              </Form.Label>
-              <Form.Control
-                disabled
-                style={{ borderRadius: "0" }}
-                size="sm"
-                as="select"
-                value={currentvaluetopic}
-                onChange={this.props.handleTopicChange}
-              >
-                {this.props.listOfTopic &&
-                  this.props.listOfTopic.map((item, index) => {
-                    return (
-                      <option key={index} value={item.title}>
-                        {item.title}
-                      </option>
-                    );
-                  })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Sub-topic
-              </Form.Label>
-              <Form.Control
-                disabled
-                style={{ borderRadius: "0" }}
-                size="sm"
-                as="select"
-                value={currentvaluesubtopic}
-                onChange={this.props.handleSubTopicChange}
-              >
-                {this.props.listOfSubTopic &&
-                  this.props.listOfSubTopic.map((item, index) => {
-                    return (
-                      <option key={index} value={item.title}>
-                        {item.title}
-                      </option>
-                    );
-                  })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Tags
-              </Form.Label>
-              <br></br>
-              <span style={{ color: "grey" }}>
-                {this.props.tags.length > 0
-                  ? this.props.tags.map((item) => {
-                      return <li>{item.name} </li>;
-                    })
-                  : "NA"}
-              </span>
-              {/* <ReactTags
-                // disabled
-                // style={{width:'100%'}}
-                tags={this.props.tags}
-                onInput={this.props.handleChangeTags}
-                suggestions={this.props.suggestions}
-                onDelete={this.props.onDelete.bind(this)}
-                onAddition={this.props.onAddition.bind(this)}
-              /> */}
-            </Form.Group>
-            <Form.Group>
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Difficulty
-              </Form.Label>
-              <br />
-              <Difficulty
-                verified={true}
-                difficulty={this.props.difficulty}
-                handleDifficultyRadio={this.props.handleDifficultyRadio}
-              />
-            </Form.Group>
-          </Form>
-        ) : (
-          <Form>
-            <Form.Group controlId="exampleForm.ControlSelectauthoreditques">
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Authors
-              </Form.Label>
-              <Form.Control
-                style={
-                  currentvalueauthor !== ""
-                    ? { borderRadius: "0" }
-                    : { borderRadius: "0", color: "#a3a2a2" }
-                }
-                size="sm"
-                as="select"
-                // defaultValue=""
-                onChange={this.props.handleAuthorChange}
-                value={currentvalueauthor}
-              >
-                {this.props.authorList &&
-                  this.props.authorList.map((item, index) => {
-                    return (
-                      <option key={index} value={item.authorName}>
-                        {item.authorName}
-                      </option>
-                    );
-                  })}
-                <option key="" value="">
-                  Select
-                </option>
-              </Form.Control>
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Subject
-              </Form.Label>
-              <Form.Control
-                style={{ borderRadius: "0" }}
-                size="sm"
-                as="select"
-                // defaultValue=""
-                onChange={this.props.handleSubjectChange}
-                value={currentvaluesubject}
-              >
-                {this.props.listOfSubject &&
-                  this.props.listOfSubject.map((item, index) => {
-                    return (
-                      <option key={index} value={item.subjectName}>
-                        {item.subjectName}
-                      </option>
-                    );
-                  })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Chapter
-              </Form.Label>
-              <Form.Control
-                style={{ borderRadius: "0" }}
-                size="sm"
-                as="select"
-                value={currentvaluechapter}
-                onChange={this.props.handleChapterChange}
-              >
-                {this.props.listOfChapter &&
-                  this.props.listOfChapter.map((item, index) => {
-                    return (
-                      <option key={index} value={item.sectionName}>
-                        {item.sectionName}
-                      </option>
-                    );
-                  })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Topic
-              </Form.Label>
-              <Form.Control
-                style={{ borderRadius: "0" }}
-                size="sm"
-                as="select"
-                value={currentvaluetopic}
-                onChange={this.props.handleTopicChange}
-              >
-                {this.props.listOfTopic &&
-                  this.props.listOfTopic.map((item, index) => {
-                    return (
-                      <option key={index} value={item.title}>
-                        {item.title}
-                      </option>
-                    );
-                  })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Sub-topic
-              </Form.Label>
-              <Form.Control
-                style={{ borderRadius: "0" }}
-                size="sm"
-                as="select"
-                value={currentvaluesubtopic}
-                onChange={this.props.handleSubTopicChange}
-              >
-                {this.props.listOfSubTopic &&
-                  this.props.listOfSubTopic.map((item, index) => {
-                    return (
-                      <option key={index} value={item.title}>
-                        {item.title}
-                      </option>
-                    );
-                  })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Tags
-              </Form.Label>
-              <ReactTags
-                // style={{width:'100%'}}
-                tags={this.props.tags}
-                onInput={this.props.handleChangeTags}
-                suggestions={this.props.suggestions}
-                onDelete={this.props.onDelete.bind(this)}
-                onAddition={this.props.onAddition.bind(this)}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Difficulty
-              </Form.Label>
-              <br />
-              <Difficulty
-                difficulty={this.props.difficulty}
-                handleDifficultyRadio={this.props.handleDifficultyRadio}
-              />
-            </Form.Group>
-          </Form>
+      <Form>
+        {this.props.fetchedData.verified && (
+          <marquee>
+            <p style={{ marginBottom: "0.5em", color: "green" }}>
+              <b>
+                *This question is marked as reviewed. Hence further updating
+                of weightage and adding or deleting number of options is not
+                permitted.*
+              </b>
+            </p>
+          </marquee>
         )}
-      </React.Fragment>
+        <Form.Group controlId="exampleForm.ControlSelectauthoreditques">
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Authors
+          </Form.Label>
+          <Form.Control
+            style={
+              currentvalueauthor !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+            size="sm"
+            as="select"
+            // defaultValue=""
+            onChange={this.props.handleAuthorChange}
+            value={currentvalueauthor}
+          >
+            {this.props.authorList &&
+              this.props.authorList.map((item, index) => {
+                return (
+                  <option key={index} value={item.authorName}>
+                    {item.authorName}
+                  </option>
+                );
+              })}
+            <option key="" value="">
+              Select
+            </option>
+          </Form.Control>
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Subject
+          </Form.Label>
+          <Form.Control
+            // style={{ borderRadius: "0" }}
+            style={
+              currentvaluesubject !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+            size="sm"
+            as="select"
+            // defaultValue=""
+            onChange={this.props.handleSubjectChange}
+            value={currentvaluesubject}
+          >
+            {this.props.listOfSubject &&
+              this.props.listOfSubject.map((item, index) => {
+                return (
+                  <option key={index} value={item.subjectName}>
+                    {item.subjectName}
+                  </option>
+                );
+              })}
+            <option key="" value="">
+              Select
+            </option>
+          </Form.Control>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Chapter
+          </Form.Label>
+          <Form.Control
+            // style={{ borderRadius: "0" }}
+            style={
+              currentvaluechapter !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+            size="sm"
+            as="select"
+            value={currentvaluechapter}
+            onChange={this.props.handleChapterChange}
+          >
+            {this.props.listOfChapter &&
+              this.props.listOfChapter.map((item, index) => {
+                return (
+                  <option key={index} value={item.sectionName}>
+                    {item.sectionName}
+                  </option>
+                );
+              })}
+            <option key="" value="">
+              Select
+            </option>
+          </Form.Control>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Topic
+          </Form.Label>
+          <Form.Control
+            // style={{ borderRadius: "0" }}
+            style={
+              currentvaluetopic !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+            size="sm"
+            as="select"
+            value={currentvaluetopic}
+            onChange={this.props.handleTopicChange}
+          >
+            {this.props.listOfTopic &&
+              this.props.listOfTopic.map((item, index) => {
+                return (
+                  <option key={index} value={item.title}>
+                    {item.title}
+                  </option>
+                );
+              })}
+            <option key="" value="">
+              Select
+            </option>
+          </Form.Control>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Sub-topic
+          </Form.Label>
+          <Form.Control
+            // style={{ borderRadius: "0" }}
+            style={
+              currentvaluetopic !== ""
+                ? { borderRadius: "0" }
+                : { borderRadius: "0", color: "#a3a2a2" }
+            }
+            size="sm"
+            as="select"
+            value={currentvaluesubtopic}
+            onChange={this.props.handleSubTopicChange}
+          >
+            {this.props.listOfSubTopic &&
+              this.props.listOfSubTopic.map((item, index) => {
+                return (
+                  <option key={index} value={item.title}>
+                    {item.title}
+                  </option>
+                );
+              })}
+            <option key="" value="">
+              Select
+            </option>
+          </Form.Control>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Tags
+          </Form.Label>
+          <ReactTags
+            // style={{width:'100%'}}
+            tags={this.props.tags}
+            onInput={this.props.handleChangeTags}
+            suggestions={this.props.suggestions}
+            onDelete={this.props.onDelete.bind(this)}
+            onAddition={this.props.onAddition.bind(this)}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            Difficulty
+          </Form.Label>
+          <br />
+          <Difficulty
+            difficulty={this.props.difficulty}
+            handleDifficultyRadio={this.props.handleDifficultyRadio}
+          />
+        </Form.Group>
+      </Form>
     );
   }
 }
@@ -926,11 +812,9 @@ class Rightpanel extends Component {
         {this.props.fetchedData.verified ? (
           <Form>
             <QuestionComp
-              verified={true}
               lang={this.props.lang}
               myRefQuestionHindi={this.props.myRefQuestionHindi}
               myRefQuestionEnglish={this.props.myRefQuestionEnglish}
-              // handleQuestionEditor={this.props.handleQuestionEditor}
               questionData={this.props.questionData}
             />
 
@@ -970,7 +854,7 @@ class Rightpanel extends Component {
                     <div style={{ margin: "0.5em 0" }}>
                       {this.props.lang === "HINDI" ? (
                         <CKEditor
-                          readOnly={true}
+                          // readOnly={true}
                           onBeforeLoad={(CKEDITOR) =>
                             (CKEDITOR.disableAutoInline = true)
                           }
@@ -1007,7 +891,7 @@ class Rightpanel extends Component {
                         />
                       ) : (
                         <CKEditor
-                          readOnly={true}
+                          // readOnly={true}
                           onBeforeLoad={(CKEDITOR) =>
                             (CKEDITOR.disableAutoInline = true)
                           }
@@ -1053,7 +937,7 @@ class Rightpanel extends Component {
             </Row>
             <div style={{ margin: "2em 0" }}>
               <ExplanationComp
-                verified={true}
+                // verified={true}
                 lang={this.props.lang}
                 // handleExplanationEditor={this.props.handleExplanationEditor}
                 explanationData={this.props.explanationData}
@@ -1063,7 +947,7 @@ class Rightpanel extends Component {
             </div>
 
             <div style={{ margin: "1em 0", textAlign: "center" }}>
-              {/* <Button
+              <Button
                 style={{
                   borderRadius: "0",
                   background: "#3F5FBB",
@@ -1075,7 +959,7 @@ class Rightpanel extends Component {
                 onClick={this.props.savedata}
               >
                 Update data
-              </Button> */}
+              </Button>
             </div>
           </Form>
         ) : (
@@ -1084,7 +968,6 @@ class Rightpanel extends Component {
               lang={this.props.lang}
               myRefQuestionHindi={this.props.myRefQuestionHindi}
               myRefQuestionEnglish={this.props.myRefQuestionEnglish}
-              // handleQuestionEditor={this.props.handleQuestionEditor}
               questionData={this.props.questionData}
             />
 
@@ -1109,17 +992,20 @@ class Rightpanel extends Component {
                           placeholder="weightage"
                         />
                       </Col>
-                      {/* {this.props.listOfOptions.length === index + 1 && (
-                  <Col>
-                    <Button
-                      style={{ float: "right", color: "grey" }}
-                      variant="link"
-                      onClick={this.props.deleteOption.bind(this, index)}
-                    >
-                      X Delete
-                    </Button>
-                  </Col>
-                )} */}
+
+                      <Col>
+                        <Button
+                          style={{ float: "right", color: "grey" }}
+                          variant="link"
+                          onClick={this.props.deleteOption.bind(
+                            this,
+                            index,
+                            this.props.lang
+                          )}
+                        >
+                          X Delete
+                        </Button>
+                      </Col>
                     </Form.Group>
                     <div style={{ margin: "0.5em 0" }}>
                       {this.props.lang === "HINDI" ? (
@@ -1201,7 +1087,23 @@ class Rightpanel extends Component {
               })}
             <Row>
               <Col lg="10"></Col>
-              <Col></Col>
+              <Col>
+                <Button
+                  onClick={this.props.addoptionfn}
+                  varirant="info"
+                  style={{
+                    fontSize: "0.8em",
+                    fontWeight: "700",
+                    background: "#FF8976",
+                    borderColor: "#FF8976",
+                    borderRadius: "0",
+                    float: "right",
+                  }}
+                >
+                  {" "}
+                  + Add Option
+                </Button>
+              </Col>
             </Row>
             <div style={{ margin: "2em 0" }}>
               <ExplanationComp
@@ -1236,248 +1138,125 @@ class Rightpanel extends Component {
 }
 
 function QuestionComp({
-  verified,
+  // verified,
   lang,
   myRefQuestionHindi,
   myRefQuestionEnglish,
   questionData,
 }) {
-  // console.log(questionData);
   return (
-    <React.Fragment>
-      {verified ? (
-        <Form.Group>
-          <Form.Label
-            style={{
-              fontWeight: "600",
-            }}
-          >
-            Question
-          </Form.Label>
-          <div
-            style={{
-              margin: "0.5em 0",
-            }}
-          >
-            {lang === "HINDI" ? (
-              <div>
-                <select
-                  id="txtLanguage"
-                  className="selectpicker"
-                  onChange={window.setLang}
-                  style={{ display: "none" }}
-                >
-                  <option value="0">English</option>
-                  <option value="1">Devnagari</option>
-                </select>
+    <Form.Group>
+      <Form.Label
+        style={{
+          fontWeight: "600",
+        }}
+      >
+        Question
+      </Form.Label>
+      <div
+        style={{
+          margin: "0.5em 0",
+        }}
+      >
+        {lang === "HINDI" ? (
+          <div>
+            <select
+              id="txtLanguage"
+              className="selectpicker"
+              onChange={window.setLang}
+              style={{ display: "none" }}
+            >
+              <option value="0">English</option>
+              <option value="1">Devnagari</option>
+            </select>
 
-                <select
-                  id="txtKeyboard"
-                  className="selectpicker"
-                  onChange={window.changeKB}
-                  style={{ display: "none" }}
-                >
-                  <option value="Phonetic">Phonetic</option>
-                  <option value="Ramington">Ramington</option>
-                </select>
-                <CKEditor
-                  readOnly={true}
-                  onBeforeLoad={(CKEDITOR) =>
-                    (CKEDITOR.disableAutoInline = true)
-                  }
-                  config={{
-                    height: 100,
-                  }}
-                  ref={myRefQuestionHindi}
-                  onFocus={(event) => {
-                    window.hook(event.editor.document.$.body);
-                  }}
-                  oninstanceReady={(event) => {
-                    var a = document.getElementById("txtLanguage");
-                    a.selectedIndex = 1;
-                    window.setLang();
-                    var b = document.getElementById("txtKeyboard");
-                    b.selectedIndex = 1;
-                    window.changeKB();
-                  }}
-                  data={questionData}
-                />
-              </div>
-            ) : (
-              <CKEditor
-                readOnly={true}
-                onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
-                config={{
-                  height: 100,
-                }}
-                ref={myRefQuestionEnglish}
-                data={questionData}
-              />
-            )}
+            <select
+              id="txtKeyboard"
+              className="selectpicker"
+              onChange={window.changeKB}
+              style={{ display: "none" }}
+            >
+              <option value="Phonetic">Phonetic</option>
+              <option value="Ramington">Ramington</option>
+            </select>
+            <CKEditor
+              onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
+              config={{
+                height: 100,
+              }}
+              ref={myRefQuestionHindi}
+              onFocus={(event) => {
+                window.hook(event.editor.document.$.body);
+              }}
+              oninstanceReady={(event) => {
+                var a = document.getElementById("txtLanguage");
+                a.selectedIndex = 1;
+                window.setLang();
+                var b = document.getElementById("txtKeyboard");
+                b.selectedIndex = 1;
+                window.changeKB();
+              }}
+              data={questionData}
+            />
           </div>
-        </Form.Group>
-      ) : (
-        <Form.Group>
-          <Form.Label
-            style={{
-              fontWeight: "600",
+        ) : (
+          <CKEditor
+            onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
+            config={{
+              height: 100,
             }}
-          >
-            Question
-          </Form.Label>
-          <div
-            style={{
-              margin: "0.5em 0",
-            }}
-          >
-            {lang === "HINDI" ? (
-              <div>
-                <select
-                  id="txtLanguage"
-                  className="selectpicker"
-                  onChange={window.setLang}
-                  style={{ display: "none" }}
-                >
-                  <option value="0">English</option>
-                  <option value="1">Devnagari</option>
-                </select>
-
-                <select
-                  id="txtKeyboard"
-                  className="selectpicker"
-                  onChange={window.changeKB}
-                  style={{ display: "none" }}
-                >
-                  <option value="Phonetic">Phonetic</option>
-                  <option value="Ramington">Ramington</option>
-                </select>
-                <CKEditor
-                  onBeforeLoad={(CKEDITOR) =>
-                    (CKEDITOR.disableAutoInline = true)
-                  }
-                  config={{
-                    height: 100,
-                  }}
-                  ref={myRefQuestionHindi}
-                  onFocus={(event) => {
-                    window.hook(event.editor.document.$.body);
-                  }}
-                  oninstanceReady={(event) => {
-                    var a = document.getElementById("txtLanguage");
-                    a.selectedIndex = 1;
-                    window.setLang();
-                    var b = document.getElementById("txtKeyboard");
-                    b.selectedIndex = 1;
-                    window.changeKB();
-                  }}
-                  data={questionData}
-                />
-              </div>
-            ) : (
-              <CKEditor
-                onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
-                config={{
-                  height: 100,
-                }}
-                ref={myRefQuestionEnglish}
-                data={questionData}
-              />
-            )}
-          </div>
-        </Form.Group>
-      )}
-    </React.Fragment>
+            ref={myRefQuestionEnglish}
+            data={questionData}
+          />
+        )}
+      </div>
+    </Form.Group>
   );
 }
 function ExplanationComp({
-  verified,
   lang,
   myRefExplanationHindi,
   myRefExplanationEnglish,
   explanationData,
 }) {
   return (
-    <React.Fragment>
-      {verified ? (
-        <Form.Group>
-          <Form.Label
-            style={{
-              fontWeight: "600",
+    <Form.Group>
+      <Form.Label
+        style={{
+          fontWeight: "600",
+        }}
+      >
+        Explanation
+      </Form.Label>
+      <div
+        style={{
+          margin: "0.5em 0",
+        }}
+      >
+        {lang === "HINDI" ? (
+          <CKEditor
+            onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
+            config={{
+              height: 100,
             }}
-          >
-            Explanation
-          </Form.Label>
-          <div
-            style={{
-              margin: "0.5em 0",
+            ref={myRefExplanationHindi}
+            onFocus={(event) => {
+              window.hook(event.editor.document.$.body);
             }}
-          >
-            {lang === "HINDI" ? (
-              <CKEditor
-                readOnly={true}
-                onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
-                config={{
-                  height: 100,
-                }}
-                ref={myRefExplanationHindi}
-                onFocus={(event) => {
-                  window.hook(event.editor.document.$.body);
-                }}
-                data={explanationData}
-              />
-            ) : (
-              <CKEditor
-                readOnly={true}
-                onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
-                config={{
-                  height: 100,
-                }}
-                ref={myRefExplanationEnglish}
-                data={explanationData}
-              />
-            )}
-          </div>
-        </Form.Group>
-      ) : (
-        <Form.Group>
-          <Form.Label
-            style={{
-              fontWeight: "600",
+            data={explanationData}
+          />
+        ) : (
+          <CKEditor
+            onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
+            config={{
+              height: 100,
             }}
-          >
-            Explanation
-          </Form.Label>
-          <div
-            style={{
-              margin: "0.5em 0",
-            }}
-          >
-            {lang === "HINDI" ? (
-              <CKEditor
-                onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
-                config={{
-                  height: 100,
-                }}
-                ref={myRefExplanationHindi}
-                onFocus={(event) => {
-                  window.hook(event.editor.document.$.body);
-                }}
-                data={explanationData}
-              />
-            ) : (
-              <CKEditor
-                onBeforeLoad={(CKEDITOR) => (CKEDITOR.disableAutoInline = true)}
-                config={{
-                  height: 100,
-                }}
-                ref={myRefExplanationEnglish}
-                data={explanationData}
-              />
-            )}
-          </div>
-        </Form.Group>
-      )}
-    </React.Fragment>
+            ref={myRefExplanationEnglish}
+            data={explanationData}
+          />
+        )}
+      </div>
+    </Form.Group>
   );
 }
 class RightpanelNewVersion extends Component {
@@ -1487,7 +1266,7 @@ class RightpanelNewVersion extends Component {
         {this.props.fetchedData.verified ? (
           <Form>
             <QuestionComp
-              verified={true}
+              // verified={true}
               lang={this.props.lang}
               myRefQuestionHindi={this.props.myRefQuestionHindiNew}
               myRefQuestionEnglish={this.props.myRefQuestionEnglishNew}
@@ -1531,7 +1310,7 @@ class RightpanelNewVersion extends Component {
                     <div style={{ margin: "0.5em 0" }}>
                       {this.props.lang === "HINDI" ? (
                         <CKEditor
-                          readOnly={true}
+                          // readOnly={true}
                           onBeforeLoad={(CKEDITOR) =>
                             (CKEDITOR.disableAutoInline = true)
                           }
@@ -1574,7 +1353,7 @@ class RightpanelNewVersion extends Component {
                         />
                       ) : (
                         <CKEditor
-                          readOnly={true}
+                          // readOnly={true}
                           onBeforeLoad={(CKEDITOR) =>
                             (CKEDITOR.disableAutoInline = true)
                           }
@@ -1631,7 +1410,7 @@ class RightpanelNewVersion extends Component {
             </Row>
             <div style={{ margin: "2em 0" }}>
               <ExplanationComp
-                verified={true}
+                // verified={true}
                 lang={this.props.lang}
                 myRefExplanationHindi={this.props.myRefExplanationHindiNew}
                 myRefExplanationEnglish={this.props.myRefExplanationEnglishNew}
@@ -1640,7 +1419,7 @@ class RightpanelNewVersion extends Component {
             </div>
 
             <div style={{ margin: "1em 0", textAlign: "center" }}>
-              {/* <Button
+              <Button
                 style={{
                   borderRadius: "0",
                   background: "#3F5FBB",
@@ -1652,7 +1431,7 @@ class RightpanelNewVersion extends Component {
                 onClick={this.props.savedata}
               >
                 Update data
-              </Button> */}
+              </Button>
             </div>
           </Form>
         ) : (
@@ -1687,7 +1466,7 @@ class RightpanelNewVersion extends Component {
                         <Button
                           style={{ float: "right", color: "grey" }}
                           variant="link"
-                          onClick={this.props.deleteOption.bind(
+                          onClick={this.props.deleteOptionNew.bind(
                             this,
                             index,
                             this.props.lang

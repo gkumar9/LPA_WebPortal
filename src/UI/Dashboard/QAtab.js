@@ -1057,8 +1057,8 @@ class QAtab extends Component {
                       style={{
                         marginBottom: "0.5em",
                         display: "flex",
-                        whiteSpace: " nowrap",
-                        overflow: "hidden",
+                        // whiteSpace: " nowrap",
+                        overflow: "scroll",
                         textOverflow: "ellipsis",
                       }}
                     >
@@ -1629,8 +1629,8 @@ class QAtab extends Component {
                                 <Card.Text
                                   style={{
                                     marginBottom: "0.5em",
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
+                                    // whiteSpace: "nowrap",
+                                    overflow: "scroll",
                                     textOverflow: "ellipsis",
                                     // display: "block",
                                     // width: "50%"

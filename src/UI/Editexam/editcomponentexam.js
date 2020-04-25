@@ -73,18 +73,10 @@ class ExamEditComponent extends Component {
       id: 0,
     });
     this.setState({ listOfSection: tempsectionlist });
-    // console.log('add section',index);
-    // let tempsectionlist = this.state.listOfSection;
-    // if (tempsectionlist[index].questions) {
-    //   tempsectionlist[index].questions.push("");
-    // } else {
-    //   tempsectionlist[index].questions = [""];
-    // }
-    // this.setState({ listOfSection: tempsectionlist });
   };
-  deleteSectionQuestion = (index) => {
+  deleteSectionQuestion = (index,indexquestion) => {
     let tempsectionlist = this.state.listOfSection;
-    tempsectionlist[index].testSectionMapping.splice(index, 1);
+    tempsectionlist[index].testSectionMapping.splice(indexquestion, 1);
     this.setState({ listOfSection: tempsectionlist });
   };
   handlSectionQuestionValueChange = (index, indexquestion, e) => {

@@ -204,10 +204,10 @@ class Editques extends Component {
                   this.setState(
                     {
                       listOfSubjectEnglish: res.data.data.list,
-                      selectedSubjectID:
-                        res.data.data.list.length > 0
-                          ? res.data.data.list[0].subject.subjectId
-                          : "",
+                      // selectedSubjectID:
+                      //   res.data.data.list.length > 0
+                      //     ? res.data.data.list[0].subject.subjectId
+                      //     : "",
                     },
                     () => {
                       this.callApiForChapter();
@@ -459,7 +459,7 @@ class Editques extends Component {
     }
   }
   callApiForChapter = () => {
-    if (this.state.selectedSubjectID !== "") {
+    if (this.state.selectedSubjectID !== 0) {
       axios({
         method: "POST",
         url: URL.fetchChapter + this.state.selectedSubjectID + "/ENGLISH",
@@ -493,10 +493,10 @@ class Editques extends Component {
               this.setState(
                 {
                   listOfChapterEnglish: res.data.data.list,
-                  selectedChapterID:
-                    res.data.data.list.length > 0
-                      ? res.data.data.list[0].subjectSection.sectionId
-                      : "",
+                  // selectedChapterID:
+                  //   res.data.data.list.length > 0
+                  //     ? res.data.data.list[0].subjectSection.sectionId
+                  //     : "",
                 },
                 () => {
                   this.callApiForChapterHindi();
@@ -531,7 +531,7 @@ class Editques extends Component {
     }
   };
   callApiForChapterHindi = () => {
-    if (this.state.selectedSubjectID !== "") {
+    if (this.state.selectedSubjectID !== 0) {
       axios({
         method: "POST",
         url: URL.fetchChapter + this.state.selectedSubjectID + "/HINDI",
@@ -596,7 +596,7 @@ class Editques extends Component {
     }
   };
   callApiForTopic = () => {
-    if (this.state.selectedChapterID !== "") {
+    if (this.state.selectedChapterID !== 0) {
       axios({
         method: "POST",
         url: URL.fetchTopic + this.state.selectedChapterID + "/ENGLISH",
@@ -663,7 +663,7 @@ class Editques extends Component {
     }
   };
   callApiForTopicHindi = () => {
-    if (this.state.selectedChapterID !== "") {
+    if (this.state.selectedChapterID !== 0) {
       axios({
         method: "POST",
         url: URL.fetchTopic + this.state.selectedChapterID + "/HINDI",
@@ -726,7 +726,7 @@ class Editques extends Component {
     }
   };
   callApiForSubTopic = () => {
-    if (this.state.selectedTopicID !== "") {
+    if (this.state.selectedTopicID !== 0) {
       axios({
         method: "POST",
         url: URL.fetchSubTopic + this.state.selectedTopicID + "/ENGLISH",
@@ -760,10 +760,10 @@ class Editques extends Component {
               this.setState(
                 {
                   listOfSubTopicEnglish: res.data.data.list,
-                  selectedSubTopicID:
-                    res.data.data.list.length > 0
-                      ? res.data.data.list[0].subjectSubtopic.subtopicId
-                      : "",
+                  // selectedSubTopicID:
+                  //   res.data.data.list.length > 0
+                  //     ? res.data.data.list[0].subjectSubtopic.subtopicId
+                  //     : "",
                 },
                 () => {
                   this.callApiForSubTopicHindi();
@@ -787,7 +787,7 @@ class Editques extends Component {
     }
   };
   callApiForSubTopicHindi = () => {
-    if (this.state.selectedTopicID !== "") {
+    if (this.state.selectedTopicID !== 0) {
       axios({
         method: "POST",
         url: URL.fetchSubTopic + this.state.selectedTopicID + "/HINDI",
@@ -834,7 +834,17 @@ class Editques extends Component {
     }
   };
   handleSubjectChange = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
+    if (e.target.value === "") {
+      this.setState(
+        {
+          selectedSubjectID: 0,
+        },
+        () => {
+          this.callApiForChapter();
+        }
+      );
+    } else {
     if (
       e.target.value.split("").filter(function (char) {
         var charCode = char.charCodeAt();
@@ -863,10 +873,22 @@ class Editques extends Component {
         }
       );
     }
+  }
   };
   handleChapterChange = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     // console.log( e.target.value)
+    if (e.target.value === "") {
+      // localStorage.setItem("addquesChapterID", "0");
+      this.setState(
+        {
+          selectedChapterID: 0,
+        },
+        () => {
+          this.callApiForTopic();
+        }
+      );
+    } else {
     if (
       e.target.value.split("").filter(function (char) {
         var charCode = char.charCodeAt();
@@ -897,9 +919,22 @@ class Editques extends Component {
         }
       );
     }
+  }
+  
   };
   handleTopicChange = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
+    if (e.target.value === "") {
+      // localStorage.setItem("addquesTopicID", "0");
+      this.setState(
+        {
+          selectedTopicID: 0,
+        },
+        () => {
+          this.callApiForSubTopic();
+        }
+      );
+    } else {
     if (
       e.target.value.split("").filter(function (char) {
         var charCode = char.charCodeAt();
@@ -928,9 +963,16 @@ class Editques extends Component {
         }
       );
     }
+  }
   };
   handleSubTopicChange = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
+    if (e.target.value === "") {
+      // localStorage.setItem("addquesSubTopicID", "0");
+      this.setState({
+        selectedSubTopicID: 0,
+      });
+    } else {
     if (
       e.target.value.split("").filter(function (char) {
         var charCode = char.charCodeAt();
@@ -949,6 +991,7 @@ class Editques extends Component {
         ].subjectSubtopic.subtopicId,
       });
     }
+  }
   };
   handleAuthorChange = (e) => {
     // e.preventDefault();

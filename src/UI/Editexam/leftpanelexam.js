@@ -47,7 +47,7 @@ class LeftPanelExam extends Component {
             <marquee>
               <p style={{ marginBottom: "0.5em", color: "green" }}>
                 <b>
-                  *This test is marked as reviewed. Hence no further updating is
+                  *This test is marked as reviewed. Hence further updating is not
                   permitted.*
                 </b>
               </p>
