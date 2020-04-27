@@ -331,7 +331,7 @@ class LeftPanelExamtab extends Component {
               </Button>
               {/* )} */}
             </Col>
-            <Col xs lg="7" style={{ paddingLeft: "0" }}>
+            <Col xs lg="7" >
               <Button
                 size="sm"
                 onClick={this.props.handlesearchWithFilter}

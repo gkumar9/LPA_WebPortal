@@ -7,11 +7,12 @@ import React, { Component } from "react";
 import PreviewQues from "./UI/QuesPreview/index.js";
 import EditExam from "./UI/Editexam/index.js";
 import PreviewTest from './UI/TestPreview/index.js';
+// import Error from './UI/QuesPreview/404'
 import { createBrowserHistory } from "history";
 import {
   Route,
   Redirect,
-  HashRouter as Router,
+  BrowserRouter as Router,
   // Switch
 } from "react-router-dom";
 export const history = createBrowserHistory({
@@ -33,7 +34,7 @@ const ProtectedRoute = ({ component: Component, authenticated, path }) => {
 class Navigation extends Component {
   render() {
     return (
-      <Router basename={'/'}>
+      <Router basename={'/office'} history={history}>
         {/* <Switch> */}
         <Route
           exact
@@ -77,6 +78,10 @@ class Navigation extends Component {
           path="/editexam/:id"
           component={EditExam}
         />
+         {/* <Route path="*">
+            <center style={{zIndex:'999999',position:'relative'}}>NO MATCH</center>
+            <Error />
+          </Route> */}
         {/* </Switch> */}
       </Router>
     );

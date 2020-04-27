@@ -1,5 +1,12 @@
-// let Base_url = "../cd";
-let Base_url = "http://api.frogbit.co/cd";
+let Base_url;
+console.log(process.env.REACT_APP_API_ENDPOINT);
+
+if (process.env.REACT_APP_API_ENDPOINT === "prod") {
+  Base_url = "../cd";
+} else {
+  Base_url = "http://api.frogbit.co/cd";
+}
+
 let URL = {
   fetchSubject: Base_url + "/api/subjects/",
   fetchChapter: Base_url + "/api/subject/sections/",
