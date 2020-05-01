@@ -2,7 +2,7 @@ let Base_url;
 console.log(process.env.REACT_APP_API_ENDPOINT);
 
 if (process.env.REACT_APP_API_ENDPOINT === "prod") {
-  Base_url = "../cd";
+  Base_url = "/";
 } else {
   Base_url = "http://api.frogbit.co/cd";
 }
